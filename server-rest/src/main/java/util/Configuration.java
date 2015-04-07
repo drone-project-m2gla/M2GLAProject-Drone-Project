@@ -7,14 +7,14 @@ import java.util.Map;
  */
 public class Configuration {
     public static String BUCKET_NAME = "prod";
-    public static String COUCHBASE_HOSTNAME = "37.59.58.42";
+    public static String COUCHBASE_HOSTNAME = "148.60.11.195";
 
     /**
      * Load configurations
+     *
      * @param configs
      */
-    public static void loadConfigurations(Map<String,String> configs)
-    {
+    public static void loadConfigurations(Map<String, String> configs) {
         BUCKET_NAME = configs.get("BUCKET_NAME");
         COUCHBASE_HOSTNAME = configs.get("COUCHBASE_HOSTNAME");
     }
