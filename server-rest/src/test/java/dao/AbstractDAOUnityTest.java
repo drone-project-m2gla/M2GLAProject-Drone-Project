@@ -18,7 +18,7 @@ public class AbstractDAOUnityTest {
     @BeforeClass
     public static void beforeAllTests() {
         HashMap<String, String> configs = new HashMap<String, String>();
-        configs.put("COUCHBASE_HOSTNAME","37.59.58.42");
+        configs.put("COUCHBASE_HOSTNAME","148.60.11.195");
         configs.put("BUCKET_NAME","test");
         Configuration.loadConfigurations(configs);
         dao.connect();

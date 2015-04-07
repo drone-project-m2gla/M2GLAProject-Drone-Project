@@ -1,10 +1,12 @@
 package dao;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import entity.GeoImage;
-import entity.Position;
-import org.junit.*;
-import util.Configuration;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +14,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import entity.GeoImage;
+import entity.Position;
+import util.Configuration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -26,7 +32,7 @@ public class GeoImageDAOTest {
     @BeforeClass
     public static void beforeAllTests() {
         HashMap<String, String> configs = new HashMap<String, String>();
-        configs.put("COUCHBASE_HOSTNAME","37.59.58.42");
+        configs.put("COUCHBASE_HOSTNAME","148.60.11.195");
         configs.put("BUCKET_NAME","test");
         Configuration.loadConfigurations(configs);
         dao.connect();
