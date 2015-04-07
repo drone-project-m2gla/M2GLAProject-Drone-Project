@@ -16,6 +16,7 @@ import java.util.List;
 public class Images {
 
     @GET
+    @Path("image")
     public Response getImages(String images) {
 
         return Response.status(200).entity("Les images sont : " + images).build();
