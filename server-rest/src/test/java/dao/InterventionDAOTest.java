@@ -1,10 +1,7 @@
 package dao;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import entity.DisasterCode;
-import entity.GeoImage;
-import entity.Intervention;
-import entity.Position;
+import entity.*;
 import org.junit.*;
 import util.Configuration;
 
@@ -55,7 +52,8 @@ public class InterventionDAOTest {
     public void test()
     {
         Intervention intervention = new Intervention("rue des mouettes",35223,"saint malo", DisasterCode.FHA);
-        intervention.setCoordinates(new Position(-1, -1, -1));
+        Position p1 = new Position(-1,-1);
+        intervention.setCoordinates(p1);
         //dao.entityToJsonDocument(intervention);
         dao.create(intervention);
     }
