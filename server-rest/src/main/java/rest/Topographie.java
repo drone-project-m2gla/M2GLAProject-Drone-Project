@@ -1,15 +1,6 @@
 package rest;
 
-import java.util.List;
-
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-
-import dao.CoordinatedIconDAO;
-import entity.CoordinatedIcon;
-import entity.Position;
 
 /**
  * Created by jerem on 08/04/15.
@@ -20,16 +11,18 @@ import entity.Position;
 public class Topographie {
 
 
-    /**
-     * Retourner une liste json de points statiques sur la carte autour de la GeoPosition précisée en paramètre.
-     * Par défaut, on peut prendre une valeur de 50km autour.
-     * @param aGeoPosition
-     * @return
-     */
+        /**
+         * Retourner une liste json de points statiques sur la carte autour de la GeoPosition précisée en paramètre.
+         * Par défaut, on peut prendre une valeur de 50km autour.
+         * @param aGeoPosition
+         * @return
+         */
+        /*
+
         @GET
         @Path("{GeoPosition}/{Rayon}")
        // @Produces(MediaType.APPLICATION_JSON)
-        public Response getCoordinatedIcons(@PathParam("GeoPosition") Position aGeoPosition) {
+        public void getCoordinatedIcons(@PathParam("GeoPosition") Position aGeoPosition) {
 
             CoordinatedIconDAO gID = new CoordinatedIconDAO();
             gID.connect();
@@ -39,6 +32,6 @@ public class Topographie {
 
 
         }
-
+*/
 
 }
