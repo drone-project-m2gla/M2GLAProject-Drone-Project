@@ -2,11 +2,10 @@ package rest;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.view.*;
 import dao.UserDAO;
-import entity.AbstractEntity;
 import entity.User;
-import org.json.JSONArray;
 import util.Constant;
 
 import javax.ws.rs.*;
@@ -30,42 +29,25 @@ public class UserServices {
     public Response longIn(@FormParam("username") String username, @FormParam("password") String password) {
         dao = new UserDAO();
         dao.connect();
-        AbstractEntity user = new User();
-
         Bucket currentBucket = dao.currentBucket;
+        JsonDocument user = currentBucket.get(username);
 
-        JSONArray array = new JSONArray();
+        String success = "ERROR";
 
-        System.out.println("**********************");
-        System.setProperty("viewmode", "development"); // before the connection to Couchbase
-        try {
-            DesignDocument designDoc = currentBucket.bucketManager().getDesignDocument("user_login");
-            if (designDoc == null) {
-                // Create user design doc.
-                userDesingDoc(currentBucket);
+        int status = 401;
+        if (user != null) {
+            System.out.println("User\t" + user);
+            JsonObject properties = user.content().getObject("properties");
+
+            String passwd = properties.getString("password");
+            if (passwd != null && passwd.equals(password)) {
+                status = 200;
+                success = username;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        // Create connection if needed
-
-        ViewQuery query = ViewQuery.from("user_login", "login_view");
-
-        ViewResult result = currentBucket.query(query);
-
-        for (ViewRow row : result) {
-            System.out.println(row.document()); // deal with the document/data
-        }
-
-        System.out.println("************************");
-
-
-        System.out.println("Les Documents******\t" + result.totalRows());
-
-//        String response = String.valueOf(dao.findByLogin(username, password));
         dao.disconnect();
-        return Response.status(200).entity("Hello " + username).entity(array.toString()).build();
+        return Response.status(status).entity(success).build();
     }
 
     private void userDesingDoc(Bucket currentBucket) {
