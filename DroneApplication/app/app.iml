@@ -83,8 +83,15 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+<<<<<<< HEAD
     <orderEntry type="library" exported="" name="support-v4-13.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-3.1.59" level="project" />
+=======
+    <orderEntry type="library" exported="" name="svg-android-1.1" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-22.0.0" level="project" />
+>>>>>>> c194c890925a4e06e5b5f596a3a21818ea4fab69
   </component>
 </module>
 
