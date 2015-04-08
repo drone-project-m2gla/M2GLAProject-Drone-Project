@@ -1,7 +1,9 @@
 package dao;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import entity.DisasterCode;
 import entity.GeoImage;
+import entity.Intervention;
 import entity.Position;
 import org.junit.*;
 import util.Configuration;
@@ -19,10 +21,9 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by alban on 16/03/15.
  */
-public class GeoImageDAOTest {
+public class InterventionDAOTest {
 
-    private static GeoImageDAO dao = new GeoImageDAO();
-    private static byte[] imagesBytes = new byte[16];
+    private static InterventionDAO dao = new InterventionDAO();
 
     @BeforeClass
     public static void beforeAllTests() {
@@ -31,10 +32,6 @@ public class GeoImageDAOTest {
         configs.put("BUCKET_NAME","test");
         Configuration.loadConfigurations(configs);
         dao.connect();
-        for(int i = 0 ; i<imagesBytes.length; i = i +1)
-        {
-            imagesBytes[i] = 1;
-        }
     }
 
     @AfterClass
@@ -57,12 +54,12 @@ public class GeoImageDAOTest {
     @Test
     public void test()
     {
-        GeoImage geoImage = new GeoImage();
-        geoImage.setCoordinates(new Position(4.0, 9.0, 19.0));
-        geoImage.setImageIn64(Base64.encode(imagesBytes));
-        dao.entityToJsonDocument(geoImage);
+        Intervention intervention = new Intervention("rue des mouettes",35223,"saint malo", DisasterCode.FHA);
+        intervention.setCoordinates(new Position(-1, -1, -1));
+        //dao.entityToJsonDocument(intervention);
+        dao.create(intervention);
     }
-
+/*
     @Test
     public void testInsert() {
         GeoImage geoImage = new GeoImage();
@@ -145,4 +142,5 @@ public class GeoImageDAOTest {
         dao.create(geoImage);
         }
     }
+    */
 }

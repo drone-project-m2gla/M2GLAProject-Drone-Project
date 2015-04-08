@@ -9,9 +9,9 @@ import util.Constant;
  */
 public class CoordinatedIcon extends AbstractEntity {
 
-    private Icon anIcone;
+    private Icon icon;
 
-    private Position aPosition;
+    private Position position;
 
 
     public CoordinatedIcon() {
@@ -19,19 +19,35 @@ public class CoordinatedIcon extends AbstractEntity {
         this.datatype = Constant.DATATYPE_COORDINATED_ICON;
     }
 
-    public Position getaPosition() {
-        return aPosition;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setaPosition(Position aPosition) {
-        this.aPosition = aPosition;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
-    public Icon getAnIcone() {
-        return anIcone;
+    public Icon getIcon() {
+        return icon;
     }
 
-    public void setAnIcone(Icon anIcone) {
-        this.anIcone = anIcone;
+    public void setIcon(Icon icon) {
+        this.icon = icon;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CoordinatedIcon coordinatedIcon = (CoordinatedIcon) o;
+
+        if (icon != null ? !icon.equals(coordinatedIcon.icon) : coordinatedIcon.icon != null)
+            return false;
+        if (position != null ? !position.equals(coordinatedIcon.position) : coordinatedIcon.position != null)
+            return false;
+
+        return true;
     }
 }

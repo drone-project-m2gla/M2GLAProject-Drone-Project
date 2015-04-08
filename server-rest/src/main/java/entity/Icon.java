@@ -9,7 +9,7 @@ import util.Constant;
  */
 public class Icon extends AbstractEntity  {
 
-    private String address_file;
+    private String filename; //nom du fichier sans l'extension
     private String entitled;
 
 
@@ -17,14 +17,6 @@ public class Icon extends AbstractEntity  {
         super();
         this.datatype = Constant.DATATYPE_ICON;
 
-    }
-
-    public String getAddress_file() {
-        return address_file;
-    }
-
-    public void setAddress_file(String address_file) {
-        this.address_file = address_file;
     }
 
     public String getEntitled() {
@@ -35,7 +27,28 @@ public class Icon extends AbstractEntity  {
         this.entitled = entitled;
     }
 
+    public String getFilename() {
+        return filename;
+    }
 
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Icon geoImage = (Icon) o;
+
+        if (filename != null ? !filename.equals(geoImage.filename) : geoImage.filename != null)
+            return false;
+        if (entitled != null ? !entitled.equals(geoImage.entitled) : geoImage.entitled != null) return false;
+
+        return true;
+    }
 //Classe avec une liste d'objets (id , intitulé, chemin_du_fichier)
 
 //Classe avec une liste de coordonnées d'objets (id_objet_statique, coordonnées_satellite, description)

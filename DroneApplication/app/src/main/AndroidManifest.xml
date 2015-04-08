@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.SVGActivity" />
         <activity android:name=".activity.UserActivity" />
 
         <receiver
