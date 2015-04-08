@@ -28,20 +28,11 @@ public class Intervention extends AbstractEntity {
         this.city = city;
         this.disasterCode = disasterCode;
         generateMeanList();
-        System.out.println(this.meansList.size());
     }
 
     public Intervention() {
         super();
         this.datatype = Constant.DATATYPE_INTERVENTION;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getAddress() {
@@ -94,7 +85,7 @@ public class Intervention extends AbstractEntity {
 
     public void generateMeanList(){
         if (this.disasterCode != null) {
-            MeansByDisasterCode.meansByDisasterCode(disasterCode);
+            this.meansList = MeansByDisasterCode.meansByDisasterCode(disasterCode);
         }
     }
 }
