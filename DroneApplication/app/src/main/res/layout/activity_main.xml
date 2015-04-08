@@ -11,6 +11,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textPresentation" />
+<!--
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textPresentation"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/urlGetLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/url_text"
+            android:id="@+id/urlDisp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="@string/url_hint"
+            android:ems="10"
+            android:id="@+id/urlGet"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+-->
 
     <LinearLayout
         android:orientation="horizontal"
@@ -34,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Identifiant"
+            android:hint="@string/login_hint"
             android:ems="10"
             android:id="@+id/loginGet"
             android:layout_weight="1" />
@@ -58,8 +87,8 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:hint="Mot de Passe"
+            android:inputType="textPassword"
+            android:hint="@string/password_hint"
             android:ems="10"
             android:id="@+id/passwordGet"
             android:layout_weight="1" />
@@ -126,7 +155,6 @@
             android:onClick="finMain"
             android:layout_weight="1"
             />
-
 
     </LinearLayout>
 
