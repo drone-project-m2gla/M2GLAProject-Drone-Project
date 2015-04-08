@@ -63,6 +63,11 @@
             <artifactId>jersey-servlet</artifactId>
             <version>1.18.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.ganyo</groupId>
+            <artifactId>gcm-server</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>sitserver</finalName>
