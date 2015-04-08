@@ -23,9 +23,8 @@ import fr.m2gla.istic.projet.service.PushService;
 public class PushServiceImpl implements PushService {
     private static final PushService INSTANCE = new PushServiceImpl();
     private static final String TAG = "PushService";
-    private static final String CLIENT_KEY = "AIzaSyBO1geWvgWqYwLQyOzNTdFPMHGCDHrGfPc";
+    private static final String SENDER_ID = "836789679656";
 
-    private GoogleCloudMessaging gcm;
     private Context context;
 
     protected PushServiceImpl() {}
@@ -41,18 +40,20 @@ public class PushServiceImpl implements PushService {
 
     @Override
     public void register() {
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(context);
+        final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
 
+        if (gcm != null && checkPlayServices()) {
             (new AsyncTask() {
                 private String registeredId;
 
                 @Override
                 protected Object doInBackground(Object[] params) {
                     try {
-                        registeredId = gcm.register(CLIENT_KEY);
+                        Log.i(TAG + ".AsyncTask", "Registration start");
+                        registeredId = gcm.register(SENDER_ID);
+                        Log.i(TAG + ".AsyncTask", "Registration id " + registeredId);
                     } catch (IOException e) {
-                        Log.e(TAG + ".AsyncTask", "Error register");
+                        Log.e(TAG + ".AsyncTask", "Error register", e);
                         return false;
                     }
 
@@ -71,7 +72,7 @@ public class PushServiceImpl implements PushService {
                                     @Override
                                     public void execute(HttpResponse response) {
                                         if (response.getStatusLine().getStatusCode() != 204) {
-                                            Log.e(TAG, "Erreur register");
+                                            Log.i(TAG, "Erreur register code " + response.getStatusLine().getStatusCode());
                                         }
                                     }
                                 }, null);
@@ -90,6 +91,15 @@ public class PushServiceImpl implements PushService {
         if (context == null) {
             throw new IllegalArgumentException("Context not set");
         }
-        return GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
+
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                Log.e(TAG, "Google not available");
+            } else {
+                Log.wtf(TAG, "This device is not supported.");
+            }
+        }
+        return resultCode == ConnectionResult.SUCCESS;
     }
 }

@@ -10,6 +10,13 @@ import util.Constant;
  * Class ${CLASS}
  */
 public class UserDAO extends AbstractDAO<User> {
+
+    public JsonDocument findByLogin(String username, String password) {
+        JsonDocument res = this.currentBucket.get(Constant.DATATYPE_USER);
+        res.content().get("username");
+        return res;
+    }
+
     @Override
     protected User jsonDocumentToEntity(JsonDocument jsonDocument) {
         User u = new User();
@@ -31,13 +38,14 @@ public class UserDAO extends AbstractDAO<User> {
     @Override
     protected JsonDocument entityToJsonDocument(User u) {
         JsonObject properties = JsonObject.create();
-        properties.put("datatype", u.getDataType());
-
-        JsonObject jsonUser = JsonObject.empty()
-                .put("datatype", u.getDataType())
+        properties.put("datatype", u.getDataType())
                 .put("username", u.getUsername())
                 .put("password", u.getPassword());
-        JsonDocument doc = JsonDocument.create("" + u.getId(), jsonUser);
+
+        JsonObject jsonUser = JsonObject.empty()
+                .put("properties", properties);
+
+        JsonDocument doc = JsonDocument.create("" + u.getUsername(), jsonUser);
         System.out.println(jsonUser);
         return doc;
     }

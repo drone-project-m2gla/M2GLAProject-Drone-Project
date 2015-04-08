@@ -1,6 +1,5 @@
 package fr.m2gla.istic.projet.activity;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,18 +12,34 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import fr.m2gla.istic.projet.service.impl.PushServiceImpl;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import fr.m2gla.istic.projet.R;
+import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.context.UserQualification;
+import fr.m2gla.istic.projet.service.RestService;
+import fr.m2gla.istic.projet.service.impl.*;
 
 public class MainActivity extends Activity {
 
-    private     String      loginName;
-    private     String      loginPassword;
+    private     String              loginName;
+    private     String              loginPassword;
+    private     String              loginServer;
+    private     UserQualification   userQualification = UserQualification.SIMPLEUSER;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
     }
 
@@ -39,8 +54,6 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int             id = item.getItemId();
-        EditText        textLogin = (EditText) findViewById(R.id.loginGet);
-        EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -60,44 +73,98 @@ public class MainActivity extends Activity {
     public void actiValider (View view) {
 
         int             radioBSelect;
+//        EditText        textServer = (EditText) findViewById(R.id.urlGet);
         EditText        textLogin = (EditText) findViewById(R.id.loginGet);
         EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
         RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
         RadioButton     codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
 
 
+        // Recuperer l'URL du serveur
+//        if (textLogin.getText().length() != 0) {
+//            this.loginServer = "" + textServer.getText();
+//            Toast.makeText(getApplicationContext(), textServer.getText(), Toast.LENGTH_SHORT).show();
+//        }
+//       else {
+            this.loginServer = "Aucun";
+//        }
+
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
             this.loginName = "" + textLogin.getText();
-            Toast.makeText(getApplicationContext(), textLogin.getText(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), textLogin.getText(), Toast.LENGTH_SHORT).show();
         }
         else {
-            this.loginName = "Aucun";
+            Log.i("actiValider", "Pas de Login");
+            return;
         }
+        Log.i("actiValider", "PRE sendLoginAsync");
 
+
+        // Recuperer le mot de passe
         if (textPassword.getText().length() != 0) {
             this.loginPassword = "" + textPassword.getText();
-            Toast.makeText(getApplicationContext(), textPassword.getText(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), textPassword.getText(), Toast.LENGTH_SHORT).show();
         }
         else {
-            this.loginPassword = "Aucun";
+            this.loginPassword = "";
         }
 
         radioBSelect = roleRadioG.getCheckedRadioButtonId();
 
         if (radioBSelect == R.id.codisRadioButton) {
-            Toast.makeText(getApplicationContext(), "CODIS", Toast.LENGTH_SHORT).show();
+            this.userQualification = UserQualification.CODIS;
+            // Toast.makeText(getApplicationContext(), "CODIS", Toast.LENGTH_SHORT).show();
         }
         else if (radioBSelect == R.id.userRadioButton) {
-            Toast.makeText(getApplicationContext(), "Superviseur", Toast.LENGTH_SHORT).show();
+            this.userQualification = UserQualification.SIMPLEUSER;
+            // Toast.makeText(getApplicationContext(), "Superviseur", Toast.LENGTH_SHORT).show();
         }
+        Log.i("actiValider", "PRE sendLoginAsync");
+
+        // Demander l'envoi des éléments de connexion au serveur
+        sendLoginAsync();
 
         // Lancement d'une tache asynchrone pour envoyer les donnees de connexion au serveur
-        new SendLoginAsync().execute();
+        // new SendLoginAsync().execute();
 
         PushServiceImpl.getInstance().setContext(getApplicationContext());
         PushServiceImpl.getInstance().register();
     }
+
+
+    private boolean sendLoginAsync() {
+
+        RestService         loginSnd = RestServiceImpl.getInstance();
+        List<NameValuePair> loginList = new ArrayList<>();
+        NameValuePair       loginPair = new BasicNameValuePair("username", this.loginName);
+        NameValuePair       passwordPair = new BasicNameValuePair("password", this.loginPassword);
+
+        Log.i("sendLoginAsync", "PRE Send Data");
+
+        loginList.add(loginPair);
+        loginList.add(passwordPair);
+
+        loginSnd.post(RestAPI.POST_PUSH_LOGIN, loginList, new LoginResult(), null);
+
+        Log.i("sendLoginAsync", "POST Send Data");
+
+
+        return true;
+    }
+
+
+    private class LoginResult implements Command {
+        @Override
+        public void execute(HttpResponse response) {
+            Log.i("HttpResponse", "Fin Login");
+
+            Toast.makeText(getApplicationContext(), "Status de ligne : " + response.getStatusLine().getStatusCode(), Toast.LENGTH_SHORT).show();
+            Log.i("HttpResponse", "Status = " + response.getStatusLine().getStatusCode());
+
+        }
+    }
+
 
 
 
@@ -124,7 +191,7 @@ public class MainActivity extends Activity {
             Log.i("onPostExecute", "Send Data");
             Toast.makeText(getApplicationContext(), "onPostExecute", Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getApplicationContext(), loginName + " et " + loginPassword, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), loginServer + " et " + loginName + " et " + loginPassword, Toast.LENGTH_SHORT).show();
 
         }
     }

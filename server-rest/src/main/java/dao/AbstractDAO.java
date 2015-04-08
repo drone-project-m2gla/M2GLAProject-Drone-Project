@@ -7,7 +7,6 @@ import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.error.FlushDisabledException;
 import com.couchbase.client.java.view.*;
 import entity.AbstractEntity;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import util.Configuration;
 
 import java.util.ArrayList;
@@ -22,12 +21,12 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     /**
      * Current Connection
      */
-    protected Cluster currentCluster;
+    protected static Cluster currentCluster;
 
     /**
      * Current Bucket
      */
-    protected Bucket currentBucket;
+    public static Bucket currentBucket;
 
     /**
      * datatype of T

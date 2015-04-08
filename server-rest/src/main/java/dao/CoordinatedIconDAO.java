@@ -10,7 +10,7 @@ import util.Constant;
 /**
  * Created by jerem on 08/04/15.
  */
-public class CoordinatedObjectDAO extends AbstractDAO<CoordinatedIcon>  {
+public class CoordinatedIconDAO extends AbstractDAO<CoordinatedIcon>  {
 
     @Override
     protected CoordinatedIcon jsonDocumentToEntity(JsonDocument jsonDocument) {
@@ -33,10 +33,13 @@ public class CoordinatedObjectDAO extends AbstractDAO<CoordinatedIcon>  {
     @Override
     protected JsonDocument entityToJsonDocument(CoordinatedIcon u) {
 
+        JsonObject properties = JsonObject.create();
+        properties.put("datatype", u.getDataType());
+
         JsonObject jsonUser = JsonObject.empty()
-                .put("datatype", u.getDataType())
                 .put("icon", u.getAnIcone())
                 .put("position", u.getaPosition())
+                .put("properties", properties)
                 .put("id", u.getId());
         JsonDocument doc = JsonDocument.create("" + u.getId(), jsonUser);
         System.out.println(jsonUser);

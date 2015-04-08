@@ -4,6 +4,8 @@ import util.Constant;
 
 /**
  * Created by jerem on 07/04/15.
+ *
+ * Retourne un icone "statique de la carte" avec son nom et le nom du fichier svg dans l'application android.
  */
 public class Icon extends AbstractEntity  {
 
