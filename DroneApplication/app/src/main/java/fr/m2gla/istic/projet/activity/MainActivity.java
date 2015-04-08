@@ -124,7 +124,6 @@ public class MainActivity extends Activity {
         // Demander l'envoi des éléments de connexion au serveur
         sendLoginAsync();
 
-
         // Lancement d'une tache asynchrone pour envoyer les donnees de connexion au serveur
         // new SendLoginAsync().execute();
 
@@ -164,6 +163,8 @@ public class MainActivity extends Activity {
 
             respEntity = response.getEntity();
             Toast.makeText(getApplicationContext(), "Status de ligne : " + response.getStatusLine().getStatusCode(), Toast.LENGTH_SHORT).show();
+            Log.i("HttpResponse", "Status = " + response.getStatusLine().getStatusCode());
+
         }
     }
 
