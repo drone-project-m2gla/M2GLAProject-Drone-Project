@@ -23,6 +23,7 @@ public class GeoImageDAOTest {
 
     private static GeoImageDAO dao = new GeoImageDAO();
     private static byte[] imagesBytes = new byte[16];
+
     @BeforeClass
     public static void beforeAllTests() {
         HashMap<String, String> configs = new HashMap<String, String>();

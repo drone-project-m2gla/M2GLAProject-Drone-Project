@@ -23,10 +23,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".UserActivity">
-        </activity>
-
-
+        <activity android:name=".UserActivity"/>
+        <activity android:name=".SVGActivity"/>
     </application>
 
 </manifest>

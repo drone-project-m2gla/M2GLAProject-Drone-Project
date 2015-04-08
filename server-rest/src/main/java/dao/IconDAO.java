@@ -15,10 +15,12 @@ public class IconDAO extends AbstractDAO<Icon> {
         Icon u = new Icon();
         try {
             JsonObject content = jsonDocument.content();
-            if (Constant.DATATYPE_ICON.equals(content.getString("datatype"))) {
+          //  System.out.println(((JsonObject)content.get("properties")).get("datatype"));
+
+            if (Constant.DATATYPE_ICON.equals(((JsonObject)content.get("properties")).get("datatype"))) {
                 u.setId(Long.parseLong(jsonDocument.id()));
-                u.setAddress_file(content.getString("MON ADRESSE !"));
-                u.setId(1234);
+                u.setEntitled(content.getString("entitled"));
+                u.setFilename(content.getString("filename"));
             } else {
                 throw new IllegalArgumentException();
             }
@@ -32,10 +34,13 @@ public class IconDAO extends AbstractDAO<Icon> {
     protected JsonDocument entityToJsonDocument(Icon u) {
 
         JsonObject properties = JsonObject.create();
-        properties.put("datatype", u.getDataType());
+        properties.put("datatype", u.getDataType())
+        .put("type", "Point");
+
 
         JsonObject jsonUser = JsonObject.empty()
-                .put("adress", u.getAddress_file())
+                .put("filename", u.getFilename())
+                .put("entitled", u.getEntitled())
                 .put("properties", properties)
                 .put("id", u.getId());
 
