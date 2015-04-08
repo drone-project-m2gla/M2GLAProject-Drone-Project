@@ -1,6 +1,7 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.service.RestService;
@@ -32,10 +34,13 @@ public class MainActivity extends Activity {
 
     private     String              loginName;
     private     String              loginPassword;
-    private     String              loginServer;
     private     UserQualification   userQualification = UserQualification.SIMPLEUSER;
 
 
+    /**
+     * Methode Principale
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +48,10 @@ public class MainActivity extends Activity {
     }
 
 
+    /**
+     * Methode de creation du menu de l'application
+     * @param menu : Objet de definition du menu principal
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -50,6 +59,10 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    /**
+     * Methode de gestion de l'usage du menu principal
+     * @param item : Objet de sélection dans le menu principal
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int             id = item.getItemId();
@@ -63,38 +76,53 @@ public class MainActivity extends Activity {
     }
 
 
+    /**
+     * Methode d'initialisation des elements
+     * @param -
+     */
+    private void    initializedElement() {
+        EditText        textLogin = (EditText) findViewById(R.id.loginGet);
+        EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
+        RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
+
+        // Reinitialisation des éléments de saisie
+        textLogin.setText("");
+        textPassword.setText("");
+        roleRadioG.check(R.id.userRadioButton);
+
+    }
+
+    /**
+     * Methode de gestion de la fin de l'application
+     * @param view : vue courante
+     */
     public void finMain(View view) {
 
         // arret de l'activity ici
         finish();
     }
 
+    /**
+     * Methode de gestion de la validation du login
+     * @param view : vue courante
+     */
     public void actiValider (View view) {
 
         int             radioBSelect;
-//        EditText        textServer = (EditText) findViewById(R.id.urlGet);
         EditText        textLogin = (EditText) findViewById(R.id.loginGet);
         EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
         RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
         RadioButton     codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
 
 
-        // Recuperer l'URL du serveur
-//        if (textLogin.getText().length() != 0) {
-//            this.loginServer = "" + textServer.getText();
-//            Toast.makeText(getApplicationContext(), textServer.getText(), Toast.LENGTH_SHORT).show();
-//        }
-//       else {
-            this.loginServer = "Aucun";
-//        }
-
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
             this.loginName = "" + textLogin.getText();
-            // Toast.makeText(getApplicationContext(), textLogin.getText(), Toast.LENGTH_SHORT).show();
         }
         else {
+            Toast.makeText(getApplicationContext(), "Manque le login", Toast.LENGTH_SHORT).show();
             Log.i("actiValider", "Pas de Login");
+            this.initializedElement();
             return;
         }
         Log.i("actiValider", "PRE sendLoginAsync");
@@ -103,7 +131,6 @@ public class MainActivity extends Activity {
         // Recuperer le mot de passe
         if (textPassword.getText().length() != 0) {
             this.loginPassword = "" + textPassword.getText();
-            // Toast.makeText(getApplicationContext(), textPassword.getText(), Toast.LENGTH_SHORT).show();
         }
         else {
             this.loginPassword = "";
@@ -113,27 +140,20 @@ public class MainActivity extends Activity {
 
         if (radioBSelect == R.id.codisRadioButton) {
             this.userQualification = UserQualification.CODIS;
-            // Toast.makeText(getApplicationContext(), "CODIS", Toast.LENGTH_SHORT).show();
         }
         else if (radioBSelect == R.id.userRadioButton) {
             this.userQualification = UserQualification.SIMPLEUSER;
-            // Toast.makeText(getApplicationContext(), "Superviseur", Toast.LENGTH_SHORT).show();
         }
-        Log.i("actiValider", "PRE sendLoginAsync");
 
         // Demander l'envoi des éléments de connexion au serveur
         sendLoginAsync();
-
-
-        // Lancement d'une tache asynchrone pour envoyer les donnees de connexion au serveur
-        // new SendLoginAsync().execute();
-
-
-        // lancement de l'activité, suivante
-//        startActivity(intent);
     }
 
 
+    /**
+     * Methode de gestion de l'envoi des elements de login au serveur
+     * @param -
+     */
     private boolean sendLoginAsync() {
 
         RestService         loginSnd = RestServiceImpl.getInstance();
@@ -141,62 +161,65 @@ public class MainActivity extends Activity {
         NameValuePair       loginPair = new BasicNameValuePair("username", this.loginName);
         NameValuePair       passwordPair = new BasicNameValuePair("password", this.loginPassword);
 
-        Log.i("sendLoginAsync", "PRE Send Data");
 
         loginList.add(loginPair);
         loginList.add(passwordPair);
 
         loginSnd.post(RestAPI.POST_PUSH_LOGIN, loginList, new LoginResult(), null);
 
-        Log.i("sendLoginAsync", "POST Send Data");
-
-
         return true;
     }
 
+    /**
+     * Methode d'action post login reussi
+     * @param -
+     */
+    private void    postOkLoginAction() {
 
+        // creation d'un intent pour appeler une autre activité (SecondaryActivity)
+        Intent intent = new Intent(getApplicationContext(),UserActivity.class);
+
+        Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Debut", Toast.LENGTH_SHORT).show();
+
+        // lancement de l'activité, suivante
+        // startActivity(intent);
+
+    }
+
+    /**
+     * Methode d'action post login
+     * @param -
+     */
+    private void    postLoginAction() {
+        this.initializedElement();
+    }
+
+
+    /**
+     * Classe en patron command pour la prise en compte du resultat de la demande de connexion
+     */
     private class LoginResult implements Command {
+        /**
+         * Methode d'action command sur resultat de connexion
+         * @param response : réponse de connexion
+         */
         @Override
         public void execute(HttpResponse response) {
-            HttpEntity  respEntity;
-
-            Log.i("HttpResponse", "Fin Login");
-
-            respEntity = response.getEntity();
             Toast.makeText(getApplicationContext(), "Status de ligne : " + response.getStatusLine().getStatusCode(), Toast.LENGTH_SHORT).show();
-        }
-    }
+            Log.i("HttpResponse", "Status = " + response.getStatusLine().getStatusCode());
 
-
-
-
-    private class SendLoginAsync extends AsyncTask<Void, Integer, Boolean> {
-
-        protected Boolean doInBackground(Void... params)
-        {
-            Log.i("doInBackground", "Send Data");
-            // Toast.makeText(getApplicationContext(), "doInBackground", Toast.LENGTH_SHORT).show();
-
-            return true;
-        }
-
-
-        protected void onPostExecute(Boolean result)
-        {
-            if (result) {
-                Log.i("onPostExecute", "Send Data OK");
-            }
-            else {
-                Log.i("onPostExecute", "Send Data KO");
+            postLoginAction();
+            if (response.getStatusLine().getStatusCode() != GeneralConstants.HTTP_RESP_OK) {
+                // Echec d'identification. Retours à l'activity principale
+                Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            Log.i("onPostExecute", "Send Data");
-            Toast.makeText(getApplicationContext(), "onPostExecute", Toast.LENGTH_SHORT).show();
-
-            Toast.makeText(getApplicationContext(), loginServer + " et " + loginName + " et " + loginPassword, Toast.LENGTH_SHORT).show();
+            // Demander la prise en compte de la validation de l'identification
+            Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
+            postOkLoginAction();
 
         }
     }
-
 
 }

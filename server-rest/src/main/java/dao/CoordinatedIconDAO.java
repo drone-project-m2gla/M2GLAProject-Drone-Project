@@ -19,7 +19,7 @@ public class CoordinatedIconDAO extends AbstractDAO<CoordinatedIcon>  {
             JsonObject content = jsonDocument.content();
             if (Constant.DATATYPE_COORDINATED_ICON.equals(content.getString("datatype"))) {
                 u.setId(Long.parseLong(jsonDocument.id()));
-                u.setaPosition(new Position());
+                u.setPosition(new Position());
                 u.setId(7879);
             } else {
                 throw new IllegalArgumentException();
@@ -34,11 +34,13 @@ public class CoordinatedIconDAO extends AbstractDAO<CoordinatedIcon>  {
     protected JsonDocument entityToJsonDocument(CoordinatedIcon u) {
 
         JsonObject properties = JsonObject.create();
-        properties.put("datatype", u.getDataType());
+        properties.put("datatype", u.getDataType())
+                .put("type", "Point");
+
 
         JsonObject jsonUser = JsonObject.empty()
-                .put("icon", u.getAnIcone())
-                .put("position", u.getaPosition())
+                .put("icon", u.getIcon())
+                .put("position", u.getPosition())
                 .put("properties", properties)
                 .put("id", u.getId());
         JsonDocument doc = JsonDocument.create("" + u.getId(), jsonUser);

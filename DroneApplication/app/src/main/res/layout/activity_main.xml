@@ -106,20 +106,20 @@
         <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkedButton="@+id/codisRadioButton"
+            android:checkedButton="@+id/userRadioButton"
             android:id="@+id/roleRadioGroup">
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/codis_role_rb_text"
-                android:id="@+id/codisRadioButton" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/user_role_rb_text"
                 android:id="@+id/userRadioButton" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/codis_role_rb_text"
+                android:id="@+id/codisRadioButton" />
 
         </RadioGroup>
 
