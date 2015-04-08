@@ -28,7 +28,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_newclt"
             android:id="@+id/newCltButton"
             android:onClick="actiNewClt"
             android:layout_weight="1"
@@ -37,7 +36,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_finclt"
             android:id="@+id/finCltButton"
             android:onClick="finClt"
             android:layout_weight="1"

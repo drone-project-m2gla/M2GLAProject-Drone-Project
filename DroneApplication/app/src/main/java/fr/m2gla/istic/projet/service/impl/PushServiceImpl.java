@@ -9,31 +9,37 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.service.PushService;
 
-public class PushService {
-    private static final PushService INSTANCE = new PushService();
-    private static final String TAG = "fr.m2gla.istic.droneapplication.push.PushService";
+public class PushServiceImpl implements PushService {
+    private static final PushService INSTANCE = new PushServiceImpl();
+    private static final String TAG = "PushService";
     private static final String CLIENT_KEY = "AIzaSyBO1geWvgWqYwLQyOzNTdFPMHGCDHrGfPc";
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private GoogleCloudMessaging gcm;
     private Context context;
 
-    protected PushService() {}
+    protected PushServiceImpl() {}
 
-    public PushService getInstance() {
+    public static PushService getInstance() {
         return INSTANCE;
     }
 
+    @Override
     public void setContext(Context context) {
         this.context = context;
     }
 
+    @Override
     public void register() {
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(context);
@@ -55,17 +61,20 @@ public class PushService {
 
                 @Override
                 protected void onPostExecute(Object o) {
-                    if (o instanceof Boolean) {
-                        Boolean result = (Boolean)o;
-                        if (result) {
-                            RestServiceImpl.getInstance()
-                                    .post(RestAPI.POST_PUSH_REGISTER, null, new Command() {
-                                        @Override
-                                        public void execute(HttpResponse response) {
+                    final Boolean result = (Boolean)o;
+                    if (result) {
+                        List<NameValuePair> content = new ArrayList<NameValuePair>();
+                        content.add(new BasicNameValuePair("id", registeredId));
 
+                        RestServiceImpl.getInstance()
+                            .post(RestAPI.POST_PUSH_REGISTER, content, new Command() {
+                                    @Override
+                                    public void execute(HttpResponse response) {
+                                        if (response.getStatusLine().getStatusCode() != 204) {
+                                            Log.e(TAG, "Erreur register");
                                         }
-                                    }, null);
-                        }
+                                    }
+                                }, null);
                     }
                 }
             }).execute();
