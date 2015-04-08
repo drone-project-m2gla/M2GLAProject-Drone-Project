@@ -5,8 +5,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import dao.CoordinatedIconDAO;
 import entity.CoordinatedIcon;
@@ -28,17 +27,16 @@ public class Topographie {
      * @return
      */
         @GET
-        @Path("{GeoPosition}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public List<CoordinatedIcon> getCoordinatedIcons(@PathParam("GeoPosition") Position aGeoPosition) {
+        @Path("{GeoPosition}/{Rayon}")
+       // @Produces(MediaType.APPLICATION_JSON)
+        public Response getCoordinatedIcons(@PathParam("GeoPosition") Position aGeoPosition) {
 
             CoordinatedIconDAO gID = new CoordinatedIconDAO();
             gID.connect();
             List<CoordinatedIcon> res = gID.getAll();
             gID.disconnect();
-            return res;
+            return Response.status(200).entity(res).build();
 
-          //  return Response.status(200).entity("Le drone id est : " + aGeoPosition).build();
 
         }
 
