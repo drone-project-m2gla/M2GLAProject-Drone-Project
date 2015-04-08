@@ -1,5 +1,6 @@
 package entity;
 
+import util.Constant;
 import util.MeansByDisasterCode;
 
 import java.util.List;
@@ -11,21 +12,28 @@ import java.util.List;
  *
  */
 
-public class Intervention {
+public class Intervention extends AbstractEntity {
 
-    private long id;
     private String address;
     private int postcode;
     private String city;
     private DisasterCode disasterCode;
     private List<Mean> meansList;
+    private Position coordinates;
 
     public Intervention(String address, int postcode, String city, DisasterCode disasterCode) {
+        this();
         this.address = address;
         this.postcode = postcode;
         this.city = city;
         this.disasterCode = disasterCode;
-        this.meansList = MeansByDisasterCode.meansByDisasterCode(disasterCode);
+        generateMeanList();
+        System.out.println(this.meansList.size());
+    }
+
+    public Intervention() {
+        super();
+        this.datatype = Constant.DATATYPE_INTERVENTION;
     }
 
     public long getId() {
@@ -74,6 +82,20 @@ public class Intervention {
 
     public void setMeansList(List<Mean> meansList) {
         this.meansList = meansList;
+    }
+
+    public Position getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Position coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void generateMeanList(){
+        if (this.disasterCode != null) {
+            MeansByDisasterCode.meansByDisasterCode(disasterCode);
+        }
     }
 }
 

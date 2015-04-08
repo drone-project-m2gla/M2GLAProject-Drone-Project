@@ -1,5 +1,7 @@
 package entity;
 
+import util.Constant;
+
 /**
  * Created by arno on 07/04/15.
  *
@@ -9,31 +11,40 @@ package entity;
  *
  */
 
-public class Mean {
+public class Mean extends AbstractEntity{
 
-    private Vehicle vehicule;
-    private Position positionRequested;
+    private Vehicle vehicle;
+    private Position coordinates;
     private boolean isInPosition;
 
-    public Mean(Vehicle vehicule) {
-        this.vehicule = vehicule;
+    public Mean(Vehicle vehicle) {
+        this();
+        this.vehicle = vehicle;
         this.isInPosition = false;
+        this.coordinates = new Position();
+        this.coordinates.setAltitude(-1);
+        this.coordinates.setLatitude(-1);
+        this.coordinates.setLongitude(-1);
+    }
+    public Mean() {
+        super();
+        this.datatype = Constant.DATATYPE_MEAN;
     }
 
-    public Vehicle getVehicule() {
-        return vehicule;
+    public Vehicle getVehicle() {
+        return vehicle;
     }
 
-    public void setVehicule(Vehicle vehicule) {
-        this.vehicule = vehicule;
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
-    public Position getPositionRequested() {
-        return positionRequested;
+    public Position getCoordinates() {
+        return coordinates;
     }
 
-    public void setPositionRequested(Position positionRequested) {
-        this.positionRequested = positionRequested;
+    public void setCoordinates(Position coordinates) {
+        this.coordinates = coordinates;
     }
 
     public boolean isInPosition() {
@@ -43,4 +54,6 @@ public class Mean {
     public void setInPosition(boolean isInPosition) {
         this.isInPosition = isInPosition;
     }
+
+
 }

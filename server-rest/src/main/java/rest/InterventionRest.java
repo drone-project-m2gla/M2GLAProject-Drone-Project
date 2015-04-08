@@ -1,21 +1,18 @@
 package rest;
 
 
-import dao.GeoInterventionZoneDAO;
-import entity.GeoInterventionZone;
-import entity.Position;
-import entity.Zone;
+import dao.InterventionDAO;
+import entity.Intervention;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Iterator;
 
 /**
  * Created by arno on 12/02/15.
  */
 @Path("/intervention")
-public class Intervention {
+public class InterventionRest {
 
     @GET
     @Path("{id}")
@@ -25,16 +22,16 @@ public class Intervention {
 
     }
 
-//    @POST
-//    @Path("/")
-//    @Consumes({MediaType.APPLICATION_JSON})
-//    public Response setGeoInterventionZone(GeoInterventionZone zone) {
-//        GeoInterventionZoneDAO gIZD = new GeoInterventionZoneDAO();
-//        gIZD.connect();
-//        GeoInterventionZone res= gIZD.create(zone);
-//        gIZD.disconnect();
-//        return Response.status(200).entity("Le nom de la zone est : " + zone + "<BR>" + res.toString()).build();
-//    }
+    @POST
+    @Path("/")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response setIntervention(Intervention intervention) {
+        InterventionDAO iD = new InterventionDAO();
+        iD.connect();
+        Intervention res= iD.create(intervention);
+        iD.disconnect();
+        return Response.status(200).entity("L'intervation : " + res.getId() + "<BR>" + res.toString()).build();
+    }
 //
 //    @POST
 //    @Path("zoneObject")
