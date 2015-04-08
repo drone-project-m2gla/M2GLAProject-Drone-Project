@@ -4,6 +4,8 @@ import util.Constant;
 
 /**
  * Created by jerem on 08/04/15.
+ *
+ *  Retourne une coordonnée satellite pour la carte avec son signalement (icone "statique)
  */
 public class CoordinatedIcon extends AbstractEntity {
 
