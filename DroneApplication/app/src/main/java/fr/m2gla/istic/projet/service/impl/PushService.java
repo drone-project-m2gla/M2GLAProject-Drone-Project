@@ -17,7 +17,7 @@ import fr.m2gla.istic.projet.context.RestAPI;
 
 public class PushService {
     private static final PushService INSTANCE = new PushService();
-    private static final String TAG = "fr.m2gla.istic.droneapplication.push.PushService";
+    private static final String TAG = "PushService";
     private static final String CLIENT_KEY = "AIzaSyBO1geWvgWqYwLQyOzNTdFPMHGCDHrGfPc";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 

@@ -1,5 +1,6 @@
 package fr.m2gla.istic.projet.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +15,7 @@ import java.util.HashMap;
  * Created by david on 09/02/15.
  */
 
-public class UserActivity {
+public class UserActivity  extends Activity {
 /*
     private ListView idList;
     private ArrayList<HashMap<String, String>> listItem;

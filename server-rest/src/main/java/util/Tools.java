@@ -1,7 +1,10 @@
 package util;
 
 import com.couchbase.client.java.document.json.JsonArray;
+import com.couchbase.client.java.document.json.JsonObject;
+import entity.Mean;
 import entity.Position;
+import entity.Vehicle;
 import entity.Zone;
 
 import java.util.ArrayList;
@@ -61,4 +64,38 @@ public class Tools {
         }
         return array;
     }
+
+    public static List<Mean> jsonArrayToMeanList(JsonArray jsonArray) {
+        List<Mean> z = new ArrayList<Mean>();
+        for(int i=0; i<jsonArray.size();i++) {
+            Mean mean = new Mean();
+            z.add(jsonToMean((JsonObject) jsonArray.get(i)));
+        }
+        return z;
+    }
+
+    public static JsonArray meanListToJsonArray(List<Mean> means) {
+        JsonArray array = JsonArray.create();
+        for(Mean mean : means) {
+            array.add(Tools.meanToJsonArray(mean));
+        }
+        return array;
+    }
+
+
+    public static JsonArray meanToJsonArray(Mean mean) {
+        JsonArray array = JsonArray.create();
+        array.add(Tools.positionToJsonArray(mean.getCoordinates()));
+        return array;
+    }
+
+    public static Mean jsonToMean(JsonObject jsonObject) {
+        Mean z = new Mean();
+        z.setId(Long.parseLong((String) jsonObject.get("id")));
+        z.setVehicle(Vehicle.valueOf((String) jsonObject.get("vehicule")));
+        z.setInPosition((Boolean) jsonObject.get("isInPosition"));
+        z.setCoordinates(jsonArrayToPosition(jsonObject.getArray("positionRequested")));
+        return z;
+    }
+
 }
