@@ -23,15 +23,15 @@ public class GeoImageDAOTest {
 
     private static GeoImageDAO dao = new GeoImageDAO();
     private static byte[] imagesBytes = new byte[16];
-
     @BeforeClass
     public static void beforeAllTests() {
         HashMap<String, String> configs = new HashMap<String, String>();
-        configs.put("COUCHBASE_HOSTNAME", "148.60.11.195");
-        configs.put("BUCKET_NAME", "test");
+        configs.put("COUCHBASE_HOSTNAME","148.60.11.195");
+        configs.put("BUCKET_NAME","test");
         Configuration.loadConfigurations(configs);
         dao.connect();
-        for (int i = 0; i < imagesBytes.length; i = i + 1) {
+        for(int i = 0 ; i<imagesBytes.length; i = i +1)
+        {
             imagesBytes[i] = 1;
         }
     }
@@ -54,7 +54,8 @@ public class GeoImageDAOTest {
     }
 
     @Test
-    public void test() {
+    public void test()
+    {
         GeoImage geoImage = new GeoImage();
         geoImage.setCoordinates(new Position(4.0, 9.0, 19.0));
         geoImage.setImageIn64(Base64.encode(imagesBytes));
@@ -112,10 +113,10 @@ public class GeoImageDAOTest {
         assertNull(dao.getById(idInbase));
     }
 
-
-    public void testGetAll() {
+    public void testGetAll()
+    {
         //dao.createDesignDocument();
-        for (GeoImage g : dao.getAll()) {
+        for(GeoImage g: dao.getAll()){
             System.out.println(g);
         }
     }
@@ -129,17 +130,18 @@ public class GeoImageDAOTest {
         strPath.add("/home/alban/Images/franziskaner.png");
         strPath.add("/home/alban/Images/GELADA 3.jpg");
         strPath.add("/home/alban/Images/supercopter-3965283semdn.jpg");
-        for (String s : strPath) {
+        for(String s : strPath)
+        {
             Path imgPath = Paths.get(s);
 
-            byte[] byteArray = Files.readAllBytes(imgPath);
-            String base64String = Base64.encode(byteArray);
+        byte[] byteArray = Files.readAllBytes(imgPath);
+        String base64String = Base64.encode(byteArray);
 
-            // on crée le document
-            GeoImage geoImage = new GeoImage();
+        // on crée le document
+        GeoImage geoImage = new GeoImage();
             geoImage.setCoordinates(new Position(4.0, 9.0, 19.0));
             geoImage.setImageIn64(base64String);
-            dao.create(geoImage);
+        dao.create(geoImage);
         }
     }
 }

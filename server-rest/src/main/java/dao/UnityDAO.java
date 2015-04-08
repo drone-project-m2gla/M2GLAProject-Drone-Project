@@ -58,7 +58,6 @@ public class UnityDAO extends AbstractDAO<Unity> {
         properties.put("datatype", u.getDataType());
 
         JsonObject jsonUser = JsonObject.empty()
-                .put("datatype", u.getDataType())
                 .put("position", Tools.positionToJsonArray(u.getUnitPosition()))
                 .put("name", u.getName())
                 .put("properties", properties);

@@ -5,7 +5,7 @@ import util.Constant;
 /**
  * Image with metadata
  * Created by mds on 10/03/15.
- * Class ${CLASS}
+ * Coordonnées d'une image et son nom
  */
 public class GeoImage extends AbstractEntity {
     private Position coordinates;
