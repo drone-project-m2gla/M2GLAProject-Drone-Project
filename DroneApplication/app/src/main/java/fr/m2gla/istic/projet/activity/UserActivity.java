@@ -1,8 +1,7 @@
-package mmm.m2gla.istic.fr.droneapplication;
+package fr.m2gla.istic.projet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -14,8 +13,9 @@ import java.util.HashMap;
 /**
  * Created by david on 09/02/15.
  */
-public class UserActivity extends ActionBarActivity {
 
+public class UserActivity {
+/*
     private ListView idList;
     private ArrayList<HashMap<String, String>> listItem;
     private SimpleAdapter mSchedule;
@@ -24,10 +24,10 @@ public class UserActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clients);
+        setContentView(mmm.m2gla.istic.fr.droneapplication.R.layout.activity_clients);
 
         //Récupération de la listview créée dans le fichier clients.xml
-        this.idList = (ListView) findViewById(R.id.idListView);
+        this.idList = (ListView) findViewById(mmm.m2gla.istic.fr.droneapplication.R.id.idListView);
 
         //Création d'une instance de la classe DAO (PersoInfoDataDAO)
         PersoInfoDataDAO clientDAO = new PersoInfoDataDAO(this);
@@ -36,11 +36,11 @@ public class UserActivity extends ActionBarActivity {
         this.listItem = new ArrayList<HashMap<String, String>>();
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
-        this.mSchedule = new SimpleAdapter(this.getBaseContext(), this.listItem, R.layout.disp_item,
+        this.mSchedule = new SimpleAdapter(this.getBaseContext(), this.listItem, mmm.m2gla.istic.fr.droneapplication.R.layout.disp_item,
 //                new String[] {"nom", "prenom, dateNais"},
 //                new int[] {R.id.nomElem, R.id.prenomElem, R.id.dateNaisElem});
                 new String[] {"nom", "prenom", "dateNais", "ville"},
-                new int[] {R.id.nomElem, R.id.prenomElem, R.id.dateNaisElem, R.id.villeElem});
+                new int[] {mmm.m2gla.istic.fr.droneapplication.R.id.nomElem, mmm.m2gla.istic.fr.droneapplication.R.id.prenomElem, mmm.m2gla.istic.fr.droneapplication.R.id.dateNaisElem, mmm.m2gla.istic.fr.droneapplication.R.id.villeElem});
 
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
@@ -98,4 +98,5 @@ public class UserActivity extends ActionBarActivity {
         Toast.makeText(getApplicationContext(), persoInfoData.getNom().toString(), Toast.LENGTH_SHORT).show();
 
     }
+*/
 }

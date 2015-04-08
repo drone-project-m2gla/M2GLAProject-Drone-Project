@@ -1,12 +1,7 @@
 package fr.m2gla.istic.projet.activity;
 
-<<<<<<< HEAD:DroneApplication/app/src/main/java/mmm/m2gla/istic/fr/droneapplication/MainActivity.java
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
-=======
 import android.app.Activity;
->>>>>>> 911e1f55e952f9f25a2236f7cd11f68f98e4497d:DroneApplication/app/src/main/java/fr/m2gla/istic/projet/activity/MainActivity.java
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,7 +21,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
     }
 
