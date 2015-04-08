@@ -12,6 +12,20 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.service.RestService;
+import fr.m2gla.istic.projet.service.impl.*;
+
 public class MainActivity extends Activity {
 
     private     String      loginName;
@@ -55,21 +69,21 @@ public class MainActivity extends Activity {
     public void actiValider (View view) {
 
         int             radioBSelect;
+//        EditText        textServer = (EditText) findViewById(R.id.urlGet);
         EditText        textLogin = (EditText) findViewById(R.id.loginGet);
         EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
-        EditText        textServer = (EditText) findViewById(R.id.urlGet);
         RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
         RadioButton     codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
 
 
         // Recuperer l'URL du serveur
-        if (textLogin.getText().length() != 0) {
-            this.loginServer = "" + textServer.getText();
-            Toast.makeText(getApplicationContext(), textServer.getText(), Toast.LENGTH_SHORT).show();
-        }
-        else {
+//        if (textLogin.getText().length() != 0) {
+//            this.loginServer = "" + textServer.getText();
+//            Toast.makeText(getApplicationContext(), textServer.getText(), Toast.LENGTH_SHORT).show();
+//        }
+//       else {
             this.loginServer = "Aucun";
-        }
+//        }
 
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
@@ -109,8 +123,26 @@ public class MainActivity extends Activity {
 
     private boolean sendLoginAsync() {
 
+        RestService         loginSnd = RestServiceImpl.getInstance();
+        List<NameValuePair> loginList = new ArrayList<>();
+        NameValuePair       loginPair = new BasicNameValuePair("username", this.loginName);
+        NameValuePair       passwordPair = new BasicNameValuePair("password", this.loginPassword);
+
+
+        loginList.add(loginPair);
+        loginList.add(passwordPair);
+
+        loginSnd.post(RestAPI.POST_PUSH_LOGIN, loginList, new LoginResult(), null);
 
         return true;
+    }
+
+
+    private class LoginResult implements Command {
+        @Override
+        public void execute(HttpResponse response) {
+
+        }
     }
 
 

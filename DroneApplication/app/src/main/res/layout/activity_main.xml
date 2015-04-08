@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textPresentation" />
+<!--
 
     <LinearLayout
         android:orientation="horizontal"
@@ -38,12 +39,13 @@
 
     </LinearLayout>
 
+-->
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/urlGetLayout"
+        android:layout_below="@+id/textPresentation"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -85,7 +87,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:hint="@string/password_hint"
             android:ems="10"
             android:id="@+id/passwordGet"
@@ -153,7 +155,6 @@
             android:onClick="finMain"
             android:layout_weight="1"
             />
-
 
     </LinearLayout>
 
