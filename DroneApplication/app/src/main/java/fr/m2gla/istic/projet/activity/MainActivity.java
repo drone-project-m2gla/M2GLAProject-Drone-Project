@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -93,8 +94,11 @@ public class MainActivity extends Activity {
             // Toast.makeText(getApplicationContext(), textLogin.getText(), Toast.LENGTH_SHORT).show();
         }
         else {
+            Log.i("actiValider", "Pas de Login");
             return;
         }
+        Log.i("actiValider", "PRE sendLoginAsync");
+
 
         // Recuperer le mot de passe
         if (textPassword.getText().length() != 0) {
@@ -115,9 +119,14 @@ public class MainActivity extends Activity {
             this.userQualification = UserQualification.SIMPLEUSER;
             // Toast.makeText(getApplicationContext(), "Superviseur", Toast.LENGTH_SHORT).show();
         }
+        Log.i("actiValider", "PRE sendLoginAsync");
+
+        // Demander l'envoi des éléments de connexion au serveur
+        sendLoginAsync();
+
 
         // Lancement d'une tache asynchrone pour envoyer les donnees de connexion au serveur
-        new SendLoginAsync().execute();
+        // new SendLoginAsync().execute();
 
 
         // lancement de l'activité, suivante
@@ -132,11 +141,15 @@ public class MainActivity extends Activity {
         NameValuePair       loginPair = new BasicNameValuePair("username", this.loginName);
         NameValuePair       passwordPair = new BasicNameValuePair("password", this.loginPassword);
 
+        Log.i("sendLoginAsync", "PRE Send Data");
 
         loginList.add(loginPair);
         loginList.add(passwordPair);
 
         loginSnd.post(RestAPI.POST_PUSH_LOGIN, loginList, new LoginResult(), null);
+
+        Log.i("sendLoginAsync", "POST Send Data");
+
 
         return true;
     }
@@ -145,9 +158,16 @@ public class MainActivity extends Activity {
     private class LoginResult implements Command {
         @Override
         public void execute(HttpResponse response) {
+            HttpEntity  respEntity;
 
+            Log.i("HttpResponse", "Fin Login");
+
+            respEntity = response.getEntity();
+            Toast.makeText(getApplicationContext(), "Status de ligne : " + response.getStatusLine().getStatusCode(), Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
 
     private class SendLoginAsync extends AsyncTask<Void, Integer, Boolean> {
