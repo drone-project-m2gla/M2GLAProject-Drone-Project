@@ -9,7 +9,7 @@
     <string name="login_hint">Identifiant</string>
     <string name="password_text">Password : </string>
     <string name="password_hint">Mot de passe</string>
-    <string name="codis_role_rb_text">Codis</string>
+    <string name="codis_role_rb_text">CODIS</string>
     <string name="user_role_rb_text">Superviseur</string>
     <string name="button_valid">Valider</string>
     <string name="button_endmain">Retour</string>

@@ -23,14 +23,16 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.service.RestService;
 import fr.m2gla.istic.projet.service.impl.*;
 
 public class MainActivity extends Activity {
 
-    private     String      loginName;
-    private     String      loginPassword;
-    private     String      loginServer;
+    private     String              loginName;
+    private     String              loginPassword;
+    private     String              loginServer;
+    private     UserQualification   userQualification = UserQualification.SIMPLEUSER;
 
 
     @Override
@@ -88,28 +90,30 @@ public class MainActivity extends Activity {
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
             this.loginName = "" + textLogin.getText();
-            Toast.makeText(getApplicationContext(), textLogin.getText(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), textLogin.getText(), Toast.LENGTH_SHORT).show();
         }
         else {
-            this.loginName = "Aucun";
+            return;
         }
 
         // Recuperer le mot de passe
         if (textPassword.getText().length() != 0) {
             this.loginPassword = "" + textPassword.getText();
-            Toast.makeText(getApplicationContext(), textPassword.getText(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), textPassword.getText(), Toast.LENGTH_SHORT).show();
         }
         else {
-            this.loginPassword = "Aucun";
+            this.loginPassword = "";
         }
 
         radioBSelect = roleRadioG.getCheckedRadioButtonId();
 
         if (radioBSelect == R.id.codisRadioButton) {
-            Toast.makeText(getApplicationContext(), "CODIS", Toast.LENGTH_SHORT).show();
+            this.userQualification = UserQualification.CODIS;
+            // Toast.makeText(getApplicationContext(), "CODIS", Toast.LENGTH_SHORT).show();
         }
         else if (radioBSelect == R.id.userRadioButton) {
-            Toast.makeText(getApplicationContext(), "Superviseur", Toast.LENGTH_SHORT).show();
+            this.userQualification = UserQualification.SIMPLEUSER;
+            // Toast.makeText(getApplicationContext(), "Superviseur", Toast.LENGTH_SHORT).show();
         }
 
         // Lancement d'une tache asynchrone pour envoyer les donnees de connexion au serveur
