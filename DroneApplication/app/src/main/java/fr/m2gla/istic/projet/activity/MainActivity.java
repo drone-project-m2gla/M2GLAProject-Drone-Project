@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
 
     private     String      loginName;
     private     String      loginPassword;
+    private     String      loginServer;
 
 
     @Override
@@ -35,8 +36,6 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int             id = item.getItemId();
-        EditText        textLogin = (EditText) findViewById(R.id.loginGet);
-        EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -58,9 +57,19 @@ public class MainActivity extends Activity {
         int             radioBSelect;
         EditText        textLogin = (EditText) findViewById(R.id.loginGet);
         EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
+        EditText        textServer = (EditText) findViewById(R.id.urlGet);
         RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
         RadioButton     codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
 
+
+        // Recuperer l'URL du serveur
+        if (textLogin.getText().length() != 0) {
+            this.loginServer = "" + textServer.getText();
+            Toast.makeText(getApplicationContext(), textServer.getText(), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            this.loginServer = "Aucun";
+        }
 
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
@@ -71,6 +80,7 @@ public class MainActivity extends Activity {
             this.loginName = "Aucun";
         }
 
+        // Recuperer le mot de passe
         if (textPassword.getText().length() != 0) {
             this.loginPassword = "" + textPassword.getText();
             Toast.makeText(getApplicationContext(), textPassword.getText(), Toast.LENGTH_SHORT).show();
@@ -97,6 +107,12 @@ public class MainActivity extends Activity {
     }
 
 
+    private boolean sendLoginAsync() {
+
+
+        return true;
+    }
+
 
     private class SendLoginAsync extends AsyncTask<Void, Integer, Boolean> {
 
@@ -121,7 +137,7 @@ public class MainActivity extends Activity {
             Log.i("onPostExecute", "Send Data");
             Toast.makeText(getApplicationContext(), "onPostExecute", Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getApplicationContext(), loginName + " et " + loginPassword, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), loginServer + " et " + loginName + " et " + loginPassword, Toast.LENGTH_SHORT).show();
 
         }
     }
