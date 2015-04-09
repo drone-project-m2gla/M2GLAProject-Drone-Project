@@ -34,4 +34,20 @@ public class CoordinatedIcon extends AbstractEntity {
     public void setIcon(Icon icon) {
         this.icon = icon;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CoordinatedIcon coordinatedIcon = (CoordinatedIcon) o;
+
+        if (icon != null ? !icon.equals(coordinatedIcon.icon) : coordinatedIcon.icon != null)
+            return false;
+        if (position != null ? !position.equals(coordinatedIcon.position) : coordinatedIcon.position != null)
+            return false;
+
+        return true;
+    }
 }
