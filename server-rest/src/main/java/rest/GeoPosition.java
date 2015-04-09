@@ -1,15 +1,21 @@
 package rest;
 
 
+import java.util.Iterator;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import dao.GeoInterventionZoneDAO;
 import entity.GeoInterventionZone;
 import entity.Position;
 import entity.Zone;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.Iterator;
 
 /**
  * Created by arno on 12/02/15.
@@ -59,7 +65,7 @@ public class GeoPosition {
     @Path("zoneObject")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response getPositionObject(GeoInterventionZone zone) {
-        System.out.println("LA zone\t" + zone);
+        System.out.println("La zone\t" + zone);
         String coordinatesZone = "Zone de survol";
         Zone flyoverZone = zone.getCoordinates().get(0);
         Iterator<Position> it = flyoverZone.positionIterator();
