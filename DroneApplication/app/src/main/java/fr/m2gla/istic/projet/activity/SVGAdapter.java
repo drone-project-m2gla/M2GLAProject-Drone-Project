@@ -28,14 +28,24 @@ import javax.xml.transform.stream.StreamResult;
  * Created by fernando on 4/9/15.
  */
 public class SVGAdapter {
-    public static InputStream modifySVG(InputStream is, String newText1, String newText2, String color) {
+
+
+    /**
+     * Modifies the given SVG input stream by changing the texts and color with the given values
+     * @param inputStream
+     * @param newText1
+     * @param newText2
+     * @param color
+     * @return
+     */
+    public static InputStream modifySVG(InputStream inputStream, String newText1, String newText2, String color) {
         //String textId = "text3826";
         InputStream isOut = null;
         try {
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(is);
+            Document document = documentBuilder.parse(inputStream);
             NodeList textNodes = document.getElementsByTagName("text");
             for (int i = 0; i < textNodes.getLength(); i++){
                 Node textNode = textNodes.item(i);
@@ -46,7 +56,7 @@ public class SVGAdapter {
                     for (int j = 0; j < textChildNodes.getLength(); j++) {
                         Node element = textChildNodes.item(j);
                         if ("tspan".equals(element.getNodeName())) {
-                            if (j==0) {
+                            if (i==0) {
                                 element.setTextContent(newText1);
                             } else {
                                 element.setTextContent(newText2);
@@ -82,6 +92,12 @@ public class SVGAdapter {
         return isOut;
     }
 
+    /**
+     * Convert an XML document into an InputStream
+     * @param document
+     * @return
+     * @throws IOException
+     */
     public static InputStream document2InputStream(Document document) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Source xmlSource = new DOMSource(document);

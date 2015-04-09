@@ -21,6 +21,11 @@
     <string name="address_hint">Rue,Voie, Allée</string>
     <string name="codepostal_hint">Code Postal</string>
     <string name="ville_hint">Ville</string>
-    <string name="title_activity_test_fragment">TestFragmentActivity</string>
+    <string name="sinistreCode_text">Selection du code sinistre :</string>
+    <string name="sinitre_rd_code_AVP">AVP</string>
+    <string name="sinitre_rd_code_FHA">FHA</string>
+    <string name="sinitre_rd_code_SAP">SAP</string>
+
+    <string name="intervention_list_text">Intervention en cours</string>
 
 </resources>

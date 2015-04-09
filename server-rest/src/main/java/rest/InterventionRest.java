@@ -3,12 +3,13 @@ package rest;
 
 import dao.InterventionDAO;
 import entity.Intervention;
+import entity.Mean;
 import entity.Position;
-import entity.Zone;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Created by arno on 12/02/15.
@@ -18,11 +19,68 @@ import javax.ws.rs.core.Response;
 @Path("/intervention")
 public class InterventionRest {
 
+
+
+    @GET
+    @Path("/{id}/moyen/{idmean}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Mean getMeanForIntervention(@PathParam("id") long id,@PathParam("idmean") long idmean) {
+
+        InterventionDAO iD = new InterventionDAO();
+        Mean res = null;
+        iD.connect();
+        List<Mean> meanList = iD.getById(id).getMeansList();
+        iD.disconnect();
+
+        for (Mean mean : meanList) {
+            if (mean.getId() == idmean) {
+                res = mean;
+            }
+        }
+
+        return res;
+
+    }
+
+
+
+    @GET
+    @Path("/{id}/moyen")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Mean> getMeanListForIntervention(@PathParam("id") long id) {
+
+        InterventionDAO iD = new InterventionDAO();
+        iD.connect();
+        List<Mean> res = iD.getById(id).getMeansList();
+        iD.disconnect();
+        return res;
+
+    }
+
+
     @GET
     @Path("{id}")
-    public Response getPosition(@PathParam("id") long id) {
+    @Produces({MediaType.APPLICATION_JSON})
+    public Intervention getIntervention(@PathParam("id") long id) {
 
-        return Response.status(200).entity("Intervention id is : " + id).build();
+        InterventionDAO iD = new InterventionDAO();
+        iD.connect();
+        Intervention res = iD.getById(id);
+        iD.disconnect();
+        return res;
+
+    }
+
+    @GET
+    @Path("")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Intervention> getAllIntervention() {
+
+        InterventionDAO iD = new InterventionDAO();
+        iD.connect();
+        List<Intervention> res = iD.getAll();
+        iD.disconnect();
+        return res;
 
     }
 
@@ -34,7 +92,7 @@ public class InterventionRest {
         iD.connect();
 
         // Code temporaire a remplacé par service google pour retrouver les coordonnées GPS
-        Position p1 = new Position(-100,-100);
+        Position p1 = new Position(-1,-1);
         intervention.setCoordinates(p1);
 
         // Génération de la liste des moyens
@@ -44,6 +102,7 @@ public class InterventionRest {
 
         return Response.status(200).entity(""+res.getId()).build();
     }
+
 //
 //    @POST
 //    @Path("zoneObject")

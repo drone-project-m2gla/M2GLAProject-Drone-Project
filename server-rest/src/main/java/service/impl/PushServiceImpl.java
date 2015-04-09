@@ -7,6 +7,7 @@ import java.util.List;
 import service.PushService;
 
 import com.google.android.gcm.server.Message.Builder;
+import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Sender;
 
 public class PushServiceImpl implements PushService {
@@ -32,11 +33,11 @@ public class PushServiceImpl implements PushService {
 		registersClient.remove(idClient);
 	}
 	
-	public void sendMessage(String scope, String message) throws IOException {
+	public MulticastResult sendMessage(String scope, String message) throws IOException {
 		Sender sender = new Sender(SERVER_KEY);
 		Builder messageBuilder = new Builder();
 		messageBuilder.addData(scope, message);
 		
-		sender.send(messageBuilder.build(), registersClient, RETRIES);
+		return sender.send(messageBuilder.build(), registersClient, RETRIES);
 	}
 }

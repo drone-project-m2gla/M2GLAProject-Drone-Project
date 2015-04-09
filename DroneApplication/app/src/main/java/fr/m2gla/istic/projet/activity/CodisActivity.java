@@ -5,7 +5,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import fr.m2gla.istic.projet.R;
+import fr.m2gla.istic.projet.context.UserQualification;
 
 /**
  * Created by david on 09/02/15.
@@ -13,9 +23,10 @@ import android.widget.Toast;
 
 public class CodisActivity extends Activity {
 
-    private     String              voie;
-    private     String              codePostal;
-    private     String              ville;
+    private     String                              voie;
+    private     String                              codePostal;
+    private     String                              ville;
+    private     String                              sinistre;
 
 
     @Override
@@ -23,7 +34,7 @@ public class CodisActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_codis);
 
-
+        initializeElement();
     }
 
 
@@ -35,17 +46,20 @@ public class CodisActivity extends Activity {
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
         EditText    textCP = (EditText) findViewById(R.id.getCodePostal);
         EditText    textVille = (EditText) findViewById(R.id.getVille);
+        RadioGroup  sinistreRadioG = (RadioGroup) findViewById(R.id.sinistreRadioGroup);
 
 
         // Reinitialisation des éléments de saisie
         textAddress.setText("");
         textCP.setText("");
         textVille.setText("");
+        sinistreRadioG.check(R.id.SAPRadioButton);
 
         // Initialisation des attributs
         this.voie = "";
         this.codePostal = "";
         this.ville = "";
+        this.sinistre = "";
 
     }
 
@@ -54,7 +68,7 @@ public class CodisActivity extends Activity {
      * Methode de gestion de la fin d'activity
      * @param view : vue courante
      */
-    public void finAjoutIntervention(View view) {
+    public void endAddIntervention(View view) {
 
         // Arret de l'activity ici
         finish();
@@ -64,11 +78,14 @@ public class CodisActivity extends Activity {
      * Methode de gestion de l'ajout d'une intervention
      * @param view : vue courante
      */
-    public void ajoutIntervention (View view) {
+    public void addIntervention (View view) {
 
+        int         radioBSelect;
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
         EditText    textCP = (EditText) findViewById(R.id.getCodePostal);
         EditText    textVille = (EditText) findViewById(R.id.getVille);
+        RadioGroup  sinistreRadioG = (RadioGroup) findViewById(R.id.sinistreRadioGroup);
+        RadioButton selectedRadioB;
 
 
         // Recuperer le nom de la rue
@@ -106,6 +123,22 @@ public class CodisActivity extends Activity {
             this.initializeElement();
             return;
         }
+
+        // Recuperer le sinistre selectionne
+        radioBSelect = sinistreRadioG.getCheckedRadioButtonId();
+        selectedRadioB = (RadioButton) findViewById(radioBSelect);
+        if (selectedRadioB.getText().length() != 0) {
+            this.sinistre = "" + selectedRadioB.getText();
+            Toast.makeText(getApplicationContext(), this.sinistre, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Manque le code sinistre", Toast.LENGTH_SHORT).show();
+            Log.i("ajoutIntervention", "Pas de code sinistre");
+            this.initializeElement();
+            return;
+        }
+
+        // Envoyer les donnees au serveur
 
     }
 
