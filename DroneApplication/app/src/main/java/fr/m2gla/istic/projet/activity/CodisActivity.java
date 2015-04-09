@@ -5,8 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import fr.m2gla.istic.projet.R;
 import fr.m2gla.istic.projet.context.UserQualification;
@@ -17,9 +23,10 @@ import fr.m2gla.istic.projet.context.UserQualification;
 
 public class CodisActivity extends Activity {
 
-    private     String              voie;
-    private     String              codePostal;
-    private     String              ville;
+    private     String                              voie;
+    private     String                              codePostal;
+    private     String                              ville;
+    private     String                              sinistre;
 
 
     @Override
@@ -27,7 +34,7 @@ public class CodisActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_codis);
 
-
+        initializeElement();
     }
 
 
@@ -39,17 +46,20 @@ public class CodisActivity extends Activity {
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
         EditText    textCP = (EditText) findViewById(R.id.getCodePostal);
         EditText    textVille = (EditText) findViewById(R.id.getVille);
+        RadioGroup  sinistreRadioG = (RadioGroup) findViewById(R.id.sinistreRadioGroup);
 
 
         // Reinitialisation des éléments de saisie
         textAddress.setText("");
         textCP.setText("");
         textVille.setText("");
+        sinistreRadioG.check(R.id.SAPRadioButton);
 
         // Initialisation des attributs
         this.voie = "";
         this.codePostal = "";
         this.ville = "";
+        this.sinistre = "";
 
     }
 
@@ -70,9 +80,12 @@ public class CodisActivity extends Activity {
      */
     public void ajoutIntervention (View view) {
 
+        int         radioBSelect;
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
         EditText    textCP = (EditText) findViewById(R.id.getCodePostal);
         EditText    textVille = (EditText) findViewById(R.id.getVille);
+        RadioGroup  sinistreRadioG = (RadioGroup) findViewById(R.id.sinistreRadioGroup);
+        RadioButton selectedRadioB;
 
 
         // Recuperer le nom de la rue
@@ -107,6 +120,20 @@ public class CodisActivity extends Activity {
         else {
             Toast.makeText(getApplicationContext(), "Manque la ville", Toast.LENGTH_SHORT).show();
             Log.i("ajoutIntervention", "Pas de ville");
+            this.initializeElement();
+            return;
+        }
+
+        // Recuperer le sinistre selectionne
+        radioBSelect = sinistreRadioG.getCheckedRadioButtonId();
+        selectedRadioB = (RadioButton) findViewById(radioBSelect);
+        if (selectedRadioB.getText().length() != 0) {
+            this.sinistre = "" + selectedRadioB.getText();
+            Toast.makeText(getApplicationContext(), this.sinistre, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Manque le code sinistre", Toast.LENGTH_SHORT).show();
+            Log.i("ajoutIntervention", "Pas de code sinistre");
             this.initializeElement();
             return;
         }
