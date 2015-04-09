@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.m2gla.istic.projet" >
-
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="17" />
-
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
+    package="fr.m2gla.istic.projet.activity">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -21,56 +13,50 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <permission android:name="fr.m2gla.istic.projet.permission.C2D_MESSAGE"
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="fr.m2gla.istic.projet.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
-
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDcc_OP8XNo9jDmH5ooa_jrcYMPqMao4wY" />
 
         <activity
-            android:name="fr.m2gla.istic.projet.activity.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".UserActivity" />
 
-        <activity android:name="fr.m2gla.istic.projet.activity.InterventionListActivity"></activity>
-        <activity
-            android:name="fr.m2gla.istic.projet.activity.MoyensSupplActivity"
-            android:label="@string/title_activity_moyens_suppl">
-
+        <activity android:name=".MapActivity">
             <intent-filter>
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="fr.m2gla.istic.projet.activity.MapActivity">
-            <intent-filter>
-                <action android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name="fr.m2gla.istic.projet.activity.SVGActivity" />
-        <activity android:name="fr.m2gla.istic.projet.activity.CodisActivity" />
+        <activity android:name=".SVGActivity" />
+        <activity android:name=".CodisActivity" />
 
         <receiver
             android:name="fr.m2gla.istic.projet.receiver.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="fr.m2gla.istic.projet" />
             </intent-filter>
         </receiver>
 
         <service android:name="fr.m2gla.istic.projet.intent.GcmIntentService" />
+
     </application>
 
 </manifest>
