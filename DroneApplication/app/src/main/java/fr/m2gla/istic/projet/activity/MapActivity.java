@@ -24,6 +24,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.InputStream;
+import fr.m2gla.istic.projet.R;
+
 public class MapActivity extends Activity {
 
     public static MapFragment mapFragment;
@@ -62,9 +65,7 @@ public class MapActivity extends Activity {
         return true;
     }
 
-
     // onLocation Changed
-
     public void onLocationChanged() {
         //On affiche dans un Toat la nouvelle Localisation
         final StringBuilder msg = new StringBuilder("lat : ");
@@ -74,24 +75,9 @@ public class MapActivity extends Activity {
 
         Toast.makeText(this, msg.toString(), Toast.LENGTH_SHORT).show();
 
-        //Mise à jour des coordonnées
-        final LatLng latLng = new LatLng(latitude, longitude);
-        try
-        {
-            SVG svg = SVG.getFromResource(this, R.raw.point_revitaillement);
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap bitmapImg = Bitmap.createScaledBitmap(convertToBitmap(drawable,64,64), 100, 100, true);
-            createSymbolMarker(latitude, longitude, bitmapImg);
-        }
-        catch(SVGParseException e)
-        {}
-
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        createSymbolMarker(latitude, longitude);
         //marker.setPosition(latLng);
     }
-
-
 
     public Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
         Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
@@ -103,28 +89,36 @@ public class MapActivity extends Activity {
     }
 
     // methode afficher positions
-    public void createSymbolMarker(double latitude, double longitude, Bitmap image) {
+    public void createSymbolMarker(double latitude, double longitude) {
+        try {
+            //Mise à jour des coordonnées
+            final LatLng latLng = new LatLng(latitude, longitude);
 
+            InputStream is = getApplicationContext().getResources().openRawResource(R.raw.colonne_incendie_active);
+            //SVG svg = SVG.getFromResource(this, R.raw.point_ravitaillement);
 
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap bmp = Bitmap.createBitmap(50, 30, conf);
-        Canvas canvas = new Canvas(bmp);
+            SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, "ABC", "DEF", "0000FF"));
+            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+            Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 100, 100, true);
+            Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+            Bitmap bmp = Bitmap.createBitmap(50, 50, conf);
+            Canvas canvas = new Canvas(bmp);
 
-        Paint color = new Paint();
-        color.setTextSize(6);
-        color.setColor(Color.WHITE);
+            Paint color = new Paint();
+            color.setTextSize(6);
+            color.setColor(Color.WHITE);
 
+            canvas.drawBitmap(Bitmap.createScaledBitmap(image, 50, 50, true), 0, 0, color);
 
-        canvas.drawBitmap(Bitmap.createScaledBitmap(image, 50, 30, true), 0, 0, color);
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(latitude, longitude))
+                    .icon(BitmapDescriptorFactory.fromBitmap(bmp))
+                    .anchor(0.5f, 1)).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(latitude, longitude))
-                .icon(BitmapDescriptorFactory.fromBitmap(bmp))
-                .anchor(0.5f, 1)).showInfoWindow();
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        }
+        catch(SVGParseException e){}
     }
-
-
-
 
 /*
     public void onResume() {

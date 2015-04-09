@@ -25,13 +25,11 @@ public class SVGActivity extends Activity {
         imageView1 = (ImageView) findViewById(R.id.imageView1);
 
         imageView1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        try
-        {
-            SVG svg = SVG.getFromResource(this, R.raw.point_revitaillement);
+        try {
+            SVG svg = SVG.getFromResource(this, R.raw.point_ravitaillement);
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             imageView1.setImageDrawable(drawable);
         }
-        catch(SVGParseException e)
-        {}
+        catch(SVGParseException e) {}
     }
 }
