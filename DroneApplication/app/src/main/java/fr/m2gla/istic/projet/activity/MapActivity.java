@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import fr.m2gla.istic.projet.R;
+
 public class MapActivity extends Activity {
 
     public static MapFragment mapFragment;
