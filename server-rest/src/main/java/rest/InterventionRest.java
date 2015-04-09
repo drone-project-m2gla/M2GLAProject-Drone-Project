@@ -43,6 +43,30 @@ public class InterventionRest {
     }
 
 
+    @POST
+    @Path("/{id}/moyen")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
+
+        InterventionDAO iD = new InterventionDAO();
+        Mean res = null;
+        iD.connect();
+        Intervention intervention = iD.getById(id);
+        List<Mean> meanList = intervention.getMeansList();
+
+        for (Mean m : meanList) {
+            if (m.getId() == mean.getId()) {
+                m.setCoordinates(mean.getCoordinates());
+                res = m;
+            }
+        }
+        iD.update(intervention);
+        iD.disconnect();
+        return res;
+
+    }
+
 
     @GET
     @Path("/{id}/moyen")
@@ -128,11 +152,6 @@ public class InterventionRest {
 //        return Response.status(200).entity("Le nom de la zone est : " + zone.getLatitude()).build();
 //    }
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String sayPlainTextHello() {
-        return "Hello Jersey";
-    }
 
 
 }

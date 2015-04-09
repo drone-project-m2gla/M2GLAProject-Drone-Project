@@ -51,6 +51,10 @@ public class Mean extends AbstractEntity{
         return isInPosition;
     }
 
+    public boolean getIsInPosition() {
+        return isInPosition;
+    }
+
     public void setInPosition(boolean isInPosition) {
         this.isInPosition = isInPosition;
     }
