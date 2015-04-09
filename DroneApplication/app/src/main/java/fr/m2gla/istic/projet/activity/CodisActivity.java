@@ -68,7 +68,7 @@ public class CodisActivity extends Activity {
      * Methode de gestion de la fin d'activity
      * @param view : vue courante
      */
-    public void finAjoutIntervention(View view) {
+    public void endAddIntervention(View view) {
 
         // Arret de l'activity ici
         finish();
@@ -78,7 +78,7 @@ public class CodisActivity extends Activity {
      * Methode de gestion de l'ajout d'une intervention
      * @param view : vue courante
      */
-    public void ajoutIntervention (View view) {
+    public void addIntervention (View view) {
 
         int         radioBSelect;
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
@@ -137,6 +137,8 @@ public class CodisActivity extends Activity {
             this.initializeElement();
             return;
         }
+
+        // Envoyer les donnees au serveur
 
     }
 

@@ -183,18 +183,34 @@ public class MainActivity extends Activity {
      * @param -
      */
     private void    postOkLoginAction() {
+        Intent  intent;
+
 
         if (this.userQualification == UserQualification.CODIS) {
 
             // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-            Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
+            intent = new Intent(getApplicationContext(), CodisActivity.class);
 
-            Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Debut", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "postLoginAction() : " + "CODIS", Toast.LENGTH_SHORT).show();
 
             // Lancement de l'activité, suivante
             startActivity(intent);
 
         }
+        else {
+
+            // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
+            intent = new Intent(getApplicationContext(), InterventionListActivity.class);
+
+            Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Sapeur", Toast.LENGTH_SHORT).show();
+
+        }
+
+        // Lancement de l'activité, suivante
+        startActivity(intent);
+
+
+        postLoginAction();
 
     }
 
@@ -220,15 +236,15 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), "Status de ligne : " + response.getStatusLine().getStatusCode(), Toast.LENGTH_SHORT).show();
             Log.i("HttpResponse", "Status = " + response.getStatusLine().getStatusCode());
 
-            postLoginAction();
             if (response.getStatusLine().getStatusCode() != GeneralConstants.HTTP_RESP_OK) {
                 // Echec d'identification. Retours à l'activity principale
                 Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
+                postLoginAction();
                 return;
             }
 
             // Demander la prise en compte de la validation de l'identification
-            Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
             postOkLoginAction();
 
         }
