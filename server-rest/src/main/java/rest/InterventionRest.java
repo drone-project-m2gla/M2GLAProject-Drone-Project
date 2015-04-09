@@ -5,12 +5,10 @@ import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
 import entity.Position;
-import entity.Zone;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 /**
@@ -24,9 +22,32 @@ public class InterventionRest {
 
 
     @GET
+    @Path("/{id}/moyen/{idmean}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Mean getMeanForIntervention(@PathParam("id") long id,@PathParam("idmean") long idmean) {
+
+        InterventionDAO iD = new InterventionDAO();
+        Mean res = null;
+        iD.connect();
+        List<Mean> meanList = iD.getById(id).getMeansList();
+        iD.disconnect();
+
+        for (Mean mean : meanList) {
+            if (mean.getId() == idmean) {
+                res = mean;
+            }
+        }
+
+        return res;
+
+    }
+
+
+
+    @GET
     @Path("/{id}/moyen")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<Mean> getMeanForIntervention(@PathParam("id") long id) {
+    public List<Mean> getMeanListForIntervention(@PathParam("id") long id) {
 
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
@@ -45,7 +66,6 @@ public class InterventionRest {
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
         Intervention res = iD.getById(id);
-        System.out.println("-------------->"+res);
         iD.disconnect();
         return res;
 
