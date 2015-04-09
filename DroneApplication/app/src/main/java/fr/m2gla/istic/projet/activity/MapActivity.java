@@ -2,7 +2,6 @@ package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,18 +16,16 @@ import android.widget.Toast;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.InputStream;
+import fr.m2gla.istic.projet.R;
 
 public class MapActivity extends Activity {
 
@@ -57,6 +54,7 @@ public class MapActivity extends Activity {
         //location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         onLocationChanged();
+
         //myView = (MyView)findViewById(R.id.myview);
     }
 
@@ -76,6 +74,7 @@ public class MapActivity extends Activity {
         msg.append(longitude);
 
         Toast.makeText(this, msg.toString(), Toast.LENGTH_SHORT).show();
+
         createSymbolMarker(latitude, longitude);
         //marker.setPosition(latLng);
     }
