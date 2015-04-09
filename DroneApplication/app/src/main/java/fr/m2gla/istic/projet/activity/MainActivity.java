@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
      * Methode d'initialisation des elements
      * @param -
      */
-    private void    initializedElement() {
+    private void initializeElement() {
         EditText        textLogin = (EditText) findViewById(R.id.loginGet);
         EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
         RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
@@ -87,6 +87,11 @@ public class MainActivity extends Activity {
         textPassword.setText("");
         roleRadioG.check(R.id.userRadioButton);
 
+        // Initialisation des attributs
+        this.loginName = "";
+        this.loginPassword = "";
+        this.userQualification = UserQualification.SIMPLEUSER;
+
     }
 
     /**
@@ -95,7 +100,7 @@ public class MainActivity extends Activity {
      */
     public void finMain(View view) {
 
-        // arret de l'activity ici
+        // Arret de l'activity ici
         finish();
     }
 
@@ -119,10 +124,9 @@ public class MainActivity extends Activity {
         else {
             Toast.makeText(getApplicationContext(), "Manque le login", Toast.LENGTH_SHORT).show();
             Log.i("actiValider", "Pas de Login");
-            this.initializedElement();
+            this.initializeElement();
             return;
         }
-        Log.i("actiValider", "PRE sendLoginAsync");
 
 
         // Recuperer le mot de passe
@@ -178,13 +182,15 @@ public class MainActivity extends Activity {
      * @param -
      */
     private void    postOkLoginAction() {
-        // creation d'un intent pour appeler une autre activité (SecondaryActivity)
-        Intent intent = new Intent(getApplicationContext(),UserActivity.class);
+
+        // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
+        Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
 
         Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Debut", Toast.LENGTH_SHORT).show();
 
-        // lancement de l'activité, suivante
-        // startActivity(intent);
+        // Lancement de l'activité, suivante
+        startActivity(intent);
+
     }
 
     /**
@@ -192,7 +198,7 @@ public class MainActivity extends Activity {
      * @param -
      */
     private void    postLoginAction() {
-        this.initializedElement();
+        this.initializeElement();
     }
 
 
