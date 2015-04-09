@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -49,8 +53,6 @@ public class MapActivity extends Activity {
 
         onLocationChanged();
 
-
-
         //myView = (MyView)findViewById(R.id.myview);
     }
 
@@ -75,16 +77,34 @@ public class MapActivity extends Activity {
 
         //Mise à jour des coordonnées
         final LatLng latLng = new LatLng(latitude, longitude);
-        Bitmap bitmapImg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.point_revitaillement), 100, 75, true);
-        createMarketOfPerson(latitude, longitude, bitmapImg);
+        try
+        {
+            SVG svg = SVG.getFromResource(this, R.raw.point_revitaillement);
+            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+            Bitmap bitmapImg = Bitmap.createScaledBitmap(convertToBitmap(drawable,64,64), 100, 100, true);
+            createSymbolMarker(latitude, longitude, bitmapImg);
+        }
+        catch(SVGParseException e)
+        {}
+
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         //marker.setPosition(latLng);
     }
 
 
 
+    public Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
+        Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(mutableBitmap);
+        drawable.setBounds(0, 0, widthPixels, heightPixels);
+        drawable.draw(canvas);
+
+        return mutableBitmap;
+    }
+
     // methode afficher positions
-    public void createMarketOfPerson(double latitude, double longitude, Bitmap image) {
+    public void createSymbolMarker(double latitude, double longitude, Bitmap image) {
 
 
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
