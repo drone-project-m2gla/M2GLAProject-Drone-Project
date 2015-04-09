@@ -28,5 +28,6 @@
     <string name="sinitre_rd_code_SAP">SAP</string>
 
     <string name="intervention_list_text">Intervention en cours</string>
+    <string name="add_new_mean">Ajout de moyens supp.</string>
 
 </resources>
