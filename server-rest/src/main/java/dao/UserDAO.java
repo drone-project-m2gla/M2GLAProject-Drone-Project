@@ -45,8 +45,7 @@ public class UserDAO extends AbstractDAO<User> {
         JsonObject jsonUser = JsonObject.empty()
                 .put("properties", properties);
 
-        JsonDocument doc = JsonDocument.create("" + u.getUsername(), jsonUser);
-        System.out.println(jsonUser);
+        JsonDocument doc = JsonDocument.create("" + u.getId(), jsonUser);
         return doc;
     }
 }

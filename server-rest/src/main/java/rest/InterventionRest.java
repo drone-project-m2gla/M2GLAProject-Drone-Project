@@ -3,6 +3,8 @@ package rest;
 
 import dao.InterventionDAO;
 import entity.Intervention;
+import entity.Position;
+import entity.Zone;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -10,6 +12,8 @@ import javax.ws.rs.core.Response;
 
 /**
  * Created by arno on 12/02/15.
+ *
+ * Service rest du type intervention
  */
 @Path("/intervention")
 public class InterventionRest {
@@ -23,14 +27,22 @@ public class InterventionRest {
     }
 
     @POST
-    @Path("/")
+    @Path("")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response setIntervention(Intervention intervention) {
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
-        Intervention res= iD.create(intervention);
+
+        // Code temporaire a remplacé par service google pour retrouver les coordonnées GPS
+        Position p1 = new Position(-100,-100);
+        intervention.setCoordinates(p1);
+
+        // Génération de la liste des moyens
+        intervention.generateMeanList();
+        Intervention res = iD.create(intervention);
         iD.disconnect();
-        return Response.status(200).entity("L'intervation : " + res.getId() + "<BR>" + res.toString()).build();
+
+        return Response.status(200).entity(""+res.getId()).build();
     }
 //
 //    @POST
