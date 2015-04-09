@@ -2,7 +2,6 @@ package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,16 +12,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
+import fr.m2gla.istic.projet.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
@@ -147,6 +144,12 @@ public class MainActivity extends Activity {
 
         // Demander l'envoi des éléments de connexion au serveur
         sendLoginAsync();
+
+        // Lancement d'une tache asynchrone pour envoyer les donnees de connexion au serveur
+        // new SendLoginAsync().execute();
+
+        PushServiceImpl.getInstance().setContext(getApplicationContext());
+        PushServiceImpl.getInstance().register();
     }
 
 
@@ -175,7 +178,6 @@ public class MainActivity extends Activity {
      * @param -
      */
     private void    postOkLoginAction() {
-
         // creation d'un intent pour appeler une autre activité (SecondaryActivity)
         Intent intent = new Intent(getApplicationContext(),UserActivity.class);
 
@@ -183,7 +185,6 @@ public class MainActivity extends Activity {
 
         // lancement de l'activité, suivante
         // startActivity(intent);
-
     }
 
     /**

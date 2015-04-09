@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 
+import fr.m2gla.istic.projet.R;
+
 public class SVGActivity extends Activity {
     private ImageView imageView1;
 

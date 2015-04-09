@@ -26,18 +26,17 @@ public class InterventionDAO extends AbstractDAO<Intervention>{
     @Override
     protected Intervention jsonDocumentToEntity(JsonDocument jsonDocument) {
         Intervention intervention = new Intervention();
-
         try {
-
             JsonObject content = jsonDocument.content();
             if (Constant.DATATYPE_INTERVENTION.equals(((JsonObject) content.get("properties")).get("datatype"))) {
                 intervention.setId(Long.parseLong(jsonDocument.id()));
                 intervention.setAddress((String) ((JsonObject)content.get("properties")).get("address"));
-                intervention.setPostcode(Integer.parseInt((String) ((JsonObject)content.get("properties")).get("postcode")));
+                intervention.setPostcode( ((JsonObject)content.get("properties")).getInt("postcode"));
                 intervention.setCity((String) ((JsonObject)content.get("properties")).get("city"));
                 intervention.setDisasterCode(DisasterCode.valueOf((String) ((JsonObject)content.get("properties")).get("disasterCode")));
-                intervention.setMeansList(Tools.jsonArrayToMeanList(((JsonObject)content.get("properties")).getArray("meansList")));
+                intervention.setMeansList(Tools.jsonArrayToMeanList((JsonArray) ((JsonObject)content.get("properties")).get("meansList")));
                 intervention.setCoordinates(Tools.jsonArrayToPosition(content.getArray("coordinates")));
+
             } else {
                 throw new IllegalArgumentException();
             }
