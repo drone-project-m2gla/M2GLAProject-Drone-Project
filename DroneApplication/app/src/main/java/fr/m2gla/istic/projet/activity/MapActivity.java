@@ -19,10 +19,8 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-//import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-//import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.io.InputStream;
@@ -36,7 +34,6 @@ public class MapActivity extends Activity {
     //private Location location ;
 
     GoogleMap map;
-    //private Marker marker;
 
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
     // latitude and longitude
@@ -78,23 +75,22 @@ public class MapActivity extends Activity {
 
     // onLocation Changed
     public void onLocationChanged() {
-        //On affiche dans un Toat la nouvelle Localisation
+        //On affiche dans un Toast la nouvelle Localisation
         Toast.makeText(this, "lat : " + latitude + "; lng : " + longitude, Toast.LENGTH_SHORT).show();
 
         Random rnd = new Random();
         for (int i = 0; i < 50; i++) {
-            //Draw a colonne_incendie_active with texts ABC et DEF and blue hex color
-            //createSymbolMarker(latitude, longitude - 0.05, "moyen_intervention_aerien_actif", "ABC", "DEF", "0000FF");
-            latitude += rnd.nextDouble() * 0.008 - 0.004;
-            longitude += rnd.nextDouble() * 0.008 - 0.004;
-
             StringBuilder sb = new StringBuilder();
             for (int j=0; j<7; j++) {
                 sb.append((char)(rnd.nextInt(25)+65));
             }
+
+            //Draw a colonne_incendie_active with random texts and color
             createSymbolMarker(latitude, longitude, "colonne_incendie_active",
                     sb.substring(0, 3), sb.substring(3, 6),
                     Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
+            latitude += rnd.nextDouble() * 0.008 - 0.004;
+            longitude += rnd.nextDouble() * 0.008 - 0.004;
         }
     }
 
@@ -186,26 +182,19 @@ public class MapActivity extends Activity {
         }
     }
 
-
-
-
     public void onPause() {
         super.onPause();
     }
-
 
     public void abonnementGPS() {
         //On s'abonne
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,999999999,999999999, this);
     }
 
-
     public void desabonnementGPS() {
         //Si le GPS est disponible, on s'y abonne
         locationManager.removeUpdates(this);
     }
-
-
 
     public void onLocationChanged(final Location location) {
         //On affiche dans un Toat la nouvelle Localisation
@@ -224,12 +213,8 @@ public class MapActivity extends Activity {
         //marker.setPosition(latLng);
     }
 
-
-
-        // methode afficher positions
+    // methode afficher positions
     public void createMarketOfPerson(double latitude, double longitude, Bitmap image, String email) {
-
-
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bmp = Bitmap.createBitmap(50, 30, conf);
         Canvas canvas = new Canvas(bmp);
@@ -253,19 +238,12 @@ public class MapActivity extends Activity {
 
     }
 
-
-
-
     public void onProviderDisabled(final String provider) {
         //Si le GPS est désactivé on se désabonne
         if("gps".equals(provider)) {
             desabonnementGPS();
         }
     }
-
-
-
-
 
     public void onProviderEnabled(final String provider) {
         //Si le GPS est activé on s'abonne
