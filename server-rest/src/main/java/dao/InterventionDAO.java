@@ -43,6 +43,7 @@ public class InterventionDAO extends AbstractDAO<Intervention>{
         }
         catch(Throwable t)
         {
+            t.printStackTrace();
             intervention = null;
         }
         return intervention;

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import fr.m2gla.istic.projet.R;
 
 public class MoyensSupplActivity extends Activity {
 
