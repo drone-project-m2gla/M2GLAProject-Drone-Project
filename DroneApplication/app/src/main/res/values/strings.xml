@@ -28,5 +28,7 @@
     <string name="sinitre_rd_code_SAP">SAP</string>
 
     <string name="intervention_list_text">Intervention en cours</string>
+    <string name="button_add">Ajouter</string>
+    <string name="button_refresh">Raffraichir</string>
 
 </resources>

@@ -187,24 +187,18 @@ public class MainActivity extends Activity {
 
 
         if (this.userQualification == UserQualification.CODIS) {
-
-            // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-            intent = new Intent(getApplicationContext(), CodisActivity.class);
-
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "CODIS", Toast.LENGTH_SHORT).show();
-
-            // Lancement de l'activité, suivante
-            startActivity(intent);
-
         }
         else {
-
-            // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-            intent = new Intent(getApplicationContext(), InterventionListActivity.class);
-
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Sapeur", Toast.LENGTH_SHORT).show();
-
         }
+
+        // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
+        intent = new Intent(getApplicationContext(), InterventionListActivity.class);
+
+        // ajout de données supplémentaires dans l'intent
+        intent.putExtra(GeneralConstants.REF_ACT_ROLE, "" + this.userQualification);
+
 
         // Lancement de l'activité, suivante
         startActivity(intent);
