@@ -27,43 +27,67 @@ public class InterventionListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intervention_list);
-/*
-        //Récupération de la listview créée dans le fichier clients.xml
-        this.idList = (ListView) findViewById(mmm.m2gla.istic.fr.droneapplication.R.id.idListView);
 
-        //Création d'une instance de la classe DAO (PersoInfoDataDAO)
-        PersoInfoDataDAO clientDAO = new PersoInfoDataDAO(this);
+        //Récupération de la listview créée dans le fichier clients.xml
+        this.idList = (ListView) findViewById(R.id.idListView);
 
         //Création de la ArrayList qui nous permettra de remplire la listView
         this.listItem = new ArrayList<HashMap<String, String>>();
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
-        this.mSchedule = new SimpleAdapter(this.getBaseContext(), this.listItem, mmm.m2gla.istic.fr.droneapplication.R.layout.disp_item,
-//                new String[] {"nom", "prenom, dateNais"},
-//                new int[] {R.id.nomElem, R.id.prenomElem, R.id.dateNaisElem});
-                new String[] {"nom", "prenom", "dateNais", "ville"},
-                new int[] {mmm.m2gla.istic.fr.droneapplication.R.id.nomElem, mmm.m2gla.istic.fr.droneapplication.R.id.prenomElem, mmm.m2gla.istic.fr.droneapplication.R.id.dateNaisElem, mmm.m2gla.istic.fr.droneapplication.R.id.villeElem});
+        this.mSchedule = new SimpleAdapter(this.getBaseContext(), this.listItem, R.layout.disp_intervention,
+                new String[] {"code", "data"},
+                new int[] {R.id.interventionCode, R.id.interventionData});
 
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
 
-//        System.out.println("- TOTO -");
-*/
+        addInterventionInList("1", "Inter1");
+        addInterventionInList("2", "Intervention 2");
+        addInterventionInList("3", "La mienne");
 
     }
 
-    public void finClt(View view) {
+
+    private void addInterventionInList(String code, String data) {
+        // Verifier si une insertion est a faire
+        if ((code == null) || (code.length() <= 0)) {
+            return;
+        }
+
+        //On déclare la HashMap qui contiendra les informations pour un element de la liste
+        HashMap<String, String> map;
+
+        //Création d'une HashMap pour insérer les informations du premier element de notre listView
+        map = new HashMap<String, String>();
+
+        //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put("code", code);
+        //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put("data", data);
+        //enfin on ajoute cette hashMap dans la arrayList
+        listItem.add(map);
+
+        // Mettre a jour la liste d'affichage
+        this.mSchedule.notifyDataSetChanged();
+    }
+
+
+    public void endInterventionSelection(View view) {
         // arret de l'activity ici
         finish();
     }
 
-    public void actiNewClt(View view) {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+    public void interventionSelection(View view) {
+        // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
         //lancement de la seconde activité, en demandant un code retour
-        startActivityForResult(intent, 0);
+        // startActivityForResult(intent, 0);
 
     }
+
+
 /*
     @Override
     public void onActivityResult(int a, int b, Intent retIntent) {
