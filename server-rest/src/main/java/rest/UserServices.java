@@ -26,66 +26,25 @@ public class UserServices {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @POST
     @Path("login")
-    public Response longIn(@FormParam("username") String username, @FormParam("password") String password) {
+    public Response logIn(@FormParam("username") String username, @FormParam("password") String password) {
         dao = new UserDAO();
         dao.connect();
-        Bucket currentBucket = dao.currentBucket;
-        JsonDocument user = currentBucket.get(username);
+        User user = dao.getByUsername(username);
 
         String success = "ERROR";
 
         int status = 401;
         if (user != null) {
             System.out.println("User\t" + user);
-            JsonObject properties = user.content().getObject("properties");
 
-            String passwd = properties.getString("password");
+            String passwd = user.getPassword();
             if (passwd != null && passwd.equals(password)) {
                 status = 200;
                 success = username;
             }
         }
-
         dao.disconnect();
         return Response.status(status).entity(success).build();
-    }
-
-    private void userDesingDoc(Bucket currentBucket) {
-        String view = "function(doc) {\n" +
-                "  if(doc.properties.datatype == \"USER\"){\t\n" +
-                "       \temit([doc.properties.username, doc.properties.password], doc.properties.username);\n" +
-                "  }\n" +
-                "}";
-        List<View> viewArray = new ArrayList<View>();
-        viewArray.add(DefaultView.create("login_view", view));
-        DesignDocument user_design = DesignDocument.create("user_login", viewArray);
-        currentBucket.bucketManager().insertDesignDocument(user_design);
-    }
-
-    private void loginView() {
-        dao = new UserDAO();
-        dao.connect();
-        Bucket currentBucket = dao.currentBucket;
-
-        DesignDocument designDoc = currentBucket.bucketManager().getDesignDocument("designDoc");
-
-        String dataType = Constant.DATATYPE_USER;
-
-        // Perform the ViewQuery
-        ViewResult result = currentBucket.query(ViewQuery.from("dev_user", "user_login"));
-
-        // Iterate through the returned ViewRows
-        for (ViewRow row : result) {
-            System.out.println(row);
-        }
-
-//                "function(doc) {\n" +
-//                        "  if(doc.datatype == \"USER\"){\t\n" +
-//                        "       \temit([doc.username, doc.password], doc.username);\n" +
-//                        "  }\n" +
-//                        "}";
-
-        dao.disconnect();
     }
 
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
