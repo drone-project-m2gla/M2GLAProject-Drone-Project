@@ -19,10 +19,10 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
+//import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
+//import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.io.InputStream;
@@ -58,7 +58,7 @@ public class MapActivity extends Activity {
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<>(this, map);
-        mClusterManager.setAlgorithm(new GridBasedAlgorithm<SymbolMarkerClusterItem>());
+        //mClusterManager.setAlgorithm(new GridBasedAlgorithm<SymbolMarkerClusterItem>());
         mClusterManager.setRenderer(new SymbolRendered(this, map, mClusterManager));
 
         // Point the map's listeners at the listeners implemented by the cluster
@@ -168,10 +168,10 @@ public class MapActivity extends Activity {
             markerOptions.icon(item.getIcon());
         }
 
-        @Override
+        /*@Override
         protected boolean shouldRenderAsCluster(Cluster<SymbolMarkerClusterItem> cluster) {
             return cluster.getSize() > 5; // when count of markers is more than 5, render as cluster
-        }
+        }*/
     }
 /*
     public void onResume() {
