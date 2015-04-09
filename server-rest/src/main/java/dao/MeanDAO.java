@@ -55,7 +55,7 @@ public class MeanDAO extends AbstractDAO<Mean>{
     public JsonObject entityToJsonObject(Mean entity) {
         JsonObject properties = JsonObject.create();
         properties.put("datatype", entity.getDataType());
-        properties.put("isInPosition", entity.isInPosition());
+        properties.put("isInPosition", entity.getIsInPosition());
         properties.put("vehicle", entity.getVehicle().toString());
         properties.put("id",entity.getId());
         JsonObject jsonMean = JsonObject.empty()
