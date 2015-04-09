@@ -12,6 +12,7 @@
     <string name="codis_role_rb_text">CODIS</string>
     <string name="user_role_rb_text">Sapeur</string>
     <string name="button_valid">Valider</string>
+    <string name="button_return">Retour</string>
     <string name="button_endmain">Retour</string>
     <string name="title_activity_moyens_suppl">Moyens suppl.</string>
     <string name="hello_world">Hello world!</string>
