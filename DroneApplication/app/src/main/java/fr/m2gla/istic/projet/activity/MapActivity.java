@@ -80,10 +80,10 @@ public class MapActivity extends Activity {
         for (int i = 0; i < 50; i++) {
             //Draw a colonne_incendie_active with texts ABC et DEF and blue hex color
             //createSymbolMarker(latitude, longitude - 0.05, "moyen_intervention_aerien_actif", "ABC", "DEF", "0000FF");
-            latitude = latitude + rnd.nextDouble() * 0.008 - 0.004;
-            longitude = longitude + rnd.nextDouble() * 0.008 - 0.004;
-            createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", "0000FF");
-            //createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", "0000FF");
+            latitude += rnd.nextDouble() * 0.008 - 0.004;
+            longitude += rnd.nextDouble() * 0.008 - 0.004;
+
+            createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
         }
         //marker.setPosition(latLng);
     }
