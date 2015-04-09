@@ -25,7 +25,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.InputStream;
-import fr.m2gla.istic.projet.R;
 
 public class MapActivity extends Activity {
 

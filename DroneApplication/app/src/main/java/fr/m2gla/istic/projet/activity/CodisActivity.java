@@ -5,11 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
-
-import fr.m2gla.istic.projet.R;
-import fr.m2gla.istic.projet.context.UserQualification;
 
 /**
  * Created by david on 09/02/15.
