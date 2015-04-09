@@ -239,8 +239,8 @@ public class MainActivity extends Activity {
             if (response.getStatusLine().getStatusCode() != GeneralConstants.HTTP_RESP_OK) {
                 // Echec d'identification. Retours à l'activity principale
                 Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
-//                postLoginAction();
-//                return;
+                postLoginAction();
+                return;
             }
 
             // Demander la prise en compte de la validation de l'identification
