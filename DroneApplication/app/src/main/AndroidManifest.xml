@@ -23,6 +23,7 @@
 
     <permission android:name="fr.m2gla.istic.projet.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+    <uses-permission android:name="fr.m2gla.istic.projet.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
