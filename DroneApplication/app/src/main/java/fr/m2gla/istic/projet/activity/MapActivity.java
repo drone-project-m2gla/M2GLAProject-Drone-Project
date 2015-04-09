@@ -1,11 +1,8 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.location.Location;
@@ -26,7 +23,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.InputStream;
-import java.lang.reflect.Field;
+import java.util.Random;
 
 import fr.m2gla.istic.projet.R;
 
@@ -78,8 +75,16 @@ public class MapActivity extends Activity {
 
         Toast.makeText(this, msg.toString(), Toast.LENGTH_SHORT).show();
 
-        //Draw a colonne_incendie_active with texts ABC et DEF and blue hex color
-        createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", "0000FF");
+        Random rnd = new Random();
+
+        for (int i = 0; i < 50; i++) {
+            //Draw a colonne_incendie_active with texts ABC et DEF and blue hex color
+            //createSymbolMarker(latitude, longitude - 0.05, "moyen_intervention_aerien_actif", "ABC", "DEF", "0000FF");
+            latitude = latitude + rnd.nextDouble() * 0.008 - 0.004;
+            longitude = longitude + rnd.nextDouble() * 0.008 - 0.004;
+            createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", "0000FF");
+            //createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", "0000FF");
+        }
         //marker.setPosition(latLng);
     }
 
