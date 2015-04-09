@@ -11,8 +11,7 @@ public class Constant {
     public static final String DATATYPE_USER = "USER";
     public static final String DATATYPE_MEAN = "MEAN";
     public static final String DATATYPE_INTERVENTION = "INTERVENTION";
-    public static final String DATATYPE_ICON = "ICON";
-    public static final String DATATYPE_COORDINATED_ICON = "COORDINATED_ICON";
+    public static final String DATATYPE_GEOICON = "GEOICON";
 
 
 
