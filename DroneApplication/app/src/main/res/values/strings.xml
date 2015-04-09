@@ -13,4 +13,7 @@
     <string name="user_role_rb_text">Superviseur</string>
     <string name="button_valid">Valider</string>
     <string name="button_endmain">Retour</string>
+    <string name="title_activity_moyens_suppl">Moyens suppl.</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="valider_moyens_supp">Envoyer les moyens</string>
 </resources>
