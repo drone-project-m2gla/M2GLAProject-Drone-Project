@@ -3,8 +3,6 @@ package fr.m2gla.istic.projet.activity;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.location.Location;
@@ -25,6 +23,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.InputStream;
+import java.util.Random;
+
 import fr.m2gla.istic.projet.R;
 
 public class MapActivity extends Activity {
@@ -67,7 +67,7 @@ public class MapActivity extends Activity {
 
     // onLocation Changed
     public void onLocationChanged() {
-        //On affiche dans un Toat la nouvelle Localisation
+        //On affiche dans un Toast la nouvelle Localisation
         final StringBuilder msg = new StringBuilder("lat : ");
         msg.append(latitude);
         msg.append( "; lng : ");
@@ -75,7 +75,16 @@ public class MapActivity extends Activity {
 
         Toast.makeText(this, msg.toString(), Toast.LENGTH_SHORT).show();
 
-        createSymbolMarker(latitude, longitude);
+        Random rnd = new Random();
+
+        for (int i = 0; i < 50; i++) {
+            //Draw a colonne_incendie_active with texts ABC et DEF and blue hex color
+            //createSymbolMarker(latitude, longitude - 0.05, "moyen_intervention_aerien_actif", "ABC", "DEF", "0000FF");
+            latitude = latitude + rnd.nextDouble() * 0.008 - 0.004;
+            longitude = longitude + rnd.nextDouble() * 0.008 - 0.004;
+            createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", "0000FF");
+            //createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", "0000FF");
+        }
         //marker.setPosition(latLng);
     }
 
@@ -88,32 +97,29 @@ public class MapActivity extends Activity {
         return mutableBitmap;
     }
 
-    // methode afficher positions
-    public void createSymbolMarker(double latitude, double longitude) {
+    /**
+     * Creates a map marker at chosen coordinates using the given resource name, text contents and color.
+     * @param latitude
+     * @param longitude
+     * @param resourceName
+     * @param textContent1
+     * @param textContent2
+     * @param hexaColor
+     */
+    public void createSymbolMarker(double latitude, double longitude, String resourceName, String textContent1, String textContent2, String hexaColor) {
         try {
             //Mise à jour des coordonnées
             final LatLng latLng = new LatLng(latitude, longitude);
-
-            InputStream is = getApplicationContext().getResources().openRawResource(R.raw.colonne_incendie_active);
-            //SVG svg = SVG.getFromResource(this, R.raw.point_ravitaillement);
-
-            SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, "ABC", "DEF", "0000FF"));
+            //InputStream is = getApplicationContext().getResources().openRawResource(R.raw.colonne_incendie_active);
+            InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceName, "raw", getPackageName()));
+            SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 100, 100, true);
-            Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-            Bitmap bmp = Bitmap.createBitmap(50, 50, conf);
-            Canvas canvas = new Canvas(bmp);
-
-            Paint color = new Paint();
-            color.setTextSize(6);
-            color.setColor(Color.WHITE);
-
-            canvas.drawBitmap(Bitmap.createScaledBitmap(image, 50, 50, true), 0, 0, color);
+            Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
 
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(latitude, longitude))
-                    .icon(BitmapDescriptorFactory.fromBitmap(bmp))
-                    .anchor(0.5f, 1)).showInfoWindow();
+                    .icon(BitmapDescriptorFactory.fromBitmap(image))
+                    .anchor(0.5f, 0.5f)).showInfoWindow();
 
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }
