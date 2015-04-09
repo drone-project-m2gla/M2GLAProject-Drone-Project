@@ -81,7 +81,13 @@ public class MapActivity extends Activity {
             latitude += rnd.nextDouble() * 0.008 - 0.004;
             longitude += rnd.nextDouble() * 0.008 - 0.004;
 
-            createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
+            StringBuilder sb = new StringBuilder();
+            for (int j=0; j<7; j++) {
+                sb.append((char)(rnd.nextInt(25)+65));
+            }
+            createSymbolMarker(latitude, longitude, "colonne_incendie_active",
+                    sb.substring(0, 3), sb.substring(3, 6),
+                    Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
         }
     }
 
