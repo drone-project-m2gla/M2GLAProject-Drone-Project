@@ -29,7 +29,14 @@ public class Tools {
         Position p = new Position();
         p.setLatitude((Double) jsonArray.get(0));
         p.setLongitude((Double)jsonArray.get(1));
-        p.setAltitude((Double)jsonArray.get(2));
+
+        if (jsonArray.get(2).equals("NaN")){
+            p.setAltitude(Double.NaN);
+        }
+        else
+        {
+            p.setAltitude((Double)jsonArray.get(2));
+        }
         return p;
     }
 

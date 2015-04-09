@@ -137,6 +137,7 @@ public class MainActivity extends Activity {
             this.loginPassword = "";
         }
 
+        // Recuperer le role
         radioBSelect = roleRadioG.getCheckedRadioButtonId();
 
         if (radioBSelect == R.id.codisRadioButton) {
@@ -183,13 +184,17 @@ public class MainActivity extends Activity {
      */
     private void    postOkLoginAction() {
 
-        // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-        Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
+        if (this.userQualification == UserQualification.CODIS) {
 
-        Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Debut", Toast.LENGTH_SHORT).show();
+            // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
+            Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
 
-        // Lancement de l'activité, suivante
-        startActivity(intent);
+            Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Debut", Toast.LENGTH_SHORT).show();
+
+            // Lancement de l'activité, suivante
+            startActivity(intent);
+
+        }
 
     }
 

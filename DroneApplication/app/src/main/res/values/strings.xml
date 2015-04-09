@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="url_text">URL : </string>
     <string name="url_hint">http://</string>
-    <string name="login_text">Login   :</string>
+    <string name="login_text">Login :</string>
     <string name="login_hint">Identifiant</string>
     <string name="password_text">Password : </string>
     <string name="password_hint">Mot de passe</string>
@@ -17,9 +17,13 @@
     <string name="hello_world">Hello world!</string>
     <string name="valider_moyens_supp">Envoyer les moyens</string>
 
-    <string name="address_text">Adresse   :</string>
+    <string name="address_text">Adresse :</string>
     <string name="address_hint">Rue,Voie, Allée</string>
     <string name="codepostal_hint">Code Postal</string>
     <string name="ville_hint">Ville</string>
+    <string name="sinistreCode_text">Selection du code sinistre :</string>
+    <string name="sinitre_rd_code_AVP">AVP</string>
+    <string name="sinitre_rd_code_FHA">FHA</string>
+    <string name="sinitre_rd_code_SAP">SAP</string>
 
 </resources>

@@ -19,6 +19,7 @@ public class Intervention extends AbstractEntity {
     private String city;
     private DisasterCode disasterCode;
     private List<Mean> meansList;
+    //private List<Mean> meansWaitingForApproval;
     private Position coordinates;
 
     public Intervention(String address, int postcode, String city, DisasterCode disasterCode) {

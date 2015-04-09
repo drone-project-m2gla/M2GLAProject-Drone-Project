@@ -9,8 +9,8 @@ package entity;
 
 import java.util.List;
 
-public class MeanWaitingForApproval {
+public class MeanWaitingForApproval extends Mean {
 
-    private List<Mean> meanList;
+
     private long interventionID;
 }
