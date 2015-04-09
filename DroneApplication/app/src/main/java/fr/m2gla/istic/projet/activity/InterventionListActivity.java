@@ -5,11 +5,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import fr.m2gla.istic.projet.R;
+import fr.m2gla.istic.projet.context.GeneralConstants;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,11 +39,24 @@ public class InterventionListActivity extends Activity {
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
         this.mSchedule = new SimpleAdapter(this.getBaseContext(), this.listItem, R.layout.disp_intervention,
-                new String[] {"code", "data"},
+                new String[] {GeneralConstants.INTER_LIST_ELEM1, GeneralConstants.INTER_LIST_ELEM2},
                 new int[] {R.id.interventionCode, R.id.interventionData});
 
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
+
+        // Ajouter un écouteur sur la selection d'un element de la liste
+        this.idList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HashMap<String, String> map;
+
+                map = (HashMap<String, String>)idList.getItemAtPosition(position);
+
+                Toast.makeText(getApplicationContext(), map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         addInterventionInList("1", "Inter1");
         addInterventionInList("2", "Intervention 2");
@@ -62,9 +78,9 @@ public class InterventionListActivity extends Activity {
         map = new HashMap<String, String>();
 
         //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
-        map.put("code", code);
+        map.put(GeneralConstants.INTER_LIST_ELEM1, code);
         //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
-        map.put("data", data);
+        map.put(GeneralConstants.INTER_LIST_ELEM2, data);
         //enfin on ajoute cette hashMap dans la arrayList
         listItem.add(map);
 

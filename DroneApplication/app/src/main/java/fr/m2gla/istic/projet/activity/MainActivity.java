@@ -183,11 +183,13 @@ public class MainActivity extends Activity {
      * @param -
      */
     private void    postOkLoginAction() {
+        Intent  intent;
+
 
         if (this.userQualification == UserQualification.CODIS) {
 
             // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-            Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
+            intent = new Intent(getApplicationContext(), CodisActivity.class);
 
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "CODIS", Toast.LENGTH_SHORT).show();
 
@@ -198,14 +200,16 @@ public class MainActivity extends Activity {
         else {
 
             // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-            Intent intent = new Intent(getApplicationContext(), InterventionListActivity.class);
+            intent = new Intent(getApplicationContext(), InterventionListActivity.class);
 
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Sapeur", Toast.LENGTH_SHORT).show();
 
-            // Lancement de l'activité, suivante
-            startActivity(intent);
-
         }
+
+        // Lancement de l'activité, suivante
+        startActivity(intent);
+
+
         postLoginAction();
 
     }
