@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import fr.m2gla.istic.projet.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,18 +17,17 @@ import java.util.HashMap;
  * Created by david on 09/02/15.
  */
 
-public class UserActivity  extends Activity {
-/*
+public class InterventionListActivity extends Activity {
+
     private ListView idList;
     private ArrayList<HashMap<String, String>> listItem;
     private SimpleAdapter mSchedule;
-    private PersoInfoDataDAO                    clientDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(mmm.m2gla.istic.fr.droneapplication.R.layout.activity_clients);
-
+        setContentView(R.layout.activity_intervention_list);
+/*
         //Récupération de la listview créée dans le fichier clients.xml
         this.idList = (ListView) findViewById(mmm.m2gla.istic.fr.droneapplication.R.id.idListView);
 
@@ -48,7 +48,7 @@ public class UserActivity  extends Activity {
         this.idList.setAdapter(mSchedule);
 
 //        System.out.println("- TOTO -");
-
+*/
 
     }
 
@@ -64,7 +64,7 @@ public class UserActivity  extends Activity {
         startActivityForResult(intent, 0);
 
     }
-
+/*
     @Override
     public void onActivityResult(int a, int b, Intent retIntent) {
         PersoInfoData persoInfoData;

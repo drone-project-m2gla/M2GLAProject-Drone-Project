@@ -36,7 +36,7 @@
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserActivity"></activity>
+        <activity android:name=".InterventionListActivity"></activity>
         <activity
             android:name=".MoyensSupplActivity"
             android:label="@string/title_activity_moyens_suppl">
