@@ -21,5 +21,6 @@
     <string name="address_hint">Rue,Voie, Allée</string>
     <string name="codepostal_hint">Code Postal</string>
     <string name="ville_hint">Ville</string>
+    <string name="title_activity_test_fragment">TestFragmentActivity</string>
 
 </resources>
