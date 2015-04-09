@@ -1,15 +1,13 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
 
 import com.caverock.androidsvg.SVG;
@@ -17,10 +15,15 @@ import com.caverock.androidsvg.SVGParseException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.io.InputStream;
 import java.util.Random;
@@ -28,13 +31,14 @@ import java.util.Random;
 public class MapActivity extends Activity {
 
     public static MapFragment mapFragment;
-    public static View myView;
 
-    private LocationManager locationManager;
-    private Location location ;
+    //private LocationManager locationManager;
+    //private Location location ;
 
     GoogleMap map;
-    private Marker marker;
+    //private Marker marker;
+
+    private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
     // latitude and longitude
     double latitude = 48.1119800 ;
     double longitude = -1.6742900;
@@ -51,9 +55,18 @@ public class MapActivity extends Activity {
         //locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         //location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        onLocationChanged();
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<>(this, map);
+        mClusterManager.setAlgorithm(new GridBasedAlgorithm<SymbolMarkerClusterItem>());
+        mClusterManager.setRenderer(new SymbolRendered(this, map, mClusterManager));
 
-        //myView = (MyView)findViewById(R.id.myview);
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        map.setOnCameraChangeListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+
+        onLocationChanged();
     }
 
     @Override
@@ -66,15 +79,9 @@ public class MapActivity extends Activity {
     // onLocation Changed
     public void onLocationChanged() {
         //On affiche dans un Toat la nouvelle Localisation
-        final StringBuilder msg = new StringBuilder("lat : ");
-        msg.append(latitude);
-        msg.append( "; lng : ");
-        msg.append(longitude);
-
-        Toast.makeText(this, msg.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "lat : " + latitude + "; lng : " + longitude, Toast.LENGTH_SHORT).show();
 
         Random rnd = new Random();
-
         for (int i = 0; i < 50; i++) {
             //Draw a colonne_incendie_active with texts ABC et DEF and blue hex color
             //createSymbolMarker(latitude, longitude - 0.05, "moyen_intervention_aerien_actif", "ABC", "DEF", "0000FF");
@@ -102,12 +109,12 @@ public class MapActivity extends Activity {
 
     /**
      * Creates a map marker at chosen coordinates using the given resource name, text contents and color.
-     * @param latitude
-     * @param longitude
-     * @param resourceName
-     * @param textContent1
-     * @param textContent2
-     * @param hexaColor
+     * @param latitude latitude from given point
+     * @param longitude longitude from given point
+     * @param resourceName resource name used to choose symbol type
+     * @param textContent1 first text
+     * @param textContent2 second text
+     * @param hexaColor symbol color
      */
     public void createSymbolMarker(double latitude, double longitude, String resourceName, String textContent1, String textContent2, String hexaColor) {
         try {
@@ -118,15 +125,53 @@ public class MapActivity extends Activity {
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
 
-            map.addMarker(new MarkerOptions()
+            /*map.addMarker(new MarkerOptions()
                     .position(new LatLng(latitude, longitude))
-                    .icon(BitmapDescriptorFactory.fromBitmap(image))
-                    .anchor(0.5f, 0.5f)).showInfoWindow();
+                    .icon(icon).anchor(0.5f, 0.5f)).showInfoWindow();*/
 
+            SymbolMarkerClusterItem offsetItem = new SymbolMarkerClusterItem(latitude, longitude, icon);
+            mClusterManager.addItem(offsetItem);
+            mClusterManager.cluster();
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }
-        catch(SVGParseException e){}
+        catch(SVGParseException ignored){}
+    }
+
+    public class SymbolMarkerClusterItem implements ClusterItem {
+        private final LatLng mPosition;
+        private BitmapDescriptor icon;
+        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon) {
+            mPosition = new LatLng(lat, lng);
+            this.icon = icon;
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return mPosition;
+        }
+
+        public BitmapDescriptor getIcon(){
+            return icon;
+        }
+    }
+
+    public class SymbolRendered extends DefaultClusterRenderer<SymbolMarkerClusterItem> {
+        public SymbolRendered(Context context, GoogleMap map, ClusterManager<SymbolMarkerClusterItem> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(SymbolMarkerClusterItem item,
+                                                   MarkerOptions markerOptions) {
+            markerOptions.icon(item.getIcon());
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster<SymbolMarkerClusterItem> cluster) {
+            return cluster.getSize() > 5; // when count of markers is more than 5, render as cluster
+        }
     }
 /*
     public void onResume() {
