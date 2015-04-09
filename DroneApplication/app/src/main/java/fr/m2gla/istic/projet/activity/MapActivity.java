@@ -25,8 +25,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.InputStream;
 import java.util.Random;
 
-import fr.m2gla.istic.projet.R;
-
 public class MapActivity extends Activity {
 
     public static MapFragment mapFragment;
@@ -67,7 +65,7 @@ public class MapActivity extends Activity {
 
     // onLocation Changed
     public void onLocationChanged() {
-        //On affiche dans un Toast la nouvelle Localisation
+        //On affiche dans un Toat la nouvelle Localisation
         final StringBuilder msg = new StringBuilder("lat : ");
         msg.append(latitude);
         msg.append( "; lng : ");
@@ -85,7 +83,6 @@ public class MapActivity extends Activity {
 
             createSymbolMarker(latitude, longitude, "colonne_incendie_active", "ABC", "DEF", Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
         }
-        //marker.setPosition(latLng);
     }
 
     public Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
@@ -125,7 +122,6 @@ public class MapActivity extends Activity {
         }
         catch(SVGParseException e){}
     }
-
 /*
     public void onResume() {
         super.onResume();

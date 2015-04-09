@@ -5,17 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import fr.m2gla.istic.projet.R;
-import fr.m2gla.istic.projet.context.UserQualification;
 
 /**
  * Created by david on 09/02/15.
@@ -68,7 +60,7 @@ public class CodisActivity extends Activity {
      * Methode de gestion de la fin d'activity
      * @param view : vue courante
      */
-    public void finAjoutIntervention(View view) {
+    public void endAddIntervention(View view) {
 
         // Arret de l'activity ici
         finish();
@@ -78,7 +70,7 @@ public class CodisActivity extends Activity {
      * Methode de gestion de l'ajout d'une intervention
      * @param view : vue courante
      */
-    public void ajoutIntervention (View view) {
+    public void addIntervention (View view) {
 
         int         radioBSelect;
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
@@ -137,6 +129,8 @@ public class CodisActivity extends Activity {
             this.initializeElement();
             return;
         }
+
+        // Envoyer les donnees au serveur
 
     }
 

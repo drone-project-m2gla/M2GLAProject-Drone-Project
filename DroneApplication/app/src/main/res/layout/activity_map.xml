@@ -1,25 +1,36 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="fr.m2gla.istic.projet.activity.MapActivity">
 
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight=".2"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
         <fragment
-            android:id="@+id/map"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            class="com.google.android.gms.maps.MapFragment" />
+            android:layout_width="wrap_content"
+            android:layout_weight=".8"
+            android:layout_height="0dp"
+            class="fr.m2gla.istic.projet.fragments.MoyensInitFragment"
+            android:id="@+id/fragment_moyens_init" />
 
-    </FrameLayout>
-    <FrameLayout android:layout_width="match_parent"
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_weight=".2"
+            android:layout_height="0dp"
+            class="fr.m2gla.istic.projet.fragments.MoyensSuppFragment"
+            android:id="@+id/fragment_moyens_supp" />
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="0dp"
+        android:layout_weight=".8"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent">
-
-    </FrameLayout>
-
-
-
-</RelativeLayout>
+        class="com.google.android.gms.maps.MapFragment" />
+</LinearLayout>
