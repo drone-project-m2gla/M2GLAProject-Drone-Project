@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 
+import fr.m2gla.istic.projet.R;
+
 public class SVGActivity extends Activity {
     private ImageView imageView1;
 
@@ -23,13 +25,11 @@ public class SVGActivity extends Activity {
         imageView1 = (ImageView) findViewById(R.id.imageView1);
 
         imageView1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        try
-        {
-            SVG svg = SVG.getFromResource(this, R.raw.point_revitaillement);
+        try {
+            SVG svg = SVG.getFromResource(this, R.raw.point_ravitaillement);
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             imageView1.setImageDrawable(drawable);
         }
-        catch(SVGParseException e)
-        {}
+        catch(SVGParseException e) {}
     }
 }
