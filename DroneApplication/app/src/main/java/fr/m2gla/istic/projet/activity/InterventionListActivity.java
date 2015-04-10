@@ -32,7 +32,7 @@ import fr.m2gla.istic.projet.fragments.InterventionListFragment;
  */
 
 public class InterventionListActivity extends Activity {
-    private static final String TAG = "InterventionListActivity";
+    private static final String TAG = "InterListActivity";
 
     private UserQualification                   userQualification = UserQualification.SIMPLEUSER;
     private FragmentManager                     fragmentManager;
