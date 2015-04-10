@@ -27,7 +27,6 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
         GeoIcon u = new GeoIcon();
         try {
             JsonObject content = jsonDocument.content();
-            System.out.println("test");
             if (Constant.DATATYPE_GEOICON.equals(((JsonObject)content.get("properties")).get("datatype"))) {
                 u.setId(Long.parseLong(jsonDocument.id()));
                 u.setEntitled(((JsonObject) content.get("properties")).getString("entitled"));
