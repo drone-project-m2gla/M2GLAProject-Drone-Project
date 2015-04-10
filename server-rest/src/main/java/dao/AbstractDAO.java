@@ -97,7 +97,6 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
         ViewResult result = currentBucket.query(ViewQuery.from("designDoc", "by_datatype_" + datatype));
                 // Iterate through the returned ViewRows
         for (ViewRow row : result) {
-            System.out.println(row);
             res.add(jsonDocumentToEntity(row.document()));
         }
         return res;

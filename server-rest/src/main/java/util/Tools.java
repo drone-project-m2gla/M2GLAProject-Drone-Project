@@ -75,8 +75,6 @@ public class Tools {
     public static List<Mean> jsonArrayToMeanList(JsonArray jsonArray) {
         List<Mean> z = new ArrayList<Mean>();
         for(int i=0; i<jsonArray.size();i++) {
-            System.out.println("**");
-            System.out.println(jsonArray.get(i));
             z.add(jsonToMean((JsonObject) jsonArray.get(i)));
 
         }
@@ -101,8 +99,8 @@ public class Tools {
     public static Mean jsonToMean(JsonObject jsonObject) {
         Mean z = new Mean();
         z.setId(((JsonObject) jsonObject.get("properties")).getLong("id"));
-        z.setVehicle(Vehicle.valueOf( ((JsonObject) jsonObject.get("properties")).getString("vehicle")));
-        z.setInPosition( ((JsonObject) jsonObject.get("properties")).getBoolean("isInPosition"));
+        z.setVehicle(Vehicle.valueOf(((JsonObject) jsonObject.get("properties")).getString("vehicle")));
+        z.setInPosition(((JsonObject) jsonObject.get("properties")).getBoolean("inPosition"));
         z.setCoordinates(Tools.jsonArrayToPosition(jsonObject.getArray("coordinates")));
         return z;
     }
