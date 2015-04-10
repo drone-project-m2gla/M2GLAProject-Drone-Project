@@ -50,7 +50,6 @@ public class GeoDroneDAO extends AbstractDAO<GeoDrone>{
                 .put("coordinates", Tools.positionToJsonArray(entity.getCoordinates()))
                 .put("properties", properties);
         JsonDocument doc = JsonDocument.create("" + entity.getId(), jsonGeoImage);
-        System.out.println(jsonGeoImage);
         return doc;
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -20,6 +21,9 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import fr.m2gla.istic.projet.context.GeneralConstants;
+import fr.m2gla.istic.projet.context.UserQualification;
+
 /**
  * Created by david on 09/02/15.
  */
@@ -27,15 +31,15 @@ import java.util.HashMap;
 public class InterventionListActivity extends Activity {
     private static final String TAG = "InterventionListActivity";
 
-    private ListView idList;
-    private ArrayList<HashMap<String, String>> listItem;
-    private SimpleAdapter mSchedule;
+    private ListView                            idList;
+    private ArrayList<HashMap<String, String>>  listItem;
+    private SimpleAdapter                       mSchedule;
+    private UserQualification                   userQualification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intervention_list);
-
 
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
                 new Command() {
@@ -57,6 +61,43 @@ public class InterventionListActivity extends Activity {
                         Log.e(TAG, "connection error");
                     }
                 });
+
+        Intent              intent;
+        String              roleStr;
+        Button              addButton = (Button) findViewById(R.id.addInterButton);
+
+
+        intent = getIntent();
+
+        if (intent != null) {
+            roleStr = intent.getStringExtra(GeneralConstants.REF_ACT_ROLE);
+            Toast.makeText(getApplicationContext(), roleStr, Toast.LENGTH_SHORT).show();
+
+            if (roleStr.compareTo(UserQualification.CODIS.toString()) == 0) {
+                Toast.makeText(getApplicationContext(), " - CODIS - ", Toast.LENGTH_SHORT).show();
+                this.userQualification = UserQualification.CODIS;
+            }
+            else if (roleStr.compareTo(UserQualification.SIMPLEUSER.toString()) == 0) {
+                Toast.makeText(getApplicationContext(), " - Sapeur - ", Toast.LENGTH_SHORT).show();
+                this.userQualification = UserQualification.SIMPLEUSER;
+                addButton.setEnabled(false);
+                addButton.setVisibility(View.INVISIBLE);
+            }
+            else {
+                Toast.makeText(getApplicationContext(), " - Aucun - ", Toast.LENGTH_SHORT).show();
+                this.userQualification = UserQualification.SIMPLEUSER;
+            }
+
+        } else {
+            Toast.makeText(getApplicationContext(), "PAS D'INTENT !", Toast.LENGTH_SHORT).show();
+        }
+
+        refreshList();
+
+    }
+
+
+    private void refreshList() {
 
         //Récupération de la listview créée dans le fichier clients.xml
         this.idList = (ListView) findViewById(R.id.idListView);
@@ -85,10 +126,25 @@ public class InterventionListActivity extends Activity {
             }
         });
 
-        addInterventionInList("1", "Inter1");
-        addInterventionInList("2", "Intervention 2");
-        addInterventionInList("3", "La mienne");
+        addInterventionInList("01", "Inter1");
+        addInterventionInList("02", "Intervention 2");
+        addInterventionInList("03", "La mienne");
+        addInterventionInList("04", "Inter4");
+        addInterventionInList("05", "Intervention 5");
+        addInterventionInList("06", "La leur");
+        addInterventionInList("07", "Inter7");
+        addInterventionInList("08", "Intervention 8");
+        addInterventionInList("09", "La votre");
+        addInterventionInList("10", "Inter10");
+        addInterventionInList("11", "Intervention 11");
+        addInterventionInList("12", "La notre");
 
+    }
+
+
+    public void interventionRefresh(View view) {
+        // Demander le rafraichissement de la liste
+        refreshList();
     }
 
 
@@ -123,11 +179,11 @@ public class InterventionListActivity extends Activity {
 
 
     public void interventionSelection(View view) {
-        // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
 
-        //lancement de la seconde activité, en demandant un code retour
+        // lancement de la seconde activité, en demandant un code retour
         // startActivityForResult(intent, 0);
-
+        startActivity(intent);
     }
 
 

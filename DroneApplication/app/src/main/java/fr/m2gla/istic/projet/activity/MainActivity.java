@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.User;
@@ -28,13 +29,14 @@ import fr.m2gla.istic.projet.service.impl.*;
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
-    private     String              loginName;
-    private     String              loginPassword;
-    private     UserQualification   userQualification = UserQualification.SIMPLEUSER;
+    private String loginName;
+    private String loginPassword;
+    private UserQualification userQualification = UserQualification.SIMPLEUSER;
 
 
     /**
      * Methode Principale
+     *
      * @param savedInstanceState
      */
     @Override
@@ -46,6 +48,7 @@ public class MainActivity extends Activity {
 
     /**
      * Methode de creation du menu de l'application
+     *
      * @param menu : Objet de definition du menu principal
      */
     @Override
@@ -57,11 +60,12 @@ public class MainActivity extends Activity {
 
     /**
      * Methode de gestion de l'usage du menu principal
+     *
      * @param item : Objet de sélection dans le menu principal
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int             id = item.getItemId();
+        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -74,12 +78,13 @@ public class MainActivity extends Activity {
 
     /**
      * Methode d'initialisation des elements
+     *
      * @param -
      */
     private void initializeElement() {
-        EditText        textLogin = (EditText) findViewById(R.id.loginGet);
-        EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
-        RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
+        EditText textLogin = (EditText) findViewById(R.id.loginGet);
+        EditText textPassword = (EditText) findViewById(R.id.passwordGet);
+        RadioGroup roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
 
         // Reinitialisation des éléments de saisie
         textLogin.setText("");
@@ -95,6 +100,7 @@ public class MainActivity extends Activity {
 
     /**
      * Methode de gestion de la fin de l'application
+     *
      * @param view : vue courante
      */
     public void finMain(View view) {
@@ -105,22 +111,22 @@ public class MainActivity extends Activity {
 
     /**
      * Methode de gestion de la validation du login
+     *
      * @param view : vue courante
      */
-    public void actiValider (View view) {
+    public void actiValider(View view) {
 
-        int             radioBSelect;
-        EditText        textLogin = (EditText) findViewById(R.id.loginGet);
-        EditText        textPassword = (EditText) findViewById(R.id.passwordGet);
-        RadioGroup      roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
-        RadioButton     codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
+        int radioBSelect;
+        EditText textLogin = (EditText) findViewById(R.id.loginGet);
+        EditText textPassword = (EditText) findViewById(R.id.passwordGet);
+        RadioGroup roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
+        RadioButton codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
 
 
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
             this.loginName = "" + textLogin.getText();
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), "Manque le login", Toast.LENGTH_SHORT).show();
             Log.i("actiValider", "Pas de Login");
             this.initializeElement();
@@ -131,8 +137,7 @@ public class MainActivity extends Activity {
         // Recuperer le mot de passe
         if (textPassword.getText().length() != 0) {
             this.loginPassword = "" + textPassword.getText();
-        }
-        else {
+        } else {
             this.loginPassword = "";
         }
 
@@ -141,8 +146,7 @@ public class MainActivity extends Activity {
 
         if (radioBSelect == R.id.codisRadioButton) {
             this.userQualification = UserQualification.CODIS;
-        }
-        else if (radioBSelect == R.id.userRadioButton) {
+        } else if (radioBSelect == R.id.userRadioButton) {
             this.userQualification = UserQualification.SIMPLEUSER;
         }
 
@@ -153,14 +157,15 @@ public class MainActivity extends Activity {
 
     /**
      * Methode de gestion de l'envoi des elements de login au serveur
+     *
      * @param -
      */
     private boolean sendLoginAsync() {
 
-        RestService         loginSnd = RestServiceImpl.getInstance();
+        RestService loginSnd = RestServiceImpl.getInstance();
         List<NameValuePair> loginList = new ArrayList<>();
-        NameValuePair       loginPair = new BasicNameValuePair("username", this.loginName);
-        NameValuePair       passwordPair = new BasicNameValuePair("password", this.loginPassword);
+        NameValuePair loginPair = new BasicNameValuePair("username", this.loginName);
+        NameValuePair passwordPair = new BasicNameValuePair("password", this.loginPassword);
 
         User user = new User();
         user.setUsername(this.loginName);
@@ -203,31 +208,25 @@ public class MainActivity extends Activity {
 
     /**
      * Methode d'action post login reussi
+     *
      * @param -
      */
-    private void    postOkLoginAction() {
-        Intent  intent;
+    private void postOkLoginAction() {
+        Intent intent;
 
 
         if (this.userQualification == UserQualification.CODIS) {
-
-            // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-            intent = new Intent(getApplicationContext(), CodisActivity.class);
-
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "CODIS", Toast.LENGTH_SHORT).show();
-
-            // Lancement de l'activité, suivante
-            startActivity(intent);
-
         }
         else {
-
-            // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
-            intent = new Intent(getApplicationContext(), InterventionListActivity.class);
-
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Sapeur", Toast.LENGTH_SHORT).show();
-
         }
+
+        // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
+        intent = new Intent(getApplicationContext(), InterventionListActivity.class);
+
+        // Ajout de données supplémentaires dans l'intent
+        intent.putExtra(GeneralConstants.REF_ACT_ROLE, "" + this.userQualification);
 
         // Lancement de l'activité, suivante
         startActivity(intent);
@@ -238,9 +237,10 @@ public class MainActivity extends Activity {
 
     /**
      * Methode d'action post login
+     *
      * @param -
      */
-    private void    postLoginAction() {
+    private void postLoginAction() {
         this.initializeElement();
     }
 }

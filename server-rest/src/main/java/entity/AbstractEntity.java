@@ -1,5 +1,7 @@
 package entity;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.util.Random;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -16,6 +18,7 @@ public abstract class AbstractEntity {
     /**
      * Type of entity
      */
+    @JsonIgnore
     protected String datatype;
 
     /**
@@ -24,7 +27,7 @@ public abstract class AbstractEntity {
     public AbstractEntity()
     {
         Random random = new Random();
-        id = random.nextLong();
+        id = random.nextInt();
     }
 
     public long getId() {

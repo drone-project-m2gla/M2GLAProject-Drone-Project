@@ -42,9 +42,33 @@ public class InterventionRest {
 
     }
 
+    @POST
+    @Path("/{id}/moyen/enplace")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Mean validateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
+
+        InterventionDAO iD = new InterventionDAO();
+        Mean res = null;
+        iD.connect();
+        Intervention intervention = iD.getById(id);
+        List<Mean> meanList = intervention.getMeansList();
+
+        for (Mean m : meanList) {
+            if (m.getId() == mean.getId()) {
+                m.setInPosition(true);
+                res = m;
+            }
+        }
+        iD.update(intervention);
+        iD.disconnect();
+        return res;
+
+    }
+
 
     @POST
-    @Path("/{id}/moyen")
+    @Path("/{id}/moyen/positionner")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
@@ -58,6 +82,7 @@ public class InterventionRest {
         for (Mean m : meanList) {
             if (m.getId() == mean.getId()) {
                 m.setCoordinates(mean.getCoordinates());
+                m.setInPosition(false);
                 res = m;
             }
         }

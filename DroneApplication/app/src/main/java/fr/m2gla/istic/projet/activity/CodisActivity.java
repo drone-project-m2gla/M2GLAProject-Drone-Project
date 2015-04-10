@@ -5,16 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import fr.m2gla.istic.projet.context.UserQualification;
 
 /**
  * Created by david on 09/02/15.

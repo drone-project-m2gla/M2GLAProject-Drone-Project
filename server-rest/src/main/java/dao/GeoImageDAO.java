@@ -51,7 +51,6 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
                 .put("coordinates", Tools.positionToJsonArray(entity.getCoordinates()))
                 .put("properties", properties);
         JsonDocument doc = JsonDocument.create("" + entity.getId(), jsonGeoImage);
-        System.out.println(jsonGeoImage);
         return doc;
     }
 }

@@ -13,7 +13,7 @@ import util.Tools;
 /**
  * Created by alban on 13/03/15.
  */
-public class InterventionDAO extends AbstractDAO<Intervention>{
+public class InterventionDAO extends AbstractDAO<Intervention> {
 
     /**
      * Contructeur UnityDAO
@@ -68,8 +68,6 @@ public class InterventionDAO extends AbstractDAO<Intervention>{
                 .put("coordinates", Tools.positionToJsonArray(entity.getCoordinates()))
                 .put("properties", properties);
         JsonDocument doc = JsonDocument.create("" + entity.getId(), jsonIntervention);
-        System.out.println(jsonIntervention);
-        System.out.println(entity.getId());
         return doc;
     }
 }
