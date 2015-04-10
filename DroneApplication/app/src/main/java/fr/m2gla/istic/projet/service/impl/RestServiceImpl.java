@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -96,6 +97,11 @@ public class RestServiceImpl implements RestService {
 
                     return result;
                 } catch (HttpClientErrorException e) {
+                    Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                }
+                catch (HttpServerErrorException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
                     error = true;
                     return e;
