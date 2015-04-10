@@ -2,6 +2,8 @@ package entity;
 
 import java.util.Random;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * Created by alban on 10/03/15.
  */
@@ -34,6 +36,7 @@ public abstract class AbstractEntity {
         this.id=id;
     }
 
+    @JsonIgnore
     public String getDataType() {
         return datatype;
     }

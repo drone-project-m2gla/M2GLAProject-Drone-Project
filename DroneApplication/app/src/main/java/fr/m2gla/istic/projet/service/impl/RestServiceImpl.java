@@ -12,6 +12,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,119 +37,123 @@ public class RestServiceImpl implements RestService {
     }
 
     @Override
-    public void get(final String service, final Command callback, final Map<String, String> param) {
+    public <T> void get(final String service, final Map<String, String> param, final Class<T> type, final Command callbackSuccess, final Command callbackError) {
         (new AsyncTask() {
+            private boolean error = false;
+
             @Override
             protected Object doInBackground(Object[] params) {
-                HttpGet httpGet = new HttpGet(addParam(URL + service, param));
+                RestTemplate restTemplate = new RestTemplate();
 
-                return  call(httpGet);
-            }
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-            @Override
-            protected void onPostExecute(Object o) {
-                callback.execute((HttpResponse)o);
-            }
-        }).execute();
-    }
-
-    @Override
-    public void post(final String service, final List<NameValuePair> content, final Command callback, final Map<String, String> param) {
-        (new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                HttpPost httpPost = new HttpPost(addParam(URL + service, param));
+                T result = null;
                 try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(content));
-                } catch (UnsupportedEncodingException e) {
-                    Log.e(TAG, e.getMessage(), e);
+                    if (param == null) {
+                        result = restTemplate.getForObject(URL + service, type);
+                    } else {
+                        result = restTemplate.getForObject(URL + service, type, param);
+                    }
+                } catch (HttpClientErrorException e) {
+                    Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
                 }
 
-                return  call(httpPost);
+                return result;
             }
 
             @Override
             protected void onPostExecute(Object o) {
-                callback.execute((HttpResponse)o);
-            }
-        }).execute();
-    }
-
-    @Override
-    public void put(final String service, final List<NameValuePair> content, final Command callback, final Map<String, String> param) {
-        (new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                HttpPut httpPut = new HttpPut(addParam(URL + service, param));
-                try {
-                    httpPut.setEntity(new UrlEncodedFormEntity(content));
-                } catch (UnsupportedEncodingException e) {
-                    Log.e(TAG, e.getMessage(), e);
+                if (error) {
+                    callbackError.execute(o);
+                } else {
+                    callbackSuccess.execute(o);
                 }
-
-                return  call(httpPut);
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                callback.execute((HttpResponse)o);
             }
         }).execute();
     }
 
     @Override
-    public void delete(final String service, final Command callback, final Map<String, String> param) {
+    public <T> void post(final String service, final Map<String, String> param, final Object content, final Class<T> type, final Command callbackSuccess, final Command callbackError) {
         (new AsyncTask() {
+            private boolean error = false;
+
             @Override
             protected Object doInBackground(Object[] params) {
-                HttpDelete httpGet = new HttpDelete(addParam(URL + service, param));
+                RestTemplate restTemplate = new RestTemplate();
 
-                return  call(httpGet);
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+                try {
+                    T result = null;
+
+                    if (param == null) {
+                        restTemplate.postForObject(URL + service, content, type);
+                    } else {
+                        restTemplate.postForObject(URL + service, content, type, param);
+                    }
+
+                    return result;
+                } catch (HttpClientErrorException e) {
+                    Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                }
             }
 
             @Override
             protected void onPostExecute(Object o) {
-                callback.execute((HttpResponse)o);
+                if (error) {
+                    callbackError.execute(o);
+                } else {
+                    callbackSuccess.execute(o);
+                }
             }
         }).execute();
     }
 
-    /**
-     * Add param of url
-     * @param url Base url
-     * @param param param of query
-     * @return Url with param
-     */
-    private String addParam(String url, Map<String, String> param) {
-        if (param == null || param.isEmpty()) {
-            return url;
-        }
+    @Override
+    public <T> void put(final String service, final Map<String, String> param, final Object content, final Class<T> type, final Command callbackSuccess, final Command callbackError) {
+        (new AsyncTask() {
+            private boolean error = false;
 
-        int i = 0;
-        String result = url + '?';
+            @Override
+            protected Object doInBackground(Object[] params) {
+                //TODO put
+                return null;
+            }
 
-        for (String key : param.keySet()) {
-            result += key + '=' + param.get(key) + ((param.size() < i) ? '&' : "");
-            i++;
-        }
-        return result;
+            @Override
+            protected void onPostExecute(Object o) {
+                if (error) {
+                    callbackError.execute(o);
+                } else {
+                    callbackSuccess.execute(o);
+                }
+            }
+        }).execute();
     }
 
-    /**
-     * Call http method
-     * @param method Method http
-     * @return Response http
-     */
-    private HttpResponse call(HttpRequestBase method) {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+    @Override
+    public <T> void delete(final String service, final Map<String, String> param, final Class<T> type, final Command callbackSuccess, final Command callbackError) {
+        (new AsyncTask() {
+            private boolean error = false;
 
-        HttpResponse httpResponse = null;
-        try {
-            httpResponse = httpClient.execute(method);
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
+            @Override
+            protected Object doInBackground(Object[] params) {
+                //TODO delete
+                return null;
+            }
 
-        return  httpResponse;
+            @Override
+            protected void onPostExecute(Object o) {
+                if (error) {
+                    callbackError.execute(o);
+                } else {
+                    callbackSuccess.execute(o);
+                }
+            }
+        }).execute();
     }
 }

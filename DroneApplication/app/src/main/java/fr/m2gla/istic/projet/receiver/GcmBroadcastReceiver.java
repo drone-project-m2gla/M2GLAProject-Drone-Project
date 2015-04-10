@@ -5,12 +5,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 
 import fr.m2gla.istic.projet.intent.GcmIntentService;
 
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+    private static final String TAG = "GcmBroadcastReceiver";
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(TAG, "Receive message");
+
         // Explicitly specify that GcmIntentService will handle the intent.
         ComponentName comp = new ComponentName(context.getPackageName(),
                 GcmIntentService.class.getName());

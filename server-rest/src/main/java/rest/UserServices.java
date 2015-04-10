@@ -4,6 +4,7 @@ import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.view.*;
+
 import dao.UserDAO;
 import entity.User;
 import util.Constant;
@@ -11,6 +12,9 @@ import util.Constant;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,31 +24,34 @@ import java.util.List;
  */
 @Path("/user")
 public class UserServices {
+	private static final Logger LOGGER = Logger.getLogger(UserServices.class);
 
     private UserDAO dao;
 
-    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @POST
     @Path("login")
-    public Response logIn(@FormParam("username") String username, @FormParam("password") String password) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response logIn(User user) {
         dao = new UserDAO();
         dao.connect();
-        User user = dao.getByUsername(username);
-
-        String success = "ERROR";
+        User userData = dao.getByUsername(user.getUsername());
+        dao.disconnect();
 
         int status = 401;
-        if (user != null) {
-            System.out.println("User\t" + user);
+        if (userData != null) {
+        	LOGGER.info("User " + userData.getUsername());
 
-            String passwd = user.getPassword();
-            if (passwd != null && passwd.equals(password)) {
+            String passwd = userData.getPassword();
+            if (passwd != null && passwd.equals(user.getPassword())) {
+            	LOGGER.info("User " + userData.getUsername() + " connect");
                 status = 200;
-                success = username;
             }
+        } else {
+        	userData = new User();
         }
-        dao.disconnect();
-        return Response.status(status).entity(success).build();
+        
+        return Response.status(status).entity(userData).build();
     }
 
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})

@@ -10,4 +10,7 @@ public interface RestAPI {
 
     // Login block
     public static final String POST_PUSH_LOGIN = "/user/login";
+
+    // Intervention block
+    public static final String GET_ALL_INTERVENTION = "/intervention";
 }

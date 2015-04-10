@@ -26,6 +26,7 @@ public class PushServiceImpl implements PushService {
     private static final String SENDER_ID = "836789679656";
 
     private Context context;
+    private String registeredId;
 
     protected PushServiceImpl() {}
 
@@ -44,8 +45,6 @@ public class PushServiceImpl implements PushService {
 
         if (gcm != null && checkPlayServices()) {
             (new AsyncTask() {
-                private String registeredId;
-
                 @Override
                 protected Object doInBackground(Object[] params) {
                     try {
@@ -67,7 +66,7 @@ public class PushServiceImpl implements PushService {
                         List<NameValuePair> content = new ArrayList<NameValuePair>();
                         content.add(new BasicNameValuePair("id", registeredId));
 
-                        RestServiceImpl.getInstance()
+                        /*RestServiceImpl.getInstance()
                             .post(RestAPI.POST_PUSH_REGISTER, content, new Command() {
                                     @Override
                                     public void execute(HttpResponse response) {
@@ -75,7 +74,46 @@ public class PushServiceImpl implements PushService {
                                             Log.i(TAG, "Erreur register code " + response.getStatusLine().getStatusCode());
                                         }
                                     }
-                                }, null);
+                                }, null);*/
+                    }
+                }
+            }).execute();
+        }
+    }
+
+    @Override
+    public void unregister() {
+        final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+
+        if (gcm != null && checkPlayServices()) {
+            (new AsyncTask() {
+                @Override
+                protected Object doInBackground(Object[] params) {
+                    try {
+                        Log.i(TAG + ".AsyncTask", "Unregistration start");
+                        gcm.unregister();
+                        Log.i(TAG + ".AsyncTask", "Unregistration end");
+                    } catch (IOException e) {
+                        Log.e(TAG + ".AsyncTask", "Error register", e);
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    final Boolean result = (Boolean)o;
+                    if (result) {
+                        /*RestServiceImpl.getInstance()
+                                .delete(RestAPI.DELETE_PUSH_REGISTER.replace(":id", registeredId), new Command() {
+                                    @Override
+                                    public void execute(HttpResponse response) {
+                                        if (response.getStatusLine().getStatusCode() != 204) {
+                                            Log.i(TAG, "Erreur register code " + response.getStatusLine().getStatusCode());
+                                        }
+                                    }
+                                }, null);*/
                     }
                 }
             }).execute();

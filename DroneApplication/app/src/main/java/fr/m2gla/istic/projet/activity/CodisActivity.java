@@ -14,7 +14,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import fr.m2gla.istic.projet.R;
 import fr.m2gla.istic.projet.context.UserQualification;
 
 /**

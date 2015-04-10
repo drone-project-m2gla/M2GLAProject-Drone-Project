@@ -12,22 +12,21 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.m2gla.istic.projet.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
+import fr.m2gla.istic.projet.model.User;
 import fr.m2gla.istic.projet.service.RestService;
 import fr.m2gla.istic.projet.service.impl.*;
 
 public class MainActivity extends Activity {
+    private static final String TAG = "MainActivity";
 
     private     String              loginName;
     private     String              loginPassword;
@@ -149,12 +148,6 @@ public class MainActivity extends Activity {
 
         // Demander l'envoi des éléments de connexion au serveur
         sendLoginAsync();
-
-        // Lancement d'une tache asynchrone pour envoyer les donnees de connexion au serveur
-        // new SendLoginAsync().execute();
-
-        PushServiceImpl.getInstance().setContext(getApplicationContext());
-        PushServiceImpl.getInstance().register();
     }
 
 
@@ -169,11 +162,41 @@ public class MainActivity extends Activity {
         NameValuePair       loginPair = new BasicNameValuePair("username", this.loginName);
         NameValuePair       passwordPair = new BasicNameValuePair("password", this.loginPassword);
 
+        User user = new User();
+        user.setUsername(this.loginName);
+        user.setPassword(this.loginPassword);
 
         loginList.add(loginPair);
         loginList.add(passwordPair);
 
-        loginSnd.post(RestAPI.POST_PUSH_LOGIN, loginList, new LoginResult(), null);
+        loginSnd.post(RestAPI.POST_PUSH_LOGIN, null, user, User.class, new Command() {
+            /**
+             * Success connection
+             * @param response Response object type User
+             */
+            @Override
+            public void execute(Object response) {
+                // register to GCM
+                PushServiceImpl.getInstance().setContext(getApplicationContext());
+                PushServiceImpl.getInstance().register();
+
+                // Demander la prise en compte de la validation de l'identification
+                Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
+                postOkLoginAction();
+            }
+        }, new Command() {
+            /**
+             * Error connection
+             * @param response Response error type HttpClientErrorException
+             */
+            @Override
+            public void execute(Object response) {
+                // Echec d'identification. Retours à l'activity principale
+                Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
+                postLoginAction();
+                return;
+            }
+        });
 
         return true;
     }
@@ -211,7 +234,6 @@ public class MainActivity extends Activity {
 
 
         postLoginAction();
-
     }
 
     /**
@@ -221,33 +243,4 @@ public class MainActivity extends Activity {
     private void    postLoginAction() {
         this.initializeElement();
     }
-
-
-    /**
-     * Classe en patron command pour la prise en compte du resultat de la demande de connexion
-     */
-    private class LoginResult implements Command {
-        /**
-         * Methode d'action command sur resultat de connexion
-         * @param response : réponse de connexion
-         */
-        @Override
-        public void execute(HttpResponse response) {
-            Toast.makeText(getApplicationContext(), "Status de ligne : " + response.getStatusLine().getStatusCode(), Toast.LENGTH_SHORT).show();
-            Log.i("HttpResponse", "Status = " + response.getStatusLine().getStatusCode());
-
-            if (response.getStatusLine().getStatusCode() != GeneralConstants.HTTP_RESP_OK) {
-                // Echec d'identification. Retours à l'activity principale
-                Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
-                postLoginAction();
-                return;
-            }
-
-            // Demander la prise en compte de la validation de l'identification
-//            Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
-            postOkLoginAction();
-
-        }
-    }
-
 }

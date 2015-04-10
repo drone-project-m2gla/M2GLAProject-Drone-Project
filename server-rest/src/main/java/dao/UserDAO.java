@@ -54,8 +54,7 @@ public class UserDAO extends AbstractDAO<User> {
         return doc;
     }
 
-    public User getByUsername(String username)
-    {
+    public User getByUsername(String username) {
         List<User> res = new ArrayList<User>();
         DesignDocument designDoc = currentBucket.bucketManager().getDesignDocument("designDoc");
         createViewGetByUsername();
@@ -63,9 +62,9 @@ public class UserDAO extends AbstractDAO<User> {
         // Iterate through the returned ViewRows
         User resUser = null;
         for (ViewRow row : result) {
-            resUser = jsonDocumentToEntity(row.document());
-            if(username.equals(resUser.getUsername()))
-            {
+            User usertmp = jsonDocumentToEntity(row.document());
+            if(username.equals(usertmp.getUsername())) {
+            	resUser = usertmp;
                 break;
             }
         }
