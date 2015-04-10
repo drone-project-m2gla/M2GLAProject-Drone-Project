@@ -30,7 +30,7 @@ public class Topographie {
         @GET
         @Path("{Long}/{Latitude}/{Rayon}")
         @Produces(MediaType.APPLICATION_JSON)
-        public List<GeoIcon> getCoordinatedIcons(@PathParam("Long") float positionLongitude, @PathParam("Latitude") float positionLatitude, @PathParam("Rayon") Long rayon) {
+        public List<GeoIcon> getCoordinatedIcons(@PathParam("Long") double positionLongitude, @PathParam("Latitude") double positionLatitude, @PathParam("Rayon") long rayon) {
 
           //Position position = new Position(-1.667, 48.100);
           //return Response.status(200).entity("Longitude :" +positionLongitude+ "Latitude"+positionLatitude+"Rayon "+rayon ).build();

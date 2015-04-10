@@ -25,6 +25,7 @@ public class Bdd {
         @Path("/init")
         public Response initBDD() {
 
+         //   List<Long> idCreated = new ArrayList<Long>();
             // Ajout des users
             JSONParser parser = new JSONParser();
 //            try {
@@ -72,17 +73,18 @@ public class Bdd {
                     Position position = new Position((Double) coordinates.get("latitude"),(Double) coordinates.get("longitude"));
                     tmpUser.setPosition(position);
                     tmpUser.setColor((String) userJSON.get("color"));
-                    tmpUser.setTiret(Boolean.parseBoolean((String) userJSON.get("tiret")));
+                    tmpUser.setTiret((Boolean) Boolean.parseBoolean(""+userJSON.get("tiret")));
                     tmpUser.setFirstContent((String) userJSON.get("firstContent"));
                     tmpUser.setSecondContent((String) userJSON.get("secondContent"));
 
                     iconDAO.create(tmpUser);
+                 //   idCreated.add(tmpUser.getId());
                 }
                 iconDAO.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
                 return Response.status(502).build();
             }
-            return Response.status(200).build();
+            return Response.status(200).entity("OK").build();
         }
 }
