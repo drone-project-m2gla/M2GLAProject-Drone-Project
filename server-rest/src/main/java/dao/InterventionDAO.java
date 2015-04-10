@@ -35,6 +35,9 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
                 intervention.setCity((String) ((JsonObject)content.get("properties")).get("city"));
                 intervention.setDisasterCode(DisasterCode.valueOf((String) ((JsonObject)content.get("properties")).get("disasterCode")));
                 intervention.setMeansList(Tools.jsonArrayToMeanList((JsonArray) ((JsonObject)content.get("properties")).get("meansList")));
+                if ((JsonArray) ((JsonObject)content.get("properties")).get("meansXtra") != null) {
+                    intervention.setMeansXtra(Tools.jsonArrayToMeanList((JsonArray) ((JsonObject) content.get("properties")).get("meansXtra")));
+                }
                 intervention.setCoordinates(Tools.jsonArrayToPosition(content.getArray("coordinates")));
 
             } else {
@@ -61,6 +64,10 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
         JsonArray means = JsonArray.create();
         for (Mean m : entity.getMeansList()) {
             means.add(meanDAO.entityToJsonObject(m));
+        }
+        JsonArray meansXtra = JsonArray.create();
+        for (Mean m : entity.getMeansXtra()) {
+            meansXtra.add(meanDAO.entityToJsonObject(m));
         }
         properties.put("meansList",means);
         JsonObject jsonIntervention = JsonObject.empty()

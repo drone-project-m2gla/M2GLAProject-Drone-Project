@@ -3,6 +3,7 @@ package entity;
 import util.Constant;
 import util.MeansByDisasterCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,8 @@ public class Intervention extends AbstractEntity {
     private String city;
     private DisasterCode disasterCode;
     private List<Mean> meansList;
+
+    private List<Mean> meansXtra;
     //private List<Mean> meansWaitingForApproval;
     private Position coordinates;
 
@@ -34,6 +37,7 @@ public class Intervention extends AbstractEntity {
     public Intervention() {
         super();
         this.datatype = Constant.DATATYPE_INTERVENTION;
+        this.meansXtra = new ArrayList<Mean>();
     }
 
     public String getAddress() {
@@ -89,5 +93,16 @@ public class Intervention extends AbstractEntity {
             this.meansList = MeansByDisasterCode.meansByDisasterCode(disasterCode);
         }
     }
+
+
+    public List<Mean> getMeansXtra() {
+        return meansXtra;
+    }
+
+    public void setMeansXtra(List<Mean> meansXtra) {
+        this.meansXtra = meansXtra;
+    }
+
+
 }
 
