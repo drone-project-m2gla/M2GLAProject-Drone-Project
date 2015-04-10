@@ -12,6 +12,16 @@ import util.Tools;
  */
 public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
 
+    /**
+     * Contructeur UnityDAO
+     */
+    public GeoIconDAO()
+    {
+        this.datatype = Constant.DATATYPE_GEOICON;
+    }
+
+
+
     @Override
     protected GeoIcon jsonDocumentToEntity(JsonDocument jsonDocument) {
         GeoIcon u = new GeoIcon();
@@ -23,7 +33,7 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
                 u.setFilename(((JsonObject) content.get("properties")).getString("filename"));
                 u.setPosition(  Tools.jsonArrayToPosition(content.getArray("coordinates")));
                 u.setColor(((JsonObject) content.get("properties")).getString("color"));
-                u.setTiret(((JsonObject) content.get("properties")).getBoolean("tiret"));
+                u.setTiret((Boolean) ((JsonObject) content.get("properties")).getBoolean("tiret"));
                 u.setFirstContent(((JsonObject) content.get("properties")).getString("firstContent"));
                 u.setSecondContent(((JsonObject) content.get("properties")).getString("secondContent"));
 
@@ -31,6 +41,7 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
                 throw new IllegalArgumentException();
             }
         } catch (Throwable t) {
+            t.printStackTrace();
             u = null;
         }
         return u;
@@ -41,12 +52,14 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
 
         JsonObject properties = JsonObject.empty()
                 .put("datatype", u.getDataType())
+                .put("id", u.getId())
                 .put("filename", u.getFilename())
                 .put("entitled", u.getEntitled())
                 .put("firstContent", u.getFirstContent())
                 .put("secondContent", u.getSecondContent())
-                .put("tiret", u.getTiret().toString())
+                .put("tiret", u.getTiret())
                 .put("color", u.getColor())
+
                 ;
 
         JsonObject jsonUser = JsonObject.empty()
