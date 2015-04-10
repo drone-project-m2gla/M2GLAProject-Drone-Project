@@ -31,6 +31,7 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
                 throw new IllegalArgumentException();
             }
         } catch (Throwable t) {
+            t.printStackTrace();
             u = null;
         }
         return u;
@@ -41,12 +42,14 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
 
         JsonObject properties = JsonObject.empty()
                 .put("datatype", u.getDataType())
+                .put("id", u.getId())
                 .put("filename", u.getFilename())
                 .put("entitled", u.getEntitled())
                 .put("firstContent", u.getFirstContent())
                 .put("secondContent", u.getSecondContent())
                 .put("tiret", u.getTiret().toString())
                 .put("color", u.getColor())
+
                 ;
 
         JsonObject jsonUser = JsonObject.empty()
