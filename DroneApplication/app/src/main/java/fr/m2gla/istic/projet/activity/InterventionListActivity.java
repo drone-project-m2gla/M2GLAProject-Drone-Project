@@ -117,9 +117,7 @@ Log.i("InterListActivity", "Debut");
 
         this.listFragment = this.fragmentManager.findFragmentById(R.id.fragment_intervention_list);
 
-        if (this.listFragment == null) Log.i("InterListActivity", "Fragment null");
-
-        this.listFragment.setArguments(bundle);
+        if (this.listFragment == null) Log.i(TAG, "Fragment null");
 
     }
 

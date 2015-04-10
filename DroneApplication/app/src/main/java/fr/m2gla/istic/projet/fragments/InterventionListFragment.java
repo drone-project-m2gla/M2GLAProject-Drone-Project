@@ -85,7 +85,7 @@ public class InterventionListFragment extends Fragment {
         this.listItem = new ArrayList<HashMap<String, String>>();
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
-        this.mSchedule = new SimpleAdapter(this.view.getContext(), this.listItem, R.layout.disp_intervention,
+        this.mSchedule = new SimpleAdapter(getActivity().getApplicationContext(), this.listItem, R.layout.disp_intervention,
                 new String[] {GeneralConstants.INTER_LIST_ELEM1, GeneralConstants.INTER_LIST_ELEM2},
                 new int[] {R.id.interventionCode, R.id.interventionData});
 
