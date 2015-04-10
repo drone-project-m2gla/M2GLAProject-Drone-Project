@@ -96,15 +96,15 @@ public class MapActivity extends Activity {
     // onLocation Changed
     public void onLocationChanged() {
         //On affiche dans un Toast la nouvelle Localisation
-        Toast.makeText(this, "lat : " + latitude + "; lng : " + longitude, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "lat : " + latitude + "; lng : " + longitude, Toast.LENGTH_SHORT).show();
 
         Random rnd = new Random();
         for (int i = 0; i < 50; i++) {
             //Build a 6 character length random uppercase string
             StringBuilder sb = new StringBuilder();
-            for (int j=0; j<7; j++) {
-                sb.append((char)(rnd.nextInt(25)+65));
-            }
+//            for (int j=0; j<7; j++) {
+//                sb.append((char)(rnd.nextInt(25)+65));
+//            }
             //Draw a random symbol with random texts and random color at a random position
             createSymbolMarker(latitude + rnd.nextDouble() * 0.008 - 0.004,
                                longitude + rnd.nextDouble() * 0.008 - 0.004,
