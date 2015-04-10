@@ -42,7 +42,10 @@ public class MapActivity extends Activity {
         secours_a_personnes_actif,
         secours_a_personnes_prevu,
         vehicule_incendie_seul_actif,
-        vehicule_incendie_seul_prevu
+        vehicule_incendie_seul_prevu,
+        danger,
+        etoile,
+        point_sensible
     }
 
     public static MapFragment mapFragment;
@@ -151,8 +154,8 @@ public class MapActivity extends Activity {
                     .position(new LatLng(latitude, longitude))
                     .icon(icon).anchor(0.5f, 0.5f)).showInfoWindow();*/
 
-            SymbolMarkerClusterItem offsetItem = new SymbolMarkerClusterItem(latitude, longitude, icon);
-            mClusterManager.addItem(offsetItem);
+            SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon);
+            mClusterManager.addItem(marketItem);
             mClusterManager.cluster();
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }
@@ -189,6 +192,7 @@ public class MapActivity extends Activity {
         protected void onBeforeClusterItemRendered(SymbolMarkerClusterItem item,
                                                    MarkerOptions markerOptions) {
             markerOptions.icon(item.getIcon());
+            markerOptions.draggable(true);
         }
 
         /*@Override
