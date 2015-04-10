@@ -1,8 +1,5 @@
 package fr.m2gla.istic.projet.service;
 
-import org.apache.http.NameValuePair;
-
-import java.util.List;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
@@ -11,32 +8,40 @@ import fr.m2gla.istic.projet.command.Command;
 public interface RestService {
     /**
      * Send get http method
-     * @param service Service REST call
-     * @param callback Callback after response
-     * @param param (Optional) Param of query
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param type Type of result
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
      */
-    public void get(final String service, final Command callback, final Map<String, String> param);
+    public <T> void get(String service, Map<String, String> param, Class<T> type, Command callbackSuccess, Command callbackError);
     /**
      * Send post http method
-     * @param service Service REST call
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param type Type of result
      * @param content Content of request
-     * @param callback Callback after response
-     * @param param (Optional) Param of query
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
      */
-    public void post(final String service, final List<NameValuePair> content, final Command callback, final Map<String, String> param);
+    public <T> void post(String service, Map<String, String> param, Object content, Class<T> type, Command callbackSuccess, Command callbackError);
     /**
      * Send put http method
-     * @param service Service REST call
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param type Type of result
      * @param content Content of request
-     * @param callback Callback after response
-     * @param param (Optional) Param of query
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
      */
-    public void put(final String service, final List<NameValuePair> content, final Command callback, final Map<String, String> param);
+    public <T> void put(String service, Map<String, String> param, Object content, Class<T> type, Command callbackSuccess, Command callbackError);
     /**
      * Send delete http method
-     * @param service Service REST call
-     * @param callback Callback after response
-     * @param param (Optional) Param of query
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param type Type of result
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
      */
-    public void delete(final String service, final Command callback, final Map<String, String> param);
+    public <T> void delete(String service, Map<String, String> param, Class<T> type, Command callbackSuccess, Command callbackError);
 }

@@ -35,15 +35,16 @@
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InterventionListActivity" />
 
         <activity android:name=".MapActivity">
             <intent-filter>
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".SVGActivity" />
         <activity android:name=".CodisActivity" />
+        <activity android:name=".InterventionListActivity" />
 
         <receiver
             android:name="fr.m2gla.istic.projet.receiver.GcmBroadcastReceiver"

@@ -28,9 +28,10 @@ public class MeanDAO extends AbstractDAO<Mean>{
 
             JsonObject content = jsonDocument.content();
             if (Constant.DATATYPE_MEAN.equals(((JsonObject) content.get("properties")).get("datatype"))) {
-                Mean.setId(Long.parseLong(jsonDocument.id()));
+                //Mean.setId(Long.parseLong(jsonDocument.id()));
+                Mean.setId(((JsonObject) content.get("properties")).getLong("id"));
                 Mean.setVehicle(Vehicle.valueOf((String) ((JsonObject) content.get("properties")).get("vehicle")));
-                Mean.setInPosition((Boolean) ((JsonObject) content.get("properties")).get("isInPosition"));
+                Mean.setInPosition((Boolean) ((JsonObject) content.get("properties")).get("inPosition"));
                 Mean.setCoordinates(Tools.jsonArrayToPosition(content.getArray("coordinates")));
             } else {
                 throw new IllegalArgumentException();
@@ -47,15 +48,13 @@ public class MeanDAO extends AbstractDAO<Mean>{
     protected JsonDocument entityToJsonDocument(Mean entity) {
         JsonObject jsonMean = entityToJsonObject(entity);
         JsonDocument doc = JsonDocument.create("" + entity.getId(), jsonMean);
-        System.out.println(jsonMean);
-        System.out.println(entity.getId());
         return doc;
     }
 
     public JsonObject entityToJsonObject(Mean entity) {
         JsonObject properties = JsonObject.create();
         properties.put("datatype", entity.getDataType());
-        properties.put("isInPosition", entity.getIsInPosition());
+        properties.put("inPosition", entity.getInPosition());
         properties.put("vehicle", entity.getVehicle().toString());
         properties.put("id",entity.getId());
         JsonObject jsonMean = JsonObject.empty()

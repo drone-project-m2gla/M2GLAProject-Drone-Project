@@ -6,5 +6,5 @@ public interface Command {
     /**
      * Code a executer apres le callback http
      */
-    public void execute(HttpResponse response);
+    public void execute(Object response);
 }

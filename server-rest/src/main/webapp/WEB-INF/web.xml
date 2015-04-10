@@ -2,7 +2,11 @@
 
 <web-app>
     <display-name>geopositionRestService</display-name>
-
+    <listener>
+         <listener-class>
+              fr.istic.m2gla.projet.initializer.ProjetServletContextListener
+         </listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>Jersey</servlet-name>
