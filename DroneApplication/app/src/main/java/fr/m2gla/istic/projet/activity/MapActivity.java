@@ -28,6 +28,23 @@ import java.util.Random;
 
 public class MapActivity extends Activity {
 
+    public enum Symbols{
+        colonne_incendie_active,
+        groupe_incendie_actif,
+        moyen_intervention_aerien_actif,
+        moyen_intervention_aerien_prevu,
+        pc_colonne_deux_fonctions_actif,
+        pc_site,
+        point_ravitaillement,
+        poste_commandement_prevu,
+        prise_eau_non_perenne,
+        prise_eau_perenne,
+        secours_a_personnes_actif,
+        secours_a_personnes_prevu,
+        vehicule_incendie_seul_actif,
+        vehicule_incendie_seul_prevu
+    }
+
     public static MapFragment mapFragment;
 
     //private LocationManager locationManager;
@@ -80,20 +97,27 @@ public class MapActivity extends Activity {
 
         Random rnd = new Random();
         for (int i = 0; i < 50; i++) {
+            //Build a 6 character length random uppercase string
             StringBuilder sb = new StringBuilder();
             for (int j=0; j<7; j++) {
                 sb.append((char)(rnd.nextInt(25)+65));
             }
-
-            //Draw a colonne_incendie_active with random texts and color
-            createSymbolMarker(latitude, longitude, "colonne_incendie_active",
-                    sb.substring(0, 3), sb.substring(3, 6),
-                    Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
-            latitude += rnd.nextDouble() * 0.008 - 0.004;
-            longitude += rnd.nextDouble() * 0.008 - 0.004;
+            //Draw a random symbol with random texts and random color at a random position
+            createSymbolMarker(latitude + rnd.nextDouble() * 0.008 - 0.004,
+                               longitude + rnd.nextDouble() * 0.008 - 0.004,
+                               Symbols.values()[rnd.nextInt(Symbols.values().length)],
+                               sb.substring(0, 3), sb.substring(3, 6),
+                                Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
         }
     }
 
+    /**
+     * Converts a drawable object into a bitmap
+     * @param drawable drawable object to convert
+     * @param widthPixels output image width
+     * @param heightPixels output image height
+     * @return converted bitmap
+     */
     public Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
         Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mutableBitmap);
@@ -107,17 +131,17 @@ public class MapActivity extends Activity {
      * Creates a map marker at chosen coordinates using the given resource name, text contents and color.
      * @param latitude latitude from given point
      * @param longitude longitude from given point
-     * @param resourceName resource name used to choose symbol type
+     * @param resourceSymbol resource name from enumeration used to choose symbol type
      * @param textContent1 first text
      * @param textContent2 second text
      * @param hexaColor symbol color
      */
-    public void createSymbolMarker(double latitude, double longitude, String resourceName, String textContent1, String textContent2, String hexaColor) {
+    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor) {
         try {
             //Mise à jour des coordonnées
             final LatLng latLng = new LatLng(latitude, longitude);
             //InputStream is = getApplicationContext().getResources().openRawResource(R.raw.colonne_incendie_active);
-            InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceName, "raw", getPackageName()));
+            InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceSymbol.name(), "raw", getPackageName()));
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
@@ -153,6 +177,9 @@ public class MapActivity extends Activity {
         }
     }
 
+    /**
+     * Cluster rendered used to draw firemen symbols
+     */
     public class SymbolRendered extends DefaultClusterRenderer<SymbolMarkerClusterItem> {
         public SymbolRendered(Context context, GoogleMap map, ClusterManager<SymbolMarkerClusterItem> clusterManager) {
             super(context, map, clusterManager);
