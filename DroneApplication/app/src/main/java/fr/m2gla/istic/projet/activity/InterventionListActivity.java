@@ -4,12 +4,19 @@ package fr.m2gla.istic.projet.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
+import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +29,7 @@ import fr.m2gla.istic.projet.context.UserQualification;
  */
 
 public class InterventionListActivity extends Activity {
+    private static final String TAG = "InterventionListActivity";
 
     private ListView                            idList;
     private ArrayList<HashMap<String, String>>  listItem;
@@ -32,6 +40,27 @@ public class InterventionListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intervention_list);
+
+        RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
+                new Command() {
+                    /**
+                     * Success connection
+                     * @param response Response object type Intervention[]
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        //TODO list intervention
+                    }
+                }, new Command() {
+                    /**
+                     * Error connection
+                     * @param response Response error type HttpClientErrorException
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Log.e(TAG, "connection error");
+                    }
+                });
 
         Intent              intent;
         String              roleStr;

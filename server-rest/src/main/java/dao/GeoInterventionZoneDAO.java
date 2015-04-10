@@ -48,7 +48,6 @@ public class GeoInterventionZoneDAO extends AbstractDAO<GeoInterventionZone>{
                 .put("coordinates", Tools.zoneListToJsonArray(entity.getCoordinates()))
                 .put("properties", properties);
         JsonDocument doc = JsonDocument.create("" + entity.getId(), jsonGeoInterventionZone);
-        System.out.println(jsonGeoInterventionZone);
         return doc;
     }
 }

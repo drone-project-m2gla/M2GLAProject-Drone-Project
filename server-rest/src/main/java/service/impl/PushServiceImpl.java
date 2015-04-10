@@ -12,8 +12,8 @@ import com.google.android.gcm.server.Sender;
 
 public class PushServiceImpl implements PushService {
 	private static final PushService INSTANCE = new PushServiceImpl();
-	private static final String SERVER_KEY = "AIzaSyB8e1INV7eARjM9y--ztTmYFxeJjD5VWvk";
-	private static final int RETRIES = 5;
+	private static final String SERVER_KEY = "AIzaSyBFsRgV6T1pY3Ev62Bz5KcAYTaylvgS90w";
+	private static final int RETRIES = 1;
 	
 	private List<String> registersClient;
 	

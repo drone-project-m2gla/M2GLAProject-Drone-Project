@@ -15,4 +15,8 @@ public interface PushService {
      * Resgister on Google Cloud Messages
      */
     public void register();
+    /**
+     * Unesgister on Google Cloud Messages
+     */
+    public void unregister();
 }

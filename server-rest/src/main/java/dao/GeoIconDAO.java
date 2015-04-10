@@ -57,7 +57,6 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
                 .put("properties", properties)
                 .put("type", "Point");
         JsonDocument doc = JsonDocument.create("" + u.getId(), jsonUser);
-        System.out.println(jsonUser);
         return doc;
 
     }

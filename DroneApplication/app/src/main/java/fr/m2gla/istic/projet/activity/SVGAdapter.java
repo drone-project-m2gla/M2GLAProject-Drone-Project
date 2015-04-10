@@ -74,11 +74,16 @@ public class SVGAdapter {
             for (int i = 0; i < pathNodes.getLength(); i++) {
                 listForms.add(pathNodes.item(i));
             }
+            pathNodes = document.getElementsByTagName("flowRoot");
+            for (int i = 0; i < pathNodes.getLength(); i++) {
+                listForms.add(pathNodes.item(i));
+            }
 
             for (Node pathNode : listForms){
                 NamedNodeMap attribute = pathNode.getAttributes();
                 Node nodeAttrStyle = attribute.getNamedItem("style");
                 nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke:#.*;", "stroke:#" + color + ";"));
+                nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;", "fill:#" + color + ";"));
             }
             isOut = document2InputStream(document);
 
