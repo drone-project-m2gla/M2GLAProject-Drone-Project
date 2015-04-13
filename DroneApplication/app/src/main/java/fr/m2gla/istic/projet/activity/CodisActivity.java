@@ -121,7 +121,7 @@ public class CodisActivity extends Activity {
         selectedRadioB = (RadioButton) findViewById(radioBSelect);
         if (selectedRadioB.getText().length() != 0) {
             this.sinistre = "" + selectedRadioB.getText();
-            Toast.makeText(getApplicationContext(), this.sinistre, Toast.LENGTH_SHORT).show();
+            Log.i("ajoutIntervention", "Sinistre : " + this.sinistre);
         }
         else {
             Toast.makeText(getApplicationContext(), "Manque le code sinistre", Toast.LENGTH_SHORT).show();

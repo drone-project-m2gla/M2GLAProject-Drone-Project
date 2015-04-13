@@ -18,7 +18,6 @@ public abstract class AbstractEntity {
     /**
      * Type of entity
      */
-    @JsonIgnore
     protected String datatype;
 
     /**
