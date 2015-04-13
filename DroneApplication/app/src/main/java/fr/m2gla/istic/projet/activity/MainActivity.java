@@ -182,8 +182,7 @@ public class MainActivity extends Activity {
             @Override
             public void execute(Object response) {
                 // register to GCM
-                PushServiceImpl.getInstance().setContext(getApplicationContext());
-                PushServiceImpl.getInstance().register();
+                PushServiceImpl.getInstance().register(userQualification);
 
                 // Demander la prise en compte de la validation de l'identification
                 Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();

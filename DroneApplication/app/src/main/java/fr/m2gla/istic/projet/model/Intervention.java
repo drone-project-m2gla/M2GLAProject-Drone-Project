@@ -5,26 +5,17 @@ import java.util.List;
 /**
  * Created by baptiste on 10/04/15.
  */
-public class Intervention {
-    private String id;
+public class Intervention extends Entity {
     private String address;
     private int postcode;
     private String city;
     private DisasterCode disasterCode;
-    private List<Mean> means;
+    private List<Mean> meansList;
     private Position position;
     private List<Mean> meansXtra;
 
     public Intervention() {
 
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getAddress() {
@@ -60,11 +51,11 @@ public class Intervention {
     }
 
     public List<Mean> getMeansList() {
-        return means;
+        return meansList;
     }
 
     public void setMeansList(List<Mean> means) {
-        this.means = means;
+        this.meansList = means;
     }
 
     public Position getCoordinates() {

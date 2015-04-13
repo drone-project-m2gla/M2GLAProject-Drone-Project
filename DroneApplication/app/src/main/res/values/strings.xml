@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Drone Application</string>
 
+    <string name="title_notification_intervntion">Nouvelle intervention</string>
+
     <string name="presentation_text">Aux Joyeux Pompiers</string>
     <string name="action_settings">Settings</string>
     <string name="url_text">URL : </string>

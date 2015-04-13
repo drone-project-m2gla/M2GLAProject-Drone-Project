@@ -5,7 +5,10 @@ import java.io.IOException;
 import com.google.android.gcm.server.MulticastResult;
 
 public interface PushService {
-	public void registerClient(String idClient);
+	public enum TypeClient {
+		CODIS, SIMPLEUSER, ALL
+	}
+	public void registerClient(TypeClient typeClient, String idClient);
 	public void unregisterClient(String idClient);
-	public MulticastResult sendMessage(String scope, String message) throws IOException;
+	public MulticastResult sendMessage(TypeClient typeClient, String scope, Object object) throws IOException;
 }
