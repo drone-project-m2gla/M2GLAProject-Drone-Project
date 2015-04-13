@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
@@ -26,9 +27,17 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import java.io.InputStream;
 import java.util.Random;
 
+import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.model.Position;
+import fr.m2gla.istic.projet.model.Topographie;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.Strategy;
+
 public class MapActivity extends Activity {
 
-    public enum Symbols{
+    public enum Symbols {
         colonne_incendie_active,
         groupe_incendie_actif,
         moyen_intervention_aerien_actif,
@@ -54,11 +63,11 @@ public class MapActivity extends Activity {
     //private Location location ;
 
     GoogleMap map;
-
+    private static final String TAG = "MapActivity";
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
     // latitude and longitude
-    double latitude = 48.1119800 ;
-    double longitude = -1.6742900;
+    //double latitude = 48.1119800 ;
+    //double longitude = -1.6742900;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,29 +104,49 @@ public class MapActivity extends Activity {
 
     // onLocation Changed
     public void onLocationChanged() {
-        //On affiche dans un Toast la nouvelle Localisation
-        Toast.makeText(this, "lat : " + latitude + "; lng : " + longitude, Toast.LENGTH_SHORT).show();
 
-        Random rnd = new Random();
-        for (int i = 0; i < 50; i++) {
-            //Build a 6 character length random uppercase string
-            StringBuilder sb = new StringBuilder();
-            for (int j=0; j<7; j++) {
-                sb.append((char)(rnd.nextInt(25)+65));
-            }
-            //Draw a random symbol with random texts and random color at a random position
-            createSymbolMarker(latitude + rnd.nextDouble() * 0.008 - 0.004,
-                               longitude + rnd.nextDouble() * 0.008 - 0.004,
-                               Symbols.values()[rnd.nextInt(Symbols.values().length)],
-                               sb.substring(0, 3), sb.substring(3, 6),
-                                Long.toHexString(Math.round(rnd.nextDouble()*0xFFFFFF)));
-        }
+        //On affiche dans un Toast la nouvelle Localisation
+//        Toast.makeText(this, "lat : " + latitude + "; lng : " + longitude, Toast.LENGTH_SHORT).show();
+        RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
+                new Command() {
+                    /**
+                     * Success connection
+                     *
+                     * @param response Response object type Intervention[]
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Topographie[] topographies = (Topographie[]) response;
+                        for (int i = 0; i < topographies.length; i++) {
+
+                            Position pos = topographies[i].getPosition();
+                            //Draw a random symbol with random texts and random color at a random position
+                            createSymbolMarker(pos.getLatitude(),pos.getLongitude(),
+                                    Symbols.valueOf(topographies[i].getFilename()),
+                                    topographies[i].getFirstContent(), topographies[i].getSecondContent(), topographies[i].getColor(),
+                                    topographies[i].getFirstContent()
+                            );
+                        }
+                    }
+                }, new Command() {
+                    /**
+                     * Error connection
+                     *
+                     * @param response Response error type HttpClientErrorException
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Log.e(TAG, "connection error");
+                    }
+                });
     }
+
 
     /**
      * Converts a drawable object into a bitmap
-     * @param drawable drawable object to convert
-     * @param widthPixels output image width
+     *
+     * @param drawable     drawable object to convert
+     * @param widthPixels  output image width
      * @param heightPixels output image height
      * @return converted bitmap
      */
@@ -132,14 +161,15 @@ public class MapActivity extends Activity {
 
     /**
      * Creates a map marker at chosen coordinates using the given resource name, text contents and color.
-     * @param latitude latitude from given point
-     * @param longitude longitude from given point
+     *
+     * @param latitude       latitude from given point
+     * @param longitude      longitude from given point
      * @param resourceSymbol resource name from enumeration used to choose symbol type
-     * @param textContent1 first text
-     * @param textContent2 second text
-     * @param hexaColor symbol color
+     * @param textContent1   first text
+     * @param textContent2   second text
+     * @param hexaColor      symbol color
      */
-    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor) {
+    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor,String description) {
         try {
             //Mise à jour des coordonnées
             final LatLng latLng = new LatLng(latitude, longitude);
@@ -152,22 +182,27 @@ public class MapActivity extends Activity {
 
             /*map.addMarker(new MarkerOptions()
                     .position(new LatLng(latitude, longitude))
-                    .icon(icon).anchor(0.5f, 0.5f)).showInfoWindow();*/
+                    .icon(icon).anchor(0.5f, 0.5f)
+                    .title(email)).showInfoWindow()).showInfoWindow();*/
 
-            SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon);
+            SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon, description);
             mClusterManager.addItem(marketItem);
+
             mClusterManager.cluster();
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        } catch (SVGParseException ignored) {
         }
-        catch(SVGParseException ignored){}
     }
 
     public class SymbolMarkerClusterItem implements ClusterItem {
         private final LatLng mPosition;
         private BitmapDescriptor icon;
-        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon) {
+        private String description;
+
+        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon,String description) {
             mPosition = new LatLng(lat, lng);
             this.icon = icon;
+            this.description = description;
         }
 
         @Override
@@ -175,7 +210,7 @@ public class MapActivity extends Activity {
             return mPosition;
         }
 
-        public BitmapDescriptor getIcon(){
+        public BitmapDescriptor getIcon() {
             return icon;
         }
     }
@@ -193,93 +228,8 @@ public class MapActivity extends Activity {
                                                    MarkerOptions markerOptions) {
             markerOptions.icon(item.getIcon());
             markerOptions.draggable(true);
+            markerOptions.title(item.description);
         }
 
-        /*@Override
-        protected boolean shouldRenderAsCluster(Cluster<SymbolMarkerClusterItem> cluster) {
-            return cluster.getSize() > 5; // when count of markers is more than 5, render as cluster
-        }*/
     }
-/*
-    public void onResume() {
-        super.onResume();
-
-        //Obtention de la référence du service
-        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-
-        //Si le GPS est disponible, on s'y abonne
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            abonnementGPS();
-        }
-    }
-
-    public void onPause() {
-        super.onPause();
-    }
-
-    public void abonnementGPS() {
-        //On s'abonne
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,999999999,999999999, this);
-    }
-
-    public void desabonnementGPS() {
-        //Si le GPS est disponible, on s'y abonne
-        locationManager.removeUpdates(this);
-    }
-
-    public void onLocationChanged(final Location location) {
-        //On affiche dans un Toat la nouvelle Localisation
-        final StringBuilder msg = new StringBuilder("lat : ");
-        msg.append(location.getLatitude());
-        msg.append( "; lng : ");
-        msg.append(location.getLongitude());
-
-        Toast.makeText(this, msg.toString(), Toast.LENGTH_SHORT).show();
-
-        //Mise à jour des coordonnées
-        final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Bitmap bitmapImg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.test), 100, 75, true);
-        createMarketOfPerson(location.getLatitude(), location.getLongitude(), bitmapImg);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        //marker.setPosition(latLng);
-    }
-
-    // methode afficher positions
-    public void createMarketOfPerson(double latitude, double longitude, Bitmap image, String email) {
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap bmp = Bitmap.createBitmap(50, 30, conf);
-        Canvas canvas = new Canvas(bmp);
-
-        Paint color = new Paint();
-        color.setTextSize(6);
-        color.setColor(Color.WHITE);
-
-
-        canvas.drawBitmap(Bitmap.createScaledBitmap(image, 50, 30, true), 0, 0, color);
-
-        gMap.addMarker(new MarkerOptions()
-                .position(new LatLng(latitude, longitude))
-                .icon(BitmapDescriptorFactory.fromBitmap(bmp))
-                .anchor(0.5f, 1)
-                .title(email)).showInfoWindow();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    public void onProviderDisabled(final String provider) {
-        //Si le GPS est désactivé on se désabonne
-        if("gps".equals(provider)) {
-            desabonnementGPS();
-        }
-    }
-
-    public void onProviderEnabled(final String provider) {
-        //Si le GPS est activé on s'abonne
-        if("gps".equals(provider)) {
-            abonnementGPS();
-        }
-    }*/
 }
