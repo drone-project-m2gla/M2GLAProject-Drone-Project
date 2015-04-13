@@ -44,7 +44,7 @@
         </activity>
 
         <activity android:name=".SVGActivity" />
-        <activity android:name=".CodisActivity" />
+        <activity android:name=".NewInterventionActivity" />
         <activity android:name=".InterventionListActivity" />
 
         <receiver

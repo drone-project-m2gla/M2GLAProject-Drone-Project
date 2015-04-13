@@ -8,22 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
-import fr.m2gla.istic.projet.context.RestAPI;
-import fr.m2gla.istic.projet.model.Intervention;
-import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 
@@ -120,7 +109,7 @@ public class InterventionListActivity extends Activity {
 
 
     public void interventionSelection(View view) {
-        Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NewInterventionActivity.class);
 
         // lancement de la seconde activité, en demandant un code retour
         // startActivityForResult(intent, 0);

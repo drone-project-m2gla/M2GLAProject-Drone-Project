@@ -13,7 +13,7 @@ import android.widget.Toast;
  * Created by david on 09/02/15.
  */
 
-public class CodisActivity extends Activity {
+public class NewInterventionActivity extends Activity {
 
     private     String                              voie;
     private     String                              codePostal;
@@ -24,7 +24,7 @@ public class CodisActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_codis);
+        setContentView(R.layout.activity_new_intervention);
 
         initializeElement();
     }
@@ -131,6 +131,8 @@ public class CodisActivity extends Activity {
         }
 
         // Envoyer les donnees au serveur
+//        RestService loginSnd = RestServiceImpl.getInstance();
+
 
     }
 
