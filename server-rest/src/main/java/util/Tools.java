@@ -28,8 +28,22 @@ public class Tools {
     public static Position jsonArrayToPosition(JsonArray jsonArray)
     {
         Position p = new Position();
-        p.setLatitude((Double) jsonArray.get(0));
-        p.setLongitude((Double)jsonArray.get(1));
+
+        if (jsonArray.get(0).equals("NaN")){
+            p.setLatitude(Double.NaN);
+        }
+        else
+        {
+            p.setLatitude((Double)jsonArray.get(0));
+        }
+
+        if (jsonArray.get(1).equals("NaN")){
+            p.setLongitude(Double.NaN);
+        }
+        else
+        {
+            p.setLongitude((Double)jsonArray.get(1));
+        }
 
         if (jsonArray.get(2).equals("NaN")){
             p.setAltitude(Double.NaN);
@@ -102,6 +116,7 @@ public class Tools {
         z.setId(((JsonObject) jsonObject.get("properties")).getLong("id"));
         z.setVehicle(Vehicle.valueOf(((JsonObject) jsonObject.get("properties")).getString("vehicle")));
         z.setInPosition(((JsonObject) jsonObject.get("properties")).getBoolean("inPosition"));
+        z.setisDeclined(((JsonObject) jsonObject.get("properties")).getBoolean("isDeclined"));
         z.setCoordinates(Tools.jsonArrayToPosition(jsonObject.getArray("coordinates")));
         return z;
     }
