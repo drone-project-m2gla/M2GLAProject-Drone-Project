@@ -62,10 +62,10 @@ public class ItemsAdapter extends ArrayAdapter {
                     "raw", activity.getPackageName());
             svg = SVG.getFromResource(activity, R.raw.colonne_incendie_active);
 
-            Log.i("sow", "test  "+test+"  raw  "+R.raw.colonne_incendie_active);
+            //Log.i("sow", "test  "+test+"  raw  "+R.raw.colonne_incendie_active);
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
-            Log.i("sow", "ressource value" + test);
+            //Log.i("sow", "ressource value" + test);
             img.setImageBitmap(image);
         } catch (SVGParseException e) {
             e.printStackTrace();

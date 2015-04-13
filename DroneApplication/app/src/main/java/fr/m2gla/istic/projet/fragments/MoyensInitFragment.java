@@ -2,12 +2,16 @@ package fr.m2gla.istic.projet.fragments;
 
 
 import android.app.ListFragment;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.constantes.Constant;
@@ -29,7 +33,7 @@ public class MoyensInitFragment extends ListFragment {
 
         setListAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
 
-        Log.e("sow", this.getListAdapter().getItem(0).toString());
+        //Log.e("sow", this.getListAdapter().getItem(0).toString());
 
         return view;
 
@@ -40,5 +44,59 @@ public class MoyensInitFragment extends ListFragment {
         MoyensSuppFragment txt = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
         txt.change(titles[position], "Version : " + Version[position]);
         getListView().setSelector(android.R.color.holo_blue_dark);
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View v,
+                                           int position, long id) {
+                // Create a new ClipData.
+                // This is done in two steps to provide clarity. The convenience method
+                // ClipData.newPlainText() can create a plain text ClipData in one step.
+
+                // Create a new ClipData.Item from the ImageView object's tag
+                ClipData.Item item = new ClipData.Item((String)v.getTag());
+
+                // Create a new ClipData using the tag as a label, the plain text MIME type, and
+                // the already-created item. This will create a new ClipDescription object within the
+                // ClipData, and set its MIME type entry to "text/plain"
+                ClipData dragData = new ClipData((String)v.getTag(),
+                        new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN},
+                        item);
+
+                // Instantiates the drag shadow builder.
+                View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
+
+                // Starts the drag
+                v.startDrag(dragData,  // the data to be dragged
+                        myShadow,  // the drag shadow builder
+                        null,      // no need to use local data
+                        0          // flags (not currently used, set to 0)
+                );
+                return true;
+            }
+        });
+
+        getListView().setOnDragListener(new AdapterView.OnDragListener(){
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        Toast.makeText(getActivity(), "Drag", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        Toast.makeText(getActivity(), "Drag Ended", Toast.LENGTH_SHORT).show();
+                        return true;
+                }
+                return true;
+            }
+        });
     }
 }
