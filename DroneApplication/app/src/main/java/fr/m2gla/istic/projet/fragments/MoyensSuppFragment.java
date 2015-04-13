@@ -2,6 +2,7 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,7 @@ public class MoyensSuppFragment extends Fragment {
      */
     private String sendRequestMeanAsync() {
         RestService requestSnd = RestServiceImpl.getInstance();
-        Mean mean = new Mean();
+        final Mean mean = new Mean();
         mean.setVehicle(Vehicle.VLCG);
         Map<String, String> map = new HashMap<>();
         map.put("id", meanID);
@@ -105,6 +106,8 @@ public class MoyensSuppFragment extends Fragment {
 
                 // Demander la prise en compte de la validation de l'identification
                 Toast.makeText(getActivity(), "Moyen suppl.", Toast.LENGTH_SHORT).show();
+                Mean moyen = (Mean) response;
+                Log.i("sow", "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
             }
         }, new Command() {
             /**

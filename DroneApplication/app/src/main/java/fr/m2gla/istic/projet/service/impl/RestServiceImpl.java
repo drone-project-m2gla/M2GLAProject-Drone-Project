@@ -18,7 +18,8 @@ public class RestServiceImpl implements RestService {
     private static final RestService INSTANCE = new RestServiceImpl();
     private static final String URL = "http://projm2gla1.istic.univ-rennes1.fr:8080/sitserver/rest";
 
-    protected RestServiceImpl() {}
+    protected RestServiceImpl() {
+    }
 
     public static RestService getInstance() {
         return INSTANCE;
@@ -81,10 +82,11 @@ public class RestServiceImpl implements RestService {
                     T result = null;
 
                     if (param == null) {
-                        restTemplate.postForObject(URL + service, content, type);
+                        result = restTemplate.postForObject(URL + service, content, type);
                     } else {
-                        restTemplate.postForObject(URL + service, content, type, param);
+                        result = restTemplate.postForObject(URL + service, content, type, param);
                     }
+                    Log.i("sow", "MEAN \t" + result);
 
                     return result;
                 } catch (HttpStatusCodeException e) {
