@@ -1,8 +1,5 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import util.Constant;
 
 import com.couchbase.client.java.document.JsonDocument;
@@ -22,7 +19,7 @@ import entity.User;
 public class UserDAO extends AbstractDAO<User> {
 
     public JsonDocument findByLogin(String username, String password) {
-        JsonDocument res = this.currentBucket.get(Constant.DATATYPE_USER);
+        JsonDocument res = currentBucket.get(Constant.DATATYPE_USER);
         res.content().get("username");
         return res;
     }
@@ -61,8 +58,7 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public User getByUsername(String username) {
-        List<User> res = new ArrayList<User>();
-        DesignDocument designDoc = currentBucket.bucketManager().getDesignDocument("designDoc");
+        currentBucket.bucketManager().getDesignDocument("designDoc");
         createViewGetByUsername();
         ViewResult result = currentBucket.query(ViewQuery.from("designDoc", "login_view" + datatype));
         // Iterate through the returned ViewRows
