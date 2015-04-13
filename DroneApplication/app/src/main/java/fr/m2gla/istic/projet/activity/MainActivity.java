@@ -182,8 +182,7 @@ public class MainActivity extends Activity {
             @Override
             public void execute(Object response) {
                 // register to GCM
-                PushServiceImpl.getInstance().setContext(getApplicationContext());
-                PushServiceImpl.getInstance().register();
+                PushServiceImpl.getInstance().register(userQualification);
 
                 // Demander la prise en compte de la validation de l'identification
                 Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
@@ -214,14 +213,14 @@ public class MainActivity extends Activity {
     private void postOkLoginAction() {
         Intent intent;
 
-
+/*
         if (this.userQualification == UserQualification.CODIS) {
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "CODIS", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Sapeur", Toast.LENGTH_SHORT).show();
         }
-
+*/
         // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
         intent = new Intent(getApplicationContext(), InterventionListActivity.class);
 

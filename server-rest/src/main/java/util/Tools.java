@@ -1,14 +1,15 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
+
 import entity.Mean;
 import entity.Position;
 import entity.Vehicle;
 import entity.Zone;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by alban on 10/03/15.

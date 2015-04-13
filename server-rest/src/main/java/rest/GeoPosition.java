@@ -67,9 +67,9 @@ public class GeoPosition {
     public Response getPositionObject(GeoInterventionZone zone) {
         String coordinatesZone = "Zone de survol";
         Zone flyoverZone = zone.getCoordinates().get(0);
-        Iterator<Position> it = flyoverZone.positionIterator();
+        Iterator it = flyoverZone.positionIterator();
         while (it.hasNext()) {
-            Position p = it.next();
+            Position p = (Position) it.next();
             coordinatesZone += "<BR>Latitude " + p.getLatitude();
             coordinatesZone += " / Longitude " + p.getLongitude();
             coordinatesZone += "/ Altitude " + p.getAltitude();

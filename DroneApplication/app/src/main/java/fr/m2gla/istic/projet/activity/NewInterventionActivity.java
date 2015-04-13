@@ -13,7 +13,7 @@ import android.widget.Toast;
  * Created by david on 09/02/15.
  */
 
-public class CodisActivity extends Activity {
+public class NewInterventionActivity extends Activity {
 
     private     String                              voie;
     private     String                              codePostal;
@@ -24,7 +24,7 @@ public class CodisActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_codis);
+        setContentView(R.layout.activity_new_intervention);
 
         initializeElement();
     }
@@ -121,7 +121,7 @@ public class CodisActivity extends Activity {
         selectedRadioB = (RadioButton) findViewById(radioBSelect);
         if (selectedRadioB.getText().length() != 0) {
             this.sinistre = "" + selectedRadioB.getText();
-            Toast.makeText(getApplicationContext(), this.sinistre, Toast.LENGTH_SHORT).show();
+            Log.i("ajoutIntervention", "Sinistre : " + this.sinistre);
         }
         else {
             Toast.makeText(getApplicationContext(), "Manque le code sinistre", Toast.LENGTH_SHORT).show();
@@ -131,6 +131,8 @@ public class CodisActivity extends Activity {
         }
 
         // Envoyer les donnees au serveur
+//        RestService loginSnd = RestServiceImpl.getInstance();
+
 
     }
 

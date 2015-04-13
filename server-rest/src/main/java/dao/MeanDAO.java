@@ -1,11 +1,13 @@
 package dao;
 
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonObject;
-import entity.Mean;
-import entity.Vehicle;
 import util.Constant;
 import util.Tools;
+
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
+
+import entity.Mean;
+import entity.Vehicle;
 
 /**
  * Created by arno on 08/04/15.

@@ -1,10 +1,9 @@
 package entity;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import java.util.Random;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
 
 /**
  * Created by alban on 10/03/15.
@@ -18,7 +17,6 @@ public abstract class AbstractEntity {
     /**
      * Type of entity
      */
-    @JsonIgnore
     protected String datatype;
 
     /**

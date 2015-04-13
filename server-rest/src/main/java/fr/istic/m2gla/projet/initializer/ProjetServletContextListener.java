@@ -6,9 +6,12 @@ import javax.servlet.ServletContextListener;
 import org.apache.log4j.PropertyConfigurator;
 
 public class ProjetServletContextListener implements ServletContextListener {
+	private static final String LOG_DEV = "./webapps/ROOT/log/log4j.properties";
+	private static final String LOG_PROD = "./webapps/sitserver/log/log4j.properties";
+	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		PropertyConfigurator.configure("./log/log4j.properties");
+		PropertyConfigurator.configure(LOG_DEV);
 	}
 
 	@Override

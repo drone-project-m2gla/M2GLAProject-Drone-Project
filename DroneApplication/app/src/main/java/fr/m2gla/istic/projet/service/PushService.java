@@ -2,19 +2,16 @@ package fr.m2gla.istic.projet.service;
 
 import android.content.Context;
 
+import fr.m2gla.istic.projet.context.UserQualification;
+
 /**
  * Created by baptiste on 08/04/15.
  */
 public interface PushService {
     /**
-     * Set context of application
-     * @param context Context of application
-     */
-    public void setContext(Context context);
-    /**
      * Resgister on Google Cloud Messages
      */
-    public void register();
+    public void register(UserQualification typeClient);
     /**
      * Unesgister on Google Cloud Messages
      */

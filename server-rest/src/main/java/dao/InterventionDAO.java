@@ -1,14 +1,15 @@
 package dao;
 
+import util.Constant;
+import util.Tools;
+
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
+
 import entity.DisasterCode;
-import entity.GeoInterventionZone;
 import entity.Intervention;
 import entity.Mean;
-import util.Constant;
-import util.Tools;
 
 /**
  * Created by alban on 13/03/15.

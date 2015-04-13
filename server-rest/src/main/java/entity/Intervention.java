@@ -1,10 +1,11 @@
 package entity;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import util.Constant;
 import util.MeansByDisasterCode;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by arno on 07/04/15.
