@@ -1,19 +1,14 @@
 package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,18 +74,28 @@ public class InterventionListFragment extends Fragment {
     public void refreshList() {
 
         //Récupération de la listview créée dans le fichier clients.xml
-        this.idList = (ListView) this.view.findViewById(R.id.idListView);
+        this.idList = (ListView) this.view.findViewById(R.id.interventionListView);
 
         //Création de la ArrayList qui nous permettra de remplire la listView
         this.listItem = new ArrayList<HashMap<String, String>>();
 
+        addInterventionInList("00", "Inter", true);
+
+
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
-        this.mSchedule = new SimpleAdapter(getActivity().getApplicationContext(), this.listItem, R.layout.disp_intervention,
+//        this.mSchedule = new SimpleAdapter(getActivity().getApplicationContext(), this.listItem, R.layout.disp_intervention,
+        this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
                 new String[] {GeneralConstants.INTER_LIST_ELEM1, GeneralConstants.INTER_LIST_ELEM2},
                 new int[] {R.id.interventionCode, R.id.interventionData});
 
+
+
+
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
+
+        Log.i("ADAPTER", this.mSchedule.toString() + " --- " + this.idList.getAdapter().getCount());
+        Log.i("ADAPTER", this.mSchedule.toString() + " --- " + this.idList.getAdapter().getItem(0).toString());
 
         // Ajouter un écouteur sur la selection d'un element de la liste
         this.idList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -104,6 +109,12 @@ public class InterventionListFragment extends Fragment {
 
             }
         });
+
+        TextView    textView = (TextView) this.view.findViewById(R.id.interventionCode);
+        if (textView == null) Log.i("ADAPTER", "NULL");
+        else textView.setText("0001");
+        Log.i("ADAPTER", "--> " + R.id.interventionCode + " --- " + R.id.interventionData + " <--");
+
 
         addInterventionInList("01", "Inter1");
         addInterventionInList("02", "Intervention 2");
@@ -122,6 +133,11 @@ public class InterventionListFragment extends Fragment {
 
 
     public void addInterventionInList(String code, String data) {
+        addInterventionInList(code, data, false);
+    }
+
+
+    public void addInterventionInList(String code, String data, boolean initial) {
         // Verifier si une insertion est a faire
         if ((code == null) || (code.length() <= 0)) {
             return;
@@ -140,8 +156,10 @@ public class InterventionListFragment extends Fragment {
         //enfin on ajoute cette hashMap dans la arrayList
         listItem.add(map);
 
-        // Mettre a jour la liste d'affichage
-        this.mSchedule.notifyDataSetChanged();
+        if (initial != true) {
+            // Mettre a jour la liste d'affichage
+            this.mSchedule.notifyDataSetChanged();
+        }
     }
 
 
