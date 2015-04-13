@@ -1,14 +1,19 @@
 package dao;
 
-import entity.Position;
-import entity.Unity;
-import org.junit.*;
-import util.Configuration;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import util.Configuration;
+import entity.Position;
+import entity.Unity;
 
 /**
  * Created by alban on 11/03/15.

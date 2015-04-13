@@ -1,10 +1,12 @@
 package dao;
 
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonObject;
-import entity.GeoInterventionZone;
 import util.Constant;
 import util.Tools;
+
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
+
+import entity.GeoInterventionZone;
 
 /**
  * Created by alban on 13/03/15.

@@ -1,11 +1,12 @@
 package dao;
 
+import util.Constant;
+import util.Tools;
+
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 
 import entity.GeoIcon;
-import util.Constant;
-import util.Tools;
 
 /**
  * Created by jerem on 08/04/15.

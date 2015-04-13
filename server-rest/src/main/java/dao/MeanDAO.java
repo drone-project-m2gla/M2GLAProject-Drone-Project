@@ -1,11 +1,13 @@
 package dao;
 
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonObject;
-import entity.Mean;
-import entity.Vehicle;
 import util.Constant;
 import util.Tools;
+
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
+
+import entity.Mean;
+import entity.Vehicle;
 
 /**
  * Created by arno on 08/04/15.
@@ -32,6 +34,7 @@ public class MeanDAO extends AbstractDAO<Mean>{
                 Mean.setId(((JsonObject) content.get("properties")).getLong("id"));
                 Mean.setVehicle(Vehicle.valueOf((String) ((JsonObject) content.get("properties")).get("vehicle")));
                 Mean.setInPosition((Boolean) ((JsonObject) content.get("properties")).get("inPosition"));
+                Mean.setisDeclined((Boolean) ((JsonObject) content.get("properties")).get("isDeclined"));
                 Mean.setCoordinates(Tools.jsonArrayToPosition(content.getArray("coordinates")));
             } else {
                 throw new IllegalArgumentException();
@@ -55,6 +58,7 @@ public class MeanDAO extends AbstractDAO<Mean>{
         JsonObject properties = JsonObject.create();
         properties.put("datatype", entity.getDataType());
         properties.put("inPosition", entity.getInPosition());
+        properties.put("isDeclined", entity.getisDeclined());
         properties.put("vehicle", entity.getVehicle().toString());
         properties.put("id",entity.getId());
         JsonObject jsonMean = JsonObject.empty()
