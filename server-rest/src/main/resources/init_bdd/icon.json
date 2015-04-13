@@ -3,13 +3,13 @@
 	"entitled":"Colonne incendie active",
 	"filename":"colonne_incendie_active",
     "coordinates": {
-            "longitude": -2.352222,
-            "latitude": 48.856614,
+            "longitude": -1.596537,
+                "latitude": 48.129062,
             "altitude": -1
         }
-    "color" : "blue",
+    "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS",
+    "firstContent" : "VAPS1",
     "secondContent" : "Vehicule"
     },
 
@@ -17,13 +17,13 @@
 	"entitled":"Moyen intervention aerien prevu",
 	"filename":"moyen_intervention_aerien_prevu",
     "coordinates": {
-            "longitude": -1.644430160522461,
-            "latitude": 48.11898690231361,
+            "longitude": -1.602287,
+            "latitude": 48.126255,
             "altitude": -1
         }
-    "color" : "blue",
+    "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS",
+    "firstContent" : "VAPS2",
     "secondContent" : "Vehicule"
     },
 
@@ -31,13 +31,13 @@
 	"entitled":"Groupe incendie actif",
 	"filename":"groupe_incendie_actif",
     "coordinates": {
-            "longitude": -1.641726,
-            "latitude": 48.117898,
+            "longitude": -1.605463,
+            "latitude": 48.121614,
             "altitude": -1
         }
-    "color" : "blue",
+    "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS",
+    "firstContent" : "VAPS3",
     "secondContent" : "Vehicule"
     },
 
@@ -45,13 +45,13 @@
 	"entitled":"Moyen intervention aerien actif",
 	"filename":"moyen_intervention_aerien_actif",
     "coordinates": {
-            "longitude": -2.352222,
-            "latitude": 48.856614,
+            "longitude": -1.6477775573730435,
+            "latitude": 48.11331108845255,
             "altitude": -1
         }
-    "color" : "blue",
+    "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS",
+    "firstContent" : "VAPS4",
     "secondContent" : "Vehicule"
     },
 
@@ -59,13 +59,13 @@
 	"entitled":"Pc colonne deux fonctions_actif",
 	"filename":"pc_colonne_deux_fonctions_actif",
     "coordinates": {
-            "longitude": -2.352222,
-            "latitude": 48.856614,
+            "longitude": -1.612158,
+            "latitude": 48.115426,
             "altitude": -1
         }
-    "color" : "blue",
+    "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS",
+    "firstContent" : "VAPS5",
     "secondContent" : "Vehicule"
     },
 
@@ -73,13 +73,13 @@
 	"entitled":"Pc site",
 	"filename":"pc_site",
     "coordinates": {
-            "longitude": -2.352222,
-            "latitude": 48.856614,
+            "longitude": -1.623938,
+            "latitude": 48.115626,
             "altitude": -1
         }
-    "color" : "blue",
+    "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS",
+    "firstContent" : "VAPS6",
     "secondContent" : "Vehicule"
     },
 
@@ -87,65 +87,66 @@
 	"entitled":"Point de ravitaillement",
 	"filename":"point_ravitaillement",
     "coordinates": {
-            "longitude": -2.352222,
-            "latitude": 48.856614,
+            "longitude": -1.64443,
+            "latitude": 48.135277,
             "altitude": -1
         }
-    "color" : "blue",
+    "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS",
+    "firstContent" : "VAPS7",
     "secondContent" : "Vehicule"
     },
     {
     	"entitled":"Prise eau non perenne",
     	"filename":"prise_eau_non_perenne",
         "coordinates": {
-                "longitude": -2.352222,
-                "latitude": 48.856614,
+                "longitude": -1.647005,
+                "latitude": 48.126283,
                 "altitude": -1
             }
-        "color" : "blue",
+        "color" : "0000ff",
         "tiret" :"true",
-        "firstContent" : "VAPS",
+        "firstContent" : "VAPS8",
         "secondContent" : "Vehicule"
         },
+
         {
         	"entitled":"Prise eau perenne",
         	"filename":"prise_eau_perenne",
             "coordinates": {
-                    "longitude": -2.352222,
-                    "latitude": 48.856614,
+                    "longitude": -1.63619,
+                    "latitude": 48.119122,
                     "altitude": -1
                 }
-            "color" : "blue",
+            "color" : "0000ff",
             "tiret" :"true",
-            "firstContent" : "VAPS",
+            "firstContent" : "VAPS9",
             "secondContent" : "Vehicule"
             },
             {
             	"entitled":"Secours a personnes actif",
             	"filename":"secours_a_personnes_actif",
                 "coordinates": {
-                        "longitude": -2.352222,
-                        "latitude": 48.856614,
+                        "longitude": -1.627092,
+                        "latitude": 48.12021,
                         "altitude": -1
                     }
-                "color" : "blue",
+                "color" : "0000ff",
                 "tiret" :"true",
-                "firstContent" : "VAPS",
+                "firstContent" : "VAPS10",
                 "secondContent" : "Vehicule"
                 },
                 {
                 	"entitled":"Vehicule incendie seul actif",
                 	"filename":"vehicule_incendie_seul_actif",
                     "coordinates": {
-                            "longitude": -2.352222,
-                            "latitude": 48.856614,
+                            "longitude": -1.631813,
+                            "latitude": 48.116428,
                             "altitude": -1
                         }
-                    "color" : "blue",
+                    "color" : "0000ff",
                     "tiret" :"true",
-                    "firstContent" : "VAPS",
+                    "firstContent" : "VAPS11",
                     "secondContent" : "Vehicule"
                     },
 
@@ -154,13 +155,13 @@
                                     	"entitled":"Vehicule incendie seul prevu",
                                     	"filename":"vehicule_incendie_seul_prevu",
                                         "coordinates": {
-                                                "longitude": -2.352222,
-                                                "latitude": 48.856614,
+                                                "longitude": -1.638851,
+                                                "latitude": 48.120038,
                                                 "altitude": -1
                                             }
-                                        "color" : "blue",
+                                        "color" : "0000ff",
                                         "tiret" :"true",
-                                        "firstContent" : "VAPS",
+                                        "firstContent" : "VAPS12",
                                         "secondContent" : "Vehicule"
                                         }
 
