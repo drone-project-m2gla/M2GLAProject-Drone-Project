@@ -1,16 +1,31 @@
 package fr.m2gla.istic.projet.strategy.impl;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.util.Log;
+
+import fr.m2gla.istic.projet.activity.InterventionListActivity;
+import fr.m2gla.istic.projet.activity.R;
+import fr.m2gla.istic.projet.application.DroneApplication;
+import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.strategy.Strategy;
-import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 
 /**
  * Created by baptiste on 09/04/15.
  */
 public class StrategyIntervention implements Strategy {
-    private static final Strategy INSTANCE = new StrategyIntervention();
+    private static final String TAG = "StratInter";
+    private static Strategy INSTANCE;
 
-    protected StrategyIntervention() {
-        StrategyRegistery.getInstance().addStrategy(INSTANCE);
+    public StrategyIntervention() {
+       INSTANCE = this;
+    }
+
+    public static Strategy getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -19,7 +34,34 @@ public class StrategyIntervention implements Strategy {
     }
 
     @Override
-    public void call(String massage) {
-        //TODO execute code
+    public Class<?> getType() {
+        return Intervention.class;
+    }
+
+    @Override
+    public void call(Object object) {
+        if (!(object instanceof Intervention)) {
+            Log.e(TAG, "Convert error");
+            return;
+        }
+
+        Context context = DroneApplication.getAppContext();
+        Intervention intervention = (Intervention)object;
+
+        Builder builder = new Builder(context)
+                    .setContentTitle(context.getString(R.string.title_notification_intervntion))
+                    .setContentText(intervention.getAddress());
+
+        Intent resultIntent = new Intent(context, InterventionListActivity.class);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(resultPendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(12, builder.build());
     }
 }

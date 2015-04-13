@@ -43,5 +43,5 @@ public interface RestService {
      * @param callbackSuccess Callback after response success
      * @param callbackError Callback after response error
      */
-    public <T> void delete(String service, Map<String, String> param, Class<T> type, Command callbackSuccess, Command callbackError);
+    public <T> void delete(String service, Map<String, String> param, Command callbackSuccess, Command callbackError);
 }

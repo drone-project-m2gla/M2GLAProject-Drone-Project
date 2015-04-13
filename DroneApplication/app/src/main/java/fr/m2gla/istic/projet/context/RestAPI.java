@@ -6,7 +6,7 @@ package fr.m2gla.istic.projet.context;
 public interface RestAPI {
     // Push register block
     public static final String POST_PUSH_REGISTER = "/register";
-    public static final String DELETE_PUSH_REGISTER = "/register/:id";
+    public static final String DELETE_PUSH_REGISTER = "/register/{id}";
 
     // Login block
     public static final String POST_PUSH_LOGIN = "/user/login";
