@@ -2,7 +2,12 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +15,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
+
 import fr.m2gla.istic.projet.activity.R;
 
 // Creating an Adapter Class
 public class ItemsAdapter extends ArrayAdapter {
 
     private final Activity activity;
-    private final Integer[] images;
+    private final String[] images;
 
     private String[] titles;
 
     public ItemsAdapter(Context context, int textViewResourceId,
-                        String[] objects, Integer[] images) {
+                        String[] objects, String[] images) {
         super(context, textViewResourceId, objects);
         activity = (Activity) context;
         this.titles = objects;
@@ -48,19 +56,20 @@ public class ItemsAdapter extends ArrayAdapter {
         // Declaring and Typecasting the imageView in the inflated layout
         ImageView img = (ImageView) layout.findViewById(R.id.imgLanguage);
 
-        // Setting an image using the id's in the array
-        img.setImageResource(images[position]);
+        SVG svg = null;
+        try {
+            int test = activity.getResources().getIdentifier("raw/" + images[0],
+                    "raw", activity.getPackageName());
+            svg = SVG.getFromResource(activity, R.raw.colonne_incendie_active);
 
-//        // Setting Special atrributes for 1st element
-//        if (position == 0) {
-//            // Removing the image view
-//            img.setVisibility(View.GONE);
-//            // Setting the size of the text
-//            tvLanguage.setTextSize(20f);
-//            // Setting the text Color
-//            tvLanguage.setTextColor(Color.BLACK);
-//
-//        }
+            Log.i("sow", "test  "+test+"  raw  "+R.raw.colonne_incendie_active);
+            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+            Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
+            Log.i("sow", "ressource value" + test);
+            img.setImageBitmap(image);
+        } catch (SVGParseException e) {
+            e.printStackTrace();
+        }
 
         return layout;
     }
@@ -76,5 +85,22 @@ public class ItemsAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
+    }
+
+    /**
+     * Converts a drawable object into a bitmap
+     *
+     * @param drawable     drawable object to convert
+     * @param widthPixels  output image width
+     * @param heightPixels output image height
+     * @return converted bitmap
+     */
+    public Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
+        Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(mutableBitmap);
+        drawable.setBounds(0, 0, widthPixels, heightPixels);
+        drawable.draw(canvas);
+
+        return mutableBitmap;
     }
 }

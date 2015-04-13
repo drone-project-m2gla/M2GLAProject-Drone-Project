@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.m2gla.istic.projet.activity.R;
+import fr.m2gla.istic.projet.constantes.Constant;
 
 
 public class MoyensSuppFragment extends Fragment {
@@ -34,7 +35,7 @@ public class MoyensSuppFragment extends Fragment {
             "XML Language", "PHP Language"};
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
     Integer[] images = {0, R.drawable.common_full_open_on_phone, R.drawable.common_signin_btn_icon_dark,
-            R.drawable.common_full_open_on_phone, R.drawable.common_signin_btn_icon_light};
+            R.drawable.common_full_open_on_phone, R.raw.colonne_incendie_active};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,9 +47,9 @@ public class MoyensSuppFragment extends Fragment {
         moyensSpinner = (Spinner) view
                 .findViewById(R.id.moyensSpinner);
 
-
         // Setting a Custom Adapter to the Spinner
-        moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
+        String[] tests = {Constant.COLONNE_INCENDIE_ACTIVE};
+        moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, tests));
 
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_moyen);
         addButton.setOnClickListener(new View.OnClickListener() {

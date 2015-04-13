@@ -70,7 +70,7 @@ public class Bdd {
                     tmpUser.setFilename((String) userJSON.get("filename"));
                    // tmpUser.setPosition(Tools.jsonArrayToPosition(userJSON.get("coordinates")));
                     JSONObject coordinates = (JSONObject) userJSON.get("coordinates");
-                    Position position = new Position((Double) coordinates.get("latitude"),(Double) coordinates.get("longitude"));
+                    Position position = new Position((Double) coordinates.get("longitude"),(Double) coordinates.get("latitude"));
                     tmpUser.setPosition(position);
                     tmpUser.setColor((String) userJSON.get("color"));
                     tmpUser.setTiret((Boolean) Boolean.parseBoolean(""+userJSON.get("tiret")));
