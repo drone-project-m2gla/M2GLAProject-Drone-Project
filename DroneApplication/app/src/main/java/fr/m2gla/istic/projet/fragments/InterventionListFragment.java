@@ -120,6 +120,9 @@ public class InterventionListFragment extends Fragment {
 
     public void refreshList() {
 
+        // Changement de la ArrayList qui nous permettra de remplire la listView
+        this.listItem.clear();
+
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
                 new Command() {
                     /**
@@ -128,7 +131,6 @@ public class InterventionListFragment extends Fragment {
                      */
                     @Override
                     public void execute(Object response) {
-                        //TODO list intervention
                         Intervention    intervention[];
 
                         if (response == null) {
