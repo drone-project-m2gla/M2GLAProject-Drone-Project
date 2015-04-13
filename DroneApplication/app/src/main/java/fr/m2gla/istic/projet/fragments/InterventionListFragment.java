@@ -95,7 +95,12 @@ public class InterventionListFragment extends Fragment {
 
                 map = (HashMap<String, String>) idList.getItemAtPosition(position);
 
-                Toast.makeText(view.getContext(), map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                if (userQualification == UserQualification.CODIS) {
+                    Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -105,6 +110,11 @@ public class InterventionListFragment extends Fragment {
 
         return this.view;
 
+    }
+
+
+    public void setUserQualification(UserQualification userQualification) {
+        this.userQualification = userQualification;
     }
 
 

@@ -96,6 +96,9 @@ public class InterventionListActivity extends Activity {
         this.listFragment = this.fragmentManager.findFragmentById(R.id.fragment_intervention_list);
 
         if (this.listFragment == null) Log.i(TAG, "Fragment null");
+        else {
+            ((InterventionListFragment)this.listFragment).setUserQualification(this.userQualification);
+        }
 
     }
 
