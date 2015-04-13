@@ -92,13 +92,18 @@ public class InterventionListActivity extends Activity {
     }
 
 
-    public void interventionRefresh(View view) {
+    public void interventionRefresh() {
         InterventionListFragment    interventionListFragment;
 
 
         // Demander le rafraichissement de la liste
         interventionListFragment = (InterventionListFragment) this.listFragment;
         interventionListFragment.refreshList();
+    }
+
+
+    public void interventionRefresh(View view) {
+        interventionRefresh();
     }
 
 
@@ -113,14 +118,17 @@ public class InterventionListActivity extends Activity {
 
         // lancement de la seconde activité, en demandant un code retour
         // startActivityForResult(intent, 0);
-        startActivity(intent);
+        // startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
 
-/*
+
     @Override
     public void onActivityResult(int a, int b, Intent retIntent) {
-        PersoInfoData persoInfoData;
+        interventionRefresh();
+
+/*        PersoInfoData persoInfoData;
 
         persoInfoData = retIntent.getParcelableExtra(MainActivity.refReturn);
 
@@ -151,7 +159,7 @@ public class InterventionListActivity extends Activity {
 
 
         Toast.makeText(getApplicationContext(), persoInfoData.getNom().toString(), Toast.LENGTH_SHORT).show();
-
-    }
 */
+    }
+
 }
