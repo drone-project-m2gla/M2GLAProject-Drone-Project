@@ -66,10 +66,11 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
             means.add(meanDAO.entityToJsonObject(m));
         }
         JsonArray meansXtra = JsonArray.create();
-        for (Mean m : entity.getMeansXtra()) {
-            meansXtra.add(meanDAO.entityToJsonObject(m));
+        for (Mean mXtra : entity.getMeansXtra()) {
+            meansXtra.add(meanDAO.entityToJsonObject(mXtra));
         }
         properties.put("meansList",means);
+        properties.put("meansXtra",meansXtra);
         JsonObject jsonIntervention = JsonObject.empty()
                 .put("type", "Point")
                 .put("coordinates", Tools.positionToJsonArray(entity.getCoordinates()))

@@ -16,18 +16,20 @@ public class Mean extends AbstractEntity{
     private Vehicle vehicle;
     private Position coordinates;
     private boolean inPosition;
+    private boolean isDeclined;
 
     public Mean(Vehicle vehicle) {
         this();
         this.vehicle = vehicle;
-        this.inPosition = false;
-        this.coordinates = new Position();
-        this.coordinates.setAltitude(-1);
-        this.coordinates.setLatitude(-1);
-        this.coordinates.setLongitude(-1);
     }
     public Mean() {
         super();
+        this.inPosition = false;
+        this.isDeclined = false;
+        this.coordinates = new Position();
+        this.coordinates.setAltitude(Double.NaN);
+        this.coordinates.setLatitude(Double.NaN);
+        this.coordinates.setLongitude(Double.NaN);
         this.datatype = Constant.DATATYPE_MEAN;
     }
 
@@ -53,6 +55,14 @@ public class Mean extends AbstractEntity{
 
     public void setInPosition(boolean inPosition) {
         this.inPosition = inPosition;
+    }
+
+    public boolean getisDeclined() {
+        return isDeclined;
+    }
+
+    public void setisDeclined(boolean isDeclined) {
+        this.isDeclined = isDeclined;
     }
 
 

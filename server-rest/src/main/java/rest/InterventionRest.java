@@ -92,6 +92,23 @@ public class InterventionRest {
 
     }
 
+    @POST
+    @Path("/{id}/moyenextra")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public long getMeanListForIntervention(@PathParam("id") long id,Mean meanXtra) {
+
+        InterventionDAO iD = new InterventionDAO();
+        Mean res = null;
+        iD.connect();
+        Intervention intervention = iD.getById(id);
+        intervention.getMeansXtra().add(meanXtra);
+
+        iD.update(intervention);
+
+        iD.disconnect();
+        return meanXtra.getId();
+    }
 
     @GET
     @Path("/{id}/moyen")
@@ -141,7 +158,7 @@ public class InterventionRest {
         iD.connect();
 
         // Code temporaire a remplacé par service google pour retrouver les coordonnées GPS
-        Position p1 = new Position(-1,-1);
+        Position p1 = new Position(Double.NaN,Double.NaN);
         intervention.setCoordinates(p1);
 
         // Génération de la liste des moyens
