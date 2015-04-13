@@ -118,7 +118,8 @@ public class InterventionListActivity extends Activity {
 
         // lancement de la seconde activité, en demandant un code retour
         // startActivityForResult(intent, 0);
-        startActivity(intent);
+        // startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
 

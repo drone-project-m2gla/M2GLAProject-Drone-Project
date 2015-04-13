@@ -78,6 +78,12 @@ public class NewInterventionActivity extends Activity {
      */
     public void endAddIntervention(View view) {
 
+        /* Pour retourner un message a l'activite principale */
+        Intent intent = new Intent();
+
+        // envoi du resultat
+        setResult(RESULT_OK, intent);
+
         // Arret de l'activity ici
         finish();
     }
