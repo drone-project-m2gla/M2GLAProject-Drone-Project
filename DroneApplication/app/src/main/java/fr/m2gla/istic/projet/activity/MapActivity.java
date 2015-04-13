@@ -9,7 +9,6 @@ import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.Toast;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
@@ -25,15 +24,12 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.io.InputStream;
-import java.util.Random;
 
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.RestAPI;
-import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
-import fr.m2gla.istic.projet.strategy.Strategy;
 
 public class MapActivity extends Activity {
 
@@ -121,7 +117,7 @@ public class MapActivity extends Activity {
 
                             Position pos = topographies[i].getPosition();
                             //Draw a random symbol with random texts and random color at a random position
-                            createSymbolMarker(pos.getLatitude(),pos.getLongitude(),
+                            createSymbolMarker(pos.getLatitude(), pos.getLongitude(),
                                     Symbols.valueOf(topographies[i].getFilename()),
                                     topographies[i].getFirstContent(), topographies[i].getSecondContent(), topographies[i].getColor(),
                                     topographies[i].getFirstContent()
@@ -169,7 +165,7 @@ public class MapActivity extends Activity {
      * @param textContent2   second text
      * @param hexaColor      symbol color
      */
-    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor,String description) {
+    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor, String description) {
         try {
             //Mise à jour des coordonnées
             final LatLng latLng = new LatLng(latitude, longitude);
@@ -179,11 +175,6 @@ public class MapActivity extends Activity {
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
-
-            /*map.addMarker(new MarkerOptions()
-                    .position(new LatLng(latitude, longitude))
-                    .icon(icon).anchor(0.5f, 0.5f)
-                    .title(email)).showInfoWindow()).showInfoWindow();*/
 
             SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon, description);
             mClusterManager.addItem(marketItem);
@@ -199,7 +190,7 @@ public class MapActivity extends Activity {
         private BitmapDescriptor icon;
         private String description;
 
-        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon,String description) {
+        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon, String description) {
             mPosition = new LatLng(lat, lng);
             this.icon = icon;
             this.description = description;

@@ -1,5 +1,7 @@
 package fr.m2gla.istic.projet.constantes;
 
+import fr.m2gla.istic.projet.activity.R;
+
 /**
  * Created by mds on 10/04/15.
  */
@@ -19,24 +21,34 @@ public class Constant {
     public static final String VALUE_SECOUR_A_PERSONNE_PREVU = "Secours à personne";
     public static final String VALUE_VEHICULE_A_INCENDIE_SEUL = "Véhicule incendie";
 
+    public static final String VALUE_VEHICULE_VSAV = "VSAV";
+    public static final String VALUE_VEHICULE_VSR = "VSR";
+    public static final String VALUE_VEHICULE_VLCG = "VLCG";
+    public static final String VALUE_VEHICULE_EPA = "EPA";
+    public static final String VALUE_VEHICULE_FPT = "FPT";
 
-    public enum Symbols {
-        colonne_incendie_active,
-        groupe_incendie_actif,
-        moyen_intervention_aerien_actif,
-        moyen_intervention_aerien_prevu,
-        pc_colonne_deux_fonctions_actif,
-        pc_site,
-        point_ravitaillement,
-        poste_commandement_prevu,
-        prise_eau_non_perenne,
-        prise_eau_perenne,
-        secours_a_personnes_actif,
-        secours_a_personnes_prevu,
-        vehicule_incendie_seul_actif,
-        vehicule_incendie_seul_prevu,
-        danger,
-        etoile,
-        point_sensible
+
+    // Text
+    public static final int DRAWABLE_VEHICULE_VSAV = R.mipmap.ic_vehicule_vsav;
+    public static final int DRAWABLE_VEHICULE_VSR = R.mipmap.ic_vehicule_vsr;
+    public static final int DRAWABLE_VEHICULE_VLCG = R.mipmap.ic_vehicule_vlcg;
+    public static final int DRAWABLE_VEHICULE_EPA = R.mipmap.ic_vehicule_epa;
+    public static final int DRAWABLE_VEHICULE_FPT = R.mipmap.ic_vehicule_fpt;
+
+    // Image
+    public static final int DRAWABLE_IMG_VEHICULE_VSAV = R.mipmap.ic_vehicule_img_vsav;
+    public static final int DRAWABLE_IMG_VEHICULE_VSR = R.mipmap.ic_vehicule_img_vsr;
+    public static final int DRAWABLE_IMG_VEHICULE_VLCG = R.mipmap.ic_vehicule_img_vlcg;
+    public static final int DRAWABLE_IMG_VEHICULE_EPA = R.mipmap.ic_vehicule_img_epa;
+    public static final int DRAWABLE_IMG_VEHICULE_FPT = R.mipmap.ic_vehicule_img_fpt;
+
+
+    // VSAV -- Véhicule de secours et d'assistance aux victimes
+    // VSR -- Véhicule secours routier
+    // VLCG -- Véhicule de liaison chef de groupe
+    // EPA -- Echelle pivotante automatique
+    // FTP -- Fourgon pompe-tonne
+    public enum Vehicule {
+        VSAV, VSR, VLCG, EPA, FPT
     }
 }

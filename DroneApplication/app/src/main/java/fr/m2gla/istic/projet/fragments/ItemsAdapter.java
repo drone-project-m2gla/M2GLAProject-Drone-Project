@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
 
 import fr.m2gla.istic.projet.activity.R;
 
@@ -24,12 +21,12 @@ import fr.m2gla.istic.projet.activity.R;
 public class ItemsAdapter extends ArrayAdapter {
 
     private final Activity activity;
-    private final String[] images;
+    private final int[] images;
 
     private String[] titles;
 
     public ItemsAdapter(Context context, int textViewResourceId,
-                        String[] objects, String[] images) {
+                        String[] objects, int[] images) {
         super(context, textViewResourceId, objects);
         activity = (Activity) context;
         this.titles = objects;
@@ -55,25 +52,7 @@ public class ItemsAdapter extends ArrayAdapter {
 
         // Declaring and Typecasting the imageView in the inflated layout
         ImageView imgImageView = (ImageView) layout.findViewById(R.id.imgLanguage);
-
-        SVG svg = null;
-        try {
-            int imageResource = activity.getResources().getIdentifier(images[position],
-                    "raw", activity.getPackageName());
-            Log.i("sow", "ressource value\t " + images[position] + "\t++++++++++++++  " + imageResource);
-
-            if (imageResource == 0) {
-                // Get default image.
-                imageResource = R.raw.prise_eau_perenne;
-            }
-            svg = SVG.getFromResource(activity, imageResource);
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
-            imgImageView.setImageBitmap(image);
-        } catch (SVGParseException e) {
-            e.printStackTrace();
-        }
-        // Setting Special atrributes for 1st element
+// Setting Special atrributes for 1st element
         if (position == 0 && titles[position].equals("")) {
             // Removing the image view
             imgImageView.setVisibility(View.GONE);
@@ -84,7 +63,28 @@ public class ItemsAdapter extends ArrayAdapter {
             // Setting the value
             itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
+        } else {
+            imgImageView.setImageDrawable(activity.getResources().getDrawable(images[position]));
         }
+
+        SVG svg = null;
+//        try {
+//            int imageResource = activity.getResources().getIdentifier(images[position],
+//                    "raw", activity.getPackageName());
+//            Log.i("sow", "ressource value\t " + images[position] + "\t++++++++++++++  " + imageResource);
+//
+//            if (imageResource == 0) {
+//                // Get default image.
+//                imageResource = R.raw.prise_eau_perenne;
+//            }
+//            svg = SVG.getFromResource(activity, imageResource);
+//            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+//            Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
+//            imgImageView.setImageBitmap(image);
+//        } catch (SVGParseException e) {
+//            e.printStackTrace();
+//        }
+
         return layout;
     }
 

@@ -26,6 +26,7 @@ public class MoyensInitFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
 
+
         //setListAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
 
 //        Log.e("sow", this.getListAdapter().getItem(0).toString());
@@ -40,4 +41,6 @@ public class MoyensInitFragment extends ListFragment {
         txt.change(titles[position], "Version : " + Version[position]);
         getListView().setSelector(android.R.color.holo_blue_dark);
     }
+
+
 }
