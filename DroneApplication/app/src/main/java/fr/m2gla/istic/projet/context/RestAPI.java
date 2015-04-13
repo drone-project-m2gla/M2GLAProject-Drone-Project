@@ -15,5 +15,5 @@ public interface RestAPI {
     public static final String GET_ALL_INTERVENTION = "/intervention";
 
     // topographie block
-    public static final String GET_ALL_TOPOGRAPHIE = "/topographie";
+    public static final String GET_ALL_TOPOGRAPHIE = "/topographie/1/1/1";
 }
