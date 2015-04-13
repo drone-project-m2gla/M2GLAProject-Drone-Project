@@ -39,7 +39,6 @@ public class Topographie {
             gID.connect();
             List<GeoIcon> res = gID.getAll();
             gID.disconnect();
-            System.out.println(res);
             return res;
         }
 }
