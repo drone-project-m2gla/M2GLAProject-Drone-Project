@@ -10,6 +10,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
@@ -182,6 +184,8 @@ public class NewInterventionActivity extends Activity {
         intervention.setAddress(this.voie);
         intervention.setCity(this.ville);
         intervention.setPostcode(this.codePostalStr);
+// Gson toto = new Gson();
+// System.out.println(toto.toJson(intervention));
 
         newInter.post(RestAPI.POST_INTERVENTION, null, intervention, Intervention.class, new Command() {
             /**

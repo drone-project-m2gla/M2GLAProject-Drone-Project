@@ -1,10 +1,13 @@
 package fr.m2gla.istic.projet.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 /**
  * Created by baptiste on 10/04/15.
  */
+@JsonInclude (JsonInclude.Include.NON_NULL)
 public class Intervention extends Entity {
     private String address;
     private String postcode;
