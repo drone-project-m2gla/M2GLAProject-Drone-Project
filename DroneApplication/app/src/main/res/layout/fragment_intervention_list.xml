@@ -28,45 +28,4 @@
         />
     </LinearLayout>
 
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/buttonLayout"
-        >
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_refresh"
-            android:id="@+id/refreshInterButton"
-            android:onClick="interventionRefresh"
-            android:layout_weight="1"
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_add"
-            android:id="@+id/addInterButton"
-            android:onClick="interventionSelection"
-            android:layout_weight="1"
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_return"
-            android:id="@+id/finInterButton"
-            android:onClick="endInterventionSelection"
-            android:layout_weight="1"
-            />
-
-    </LinearLayout>
-
-
 </RelativeLayout>
