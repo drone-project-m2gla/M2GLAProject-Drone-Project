@@ -7,6 +7,7 @@ public class Mean extends Entity {
     private Vehicle vehicle;
     private Position coordinates;
     private boolean inPosition;
+    private boolean isDeclined;
 
     public Vehicle getVehicle() {
         return vehicle;
@@ -30,5 +31,13 @@ public class Mean extends Entity {
 
     public void setInPosition(boolean inPosition) {
         this.inPosition = inPosition;
+    }
+
+    public boolean getIsDeclined() {
+        return isDeclined;
+    }
+
+    public void setIsDeclined(boolean isDeclined) {
+        this.isDeclined = isDeclined;
     }
 }
