@@ -1,6 +1,7 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
+import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.DisasterCode;
+import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.model.User;
+import fr.m2gla.istic.projet.service.RestService;
+import fr.m2gla.istic.projet.service.impl.PushServiceImpl;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+
 /**
  * Created by david on 09/02/15.
  */
@@ -16,9 +27,11 @@ import android.widget.Toast;
 public class NewInterventionActivity extends Activity {
 
     private     String                              voie;
-    private     String                              codePostal;
+    private     String                              codePostalStr;
     private     String                              ville;
-    private     String                              sinistre;
+    private     String                              sinistreStr;
+    private     DisasterCode                        disasterCode;
+    private     Integer                             postCode;
 
 
     @Override
@@ -49,10 +62,11 @@ public class NewInterventionActivity extends Activity {
 
         // Initialisation des attributs
         this.voie = "";
-        this.codePostal = "";
+        this.codePostalStr = "";
         this.ville = "";
-        this.sinistre = "";
-
+        this.sinistreStr = "";
+        this.disasterCode = DisasterCode.AVP;
+        this.postCode = 0;
     }
 
 
@@ -94,8 +108,9 @@ public class NewInterventionActivity extends Activity {
 
         // Recuperer le code postal
         if (textCP.getText().length() != 0) {
-            this.codePostal = "" + textCP.getText();
-            Toast.makeText(getApplicationContext(), "" + this.codePostal, Toast.LENGTH_SHORT).show();
+            this.codePostalStr = "" + textCP.getText();
+            Toast.makeText(getApplicationContext(), "" + this.codePostalStr, Toast.LENGTH_SHORT).show();
+            this.postCode = Integer.parseInt(this.codePostalStr);
         }
         else {
             Toast.makeText(getApplicationContext(), "Manque le code postal", Toast.LENGTH_SHORT).show();
@@ -120,8 +135,21 @@ public class NewInterventionActivity extends Activity {
         radioBSelect = sinistreRadioG.getCheckedRadioButtonId();
         selectedRadioB = (RadioButton) findViewById(radioBSelect);
         if (selectedRadioB.getText().length() != 0) {
-            this.sinistre = "" + selectedRadioB.getText();
-            Log.i("ajoutIntervention", "Sinistre : " + this.sinistre);
+            this.sinistreStr = "" + selectedRadioB.getText();
+            if (this.sinistreStr.compareTo(DisasterCode.AVP.toString()) == 0) {
+                this.disasterCode = DisasterCode.AVP;
+            }
+            else if (this.sinistreStr.compareTo(DisasterCode.FHA.toString()) == 0) {
+                this.disasterCode = DisasterCode.FHA;
+            }
+            else if (this.sinistreStr.compareTo(DisasterCode.SAP.toString()) == 0) {
+                this.disasterCode = DisasterCode.SAP;
+            }
+            else {
+                this.disasterCode = DisasterCode.AVP;
+            }
+
+            Log.i("ajoutIntervention", "Sinistre : " + this.sinistreStr + "/" + this.disasterCode);
         }
         else {
             Toast.makeText(getApplicationContext(), "Manque le code sinistre", Toast.LENGTH_SHORT).show();
@@ -131,10 +159,78 @@ public class NewInterventionActivity extends Activity {
         }
 
         // Envoyer les donnees au serveur
-//        RestService loginSnd = RestServiceImpl.getInstance();
+        sendNewInterventionAsync();
+
 
 
     }
 
+
+    /**
+     * Methode de gestion de l'envoi des elements de login au serveur
+     *
+     * @param -
+     */
+    private boolean sendNewInterventionAsync() {
+
+        RestService     newInter = RestServiceImpl.getInstance();
+        Intervention    intervention;
+
+
+        intervention = new Intervention();
+        intervention.setDisasterCode(this.disasterCode);
+        intervention.setAddress(this.voie);
+        intervention.setCity(this.ville);
+        intervention.setPostcode(this.codePostalStr);
+
+        newInter.post(RestAPI.POST_INTERVENTION, null, intervention, Intervention.class, new Command() {
+            /**
+             * Success connection
+             * @param response Response object type User
+             */
+            @Override
+            public void execute(Object response) {
+                // register to GCM
+                // PushServiceImpl.getInstance().register(disasterCode);
+
+                // Demander la prise en compte de la validation de l'identification
+                Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
+                postOkNewInterventionAction();
+            }
+        }, new Command() {
+            /**
+             * Error connection
+             * @param response Response error type HttpClientErrorException
+             */
+            @Override
+            public void execute(Object response) {
+                // Echec d'identification. Retours à l'activity principale
+                Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
+                postNewInterventionAction();
+                return;
+            }
+        });
+
+        return true;
+    }
+
+
+    /**
+     * Methode d'action post login reussi
+     *
+     * @param -
+     */
+    private void postOkNewInterventionAction() {
+        postNewInterventionAction();
+    }
+
+    /**
+     * Methode d'action post login
+     *
+     * @param -
+     */
+    private void postNewInterventionAction() {
+        this.initializeElement();
+    }
 
 }

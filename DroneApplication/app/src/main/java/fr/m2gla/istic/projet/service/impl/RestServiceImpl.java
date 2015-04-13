@@ -3,6 +3,7 @@ package fr.m2gla.istic.projet.service.impl;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -42,6 +43,10 @@ public class RestServiceImpl implements RestService {
                         result = restTemplate.getForObject(URL + service, type, param);
                     }
                 } catch (HttpStatusCodeException e) {
+                    Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (HttpMessageNotReadableException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
                     error = true;
                     return e;

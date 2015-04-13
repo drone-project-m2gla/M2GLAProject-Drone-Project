@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class Intervention extends Entity {
     private String address;
-    private int postcode;
+    private String postcode;
     private String city;
     private DisasterCode disasterCode;
     private List<Mean> meansList;
@@ -26,11 +26,11 @@ public class Intervention extends Entity {
         this.address = address;
     }
 
-    public int getPostcode() {
+    public String getPostcode() {
         return postcode;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
 
