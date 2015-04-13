@@ -14,10 +14,16 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import fr.m2gla.istic.projet.application.DroneApplication;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.context.UserQualification;
+import fr.m2gla.istic.projet.model.Entity;
+import fr.m2gla.istic.projet.model.PushEntity;
 import fr.m2gla.istic.projet.service.PushService;
 
 public class PushServiceImpl implements PushService {
@@ -28,19 +34,16 @@ public class PushServiceImpl implements PushService {
     private Context context;
     private String registeredId;
 
-    protected PushServiceImpl() {}
+    protected PushServiceImpl() {
+        context = DroneApplication.getAppContext();
+    }
 
     public static PushService getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-    @Override
-    public void register() {
+    public void register(final UserQualification typeClient) {
         final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
 
         if (gcm != null && checkPlayServices()) {
@@ -63,18 +66,23 @@ public class PushServiceImpl implements PushService {
                 protected void onPostExecute(Object o) {
                     final Boolean result = (Boolean)o;
                     if (result) {
-                        List<NameValuePair> content = new ArrayList<NameValuePair>();
-                        content.add(new BasicNameValuePair("id", registeredId));
+                        PushEntity entity = new PushEntity();
+                        entity.setId(registeredId);
+                        entity.setTypeClient(typeClient);
 
-                        /*RestServiceImpl.getInstance()
-                            .post(RestAPI.POST_PUSH_REGISTER, content, new Command() {
+                        RestServiceImpl.getInstance().post(RestAPI.POST_PUSH_REGISTER, null, entity, Void.class,
+                                new Command() {
                                     @Override
-                                    public void execute(HttpResponse response) {
-                                        if (response.getStatusLine().getStatusCode() != 204) {
-                                            Log.i(TAG, "Erreur register code " + response.getStatusLine().getStatusCode());
-                                        }
+                                    public void execute(Object response) {
+                                        Log.i(TAG, "Unregister success");
                                     }
-                                }, null);*/
+                                },
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Error unregister code " + ((Exception)response).getMessage());
+                                    }
+                                });
                     }
                 }
             }).execute();
@@ -105,15 +113,22 @@ public class PushServiceImpl implements PushService {
                 protected void onPostExecute(Object o) {
                     final Boolean result = (Boolean)o;
                     if (result) {
-                        /*RestServiceImpl.getInstance()
-                                .delete(RestAPI.DELETE_PUSH_REGISTER.replace(":id", registeredId), new Command() {
+                        Map<String, String> param = new HashMap<String, String>();
+                        param.put("id", registeredId);
+
+                        RestServiceImpl.getInstance().delete(RestAPI.DELETE_PUSH_REGISTER, param,
+                                new Command() {
                                     @Override
-                                    public void execute(HttpResponse response) {
-                                        if (response.getStatusLine().getStatusCode() != 204) {
-                                            Log.i(TAG, "Erreur register code " + response.getStatusLine().getStatusCode());
-                                        }
+                                    public void execute(Object response) {
+                                        Log.i(TAG, "Unregister success");
                                     }
-                                }, null);*/
+                                },
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Error unregister code " + ((Exception)response).getMessage());
+                                    }
+                                });
                     }
                 }
             }).execute();
