@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
@@ -56,6 +57,10 @@ public class RestServiceImpl implements RestService {
                         result = restTemplate.getForObject(URL + service, type, param);
                     }
                 } catch (HttpClientErrorException e) {
+                    Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (HttpMessageNotReadableException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
                     error = true;
                     return e;

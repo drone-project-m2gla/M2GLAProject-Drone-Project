@@ -13,8 +13,10 @@ public class Intervention {
     private DisasterCode disasterCode;
     private List<Mean> means;
     private Position position;
+    private List<Mean> meansXtra;
 
     public Intervention() {
+
     }
 
     public String getId() {
@@ -72,4 +74,13 @@ public class Intervention {
     public void setCoordinates(Position position) {
         this.position = position;
     }
+
+    public List<Mean> getMeansXtra() {
+        return meansXtra;
+    }
+
+    public void setMeansXtra(List<Mean> meansXtra) {
+        this.meansXtra = meansXtra;
+    }
+
 }
