@@ -1,15 +1,21 @@
 package rest;
 
 
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
 import entity.Position;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
 
 /**
  * Created by arno on 12/02/15.
@@ -92,6 +98,23 @@ public class InterventionRest {
 
     }
 
+    @POST
+    @Path("/{id}/moyenextra")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public long getMeanListForIntervention(@PathParam("id") long id,Mean meanXtra) {
+
+        InterventionDAO iD = new InterventionDAO();
+        Mean res = null;
+        iD.connect();
+        Intervention intervention = iD.getById(id);
+        intervention.getMeansXtra().add(meanXtra);
+
+        iD.update(intervention);
+
+        iD.disconnect();
+        return meanXtra.getId();
+    }
 
     @GET
     @Path("/{id}/moyen")
@@ -141,7 +164,7 @@ public class InterventionRest {
         iD.connect();
 
         // Code temporaire a remplacé par service google pour retrouver les coordonnées GPS
-        Position p1 = new Position(-1,-1);
+        Position p1 = new Position(Double.NaN,Double.NaN);
         intervention.setCoordinates(p1);
 
         // Génération de la liste des moyens
