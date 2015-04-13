@@ -12,8 +12,10 @@ public class Intervention extends Entity {
     private DisasterCode disasterCode;
     private List<Mean> meansList;
     private Position position;
+    private List<Mean> meansXtra;
 
     public Intervention() {
+
     }
 
     public String getAddress() {
@@ -63,4 +65,13 @@ public class Intervention extends Entity {
     public void setCoordinates(Position position) {
         this.position = position;
     }
+
+    public List<Mean> getMeansXtra() {
+        return meansXtra;
+    }
+
+    public void setMeansXtra(List<Mean> meansXtra) {
+        this.meansXtra = meansXtra;
+    }
+
 }

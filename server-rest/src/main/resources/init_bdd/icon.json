@@ -3,8 +3,8 @@
 	"entitled":"Colonne incendie active",
 	"filename":"colonne_incendie_active",
     "coordinates": {
-            "longitude": -1.596537,
-                "latitude": 48.129062
+            "longitude": -1.63847,
+                "latitude": 48.117121
         }
     "color" : "0000ff",
     "tiret" :"true",
@@ -16,8 +16,8 @@
 	"entitled":"Moyen intervention aerien prevu",
 	"filename":"moyen_intervention_aerien_prevu",
     "coordinates": {
-            "longitude": -1.602287,
-            "latitude": 48.126255
+            "longitude": -1.637371,
+            "latitude": 48.114909
         }
     "color" : "0000ff",
     "tiret" :"true",
@@ -29,8 +29,8 @@
 	"entitled":"Groupe incendie actif",
 	"filename":"groupe_incendie_actif",
     "coordinates": {
-            "longitude": -1.605463,
-            "latitude": 48.121614
+            "longitude": -1.641726,
+            "latitude": 48.117898
         }
     "color" : "0000ff",
     "tiret" :"true",
@@ -42,8 +42,8 @@
 	"entitled":"Moyen intervention aerien actif",
 	"filename":"moyen_intervention_aerien_actif",
     "coordinates": {
-            "longitude": -1.6477775573730435,
-            "latitude": 48.11331108845255
+            "longitude": -1.639761,
+            "latitude": 48.114499
         }
     "color" : "0000ff",
     "tiret" :"true",
