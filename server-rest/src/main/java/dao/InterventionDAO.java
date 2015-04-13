@@ -32,7 +32,7 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
             if (Constant.DATATYPE_INTERVENTION.equals(((JsonObject) content.get("properties")).get("datatype"))) {
                 intervention.setId(Long.parseLong(jsonDocument.id()));
                 intervention.setAddress((String) ((JsonObject)content.get("properties")).get("address"));
-                intervention.setPostcode( ((JsonObject)content.get("properties")).getInt("postcode"));
+                intervention.setPostcode((String) ((JsonObject)content.get("properties")).get("postcode"));
                 intervention.setCity((String) ((JsonObject)content.get("properties")).get("city"));
                 intervention.setDisasterCode(DisasterCode.valueOf((String) ((JsonObject)content.get("properties")).get("disasterCode")));
                 intervention.setMeansList(Tools.jsonArrayToMeanList((JsonArray) ((JsonObject)content.get("properties")).get("meansList")));
