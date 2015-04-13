@@ -1,10 +1,7 @@
 package dao;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import entity.GeoImage;
-import entity.Position;
-import org.junit.*;
-import util.Configuration;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,8 +10,18 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import util.Configuration;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
+import entity.GeoImage;
+import entity.Position;
 
 /**
  * Created by alban on 16/03/15.
