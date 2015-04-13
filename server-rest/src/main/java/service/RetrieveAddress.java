@@ -9,7 +9,7 @@ public class RetrieveAddress {
 
 	private String address;
 	private String ville;
-	private int codepostal;
+	private String codepostal;
 	
 	private Position coordinates;
 
@@ -20,7 +20,7 @@ public class RetrieveAddress {
 
 
 
-	public RetrieveAddress(String address, int codepostal , String ville) {
+	public RetrieveAddress(String address, String codepostal , String ville) {
 		super();
 		this.address = address;
 		this.ville = ville;
@@ -42,6 +42,7 @@ public class RetrieveAddress {
 	//http://maps.googleapis.com/maps/api/geocode/json?parameters
 
 
+	
 	public Position retrieveGps(){
 		Double lng = null;
 		Double lat = null;
@@ -63,8 +64,4 @@ public class RetrieveAddress {
 
 	}
 
-	public static void main(String[] args) {
-		RetrieveAddress a  = new RetrieveAddress("14 avenue pierre donzelot", 35700, "Rennes");
-		a.retrieveGps();
-	}
 }
