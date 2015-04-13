@@ -3,7 +3,6 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.ListFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +20,15 @@ public class MoyensInitFragment extends ListFragment {
             "XML Language", "PHP Language"};
 
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
-    String [] images = {Constant.COLONNE_INCENDIE_ACTIVE,Constant.GROUPE_INCENDIE_ACTIF,Constant.MOYEN_INTERVENTION_AERIEN};
+    String [] images = {Constant.SVG_COLONNE_INCENDIE_ACTIVE,Constant.SVG_GROUPE_INCENDIE_ACTIF,Constant.SVG_MOYEN_INTERVENTION_AERIEN};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
 
-        setListAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
+        //setListAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
 
-        Log.e("sow", this.getListAdapter().getItem(0).toString());
+//        Log.e("sow", this.getListAdapter().getItem(0).toString());
 
         return view;
 

@@ -44,33 +44,47 @@ public class ItemsAdapter extends ArrayAdapter {
         View layout = inflater.inflate(R.layout.custom, parent, false);
 
         // Declaring and Typecasting the textview in the inflated layout
-        TextView tvLanguage = (TextView) layout
+        TextView itemLabelTxtView = (TextView) layout
                 .findViewById(R.id.tvLanguage);
 
         // Setting the text using the array
-        tvLanguage.setText(titles[position]);
+        itemLabelTxtView.setText(titles[position]);
 
         // Setting the color of the text
-        tvLanguage.setTextColor(Color.rgb(75, 180, 225));
+        itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
 
         // Declaring and Typecasting the imageView in the inflated layout
-        ImageView img = (ImageView) layout.findViewById(R.id.imgLanguage);
+        ImageView imgImageView = (ImageView) layout.findViewById(R.id.imgLanguage);
 
         SVG svg = null;
         try {
-            int test = activity.getResources().getIdentifier("raw/" + images[0],
+            int imageResource = activity.getResources().getIdentifier(images[position],
                     "raw", activity.getPackageName());
-            svg = SVG.getFromResource(activity, R.raw.colonne_incendie_active);
+            Log.i("sow", "ressource value\t " + images[position] + "\t++++++++++++++  " + imageResource);
 
-            Log.i("sow", "test  "+test+"  raw  "+R.raw.colonne_incendie_active);
+            if (imageResource == 0) {
+                // Get default image.
+                imageResource = R.raw.prise_eau_perenne;
+            }
+            svg = SVG.getFromResource(activity, imageResource);
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
-            Log.i("sow", "ressource value" + test);
-            img.setImageBitmap(image);
+            imgImageView.setImageBitmap(image);
         } catch (SVGParseException e) {
             e.printStackTrace();
         }
+        // Setting Special atrributes for 1st element
+        if (position == 0 && titles[position].equals("")) {
+            // Removing the image view
+            imgImageView.setVisibility(View.GONE);
+            // Setting the size of the text
+            itemLabelTxtView.setTextSize(20f);
+            // Setting the text Color
+            itemLabelTxtView.setTextColor(Color.WHITE);
+            // Setting the value
+            itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
+        }
         return layout;
     }
 

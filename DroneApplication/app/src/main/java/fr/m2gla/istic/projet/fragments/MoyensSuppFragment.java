@@ -31,11 +31,9 @@ public class MoyensSuppFragment extends Fragment {
     private static ArrayAdapter<CharSequence> adapter;
 
     // Declaring the String Array with the Text Data for the Spinners
-    String[] titles = {"Select a Language", "C# Language", "HTML Language",
-            "XML Language", "PHP Language"};
+    String[] titles;
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
-    Integer[] images = {0, R.drawable.common_full_open_on_phone, R.drawable.common_signin_btn_icon_dark,
-            R.drawable.common_full_open_on_phone, R.raw.colonne_incendie_active};
+    String[] images;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,8 +46,13 @@ public class MoyensSuppFragment extends Fragment {
                 .findViewById(R.id.moyensSpinner);
 
         // Setting a Custom Adapter to the Spinner
-        String[] tests = {Constant.COLONNE_INCENDIE_ACTIVE};
-        moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, tests));
+        images = new String[]{"", Constant.SVG_COLONNE_INCENDIE_ACTIVE, Constant.SVG_MOYEN_INTERVENTION_AERIEN,
+                Constant.SVG_GROUPE_INCENDIE_ACTIF, Constant.SVG_SECOUR_A_PERSONNE_PREVU};
+        titles = new String[]{"", Constant.VALUE_COLONNE_INCENDIE_ACTIVE, Constant.VALUE_MOYEN_INTERVENTION_AERIEN,
+                Constant.VALUE_GROUPE_INCENDIE_ACTIF, Constant.VALUE_SECOUR_A_PERSONNE_PREVU};
+
+
+        moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
 
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_moyen);
         addButton.setOnClickListener(new View.OnClickListener() {
