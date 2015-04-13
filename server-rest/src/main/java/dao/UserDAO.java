@@ -1,13 +1,19 @@
 package dao;
 
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonObject;
-import com.couchbase.client.java.view.*;
-import entity.User;
-import util.Constant;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import util.Constant;
+
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.view.DefaultView;
+import com.couchbase.client.java.view.DesignDocument;
+import com.couchbase.client.java.view.ViewQuery;
+import com.couchbase.client.java.view.ViewResult;
+import com.couchbase.client.java.view.ViewRow;
+
+import entity.User;
 
 /**
  * Created by mds on 07/04/15.

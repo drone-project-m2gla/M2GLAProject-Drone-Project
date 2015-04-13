@@ -12,11 +12,12 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 
+import service.PushService.TypeClient;
+import service.impl.PushServiceImpl;
+
 import com.google.android.gcm.server.MulticastResult;
 
 import entity.PushEntity;
-import service.PushService.TypeClient;
-import service.impl.PushServiceImpl;
 
 @Path("/register")
 public class PushRegister {

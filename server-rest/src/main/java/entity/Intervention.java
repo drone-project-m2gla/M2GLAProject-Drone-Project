@@ -1,9 +1,9 @@
 package entity;
 
+import java.util.List;
+
 import util.Constant;
 import util.MeansByDisasterCode;
-
-import java.util.List;
 
 /**
  * Created by arno on 07/04/15.

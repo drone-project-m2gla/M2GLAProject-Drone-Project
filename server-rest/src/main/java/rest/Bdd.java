@@ -1,9 +1,5 @@
 package rest;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import java.io.File;
 import java.io.FileReader;
 import java.util.Iterator;
@@ -11,6 +7,10 @@ import java.util.Iterator;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import dao.GeoIconDAO;
 import entity.GeoIcon;
@@ -59,12 +59,12 @@ public class Bdd {
                 File file = new File(classLoader.getResource("init_bdd/icon.json").getFile());
                 Object obj = parser.parse(new FileReader(file));
                 JSONArray users = (JSONArray) obj;
-                Iterator<JSONObject> iterator = users.iterator();
+                Iterator iterator = users.iterator();
 
                 GeoIconDAO iconDAO = new GeoIconDAO();
                 iconDAO.connect();
                 while (iterator.hasNext()) {
-                    JSONObject userJSON = iterator.next();
+                    JSONObject userJSON = (JSONObject) iterator.next();
                     GeoIcon tmpUser = new GeoIcon();
                     tmpUser.setEntitled((String) userJSON.get("entitled"));
                     tmpUser.setFilename((String) userJSON.get("filename"));
@@ -73,7 +73,7 @@ public class Bdd {
                     Position position = new Position((Double) coordinates.get("longitude"),(Double) coordinates.get("latitude"));
                     tmpUser.setPosition(position);
                     tmpUser.setColor((String) userJSON.get("color"));
-                    tmpUser.setTiret((Boolean) Boolean.parseBoolean(""+userJSON.get("tiret")));
+                    tmpUser.setTiret(Boolean.parseBoolean(""+userJSON.get("tiret")));
                     tmpUser.setFirstContent((String) userJSON.get("firstContent"));
                     tmpUser.setSecondContent((String) userJSON.get("secondContent"));
 

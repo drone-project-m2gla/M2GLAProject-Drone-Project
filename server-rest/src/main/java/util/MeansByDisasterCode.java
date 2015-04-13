@@ -1,11 +1,11 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import entity.DisasterCode;
 import entity.Mean;
 import entity.Vehicle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by arno on 07/04/15.
