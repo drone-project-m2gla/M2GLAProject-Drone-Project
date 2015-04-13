@@ -45,7 +45,11 @@
 
         <activity android:name=".SVGActivity" />
         <activity android:name=".CodisActivity" />
-        <activity android:name=".InterventionListActivity" />
+        <activity android:name=".InterventionListActivity">
+            <intent-filter>
+                <action android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name="fr.m2gla.istic.projet.receiver.GcmBroadcastReceiver"

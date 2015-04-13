@@ -1,73 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:id="@+id/listLayout"
-        >
-        <fragment
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            class="fr.m2gla.istic.projet.fragments.PresentationFragment"
-            android:id="@+id/fragment_presentation" />
-
-        <fragment
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
-            android:id="@+id/fragment_intervention_list" />
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/buttonLayout"
-        >
+        android:layout_weight=".6">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_refresh"
-            android:id="@+id/refreshInterButton"
-            android:onClick="interventionRefresh"
-            android:layout_weight="1"
-            />
 
-        <Button
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/listLayout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_add"
-            android:id="@+id/addInterButton"
-            android:onClick="interventionSelection"
-            android:layout_weight="1"
-            />
+            android:layout_above="@+id/buttonLayout"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
 
-        <Button
-            android:layout_width="match_parent"
+            <fragment
+                android:id="@+id/fragment_presentation"
+                class="fr.m2gla.istic.projet.fragments.PresentationFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/fragment_intervention_list"
+                class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_return"
-            android:id="@+id/finInterButton"
-            android:onClick="endInterventionSelection"
-            android:layout_weight="1"
-            />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/refreshInterButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="interventionRefresh"
+                android:text="@string/button_refresh" />
+
+            <Button
+                android:id="@+id/addInterButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="interventionSelection"
+                android:text="@string/button_add" />
+
+            <Button
+                android:id="@+id/finInterButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="endInterventionSelection"
+                android:text="@string/button_return" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
+    <fragment
+        android:id="@+id/fragment_intervention_list1"
+        class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".4" />
 
 </RelativeLayout>
