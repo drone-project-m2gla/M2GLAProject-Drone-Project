@@ -25,6 +25,8 @@ public class ItemsAdapter extends ArrayAdapter {
     private final Activity activity;
     private final int[] images;
 
+    private final static String TAG = "ItemsAdapter";
+
     private String[] titles;
 
     public ItemsAdapter(Context context, int textViewResourceId,
@@ -67,14 +69,14 @@ public class ItemsAdapter extends ArrayAdapter {
 
         } else {
             //FIXME: corriger plus tard
-            //imgImageView.setImageDrawable(activity.getResources().getDrawable(images[position]));
+            imgImageView.setImageDrawable(activity.getResources().getDrawable(images[position]));
         }
 
         SVG svg = null;
 //        try {
 //            int imageResource = activity.getResources().getIdentifier(images[position],
 //                    "raw", activity.getPackageName());
-//            Log.i("sow", "ressource value\t " + images[position] + "\t++++++++++++++  " + imageResource);
+//            Log.i(TAG, "ressource value\t " + images[position] + "\t++++++++++++++  " + imageResource);
 //
 //            if (imageResource == 0) {
 //                // Get default image.
