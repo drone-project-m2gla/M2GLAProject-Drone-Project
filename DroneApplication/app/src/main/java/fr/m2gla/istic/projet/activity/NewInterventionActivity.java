@@ -191,8 +191,7 @@ public class NewInterventionActivity extends Activity {
         intervention.setAddress(this.voie);
         intervention.setCity(this.ville);
         intervention.setPostcode(this.codePostalStr);
-// Gson toto = new Gson();
-// System.out.println(toto.toJson(intervention));
+
 
         newInter.post(RestAPI.POST_INTERVENTION, null, intervention, Intervention.class, new Command() {
             /**
@@ -205,7 +204,7 @@ public class NewInterventionActivity extends Activity {
                 // PushServiceImpl.getInstance().register(disasterCode);
 
                 // Demander la prise en compte de la validation de l'identification
-                Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
                 postOkNewInterventionAction();
             }
         }, new Command() {
@@ -216,7 +215,7 @@ public class NewInterventionActivity extends Activity {
             @Override
             public void execute(Object response) {
                 // Echec d'identification. Retours à l'activity principale
-                Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
                 postNewInterventionAction();
                 return;
             }

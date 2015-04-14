@@ -3,6 +3,12 @@ package fr.m2gla.istic.projet.service.impl;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -32,6 +38,7 @@ public class RestServiceImpl implements RestService {
 
             @Override
             protected Object doInBackground(Object[] params) {
+
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -74,19 +81,29 @@ public class RestServiceImpl implements RestService {
 
             @Override
             protected Object doInBackground(Object[] params) {
+
+                HttpHeaders requestHeaders = new HttpHeaders();
+                requestHeaders.set("Connection", "Close");
+                requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+
                 RestTemplate restTemplate = new RestTemplate();
+                HttpEntity<String> entity = new HttpEntity<String>(new Gson().toJson((T) content), requestHeaders);
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
+                HttpEntity<T> result = null;
                 try {
-                    T result = null;
-
                     if (param == null) {
-                        result = restTemplate.postForObject(URL + service, content, type);
+                        System.out.println(URL.toString()+" - " + service.toString());
+                        System.out.println(new Gson().toJson((T) content));
+                        System.out.println(type.toString());
+                        result = restTemplate.exchange(URL + service, HttpMethod.POST, entity, type);
+
                     } else {
-                        result = restTemplate.postForObject(URL + service, content, type, param);
+                        result = restTemplate.exchange(URL + service, HttpMethod.POST, entity, type, param);
                     }
-                    Log.i(TAG, "Object \t" + result);
+                    // Log.i(TAG, "Object \t" + result);
 
                     return result;
                 } catch (HttpStatusCodeException e) {
