@@ -1,29 +1,29 @@
 from flask import Flask, jsonify, request
 from flask_restful import abort
 import math
-'''from math import cos
-from math import sin
-from math import acos'''
 import rospy
+from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+lat0 = 48.117451
+lng0 = -1.641408
 
 def gpsToPoint(lat,lng):
-    if lng + 1.641408 > 0:
+    if lng + lng0 > 0:
         coefx = 1
     else :
         coefx =-1
 
-    if lat - 48.117451 > 0:
+    if lat - lat0 > 0:
         coefy = 1
     else:
         coefy =-1
 
-    x =  coefx * gpsToMeter(lat,lng, lat,-1.641408)
-    y =  coefy * gpsToMeter(lat,lng,48.117451,lng)
-    return Point(x,y,10)
+    x =  coefx * gpsToMeter(lat,lng, lat,lng0)
+    y =  coefy * gpsToMeter(lat,lng, lat0,lng)
+    return Point(x,y,20)
 
 def gpsToMeter(lat_a, lng_a, lat_b, lng_b):
     angleLatA = math.radians(lat_a)
@@ -37,20 +37,26 @@ def gpsToMeter(lat_a, lng_a, lat_b, lng_b):
     tt = math.acos(t1 + t2 + t3) 
     return 6366000*tt
 
+def meterToGps(x,y):
+    lat = lat0 + (180/ math.pi)*(y/6378137)
+    lng = lng0 + (180/ math.pi)*(x/6378137)/math.cos(lat0)
+    return (lat,lng)
+
+def callbackOdometry(data):
+    '''rospy.loginfo (" postition d'odometry %s ", data.pose.pose)'''
+    command.pose = data.pose.pose
+
 class Command:
+
     def __init__(self):
-        self.cmd = rospy.Publisher("/mav/waypoint", Pose, queue_size=10, latch=True)
+        self.cmdWaypoint = rospy.Publisher("/drone/waypoint", Pose, queue_size=10, latch=True)
+        self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry,callbackOdometry)
 
     def setWaypoint(self, x, y, z):
         point = gpsToPoint(x,y)
-        print("Point " + str(point.x) + " " + str(point.y))
+        print("Go to Point " + str(point.x) + " " + str(point.y))
         pose = Pose(position=point)
-        self.cmd.publish(pose)
-
-    def getWaypoint(self):
-        pose = Pose(position=Point(x,y,z))
-        self.cmd.publish(pose)
-        return Point(x,y,y)
+        self.cmdWaypoint.publish(pose)
 
     def process_image(self, ros_image):
         print("processing image")
@@ -71,12 +77,11 @@ def rotate() :
     
     return jsonify({"d": d}), 201
 
-@app.route('/robot/waypoint', methods=['POST'])
-def waypoint():
+@app.route('/robot/position', methods=['POST'])
+def setPosition():
     global command
     if not request.json or not 'x' in request.json or not 'y' in request.json or not 'z' in request.json:
-        abort(400)
-    
+        abort(400)    
     x = request.json['x']
     y = request.json['y']
     z = request.json['z']
@@ -84,9 +89,16 @@ def waypoint():
     
     return jsonify({"x": x, "y": y, "z": z}), 201
 
+@app.route('/robot/position', methods=['GET'])
+def getPosition():
+    x = command.pose.position.x
+    y = command.pose.position.y
+    z = command.pose.position.z
+    t = meterToGps(x,y)    
+    return jsonify({"x": t[0], "y": t[1], "z": z}), 200
+
 @app.route('/robot/picture', methods=['GET'])
 def getpicture() :    
-    ''' rospy.init_node("cat_node")'''
     command.subscriber = rospy.Subscriber("cat/camera/image", Image, command.process_image, queue_size = 10, latch=True)
     return jsonify({"message":"reussi"})
 
