@@ -84,10 +84,10 @@ public class SVGAdapter {
             for (Node pathNode : listForms){
                 NamedNodeMap attribute = pathNode.getAttributes();
                 Node nodeAttrStyle = attribute.getNamedItem("style");
-                nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke:#.*;", "stroke:#" + color + ";"));
+                nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke:#ff00ff;", "stroke:#" + color + ";"));
                 nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;", "fill:#" + color + ";"));
             }
-            isOut = document2InputStream(document);
+            isOut = documentToInputStream(document);
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -105,7 +105,7 @@ public class SVGAdapter {
      * @return
      * @throws IOException
      */
-    public static InputStream document2InputStream(Document document) throws IOException {
+    public static InputStream documentToInputStream(Document document) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Source xmlSource = new DOMSource(document);
         Result outputTarget = new StreamResult(outputStream);
