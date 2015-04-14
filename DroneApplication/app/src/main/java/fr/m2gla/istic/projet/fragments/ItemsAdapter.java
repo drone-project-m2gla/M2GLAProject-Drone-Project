@@ -21,6 +21,8 @@ public class ItemsAdapter extends ArrayAdapter {
     private final Activity activity;
     private final Drawable[] images;
 
+    private final static String TAG = "ItemsAdapter";
+
     private String[] titles;
 
     public ItemsAdapter(Context context, int textViewResourceId,

@@ -86,7 +86,7 @@ public class RestServiceImpl implements RestService {
                     } else {
                         result = restTemplate.postForObject(URL + service, content, type, param);
                     }
-                    Log.i("sow", "MEAN \t" + result);
+                    Log.i(TAG, "Object \t" + result);
 
                     return result;
                 } catch (HttpStatusCodeException e) {

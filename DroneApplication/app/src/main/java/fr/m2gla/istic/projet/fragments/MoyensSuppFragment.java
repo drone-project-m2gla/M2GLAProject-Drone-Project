@@ -50,8 +50,6 @@ public class MoyensSuppFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.moyens_supp_fragment, container, false);
-        text = (TextView) view.findViewById(R.id.AndroidOs);
-        vers = (TextView) view.findViewById(R.id.Version);
 
         moyensSpinner = (Spinner) view
                 .findViewById(R.id.moyensSpinner);
@@ -79,7 +77,7 @@ public class MoyensSuppFragment extends Fragment {
                 int position = moyensSpinner.getSelectedItemPosition();
                 SpinnerAdapter adapter = moyensSpinner.getAdapter();
                 String moyen = String.valueOf(position);
-                Toast.makeText(getActivity(), "Bonjour\n" + moyen, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Bonjour\n" + moyen + "\tValue\t" + titles[position], Toast.LENGTH_SHORT).show();
 
                 sendRequestMeanAsync();
             }
@@ -109,7 +107,7 @@ public class MoyensSuppFragment extends Fragment {
                 // Demander la prise en compte de la validation de l'identification
                 Toast.makeText(getActivity(), "Moyen suppl.", Toast.LENGTH_SHORT).show();
                 Mean moyen = (Mean) response;
-                Log.i("sow", "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
+                Log.i("Moyen suppl.", "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
             }
         }, new Command() {
             /**
