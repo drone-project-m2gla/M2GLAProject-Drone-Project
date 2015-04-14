@@ -1,6 +1,7 @@
 package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import fr.m2gla.istic.projet.activity.MapActivity;
+import fr.m2gla.istic.projet.activity.NewInterventionActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -104,6 +107,7 @@ public class InterventionListFragment extends Fragment {
                 }
                 else {
                     Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                    callMap(map.get(GeneralConstants.INTER_LIST_ELEM1).toString());
                 }
 
             }
@@ -234,6 +238,23 @@ public class InterventionListFragment extends Fragment {
             // Mettre a jour la liste d'affichage
             this.mSchedule.notifyDataSetChanged();
         }
+    }
+
+
+    /**
+     * Methode de lancement de l'activity d'affichage de la carte correspondant a l'intervention
+     *
+     * @param idIntervention : Reference (id) de l'intervention
+     */
+    public void callMap(String idIntervention) {
+        Intent intent = new Intent(getActivity(), MapActivity.class);
+
+
+        // Ajouter l'id dans l'intent
+        intent.putExtra(GeneralConstants.ID_INTERVENTION, idIntervention);
+
+        // lancement de l'activité d'affichage de la carte
+        startActivity(intent);
     }
 
 
