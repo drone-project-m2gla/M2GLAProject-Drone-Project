@@ -155,10 +155,10 @@ public class InterventionListFragment extends Fragment {
 
                         intervention = (Intervention[]) response;
 
+                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
                         if (intervention.length == 0) {
                             return;
                         }
-                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
 
 
                         for (Intervention inter:intervention) {
