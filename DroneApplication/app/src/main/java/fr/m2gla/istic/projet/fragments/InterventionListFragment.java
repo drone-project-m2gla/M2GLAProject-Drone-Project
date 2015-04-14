@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
-import fr.m2gla.istic.projet.activity.NewInterventionActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -104,6 +103,9 @@ public class InterventionListFragment extends Fragment {
 
                 if (userQualification == UserQualification.CODIS) {
                     Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                    //InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+                    String idIntervention = map.get(GeneralConstants.INTER_LIST_ELEM1).toString();
+                    //fragmentDetailIntervention.setIdIntervention(idIntervention);
                 }
                 else {
                     Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
@@ -155,10 +157,10 @@ public class InterventionListFragment extends Fragment {
 
                         intervention = (Intervention[]) response;
 
+                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
                         if (intervention.length == 0) {
                             return;
                         }
-                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
 
 
                         for (Intervention inter:intervention) {
@@ -256,6 +258,8 @@ public class InterventionListFragment extends Fragment {
         // lancement de l'activité d'affichage de la carte
         startActivity(intent);
     }
+
+
 
 
 }

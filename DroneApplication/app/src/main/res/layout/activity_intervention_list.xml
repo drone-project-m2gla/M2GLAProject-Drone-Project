@@ -1,71 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:id="@+id/listLayout"
-        >
-        <fragment
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            class="fr.m2gla.istic.projet.fragments.PresentationFragment"
-            android:id="@+id/fragment_presentation" />
+        android:orientation="vertical">
+
 
         <fragment
+            android:id="@+id/fragment_presentation"
+            class="fr.m2gla.istic.projet.fragments.PresentationFragment"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/list_layout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
-            android:id="@+id/fragment_intervention_list" />
+            android:orientation="horizontal">
+
+            <fragment
+                android:id="@+id/fragment_intervention_list"
+                class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight=".7" />
+
+            <fragment
+                android:id="@+id/fragment_intervention_detail"
+                class="fr.m2gla.istic.projet.fragments.InterventionDetailFragment"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight=".3" />
+        </LinearLayout>
+
 
     </LinearLayout>
 
 
-
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/buttonLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:id="@+id/buttonLayout"
-        >
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_refresh"
             android:id="@+id/refreshInterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="interventionRefresh"
-            android:layout_weight="1"
-            />
+            android:text="@string/button_refresh" />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_add"
             android:id="@+id/addInterButton"
-            android:onClick="interventionSelection"
-            android:layout_weight="1"
-            />
-
-        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_return"
-            android:id="@+id/finInterButton"
-            android:onClick="endInterventionSelection"
             android:layout_weight="1"
-            />
+            android:onClick="interventionSelection"
+            android:text="@string/button_add" />
+
+        <Button
+            android:id="@+id/finInterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="endInterventionSelection"
+            android:text="@string/button_return" />
 
     </LinearLayout>
 

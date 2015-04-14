@@ -17,7 +17,7 @@ import entity.Mean;
 public class InterventionDAO extends AbstractDAO<Intervention> {
 
     /**
-     * Contructeur UnityDAO
+     * Contructeur InterventionDAO
      */
     public InterventionDAO()
     {

@@ -8,6 +8,7 @@ import java.util.Map;
 public class Configuration {
     public static String BUCKET_NAME = "prod";
     public static String COUCHBASE_HOSTNAME = "148.60.11.195";
+    public static String SERVER_PYTHON = "http://projm2gla2.istic.univ-rennes1.fr:5000/robot";
 
     /**
      * Load configurations

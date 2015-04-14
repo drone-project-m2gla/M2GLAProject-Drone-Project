@@ -5,19 +5,23 @@ import math
 bpymorse.set_speed(fps=60, logic_step_max=5, physics_step_max=5)
 
 # Simple quadrotor with rigid body physics
-quadrotor = Quadrotor()
-quadrotor.translate(x=-0, y=0, z=15)
-quadrotor.name = 'mav'
+quadrotor = Submarine()
+quadrotor.translate(x=-0, y=0, z=20)
+quadrotor.name = 'drone'
 
 camera = VideoCamera()
 
 camera.name = "camera"
-camera.translate(x=0.05,z=-0.05)
-'''camera.properties(cam_width=640,cam_heigth=480)'''
+camera.translate(x=0.05,z=-0.50)
 camera.properties(cam_width=640,cam_heigth=480,cam_near=15,cam_far=500)
 camera.frequency(15)
 camera.add_interface('ros')
 quadrotor.append(camera)
+
+odometry = Odometry()
+odometry.translate(x=0.05,z=0.23)
+odometry.add_stream('ros')
+quadrotor.append(odometry)
 
 motion = RotorcraftWaypoint()
 motion.name = 'waypoint'

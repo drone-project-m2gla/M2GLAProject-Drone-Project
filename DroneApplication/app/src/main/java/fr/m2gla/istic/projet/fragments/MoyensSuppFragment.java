@@ -43,7 +43,7 @@ public class MoyensSuppFragment extends Fragment {
 
     // Declaring the String Array with the Text Data for the Spinners
     String[] titles;
-    // Declaring the Integer Array with resourse Id's of Images for the Spinners
+    // Declaring the Integer Array with resource Id's of Images for the Spinners
     int[] images;
     private String interventionID = "-1113935408";
 

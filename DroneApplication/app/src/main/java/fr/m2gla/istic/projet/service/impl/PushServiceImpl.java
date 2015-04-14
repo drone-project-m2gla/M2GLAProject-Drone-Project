@@ -74,7 +74,7 @@ public class PushServiceImpl implements PushService {
                                 new Command() {
                                     @Override
                                     public void execute(Object response) {
-                                        Log.i(TAG, "Unregister success");
+                                        Log.i(TAG, "Register success");
                                     }
                                 },
                                 new Command() {

@@ -48,9 +48,7 @@ public class MoyensInitFragment extends ListFragment {
             }
         }
         setListAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, drawables.toArray(new Drawable[drawables.size()])));
-
         return view;
-
     }
 
     @Override
