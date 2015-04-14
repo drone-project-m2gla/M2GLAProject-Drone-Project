@@ -13,6 +13,7 @@ import android.view.DragEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
@@ -74,6 +75,7 @@ public class MapActivity extends Activity {
 
         if (intent != null) {
             String extras = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
+            Toast.makeText(getApplication(), "Bonjour\nID intervention " + extras, Toast.LENGTH_LONG);
         }
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
