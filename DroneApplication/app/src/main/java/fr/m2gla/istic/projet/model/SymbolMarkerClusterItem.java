@@ -1,6 +1,5 @@
 package fr.m2gla.istic.projet.model;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
@@ -9,22 +8,16 @@ import com.google.maps.android.clustering.ClusterItem;
  */
 public class SymbolMarkerClusterItem implements ClusterItem {
     private final LatLng mPosition;
-    private BitmapDescriptor icon;
     private Symbol symbol;
 
-    public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon, Symbol symbol) {
+    public SymbolMarkerClusterItem(double lat, double lng, Symbol symbol) {
         mPosition = new LatLng(lat, lng);
-        this.icon = icon;
         this.symbol = symbol;
     }
 
     @Override
     public LatLng getPosition() {
         return mPosition;
-    }
-
-    public BitmapDescriptor getIcon() {
-        return icon;
     }
 
     public Symbol getSymbol() {

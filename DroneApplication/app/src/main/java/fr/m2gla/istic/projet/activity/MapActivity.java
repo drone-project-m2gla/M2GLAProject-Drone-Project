@@ -48,12 +48,16 @@ import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
-public class MapActivity extends Activity implements ClusterManager.OnClusterItemInfoWindowClickListener<SymbolMarkerClusterItem> {
+public class MapActivity extends Activity implements
+        ClusterManager.OnClusterItemInfoWindowClickListener<SymbolMarkerClusterItem>,
+        ClusterManager.OnClusterItemClickListener<SymbolMarkerClusterItem>{
 
     private static MapFragment mapFragment;
     private GoogleMap map;
     private static final String TAG = "MapActivity";
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+    // Keep track of the symbol that was last clicked on
+    private SymbolMarkerClusterItem clickedSymbolMarkerClusterItem = null;
 
     // default latitude and longitude to center map if error
     double latitude = 48.1119800 ;
@@ -94,7 +98,6 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
             public void onMarkerDragStart(Marker marker) {
                 // TODO: mettre en pointillés les icones
                 Log.d(TAG, "onMarkerDragStart " + marker.getId());
-
             }
 
             @Override
@@ -112,19 +115,19 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
                 mean.setCoordinates(position);
 
                 RestServiceImpl.getInstance()
-                        .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.e(TAG, "Post new position success");
-                                    }
-                                },
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.e(TAG, "Post new position error");
-                                    }
-                                });
+                    .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Post new position success");
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Post new position error");
+                                }
+                            });
             }
         });
 
@@ -146,7 +149,8 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
                         Log.d(TAG, clipData.getItemAt(0).toString());
                         LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
                         Symbol symbol = new Symbol(symbolType, "AAA", "BBB", "ff0000", "Description");
-                        createSymbolMarker(latlng.latitude, latlng.longitude, symbol);
+                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
+                        mClusterManager.addItem(markerItem);
                         mClusterManager.cluster();
 
                     } catch (IllegalArgumentException e){}
@@ -156,6 +160,7 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
         });
 
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
@@ -193,7 +198,8 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
                                 topographies[i].getColor(),
                                 topographies[i].getFirstContent(),
                                 true);
-                        createSymbolMarker(pos.getLatitude(), pos.getLongitude(), symbol);
+                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
+                        mClusterManager.addItem(markerItem);
                     }
 
                     if (pos != null) {
@@ -211,31 +217,11 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
                 public void execute(Object response) {
                     Log.e(TAG, "connection error");
                     Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000", "SAP REN");
-                    createSymbolMarker(latitude, longitude, symbol);
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
+                    mClusterManager.addItem(markerItem);
+                    mClusterManager.cluster();
                 }
             });
-    }
-
-    /**
-     * Creates a map marker at chosen coordinates using the given resource name, text contents and color.
-     *
-     * @param latitude       latitude from given point
-     * @param longitude      longitude from given point
-     * @param symbol         symbol to draw
-     */
-    public void createSymbolMarker(double latitude, double longitude, Symbol symbol) {
-        try {
-            InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(symbol.getSymbolType().name(), "raw", getPackageName()));
-            SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, symbol.getFirstText(), symbol.getSecondText(), symbol.getColor()));
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
-            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
-
-            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, icon, symbol);
-            mClusterManager.addItem(markerItem);
-
-        } catch (SVGParseException ignored) {
-        }
     }
 
     @Override
@@ -252,18 +238,18 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
 
                     RestServiceImpl.getInstance()
                     .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.i(TAG, "Confirm position success");
-                            }
-                        },
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.e(TAG, "Confirm position error");
-                            }
-                        });
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.i(TAG, "Confirm position success");
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Confirm position error");
+                                }
+                            });
                 }
             })
             .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -274,6 +260,12 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
             })
             .show();
         }
+    }
+
+    @Override
+    public boolean onClusterItemClick(SymbolMarkerClusterItem symbolMarkerClusterItem) {
+        clickedSymbolMarkerClusterItem = symbolMarkerClusterItem;
+        return false;
     }
 
     /**
@@ -288,11 +280,26 @@ public class MapActivity extends Activity implements ClusterManager.OnClusterIte
         protected void onBeforeClusterItemRendered(SymbolMarkerClusterItem item,
                                                    MarkerOptions markerOptions) {
             super.onBeforeClusterItemRendered(item, markerOptions);
-            markerOptions.icon(item.getIcon());
-            if (!item.getSymbol().isTopographic()) {
-                markerOptions.draggable(true);
+
+            try {
+                InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(item.getSymbol().getSymbolType().name(), "raw", getPackageName()));
+                is = SVGAdapter.modifySVG(is, item.getSymbol().isValidated());
+
+                SVG svg = SVG.getFromInputStream(
+                        SVGAdapter.modifySVG(is, item.getSymbol().getFirstText(), item.getSymbol().getSecondText(), item.getSymbol().getColor()));
+
+                Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
+
+                markerOptions.icon(icon);
+                if (!item.getSymbol().isTopographic()) {
+                    markerOptions.draggable(true);
+                }
+                markerOptions.title(item.getSymbol().getDescription());
+            } catch (SVGParseException e) {
+                e.printStackTrace();
             }
-            markerOptions.title(item.getSymbol().getDescription());
         }
     }
 }
