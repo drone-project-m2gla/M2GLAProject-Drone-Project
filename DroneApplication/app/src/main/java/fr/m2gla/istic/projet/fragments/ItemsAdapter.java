@@ -5,16 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.activity.SVGAdapter;
@@ -23,12 +19,12 @@ import fr.m2gla.istic.projet.activity.SVGAdapter;
 public class ItemsAdapter extends ArrayAdapter {
 
     private final Activity activity;
-    private final int[] images;
+    private final Drawable[] images;
 
     private String[] titles;
 
     public ItemsAdapter(Context context, int textViewResourceId,
-                        String[] objects, int[] images) {
+                        String[] objects, Drawable[] images) {
         super(context, textViewResourceId, objects);
         activity = (Activity) context;
         this.titles = objects;
@@ -66,39 +62,9 @@ public class ItemsAdapter extends ArrayAdapter {
             itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
         } else {
-            //FIXME: corriger plus tard
-            //imgImageView.setImageDrawable(activity.getResources().getDrawable(images[position]));
-        }
-
-        SVG svg = null;
-//        try {
-//            int imageResource = activity.getResources().getIdentifier(images[position],
-//                    "raw", activity.getPackageName());
-//            Log.i("sow", "ressource value\t " + images[position] + "\t++++++++++++++  " + imageResource);
-//
-//            if (imageResource == 0) {
-//                // Get default image.
-//                imageResource = R.raw.prise_eau_perenne;
-//            }
-//            svg = SVG.getFromResource(activity, imageResource);
-//            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-//            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertToBitmap(drawable, 64, 64), 50, 50, true);
-//            imgImageView.setImageBitmap(image);
-//        } catch (SVGParseException e) {
-//            e.printStackTrace();
-//        }
-
-        //FIXME: Bloc à supprimer plus tard
-        try {
-            svg = SVG.getFromResource(activity, R.raw.colonne_incendie_active);
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertToBitmap(drawable, 64, 64), 50, 50, true);
+            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(images[position], 64, 64), 50, 50, true);
             imgImageView.setImageBitmap(image);
-        } catch (SVGParseException e) {
-            e.printStackTrace();
         }
-        //FIXME: Bloc à supprimer plus tard
-
         return layout;
     }
 

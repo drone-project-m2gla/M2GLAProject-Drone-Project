@@ -117,7 +117,6 @@ public class MapActivity extends Activity {
                         Topographie[] topographies = (Topographie[]) response;
                         Position pos = new Position();
                         for (int i = 0; i < topographies.length; i++) {
-
                             pos = topographies[i].getPosition();
                             //Draw a random symbol with random texts and random color at a random position
                             createSymbolMarker(pos.getLatitude(), pos.getLongitude(),
@@ -155,13 +154,10 @@ public class MapActivity extends Activity {
      */
     public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor, String description) {
         try {
-            //Mise à jour des coordonnées
-            final LatLng latLng = new LatLng(latitude, longitude);
-            //InputStream is = getApplicationContext().getResources().openRawResource(R.raw.colonne_incendie_active);
             InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceSymbol.name(), "raw", getPackageName()));
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertToBitmap(drawable, 64, 64), 50, 50, true);
+            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 64, 64, true);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
 
             SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon, description);

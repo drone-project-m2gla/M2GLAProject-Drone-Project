@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ public class SVGAdapter {
      * @return
      */
     public static InputStream modifySVG(InputStream inputStream, String newText1, String newText2, String color) {
-        //String textId = "text3826";
         InputStream isOut = null;
         try {
 
@@ -129,7 +127,7 @@ public class SVGAdapter {
      * @param heightPixels output image height
      * @return converted bitmap
      */
-    public static Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
+    public static Bitmap convertDrawableToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
         Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mutableBitmap);
         drawable.setBounds(0, 0, widthPixels, heightPixels);
