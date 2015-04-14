@@ -8,30 +8,61 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ArrayAdapter;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.constantes.Constant;
+import fr.m2gla.istic.projet.model.Intervention;
 
 import com.google.android.gms.plus.PlusOneButton;
 
+import java.util.ArrayList;
+
+
 
 public class InterventionDetailFragment extends Fragment {
-    String[] titles = new String[]{"Cupcake", "Donut", "Eclair", "Froyo", "Gingerbread"};
-    String[] Version = new String[]{"1.5", "1.6", "2.0-2.1", "2.2", "2.3", "3.0-3.2", "4.0", "4.1-4.3", "4.4"};
+    private String idIntervention;
+    private String[] titles;
+    private int[] images;
 
-    // Declaring the String Array with the Text Data for the Spinners
-    String[] Languages = {"Select a Language", "C# Language", "HTML Language",
-            "XML Language", "PHP Language"};
 
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_intervention_detail, container, false);
 
+
+        titles = new String[]{"", Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
+                Constant.VALUE_VEHICULE_VSR, Constant.VALUE_VEHICULE_VLCG, Constant.VALUE_VEHICULE_VSAV};
+
+
+        images = new int[]{0, Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
+                Constant.DRAWABLE_IMG_VEHICULE_VSR, Constant.DRAWABLE_IMG_VEHICULE_VLCG, Constant.DRAWABLE_IMG_VEHICULE_VSAV};
+
+
+        ListView listMoyen = (ListView) view.findViewById(R.id.interventionDetailList);
+        listMoyen.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
+
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,, listMoyen);
+//        setListAdapter(adapter);
+//
+
+
         return view;
 
     }
 
+
+
+
+    public void setIdIntervention(String idIntervention) {
+        this.idIntervention = idIntervention;
+        Toast.makeText(getActivity(),"bonjour  " + idIntervention,Toast.LENGTH_LONG).show();
+        TextView idTextView = (TextView) getView().findViewById(R.id.id_detail_intervention);
+        idTextView.setText(idIntervention);
+
+    }
 }
