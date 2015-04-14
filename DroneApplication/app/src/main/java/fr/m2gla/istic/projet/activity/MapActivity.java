@@ -33,6 +33,7 @@ import java.io.InputStream;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
@@ -76,6 +77,10 @@ public class MapActivity extends Activity {
         if (intent != null) {
             String extras = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
             Toast.makeText(getApplication(), "Bonjour\nID intervention " + extras, Toast.LENGTH_LONG);
+            MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
+            if(mSuppFragment != null){
+                mSuppFragment.setInterventionID(extras);
+            }
         }
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);

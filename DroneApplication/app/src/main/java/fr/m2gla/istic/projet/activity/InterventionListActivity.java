@@ -96,7 +96,6 @@ public class InterventionListActivity extends Activity {
 
     }
 
-
     /**
      * Methode de rafraichissement de l'activity
      *
