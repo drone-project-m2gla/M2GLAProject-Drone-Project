@@ -15,7 +15,7 @@ import entity.Vehicle;
 public class MeanDAO extends AbstractDAO<Mean>{
 
     /**
-     * Contructeur UnityDAO
+     * Contructeur MeanDAO
      */
     public MeanDAO()
     {
