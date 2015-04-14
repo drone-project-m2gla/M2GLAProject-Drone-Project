@@ -32,7 +32,6 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class SVGAdapter {
 
-
     /**
      * Modifies the given SVG input stream by changing the texts and color with the given values
      * @param inputStream
@@ -93,6 +92,41 @@ public class SVGAdapter {
                 Node nodeAttrStyle = attribute.getNamedItem("style");
                 nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke:#ff00ff;", "stroke:#" + color + ";"));
                 nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;", "fill:#" + color + ";"));
+            }
+            isOut = documentToInputStream(document);
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (SAXException sae) {
+            sae.printStackTrace();
+        }
+        return isOut;
+    }
+
+    /**
+     * Modifies the given SVG input stream by changing the texts and color with the given values
+     * @param inputStream
+     * @param validated
+     * @return
+     */
+    public static InputStream modifySVG(InputStream inputStream, boolean validated) {
+        InputStream isOut = null;
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(inputStream);
+            NodeList pathNodes =  document.getElementsByTagName("rect");
+            for (int i = 0; i < pathNodes.getLength(); i++) {
+                Node pathNode = pathNodes.item(i);
+                NamedNodeMap attribute = pathNode.getAttributes();
+                Node nodeAttrStyle = attribute.getNamedItem("style");
+                if (validated) {
+                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:4, 4", "stroke-dasharray:none"));
+                } else {
+                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:none", "stroke-dasharray:4, 4"));
+                }
             }
             isOut = documentToInputStream(document);
 
