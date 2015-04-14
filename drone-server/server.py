@@ -11,7 +11,7 @@ lat0 = 48.117451
 lng0 = -1.641408
 
 def gpsToPoint(lat,lng):
-    if lng + lng0 > 0:
+    if lng - lng0 > 0:
         coefx = 1
     else :
         coefx =-1
@@ -53,7 +53,7 @@ class Command:
         self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry,callbackOdometry)
 
     def setWaypoint(self, x, y, z):
-        point = gpsToPoint(x,y)
+        point = gpsToPoint(y,x)
         print("Go to Point " + str(point.x) + " " + str(point.y))
         pose = Pose(position=point)
         self.cmdWaypoint.publish(pose)
@@ -80,22 +80,23 @@ def rotate() :
 @app.route('/robot/position', methods=['POST'])
 def setPosition():
     global command
-    if not request.json or not 'x' in request.json or not 'y' in request.json or not 'z' in request.json:
+    if not request.json or not 'latitude' in request.json or not 'longitude' in request.json or not 'altitude' in request.json:
         abort(400)    
-    x = request.json['x']
-    y = request.json['y']
-    z = request.json['z']
+    x = request.json['longitude']
+    y = request.json['latitude']
+    z = request.json['altitude']
     command.setWaypoint(x, y, z)
     
-    return jsonify({"x": x, "y": y, "z": z}), 201
+    return jsonify({"longitude": x, "latitude": y, "altitude": z}), 201
 
 @app.route('/robot/position', methods=['GET'])
 def getPosition():
     x = command.pose.position.x
     y = command.pose.position.y
     z = command.pose.position.z
-    t = meterToGps(x,y)    
-    return jsonify({"x": t[0], "y": t[1], "z": z}), 200
+    t = meterToGps(x,y)
+
+    return jsonify({"latitude": t[0], "longitude": t[1], "altitude": z}), 200
 
 @app.route('/robot/picture', methods=['GET'])
 def getpicture() :    

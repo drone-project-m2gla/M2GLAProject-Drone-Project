@@ -24,6 +24,7 @@ public class ItemsAdapter extends ArrayAdapter {
     private final static String TAG = "ItemsAdapter";
 
     private String[] titles;
+    private int customLayout;
 
     public ItemsAdapter(Context context, int textViewResourceId,
                         String[] objects, Drawable[] images) {
@@ -31,6 +32,7 @@ public class ItemsAdapter extends ArrayAdapter {
         activity = (Activity) context;
         this.titles = objects;
         this.images = images;
+        customLayout = textViewResourceId;
     }
 
     public View getCustomView(int position, View convertView,
@@ -38,7 +40,7 @@ public class ItemsAdapter extends ArrayAdapter {
 
         // Inflating the layout for the custom Spinner
         LayoutInflater inflater = activity.getLayoutInflater();
-        View layout = inflater.inflate(R.layout.custom, parent, false);
+        View layout = inflater.inflate(this.customLayout, parent, false);
 
         // Declaring and Typecasting the textview in the inflated layout
         TextView itemLabelTxtView = (TextView) layout

@@ -18,8 +18,8 @@ import entity.Intervention;
 import entity.Mean;
 import entity.Position;
 import service.PushService.TypeClient;
-import service.RetrieveAddress;
 import service.impl.PushServiceImpl;
+import service.impl.RetrieveAddressImpl;
 
 /**
  * Created by arno on 12/02/15.
@@ -174,7 +174,7 @@ public class InterventionRest {
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
 
-        RetrieveAddress adresseIntervention = new RetrieveAddress(intervention.getAddress(), intervention.getPostcode(), intervention.getCity()); 
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity()); 
         
         Position coordinatesIntervention = adresseIntervention.getCoordinates();
         intervention.setCoordinates(coordinatesIntervention);
@@ -186,32 +186,4 @@ public class InterventionRest {
 
         return res;
     }
-
-//
-//    @POST
-//    @Path("zoneObject")
-//    @Consumes({MediaType.APPLICATION_JSON})
-//    public Response getPositionObject(GeoInterventionZone zone) {
-//        System.out.println("LA zone\t" + zone);
-//        String coordinatesZone = "Zone de survol";
-//        Zone flyoverZone = zone.getCoordinates().get(0);
-//        Iterator<Position> it = flyoverZone.positionIterator();
-//        while (it.hasNext()) {
-//            Position p = it.next();
-//            coordinatesZone += "<BR>Latitude " + p.getLatitude();
-//            coordinatesZone += " / Longitude " + p.getLongitude();
-//            coordinatesZone += "/ Altitude " + p.getAltitude();
-//        }
-//        return Response.status(200).entity("Le nom de la zone est : " + zone + "<BR>" + coordinatesZone).build();
-//    }
-//
-//    @POST
-//    @Path("position")
-//    @Consumes({MediaType.APPLICATION_JSON})
-//    public Response getPositionObject(Position zone) {
-//        return Response.status(200).entity("Le nom de la zone est : " + zone.getLatitude()).build();
-//    }
-
-
-
 }

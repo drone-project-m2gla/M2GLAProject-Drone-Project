@@ -19,11 +19,12 @@ import com.google.android.gcm.server.MulticastResult;
 
 import entity.PushEntity;
 
-@Path("/register")
+@Path("/gcm")
 public class PushRegister {
 	private static final Logger LOGGER = Logger.getLogger(PushRegister.class);
-	
-	@POST
+
+    @Path("/register")
+    @POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void registerClient(PushEntity entity) {
 		PushServiceImpl.getInstance().registerClient(entity.getTypeClient(), entity.getId());
@@ -31,14 +32,14 @@ public class PushRegister {
 	}
 	
 	@DELETE
-	@Path("/{id}")
+	@Path("unregister/{id}")
 	public void unregisterClient(@PathParam("id") String id) {
 		PushServiceImpl.getInstance().unregisterClient(id);
 		LOGGER.info("User disconect to push service " + id);
 	}
 	
 	@POST
-	@Path("add/{scope}")
+	@Path("register/add/{scope}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response testPush(@PathParam("scope") String scope, Object object) {

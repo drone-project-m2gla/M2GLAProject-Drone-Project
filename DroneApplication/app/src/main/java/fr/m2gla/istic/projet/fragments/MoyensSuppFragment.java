@@ -32,6 +32,7 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
 public class MoyensSuppFragment extends Fragment {
+    public static final String MOYEN_SUPPL_TAG = "Moyen suppl.";
     TextView text, vers;
 
     public static ListView maListViewPerso;
@@ -44,7 +45,7 @@ public class MoyensSuppFragment extends Fragment {
     String[] titles;
     // Declaring the Integer Array with resource Id's of Images for the Spinners
     int[] images;
-    private String meanID = "-1113935408";
+    private String interventionID = "-1113935408";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class MoyensSuppFragment extends Fragment {
 
         List<Drawable> drawables = new ArrayList<Drawable>();
         for (int imageId : images) {
-            if (imageId!=0) {
+            if (imageId != 0) {
                 drawables.add(getResources().getDrawable(imageId));
             } else {
                 drawables.add(null);
@@ -79,7 +80,11 @@ public class MoyensSuppFragment extends Fragment {
                 String moyen = String.valueOf(position);
                 Toast.makeText(getActivity(), "Bonjour\n" + moyen + "\tValue\t" + titles[position], Toast.LENGTH_SHORT).show();
 
-                sendRequestMeanAsync();
+                final Mean mean = new Mean();
+                if (position > 0) {
+                    mean.setVehicle(Vehicle.valueOf(titles[position]));
+                    sendRequestMeanAsync(mean);
+                }
             }
         });
         return view;
@@ -88,14 +93,14 @@ public class MoyensSuppFragment extends Fragment {
     /**
      * Méthode d'envoi d'une demande d'un moyen supplémentaire.
      *
+     * @param mean
      * @return
      */
-    private String sendRequestMeanAsync() {
+    private void sendRequestMeanAsync(Mean mean) {
         RestService requestSnd = RestServiceImpl.getInstance();
-        final Mean mean = new Mean();
-        mean.setVehicle(Vehicle.VLCG);
+
         Map<String, String> map = new HashMap<>();
-        map.put("id", meanID);
+        map.put("id", interventionID);
 
         requestSnd.post(RestAPI.POST_SEND_MEAN_REQUEST, map, mean, Mean.class, new Command() {
             /**
@@ -105,9 +110,9 @@ public class MoyensSuppFragment extends Fragment {
             @Override
             public void execute(Object response) {
                 // Demander la prise en compte de la validation de l'identification
-                Toast.makeText(getActivity(), "Moyen suppl.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Moyen suppl.\n" + interventionID, Toast.LENGTH_SHORT).show();
                 Mean moyen = (Mean) response;
-                Log.i("Moyen suppl.", "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
+                Log.i(MOYEN_SUPPL_TAG, "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
             }
         }, new Command() {
             /**
@@ -121,12 +126,15 @@ public class MoyensSuppFragment extends Fragment {
                 //return;
             }
         });
-
-        return "Cool";
     }
 
     public void change(String txt, String txt1) {
         text.setText(txt);
         vers.setText(txt1);
+    }
+
+    public void setInterventionID(String interventionID) {
+        this.interventionID = interventionID;
+        Toast.makeText(getActivity(), MOYEN_SUPPL_TAG + "\n" + interventionID, Toast.LENGTH_LONG).show();
     }
 }
