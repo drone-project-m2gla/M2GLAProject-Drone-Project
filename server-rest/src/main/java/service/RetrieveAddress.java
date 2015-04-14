@@ -14,6 +14,12 @@ public class RetrieveAddress {
 	private Position coordinates;
 
 	
+	public Position getCoordinates() {
+		return coordinates;
+	}
+
+
+
 	public void setCoordinates(Position coordinates) {
 		this.coordinates = coordinates;
 	}
@@ -41,8 +47,6 @@ public class RetrieveAddress {
 	//https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=API_KEY
 	//http://maps.googleapis.com/maps/api/geocode/json?parameters
 
-
-	
 	public Position retrieveGps(){
 		Double lng = null;
 		Double lat = null;

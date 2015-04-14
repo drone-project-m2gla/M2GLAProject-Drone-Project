@@ -176,8 +176,8 @@ public class InterventionRest {
 
         RetrieveAddress adresseIntervention = new RetrieveAddress(intervention.getAddress(), intervention.getPostcode(), intervention.getCity()); 
         
-        Position coordinatesIntervention = adresseIntervention.retrieveGps();
-        intervention.setCoordinates( coordinatesIntervention);
+        Position coordinatesIntervention = adresseIntervention.getCoordinates();
+        intervention.setCoordinates(coordinatesIntervention);
         
         // Génération de la liste des moyens
         intervention.generateMeanList();
