@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import service.impl.RetrieveAddressImpl;
 import util.Configuration;
 import entity.DisasterCode;
 import entity.Intervention;
@@ -47,14 +48,18 @@ public class InterventionDAOTest {
     }
 
     @Test
-    public void test()
+    public void testCreateIntervention()
     {
-        Intervention intervention = new Intervention("rue des mouettes","35223","saint malo", DisasterCode.FHA);
-        Position p1 = new Position(-1,-1);
-        intervention.setCoordinates(p1);
+        Intervention intervention = new Intervention("263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
+        Position coordinatesIntervention = adresseIntervention.getCoordinates();
+        intervention.setCoordinates(coordinatesIntervention);
+        System.out.println(intervention.getId());
         //dao.entityToJsonDocument(intervention);
         dao.create(intervention);
     }
+
+
 /*
     @Test
     public void testInsert() {

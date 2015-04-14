@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
-import fr.m2gla.istic.projet.activity.NewInterventionActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -29,11 +28,11 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 public class InterventionListFragment extends Fragment {
     private static final String TAG = "InterListFragment";
 
-    private UserQualification                   userQualification = UserQualification.SIMPLEUSER;
-    private ListView                            idList;
-    private ArrayList<HashMap<String, String>>  listItem;
-    private SimpleAdapter                       mSchedule;
-    private View                                view;
+    private UserQualification userQualification = UserQualification.SIMPLEUSER;
+    private ListView idList;
+    private ArrayList<HashMap<String, String>> listItem;
+    private SimpleAdapter mSchedule;
+    private View view;
 
 
     /**
@@ -46,7 +45,7 @@ public class InterventionListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String      roleStr;
+        String roleStr;
 
 
         this.view = inflater.inflate(R.layout.fragment_intervention_list, container, false);
@@ -54,23 +53,22 @@ public class InterventionListFragment extends Fragment {
         if (getArguments() != null) {
             roleStr = getArguments().getString(GeneralConstants.REF_ACT_ROLE);
             if (roleStr != null) {
-                Toast.makeText(this.view.getContext(), roleStr, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.view.getContext(), "I'm here!!! " + roleStr, Toast.LENGTH_SHORT).show();
 
                 if (roleStr.compareTo(UserQualification.CODIS.toString()) == 0) {
+                    Log.i(TAG, "is Codis\t" + roleStr);
                     this.userQualification = UserQualification.CODIS;
-                }
-                else if (roleStr.compareTo(UserQualification.SIMPLEUSER.toString()) == 0) {
+                } else if (roleStr.compareTo(UserQualification.SIMPLEUSER.toString()) == 0) {
                     this.userQualification = UserQualification.SIMPLEUSER;
-                }
-                else {
+                    Log.i(TAG, "is Simple user\t" + roleStr);
+                } else {
                     this.userQualification = UserQualification.SIMPLEUSER;
+                    Log.i(TAG, "is nothing\t" + roleStr);
                 }
-            }
-            else {
+            } else {
                 this.userQualification = UserQualification.SIMPLEUSER;
             }
-        }
-        else {
+        } else {
             this.userQualification = UserQualification.SIMPLEUSER;
         }
 
@@ -87,8 +85,8 @@ public class InterventionListFragment extends Fragment {
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
         this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
-                new String[] {GeneralConstants.INTER_LIST_ELEM1, GeneralConstants.INTER_LIST_ELEM2},
-                new int[] {R.id.interventionCode, R.id.interventionData});
+                new String[]{GeneralConstants.INTER_LIST_ELEM1, GeneralConstants.INTER_LIST_ELEM2},
+                new int[]{R.id.interventionCode, R.id.interventionData});
 
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
@@ -101,11 +99,14 @@ public class InterventionListFragment extends Fragment {
                 HashMap<String, String> map;
 
                 map = (HashMap<String, String>) idList.getItemAtPosition(position);
+                Log.i(TAG, "OnClicklistener\t" + userQualification);
 
                 if (userQualification == UserQualification.CODIS) {
                     Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                    InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+                    String idIntervention = map.get(GeneralConstants.INTER_LIST_ELEM1).toString();
+                    fragmentDetailIntervention.setIdIntervention(idIntervention);
+                } else {
                     Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
                     callMap(map.get(GeneralConstants.INTER_LIST_ELEM1).toString());
                 }
@@ -123,6 +124,7 @@ public class InterventionListFragment extends Fragment {
 
     /**
      * Methode setter permettant à l'activity appelante de passer le role de l'utilisateur
+     *
      * @param userQualification : role de l'utilisateur
      */
     public void setUserQualification(UserQualification userQualification) {
@@ -132,6 +134,7 @@ public class InterventionListFragment extends Fragment {
 
     /**
      * Methode permettant de rafraichir la liste des intervention
+     *
      * @param -
      */
     public void refreshList() {
@@ -147,7 +150,7 @@ public class InterventionListFragment extends Fragment {
                      */
                     @Override
                     public void execute(Object response) {
-                        Intervention    intervention[];
+                        Intervention intervention[];
 
                         if (response == null) {
                             return;
@@ -155,13 +158,13 @@ public class InterventionListFragment extends Fragment {
 
                         intervention = (Intervention[]) response;
 
+                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
                         if (intervention.length == 0) {
                             return;
                         }
-                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
 
 
-                        for (Intervention inter:intervention) {
+                        for (Intervention inter : intervention) {
                             if (inter == null) {
                                 Log.w(TAG, "Element NULL");
                                 continue;
@@ -201,6 +204,7 @@ public class InterventionListFragment extends Fragment {
 
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
+     *
      * @param code : Reference (id) de l'intervention
      * @param data : données de l'intervention
      */
@@ -211,8 +215,9 @@ public class InterventionListFragment extends Fragment {
 
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
-     * @param code : Reference (id) de l'intervention
-     * @param data : données de l'intervention
+     *
+     * @param code    : Reference (id) de l'intervention
+     * @param data    : données de l'intervention
      * @param initial : true pour specifier qu'il s'agit d'une intervention ajoutée pendant l'initialisation
      */
     public void addInterventionInList(String code, String data, boolean initial) {

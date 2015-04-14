@@ -18,6 +18,14 @@ import entity.User;
  */
 public class UserDAO extends AbstractDAO<User> {
 
+    /**
+     * Contructeur UserDAO
+     */
+    public UserDAO()
+    {
+        this.datatype = Constant.DATATYPE_USER;
+    }
+
     public JsonDocument findByLogin(String username, String password) {
         JsonDocument res = currentBucket.get(Constant.DATATYPE_USER);
         res.content().get("username");
@@ -60,7 +68,7 @@ public class UserDAO extends AbstractDAO<User> {
     public User getByUsername(String username) {
         currentBucket.bucketManager().getDesignDocument("designDoc");
         createViewGetByUsername();
-        ViewResult result = currentBucket.query(ViewQuery.from("designDoc", "login_view" + datatype));
+        ViewResult result = currentBucket.query(ViewQuery.from("designDoc", "login_view_" + datatype));
         // Iterate through the returned ViewRows
         User resUser = null;
         for (ViewRow row : result) {
@@ -77,7 +85,7 @@ public class UserDAO extends AbstractDAO<User> {
     {
         DesignDocument designDoc = currentBucket.bucketManager().getDesignDocument("designDoc");
 
-        String viewName = "login_view";
+        String viewName = "login_view_"+Constant.DATATYPE_USER;
         String view = "function(doc) {\n" +
                 "  if(doc.properties.datatype == \""+ Constant.DATATYPE_USER + "\"){\t\n" +
                 "       \temit([doc.properties.username, doc.properties.password], doc.properties.username);\n" +

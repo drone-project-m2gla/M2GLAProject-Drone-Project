@@ -13,8 +13,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import dao.GeoIconDAO;
+import dao.UserDAO;
 import entity.GeoIcon;
 import entity.Position;
+import entity.User;
 
 /**
  * Created by alban on 08/04/15.
@@ -28,36 +30,34 @@ public class Bdd {
          //   List<Long> idCreated = new ArrayList<Long>();
             // Ajout des users
             JSONParser parser = new JSONParser();
-//            try {
-//                ClassLoader classLoader = getClass().getClassLoader();
-//                File file = new File(classLoader.getResource("init_bdd/user.json").getFile());
-//                Object obj = parser.parse(new FileReader(file));
-//                JSONArray users = (JSONArray) obj;
-//                Iterator<JSONObject> iterator = users.iterator();
-//
-//                UserDAO userDAO = new UserDAO();
-//                userDAO.connect();
-//                while (iterator.hasNext()) {
-//                    JSONObject userJSON = iterator.next();
-//                    User tmpUser = new User();
-//                    tmpUser.setPassword((String) userJSON.get("password"));
-//                    tmpUser.setUsername((String) userJSON.get("username"));
-//                    userDAO.create(tmpUser);
-//                }
-//                // code qui n'a rien à voir avec le reste.
-//                // On crée le design document.
-//                userDAO.createDesignDocument();
-//                userDAO.disconnect();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return Response.status(502).build();
-//            }
-            // Ajout des icones
-              parser = new JSONParser();
             try {
-                ClassLoader classLoader = getClass().getClassLoader();
-                File file = new File(classLoader.getResource("init_bdd/icon.json").getFile());
+                File file = new File("./webapps/sitserver/init_bdd/user.json");
                 Object obj = parser.parse(new FileReader(file));
+                JSONArray users = (JSONArray) obj;
+                Iterator<JSONObject> iterator = users.iterator();
+
+                UserDAO userDAO = new UserDAO();
+                userDAO.connect();
+               while (iterator.hasNext()) {
+                    JSONObject userJSON = iterator.next();
+                    User tmpUser = new User();
+                    tmpUser.setPassword((String) userJSON.get("password"));
+                    tmpUser.setUsername((String) userJSON.get("username"));
+                    userDAO.create(tmpUser);
+                }
+                // code qui n'a rien à voir avec le reste.
+                // On crée le design document.
+                userDAO.createDesignDocument();
+                userDAO.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Response.status(502).build();
+            }
+            // Ajout des icones
+            JSONParser  parserTopography = new JSONParser();
+            try {
+                File file = new File("./webapps/sitserver/init_bdd/icon.json");
+                Object obj = parserTopography.parse(new FileReader(file));
                 JSONArray users = (JSONArray) obj;
                 Iterator iterator = users.iterator();
 

@@ -11,7 +11,7 @@ public class ProjetServletContextListener implements ServletContextListener {
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		PropertyConfigurator.configure(LOG_DEV);
+		PropertyConfigurator.configure(LOG_PROD);
 	}
 
 	@Override
