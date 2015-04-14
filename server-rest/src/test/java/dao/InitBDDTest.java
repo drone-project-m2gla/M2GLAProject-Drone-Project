@@ -1,23 +1,18 @@
 package dao;
 
-import java.util.HashMap;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import service.RetrieveAddress;
-import util.Configuration;
 import entity.DisasterCode;
 import entity.Intervention;
 import entity.Position;
+import org.junit.*;
+import service.RetrieveAddress;
+import util.Configuration;
+
+import java.util.HashMap;
 
 /**
  * Created by alban on 16/03/15.
  */
-public class InterventionDAOTest {
+public class InitBDDTest {
 
     private static InterventionDAO dao = new InterventionDAO();
 
@@ -48,15 +43,9 @@ public class InterventionDAOTest {
     }
 
     @Test
-    public void testCreateIntervention()
+    public void flushBucket()
     {
-        Intervention intervention = new Intervention("263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
-        RetrieveAddress adresseIntervention = new RetrieveAddress(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
-        Position coordinatesIntervention = adresseIntervention.getCoordinates();
-        intervention.setCoordinates(coordinatesIntervention);
-        System.out.println(intervention.getId());
-        //dao.entityToJsonDocument(intervention);
-        dao.create(intervention);
+        Apache
     }
 
 
