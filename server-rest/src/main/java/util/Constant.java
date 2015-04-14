@@ -12,7 +12,4 @@ public class Constant {
     public static final String DATATYPE_MEAN = "MEAN";
     public static final String DATATYPE_INTERVENTION = "INTERVENTION";
     public static final String DATATYPE_GEOICON = "GEOICON";
-
-
-
 }
