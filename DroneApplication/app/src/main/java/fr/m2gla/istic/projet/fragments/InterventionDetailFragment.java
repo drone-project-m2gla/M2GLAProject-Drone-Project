@@ -11,15 +11,21 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import fr.m2gla.istic.projet.activity.R;
+import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.constantes.Constant;
+import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class InterventionDetailFragment extends Fragment {
     private static final String TAG = "InterventionDetailFragment";
-    private String idIntervention;
+    private String idIntervention = "";
     private String[] titles;
     private int[] images;
 
@@ -69,6 +75,25 @@ public class InterventionDetailFragment extends Fragment {
     public void setIdIntervention(String idIntervention) {
         this.idIntervention = idIntervention;
         Toast.makeText(getActivity(),"bonjour  " + idIntervention,Toast.LENGTH_LONG).show();
+
+
+        if(!idIntervention.equals("")){
+            Map<String,String> map = new HashMap<>();
+            map.put("id",idIntervention);
+            RestServiceImpl.getInstance()
+                    .get(RestAPI.GET_INTERVENTION,map, Intervention.class,new Command() {
+                        @Override
+                        public void execute(Object response) {
+                           Intervention intervention = (Intervention)response;
+                            Toast.makeText(getActivity(),"  test intervetion return " + intervention.getId(),Toast.LENGTH_LONG).show();
+                        }
+                    },new Command() {
+                        @Override
+                        public void execute(Object response) {
+
+                        }
+                    });
+        }
         // idTextView.setText(idIntervention);
 
     }
