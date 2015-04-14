@@ -1,5 +1,9 @@
 package fr.m2gla.istic.projet.activity;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -115,5 +119,22 @@ public class SVGAdapter {
             e.printStackTrace();
         }
         return isOut;
+    }
+
+    /**
+     * Converts a drawable object into a bitmap
+     *
+     * @param drawable     drawable object to convert
+     * @param widthPixels  output image width
+     * @param heightPixels output image height
+     * @return converted bitmap
+     */
+    public static Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
+        Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(mutableBitmap);
+        drawable.setBounds(0, 0, widthPixels, heightPixels);
+        drawable.draw(canvas);
+
+        return mutableBitmap;
     }
 }
