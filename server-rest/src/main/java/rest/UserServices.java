@@ -70,16 +70,4 @@ public class UserServices {
         return Response.status(200).entity("Hello " + username).build();
     }
 
-    @GET
-    public Response findAll() {
-        dao = new UserDAO();
-        dao.connect();
-        Bucket bucket = dao.currentBucket;
-        JsonDocument doc = bucket.get("mdiansow");
-        System.out.println("User doc\t" + doc);
-        System.out.println("bucket\t" + bucket.name());
-        dao.disconnect();
-        return Response.status(200).entity(doc).build();
-    }
-
 }

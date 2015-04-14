@@ -18,5 +18,17 @@
         android:layout_height="match_parent"
         android:text="Text Here"
         android:gravity="center"></TextView>
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_weight=".15"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:src="@drawable/valide"/>
 
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_weight=".15"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:src="@drawable/annuller"/>
 </LinearLayout>
