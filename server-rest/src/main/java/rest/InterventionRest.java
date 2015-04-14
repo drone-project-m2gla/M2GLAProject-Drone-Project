@@ -18,8 +18,8 @@ import entity.Intervention;
 import entity.Mean;
 import entity.Position;
 import service.PushService.TypeClient;
-import service.RetrieveAddress;
 import service.impl.PushServiceImpl;
+import service.impl.RetrieveAddressImpl;
 
 /**
  * Created by arno on 12/02/15.
@@ -174,7 +174,7 @@ public class InterventionRest {
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
 
-        RetrieveAddress adresseIntervention = new RetrieveAddress(intervention.getAddress(), intervention.getPostcode(), intervention.getCity()); 
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity()); 
         
         Position coordinatesIntervention = adresseIntervention.getCoordinates();
         intervention.setCoordinates(coordinatesIntervention);
