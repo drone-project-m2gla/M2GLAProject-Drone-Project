@@ -13,6 +13,7 @@ public interface RestAPI {
 
     // Intervention block
     public static final String GET_ALL_INTERVENTION = "/intervention";
+    public static final String POST_POSITION_CONFIRMATION = "/intervention/{id}/moyen/emplace";
 
     // topographie block
     public static final String GET_ALL_TOPOGRAPHIE = "/topographie/1/1/1";
