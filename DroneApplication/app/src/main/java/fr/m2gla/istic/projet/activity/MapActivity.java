@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.view.DragEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
@@ -34,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
@@ -84,6 +87,12 @@ public class MapActivity extends Activity {
         param = new HashMap<String, String>();
         param.put("id", "");
 
+        Intent intent = getIntent();
+
+        if (intent != null) {
+            String extras = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
+            Toast.makeText(getApplication(), "Bonjour\nID intervention " + extras, Toast.LENGTH_LONG);
+        }
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
@@ -179,13 +188,13 @@ public class MapActivity extends Activity {
         map.setOnMarkerClickListener(mClusterManager);
 
         loadSymbols();
-        mapFragment.getView().setOnDragListener(new AdapterView.OnDragListener(){
+        mapFragment.getView().setOnDragListener(new AdapterView.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
-                if (event.getAction()==DragEvent.ACTION_DROP) {
+                if (event.getAction() == DragEvent.ACTION_DROP) {
                     Log.i("MapActivity", event.toString());
 
-                    LatLng latlng = map.getProjection().fromScreenLocation(new Point((int)event.getX() + OFFSET_X, (int)event.getY() + OFFSET_Y));
+                    LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
                     createSymbolMarker(latlng.latitude, latlng.longitude, Symbols.vehicule_incendie_seul_prevu, "AAA", "BBB", "ff0000", "");
                     mClusterManager.cluster();
                 }
@@ -253,13 +262,10 @@ public class MapActivity extends Activity {
      */
     public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor, String description) {
         try {
-            //Mise à jour des coordonnées
-            final LatLng latLng = new LatLng(latitude, longitude);
-            //InputStream is = getApplicationContext().getResources().openRawResource(R.raw.colonne_incendie_active);
             InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceSymbol.name(), "raw", getPackageName()));
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertToBitmap(drawable, 64, 64), 50, 50, true);
+            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 64, 64, true);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
 
             SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon, description);
