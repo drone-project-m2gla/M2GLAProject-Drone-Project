@@ -49,7 +49,7 @@ public class InterventionDAOTest {
     @Test
     public void test()
     {
-        Intervention intervention = new Intervention("rue des mouettes","35223","saint malo", DisasterCode.FHA);
+        Intervention intervention = new Intervention("263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
         Position p1 = new Position(-1,-1);
         intervention.setCoordinates(p1);
         //dao.entityToJsonDocument(intervention);
