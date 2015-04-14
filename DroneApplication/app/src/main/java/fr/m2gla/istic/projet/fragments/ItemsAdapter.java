@@ -68,7 +68,6 @@ public class ItemsAdapter extends ArrayAdapter {
             itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
         } else {
-            //FIXME: corriger plus tard
             imgImageView.setImageDrawable(activity.getResources().getDrawable(images[position]));
         }
 
