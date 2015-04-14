@@ -31,7 +31,6 @@ public class Bdd {
             // Ajout des users
             JSONParser parser = new JSONParser();
             try {
-                ClassLoader classLoader = getClass().getClassLoader();
                 File file = new File("./webapps/sitserver/init_bdd/user.json");
                 Object obj = parser.parse(new FileReader(file));
                 JSONArray users = (JSONArray) obj;
@@ -55,11 +54,10 @@ public class Bdd {
                 return Response.status(502).build();
             }
             // Ajout des icones
-              parser = new JSONParser();
+            JSONParser  parserTopography = new JSONParser();
             try {
-                ClassLoader classLoader = getClass().getClassLoader();
                 File file = new File("./webapps/sitserver/init_bdd/icon.json");
-                Object obj = parser.parse(new FileReader(file));
+                Object obj = parserTopography.parse(new FileReader(file));
                 JSONArray users = (JSONArray) obj;
                 Iterator iterator = users.iterator();
 
