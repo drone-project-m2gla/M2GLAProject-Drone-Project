@@ -1,7 +1,9 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -23,16 +25,20 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
@@ -63,13 +69,23 @@ public class MapActivity extends Activity {
     private GoogleMap map;
     private static final String TAG = "MapActivity";
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+
+    // latitude and longitude
+    double latitude = 48.1119800 ;
+    double longitude = -1.6742900;
+
     private static final int OFFSET_X = -100;
     private static final int OFFSET_Y = 30;
+
+    private Map<String, String> param;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        param = new HashMap<String, String>();
+        param.put("id", "");
 
         Intent intent = getIntent();
 
@@ -80,6 +96,86 @@ public class MapActivity extends Activity {
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
+
+        final Activity _this = this;
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(final Marker marker) {
+                new AlertDialog.Builder(_this)
+                        .setMessage(R.string.query_position_confirmation)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Mean mean = new Mean();
+                                mean.setId("");
+
+                                RestServiceImpl.getInstance()
+                                        .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                                new Command() {
+                                                    @Override
+                                                    public void execute(Object response) {
+                                                        Log.i(TAG, "Confirm position success");
+                                                    }
+                                                },
+                                                new Command() {
+                                                    @Override
+                                                    public void execute(Object response) {
+                                                        Log.e(TAG, "Confirm position error");
+                                                    }
+                                                });
+                            }
+                        })
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "Invalide position");
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                // TODO mettre en pointiller les icons
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                // Not use
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                Position position = new Position();
+                position.setLatitude(marker.getPosition().latitude);
+                position.setLongitude(marker.getPosition().longitude);
+                Mean mean = new Mean();
+                mean.setId("");
+                mean.setCoordinates(position);
+
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Post new position success");
+                                    }
+                                },
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Post new position error");
+                                    }
+                                });
+            }
+        });
+
+        //Obtention de la référence du service
+        //locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        //location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
@@ -128,7 +224,7 @@ public class MapActivity extends Activity {
                         Position pos = new Position();
                         for (int i = 0; i < topographies.length; i++) {
                             pos = topographies[i].getPosition();
-                            //Draw a random symbol with random texts and random color at a random position
+                            //Draw a symbol with texts and color at a position
                             createSymbolMarker(pos.getLatitude(), pos.getLongitude(),
                                     Symbols.valueOf(topographies[i].getFilename()),
                                     topographies[i].getFirstContent(), topographies[i].getSecondContent(), topographies[i].getColor(),
@@ -148,6 +244,8 @@ public class MapActivity extends Activity {
                     @Override
                     public void execute(Object response) {
                         Log.e(TAG, "connection error");
+                        createSymbolMarker(latitude, longitude, Symbols.secours_a_personnes_prevu,
+                                "SAP", "REN", "FF0000", "SAP REN");
                     }
                 });
     }
@@ -167,7 +265,7 @@ public class MapActivity extends Activity {
             InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceSymbol.name(), "raw", getPackageName()));
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 64, 64, true);
+            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
 
             SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon, description);

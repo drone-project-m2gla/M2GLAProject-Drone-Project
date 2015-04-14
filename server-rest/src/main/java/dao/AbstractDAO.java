@@ -99,7 +99,6 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     public final List<T> getAll()
     {
         List<T> res = new ArrayList<T>();
-        currentBucket.bucketManager().getDesignDocument("designDoc");
         createViewAll();
         ViewResult result = currentBucket.query(ViewQuery.from("designDoc", "by_datatype_" + datatype));
                 // Iterate through the returned ViewRows
@@ -162,7 +161,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
             String mapFunction =
                     "function (doc, meta) {\n" +
                             " if(doc.properties.datatype && doc.properties.datatype == '"+ datatype + "') \n" +
-                            "   { emit(doc.firstname);}\n" +
+                            "   { emit(doc);}\n" +
                             "}";
             designDoc.views().add(DefaultView.create(viewName, mapFunction, ""));
             currentBucket.bucketManager().upsertDesignDocument(designDoc);
