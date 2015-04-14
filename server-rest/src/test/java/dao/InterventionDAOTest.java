@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import service.RetrieveAddress;
+import service.impl.RetrieveAddressImpl;
 import util.Configuration;
 import entity.DisasterCode;
 import entity.Intervention;
@@ -51,7 +51,7 @@ public class InterventionDAOTest {
     public void testCreateIntervention()
     {
         Intervention intervention = new Intervention("263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
-        RetrieveAddress adresseIntervention = new RetrieveAddress(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
         Position coordinatesIntervention = adresseIntervention.getCoordinates();
         intervention.setCoordinates(coordinatesIntervention);
         System.out.println(intervention.getId());
