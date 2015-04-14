@@ -1,3 +1,4 @@
+package dto;
 
 /**
  * Created by arno on 09/03/15.
