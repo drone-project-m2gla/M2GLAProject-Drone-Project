@@ -1,19 +1,17 @@
 package dao;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import entity.*;
-import org.junit.*;
-import util.Configuration;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import util.Configuration;
+import entity.DisasterCode;
+import entity.Intervention;
+import entity.Position;
 
 /**
  * Created by alban on 16/03/15.
@@ -51,7 +49,7 @@ public class InterventionDAOTest {
     @Test
     public void test()
     {
-        Intervention intervention = new Intervention("rue des mouettes",35223,"saint malo", DisasterCode.FHA);
+        Intervention intervention = new Intervention("rue des mouettes","35223","saint malo", DisasterCode.FHA);
         Position p1 = new Position(-1,-1);
         intervention.setCoordinates(p1);
         //dao.entityToJsonDocument(intervention);

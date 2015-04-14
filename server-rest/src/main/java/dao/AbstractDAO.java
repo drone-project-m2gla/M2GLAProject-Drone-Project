@@ -1,16 +1,23 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import util.Configuration;
+
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.error.FlushDisabledException;
-import com.couchbase.client.java.view.*;
-import entity.AbstractEntity;
-import util.Configuration;
+import com.couchbase.client.java.view.DefaultView;
+import com.couchbase.client.java.view.DesignDocument;
+import com.couchbase.client.java.view.View;
+import com.couchbase.client.java.view.ViewQuery;
+import com.couchbase.client.java.view.ViewResult;
+import com.couchbase.client.java.view.ViewRow;
 
-import java.util.ArrayList;
-import java.util.List;
+import entity.AbstractEntity;
 
 /**
  * Abstract class for DAO

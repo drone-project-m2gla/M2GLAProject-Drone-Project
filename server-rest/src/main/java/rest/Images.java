@@ -1,13 +1,14 @@
 package rest;
 
 
-import dao.GeoImageDAO;
-import entity.GeoImage;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import java.util.List;
+
+import dao.GeoImageDAO;
+import entity.GeoImage;
 
 /**
  * Created by arno on 12/02/15.

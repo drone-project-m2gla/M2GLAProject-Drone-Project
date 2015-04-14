@@ -20,9 +20,8 @@ public class Zone {
     }
 
     public Iterator<Position> positionIterator() {
-        Iterator it = positions.iterator();
-
-        return it;
+    	return positions.iterator();
+         
     }
 
     public Iterator<Position> addPosition(Position position) {

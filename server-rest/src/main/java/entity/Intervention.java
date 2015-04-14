@@ -1,9 +1,11 @@
 package entity;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import util.Constant;
 import util.MeansByDisasterCode;
 
-import java.util.List;
 
 /**
  * Created by arno on 07/04/15.
@@ -15,14 +17,16 @@ import java.util.List;
 public class Intervention extends AbstractEntity {
 
     private String address;
-    private int postcode;
+    private String postcode;
     private String city;
     private DisasterCode disasterCode;
     private List<Mean> meansList;
+
+    private List<Mean> meansXtra;
     //private List<Mean> meansWaitingForApproval;
     private Position coordinates;
 
-    public Intervention(String address, int postcode, String city, DisasterCode disasterCode) {
+    public Intervention(String address, String postcode, String city, DisasterCode disasterCode) {
         this();
         this.address = address;
         this.postcode = postcode;
@@ -34,6 +38,7 @@ public class Intervention extends AbstractEntity {
     public Intervention() {
         super();
         this.datatype = Constant.DATATYPE_INTERVENTION;
+        this.meansXtra = new ArrayList<Mean>();
     }
 
     public String getAddress() {
@@ -44,11 +49,11 @@ public class Intervention extends AbstractEntity {
         this.address = address;
     }
 
-    public int getPostcode() {
+    public String getPostcode() {
         return postcode;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
 
@@ -89,5 +94,16 @@ public class Intervention extends AbstractEntity {
             this.meansList = MeansByDisasterCode.meansByDisasterCode(disasterCode);
         }
     }
+
+
+    public List<Mean> getMeansXtra() {
+        return meansXtra;
+    }
+
+    public void setMeansXtra(List<Mean> meansXtra) {
+        this.meansXtra = meansXtra;
+    }
+
+
 }
 

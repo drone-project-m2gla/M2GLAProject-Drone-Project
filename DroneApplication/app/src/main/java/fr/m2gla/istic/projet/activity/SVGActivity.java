@@ -22,7 +22,7 @@ public class SVGActivity extends Activity {
 
         imageView1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         try {
-            SVG svg = SVG.getFromResource(this, R.raw.point_ravitaillement);
+            SVG svg = SVG.getFromResource(this, R.raw.vehicule_incendie_seul_prevu);
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             imageView1.setImageDrawable(drawable);
         }

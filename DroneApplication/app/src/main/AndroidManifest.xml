@@ -37,14 +37,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MapActivity">
+        <activity android:name=".MapActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".SVGActivity" />
-        <activity android:name=".CodisActivity" />
+        <activity android:name=".SVGActivity" >
+            <intent-filter>
+                <action android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".NewInterventionActivity" />
         <activity android:name=".InterventionListActivity" />
 
         <receiver

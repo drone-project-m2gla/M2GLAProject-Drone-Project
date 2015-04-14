@@ -16,17 +16,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.m2gla.istic.projet.activity.R;
+import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
+import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
+import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
 public class InterventionListFragment extends Fragment {
+    private static final String TAG = "InterListFragment";
 
     private UserQualification                   userQualification = UserQualification.SIMPLEUSER;
     private ListView                            idList;
     private ArrayList<HashMap<String, String>>  listItem;
     private SimpleAdapter                       mSchedule;
     private View                                view;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,36 +48,25 @@ public class InterventionListFragment extends Fragment {
                 Toast.makeText(this.view.getContext(), roleStr, Toast.LENGTH_SHORT).show();
 
                 if (roleStr.compareTo(UserQualification.CODIS.toString()) == 0) {
-                    Toast.makeText(this.view.getContext(), " * CODIS * ", Toast.LENGTH_SHORT).show();
                     this.userQualification = UserQualification.CODIS;
                 }
                 else if (roleStr.compareTo(UserQualification.SIMPLEUSER.toString()) == 0) {
-                    Toast.makeText(this.view.getContext(), " * Sapeur * ", Toast.LENGTH_SHORT).show();
                     this.userQualification = UserQualification.SIMPLEUSER;
                 }
                 else {
-                    Toast.makeText(this.view.getContext(), " * Aucun * ", Toast.LENGTH_SHORT).show();
                     this.userQualification = UserQualification.SIMPLEUSER;
                 }
             }
             else {
-                Toast.makeText(this.view.getContext(), " * Null ! * ", Toast.LENGTH_SHORT).show();
                 this.userQualification = UserQualification.SIMPLEUSER;
             }
         }
         else {
-            Toast.makeText(this.view.getContext(), "* Pas D'Argument ! *", Toast.LENGTH_SHORT).show();
             this.userQualification = UserQualification.SIMPLEUSER;
         }
 
-        refreshList();
-
-        return this.view;
-
-    }
 
 
-    public void refreshList() {
 
         //Récupération de la listview créée dans le fichier clients.xml
         this.idList = (ListView) this.view.findViewById(R.id.interventionListView);
@@ -79,7 +74,7 @@ public class InterventionListFragment extends Fragment {
         //Création de la ArrayList qui nous permettra de remplire la listView
         this.listItem = new ArrayList<HashMap<String, String>>();
 
-        addInterventionInList("00", "Inter", true);
+        // addInterventionInList("00", "Inter", true);
 
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
@@ -88,14 +83,9 @@ public class InterventionListFragment extends Fragment {
                 new String[] {GeneralConstants.INTER_LIST_ELEM1, GeneralConstants.INTER_LIST_ELEM2},
                 new int[] {R.id.interventionCode, R.id.interventionData});
 
-
-
-
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
 
-        Log.i("ADAPTER", this.mSchedule.toString() + " --- " + this.idList.getAdapter().getCount());
-        Log.i("ADAPTER", this.mSchedule.toString() + " --- " + this.idList.getAdapter().getItem(0).toString());
 
         // Ajouter un écouteur sur la selection d'un element de la liste
         this.idList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -103,18 +93,78 @@ public class InterventionListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String, String> map;
 
-                map = (HashMap<String, String>)idList.getItemAtPosition(position);
+                map = (HashMap<String, String>) idList.getItemAtPosition(position);
 
-                Toast.makeText(view.getContext(), map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                if (userQualification == UserQualification.CODIS) {
+                    Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
 
-        TextView    textView = (TextView) this.view.findViewById(R.id.interventionCode);
-        if (textView == null) Log.i("ADAPTER", "NULL");
-        else textView.setText("0001");
-        Log.i("ADAPTER", "--> " + R.id.interventionCode + " --- " + R.id.interventionData + " <--");
 
+        refreshList();
+
+        return this.view;
+
+    }
+
+
+    public void setUserQualification(UserQualification userQualification) {
+        this.userQualification = userQualification;
+    }
+
+
+    public void refreshList() {
+
+        // Changement de la ArrayList qui nous permettra de remplire la listView
+        this.listItem.clear();
+
+        RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
+                new Command() {
+                    /**
+                     * Success connection
+                     * @param response Response object type Intervention[]
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Intervention    intervention[];
+
+                        if (response == null) {
+                            return;
+                        }
+
+                        intervention = (Intervention[]) response;
+
+                        if (intervention.length == 0) {
+                            return;
+                        }
+                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
+
+
+                        for (Intervention inter:intervention) {
+                            if (inter == null) {
+                                Log.w(TAG, "Element NULL");
+                                continue;
+                            }
+                            addInterventionInList("" + inter.getId(), "" + inter.getAddress());
+                        }
+
+
+                    }
+                }, new Command() {
+                    /**
+                     * Error connection
+                     * @param response Response error type HttpClientErrorException
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Log.e(TAG, "connection error");
+                    }
+                });
 
         addInterventionInList("01", "Inter1");
         addInterventionInList("02", "Intervention 2");

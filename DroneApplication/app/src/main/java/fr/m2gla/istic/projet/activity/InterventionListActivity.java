@@ -8,22 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
-import fr.m2gla.istic.projet.context.RestAPI;
-import fr.m2gla.istic.projet.model.Intervention;
-import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 
@@ -44,27 +33,6 @@ public class InterventionListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intervention_list);
 
-        RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
-                new Command() {
-                    /**
-                     * Success connection
-                     * @param response Response object type Intervention[]
-                     */
-                    @Override
-                    public void execute(Object response) {
-                        //TODO list intervention
-                    }
-                }, new Command() {
-                    /**
-                     * Error connection
-                     * @param response Response error type HttpClientErrorException
-                     */
-                    @Override
-                    public void execute(Object response) {
-                        Log.e(TAG, "connection error");
-                    }
-                });
-
         Intent              intent;
         String              roleStr;
         Button              addButton = (Button) findViewById(R.id.addInterButton);
@@ -73,12 +41,11 @@ public class InterventionListActivity extends Activity {
 
         this.fragmentManager = getFragmentManager();
         intent = getIntent();
-Log.i("InterListActivity", "Debut");
 
         if (intent != null) {
             roleStr = intent.getStringExtra(GeneralConstants.REF_ACT_ROLE);
             if (roleStr != null) {
-                Toast.makeText(getApplicationContext(), roleStr, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), roleStr, Toast.LENGTH_SHORT).show();
 
                 if (roleStr.compareTo(UserQualification.CODIS.toString()) == 0) {
                     Toast.makeText(getApplicationContext(), " - CODIS - ", Toast.LENGTH_SHORT).show();
@@ -118,17 +85,25 @@ Log.i("InterListActivity", "Debut");
         this.listFragment = this.fragmentManager.findFragmentById(R.id.fragment_intervention_list);
 
         if (this.listFragment == null) Log.i(TAG, "Fragment null");
+        else {
+            ((InterventionListFragment)this.listFragment).setUserQualification(this.userQualification);
+        }
 
     }
 
 
-    public void interventionRefresh(View view) {
+    public void interventionRefresh() {
         InterventionListFragment    interventionListFragment;
 
 
         // Demander le rafraichissement de la liste
         interventionListFragment = (InterventionListFragment) this.listFragment;
         interventionListFragment.refreshList();
+    }
+
+
+    public void interventionRefresh(View view) {
+        interventionRefresh();
     }
 
 
@@ -139,18 +114,21 @@ Log.i("InterListActivity", "Debut");
 
 
     public void interventionSelection(View view) {
-        Intent intent = new Intent(getApplicationContext(), CodisActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NewInterventionActivity.class);
 
         // lancement de la seconde activité, en demandant un code retour
         // startActivityForResult(intent, 0);
-        startActivity(intent);
+        // startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
 
-/*
+
     @Override
     public void onActivityResult(int a, int b, Intent retIntent) {
-        PersoInfoData persoInfoData;
+        interventionRefresh();
+
+/*        PersoInfoData persoInfoData;
 
         persoInfoData = retIntent.getParcelableExtra(MainActivity.refReturn);
 
@@ -181,7 +159,7 @@ Log.i("InterListActivity", "Debut");
 
 
         Toast.makeText(getApplicationContext(), persoInfoData.getNom().toString(), Toast.LENGTH_SHORT).show();
-
-    }
 */
+    }
+
 }

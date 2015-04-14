@@ -163,16 +163,10 @@ public class MainActivity extends Activity {
     private boolean sendLoginAsync() {
 
         RestService loginSnd = RestServiceImpl.getInstance();
-        List<NameValuePair> loginList = new ArrayList<>();
-        NameValuePair loginPair = new BasicNameValuePair("username", this.loginName);
-        NameValuePair passwordPair = new BasicNameValuePair("password", this.loginPassword);
 
         User user = new User();
         user.setUsername(this.loginName);
         user.setPassword(this.loginPassword);
-
-        loginList.add(loginPair);
-        loginList.add(passwordPair);
 
         loginSnd.post(RestAPI.POST_PUSH_LOGIN, null, user, User.class, new Command() {
             /**
@@ -213,14 +207,14 @@ public class MainActivity extends Activity {
     private void postOkLoginAction() {
         Intent intent;
 
-
+/*
         if (this.userQualification == UserQualification.CODIS) {
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "CODIS", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Sapeur", Toast.LENGTH_SHORT).show();
         }
-
+*/
         // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
         intent = new Intent(getApplicationContext(), InterventionListActivity.class);
 

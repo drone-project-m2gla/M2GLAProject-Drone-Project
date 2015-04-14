@@ -5,13 +5,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
@@ -33,10 +35,10 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
-import fr.m2gla.istic.projet.strategy.Strategy;
 
 public class MapActivity extends Activity {
 
@@ -60,22 +62,28 @@ public class MapActivity extends Activity {
         point_sensible
     }
 
-    public static MapFragment mapFragment;
-
-    //private LocationManager locationManager;
-    //private Location location ;
-
-    GoogleMap map;
+    private static MapFragment mapFragment;
+    private GoogleMap map;
     private static final String TAG = "MapActivity";
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+
     // latitude and longitude
     double latitude = 48.1119800 ;
     double longitude = -1.6742900;
+
+    private static final int OFFSET_X = -100;
+    private static final int OFFSET_Y = 30;
+
+    private Map<String, String> param;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        param = new HashMap<String, String>();
+        param.put("id", "");
+
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
@@ -90,11 +98,23 @@ public class MapActivity extends Activity {
                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Map<String, String> param = new HashMap<String, String>();
-                                param.put("id", marker.getId());
+                                Mean mean = new Mean();
+                                mean.setId("");
 
                                 RestServiceImpl.getInstance()
-                                        .post(RestAPI.POST_POSITION_CONFIRMATION, );
+                                        .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                                new Command() {
+                                                    @Override
+                                                    public void execute(Object response) {
+                                                        Log.i(TAG, "Confirm position success");
+                                                    }
+                                                },
+                                                new Command() {
+                                                    @Override
+                                                    public void execute(Object response) {
+                                                        Log.e(TAG, "Confirm position error");
+                                                    }
+                                                });
                             }
                         })
                         .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -107,27 +127,40 @@ public class MapActivity extends Activity {
             }
         });
 
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                return false;
-            }
-        });
-
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
-
+                // TODO mettre en pointiller les icons
             }
 
             @Override
             public void onMarkerDrag(Marker marker) {
-
+                // Not use
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
+                Position position = new Position();
+                position.setLatitude(marker.getPosition().latitude);
+                position.setLongitude(marker.getPosition().longitude);
+                Mean mean = new Mean();
+                mean.setId("");
+                mean.setCoordinates(position);
 
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Post new position success");
+                                    }
+                                },
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Post new position error");
+                                    }
+                                });
             }
         });
 
@@ -138,7 +171,6 @@ public class MapActivity extends Activity {
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<>(this, map);
-        //mClusterManager.setAlgorithm(new GridBasedAlgorithm<SymbolMarkerClusterItem>());
         mClusterManager.setRenderer(new SymbolRendered(this, map, mClusterManager));
 
         // Point the map's listeners at the listeners implemented by the cluster
@@ -146,7 +178,20 @@ public class MapActivity extends Activity {
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
 
-        onLocationChanged();
+        loadSymbols();
+        mapFragment.getView().setOnDragListener(new AdapterView.OnDragListener(){
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                if (event.getAction()==DragEvent.ACTION_DROP) {
+                    Log.i("MapActivity", event.toString());
+
+                    LatLng latlng = map.getProjection().fromScreenLocation(new Point((int)event.getX() + OFFSET_X, (int)event.getY() + OFFSET_Y));
+                    createSymbolMarker(latlng.latitude, latlng.longitude, Symbols.vehicule_incendie_seul_prevu, "AAA", "BBB", "ff0000", "");
+                    mClusterManager.cluster();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -156,11 +201,7 @@ public class MapActivity extends Activity {
         return true;
     }
 
-    // onLocation Changed
-    public void onLocationChanged() {
-
-        //On affiche dans un Toast la nouvelle Localisation
-//        Toast.makeText(this, "lat : " + latitude + "; lng : " + longitude, Toast.LENGTH_SHORT).show();
+    public void loadSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
                 new Command() {
                     /**
@@ -171,16 +212,19 @@ public class MapActivity extends Activity {
                     @Override
                     public void execute(Object response) {
                         Topographie[] topographies = (Topographie[]) response;
+                        Position pos = new Position();
                         for (int i = 0; i < topographies.length; i++) {
-
-                            Position pos = topographies[i].getPosition();
+                            pos = topographies[i].getPosition();
                             //Draw a symbol with texts and color at a position
-                            createSymbolMarker(pos.getLatitude(),pos.getLongitude(),
+                            createSymbolMarker(pos.getLatitude(), pos.getLongitude(),
                                     Symbols.valueOf(topographies[i].getFilename()),
                                     topographies[i].getFirstContent(), topographies[i].getSecondContent(), topographies[i].getColor(),
                                     topographies[i].getFirstContent()
                             );
                         }
+
+                        mClusterManager.cluster();
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
                     }
                 }, new Command() {
                     /**
@@ -197,24 +241,6 @@ public class MapActivity extends Activity {
                 });
     }
 
-
-    /**
-     * Converts a drawable object into a bitmap
-     *
-     * @param drawable     drawable object to convert
-     * @param widthPixels  output image width
-     * @param heightPixels output image height
-     * @return converted bitmap
-     */
-    public Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {
-        Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(mutableBitmap);
-        drawable.setBounds(0, 0, widthPixels, heightPixels);
-        drawable.draw(canvas);
-
-        return mutableBitmap;
-    }
-
     /**
      * Creates a map marker at chosen coordinates using the given resource name, text contents and color.
      *
@@ -225,7 +251,7 @@ public class MapActivity extends Activity {
      * @param textContent2   second text
      * @param hexaColor      symbol color
      */
-    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor,String description) {
+    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor, String description) {
         try {
             //Mise à jour des coordonnées
             final LatLng latLng = new LatLng(latitude, longitude);
@@ -233,14 +259,12 @@ public class MapActivity extends Activity {
             InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceSymbol.name(), "raw", getPackageName()));
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(convertToBitmap(drawable, 64, 64), 50, 50, true);
+            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertToBitmap(drawable, 64, 64), 50, 50, true);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
 
             SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon, description);
             mClusterManager.addItem(marketItem);
 
-            mClusterManager.cluster();
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         } catch (SVGParseException ignored) {
         }
     }
@@ -250,7 +274,7 @@ public class MapActivity extends Activity {
         private BitmapDescriptor icon;
         private String description;
 
-        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon,String description) {
+        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon, String description) {
             mPosition = new LatLng(lat, lng);
             this.icon = icon;
             this.description = description;
@@ -281,6 +305,5 @@ public class MapActivity extends Activity {
             markerOptions.draggable(true);
             markerOptions.title(item.description);
         }
-
     }
 }
