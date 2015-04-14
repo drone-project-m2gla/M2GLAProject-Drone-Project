@@ -45,6 +45,7 @@ public class InitBDDTest {
     @Test
     public void flushBucket()
     {
+        StringCurlAddress = ""
         Apache
     }
 
