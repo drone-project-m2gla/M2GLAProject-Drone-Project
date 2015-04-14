@@ -18,6 +18,7 @@ import entity.Intervention;
 import entity.Mean;
 import entity.Position;
 import service.PushService.TypeClient;
+import service.RetrieveAddress;
 import service.impl.PushServiceImpl;
 
 /**
@@ -173,10 +174,11 @@ public class InterventionRest {
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
 
-        // Code temporaire a remplacé par service google pour retrouver les coordonnées GPS
-        Position p1 = new Position(Double.NaN,Double.NaN);
-        intervention.setCoordinates(p1);
-
+        RetrieveAddress adresseIntervention = new RetrieveAddress(intervention.getAddress(), intervention.getPostcode(), intervention.getCity()); 
+        
+        Position coordinatesIntervention = adresseIntervention.retrieveGps();
+        intervention.setCoordinates( coordinatesIntervention);
+        
         // Génération de la liste des moyens
         intervention.generateMeanList();
         Intervention res = iD.create(intervention);

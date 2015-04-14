@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Drone Application</string>
 
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+
     <string name="title_notification_intervntion">Nouvelle intervention</string>
 
     <string name="presentation_text">Aux Joyeux Pompiers</string>
@@ -34,4 +37,5 @@
     <string name="button_refresh">Raffraichir</string>
     <string name="add_new_mean">Ajout de moyens supp.</string>
 
+    <string name="query_position_confirmation">Confirmer la position du moyen?</string>
 </resources>

@@ -1,8 +1,11 @@
 package fr.m2gla.istic.projet.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Created by baptiste on 10/04/15.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mean extends Entity {
     private Vehicle vehicle;
     private Position coordinates;
@@ -25,7 +28,7 @@ public class Mean extends Entity {
         this.coordinates = coordinates;
     }
 
-    public boolean getIsInPosition() {
+    public boolean getInPosition() {
         return inPosition;
     }
 
