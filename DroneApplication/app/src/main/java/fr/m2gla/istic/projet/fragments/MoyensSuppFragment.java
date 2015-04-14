@@ -1,6 +1,7 @@
 package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
@@ -40,7 +42,7 @@ public class MoyensSuppFragment extends Fragment {
 
     // Declaring the String Array with the Text Data for the Spinners
     String[] titles;
-    // Declaring the Integer Array with resourse Id's of Images for the Spinners
+    // Declaring the Integer Array with resource Id's of Images for the Spinners
     int[] images;
     private String meanID = "-1113935408";
 
@@ -52,18 +54,21 @@ public class MoyensSuppFragment extends Fragment {
         moyensSpinner = (Spinner) view
                 .findViewById(R.id.moyensSpinner);
 
-        // Setting a Custom Adapter to the Spinner
-//        images = new String[]{"", Constant.SVG_COLONNE_INCENDIE_ACTIVE, Constant.SVG_MOYEN_INTERVENTION_AERIEN,
-//                Constant.SVG_GROUPE_INCENDIE_ACTIF, Constant.SVG_SECOUR_A_PERSONNE_PREVU};
         titles = new String[]{"", Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
                 Constant.VALUE_VEHICULE_VSR, Constant.VALUE_VEHICULE_VLCG, Constant.VALUE_VEHICULE_VSAV};
-
 
         images = new int[]{0, Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
                 Constant.DRAWABLE_IMG_VEHICULE_VSR, Constant.DRAWABLE_IMG_VEHICULE_VLCG, Constant.DRAWABLE_IMG_VEHICULE_VSAV};
 
-
-        moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
+        List<Drawable> drawables = new ArrayList<Drawable>();
+        for (int imageId : images) {
+            if (imageId!=0) {
+                drawables.add(getResources().getDrawable(imageId));
+            } else {
+                drawables.add(null);
+            }
+        }
+        moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, drawables.toArray(new Drawable[drawables.size()])));
 
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_moyen);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +82,7 @@ public class MoyensSuppFragment extends Fragment {
                 sendRequestMeanAsync();
             }
         });
-
         return view;
-
     }
 
     /**
@@ -101,7 +104,6 @@ public class MoyensSuppFragment extends Fragment {
              */
             @Override
             public void execute(Object response) {
-
                 // Demander la prise en compte de la validation de l'identification
                 Toast.makeText(getActivity(), "Moyen suppl.", Toast.LENGTH_SHORT).show();
                 Mean moyen = (Mean) response;
