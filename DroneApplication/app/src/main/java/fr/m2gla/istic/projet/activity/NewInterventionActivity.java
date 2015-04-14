@@ -10,16 +10,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+// import com.google.gson.Gson;
 
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.DisasterCode;
 import fr.m2gla.istic.projet.model.Intervention;
-import fr.m2gla.istic.projet.model.User;
 import fr.m2gla.istic.projet.service.RestService;
-import fr.m2gla.istic.projet.service.impl.PushServiceImpl;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 /**
@@ -36,6 +33,11 @@ public class NewInterventionActivity extends Activity {
     private     Integer                             postCode;
 
 
+    /**
+     * Methode Principale
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +75,7 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode de gestion de la fin d'activity
+     * Methode de gestion de la fin d'activity appelee via bouton
      * @param view : vue courante
      */
     public void endAddIntervention(View view) {
@@ -88,8 +90,9 @@ public class NewInterventionActivity extends Activity {
         finish();
     }
 
+
     /**
-     * Methode de gestion de l'ajout d'une intervention
+     * Methode de gestion de l'ajout d'une intervention appelee via bouton
      * @param view : vue courante
      */
     public void addIntervention (View view) {
@@ -169,13 +172,11 @@ public class NewInterventionActivity extends Activity {
         // Envoyer les donnees au serveur
         sendNewInterventionAsync();
 
-
-
     }
 
 
     /**
-     * Methode de gestion de l'envoi des elements de login au serveur
+     * Methode de gestion de l'envoi des elements de l'intervention au serveur
      *
      * @param -
      */
@@ -226,7 +227,7 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode d'action post login reussi
+     * Methode d'action post envoi intervention reussi
      *
      * @param -
      */
@@ -234,8 +235,9 @@ public class NewInterventionActivity extends Activity {
         postNewInterventionAction();
     }
 
+
     /**
-     * Methode d'action post login
+     * Methode d'action post envoi intervention reussi
      *
      * @param -
      */

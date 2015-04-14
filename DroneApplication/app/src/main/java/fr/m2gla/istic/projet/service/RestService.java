@@ -39,7 +39,6 @@ public interface RestService {
      * Send delete http method
      * @param service Service REST call (available in RestAPI)
      * @param param (Optional) Param of query, or null
-     * @param type Type of result
      * @param callbackSuccess Callback after response success
      * @param callbackError Callback after response error
      */
