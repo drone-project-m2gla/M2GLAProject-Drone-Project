@@ -2,6 +2,7 @@ package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -29,6 +30,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import java.io.InputStream;
 
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Topographie;
@@ -68,6 +70,12 @@ public class MapActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        Intent intent = getIntent();
+
+        if (intent != null) {
+            String extras = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
+        }
+
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
 
@@ -82,13 +90,13 @@ public class MapActivity extends Activity {
         map.setOnMarkerClickListener(mClusterManager);
 
         loadSymbols();
-        mapFragment.getView().setOnDragListener(new AdapterView.OnDragListener(){
+        mapFragment.getView().setOnDragListener(new AdapterView.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
-                if (event.getAction()==DragEvent.ACTION_DROP) {
+                if (event.getAction() == DragEvent.ACTION_DROP) {
                     Log.i("MapActivity", event.toString());
 
-                    LatLng latlng = map.getProjection().fromScreenLocation(new Point((int)event.getX() + OFFSET_X, (int)event.getY() + OFFSET_Y));
+                    LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
                     createSymbolMarker(latlng.latitude, latlng.longitude, Symbols.vehicule_incendie_seul_prevu, "AAA", "BBB", "ff0000", "");
                     mClusterManager.cluster();
                 }
