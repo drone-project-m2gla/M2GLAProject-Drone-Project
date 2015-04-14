@@ -23,11 +23,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ListView
-<<<<<<< HEAD
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-=======
->>>>>>> ee4866e43a00a51c5c14078dccf5b0d77fb6f0c6
             android:id="@+id/interventionListView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
