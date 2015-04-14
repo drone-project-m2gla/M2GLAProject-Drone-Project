@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -34,6 +33,13 @@ public class InterventionListFragment extends Fragment {
     private View                                view;
 
 
+    /**
+     * Methode d'entree
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -66,19 +72,17 @@ public class InterventionListFragment extends Fragment {
         }
 
 
-
-
         //Récupération de la listview créée dans le fichier clients.xml
         this.idList = (ListView) this.view.findViewById(R.id.interventionListView);
 
         //Création de la ArrayList qui nous permettra de remplire la listView
         this.listItem = new ArrayList<HashMap<String, String>>();
 
+        // Pour TEST
         // addInterventionInList("00", "Inter", true);
 
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
-//        this.mSchedule = new SimpleAdapter(getActivity().getApplicationContext(), this.listItem, R.layout.disp_intervention,
         this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
                 new String[] {GeneralConstants.INTER_LIST_ELEM1, GeneralConstants.INTER_LIST_ELEM2},
                 new int[] {R.id.interventionCode, R.id.interventionData});
@@ -113,11 +117,19 @@ public class InterventionListFragment extends Fragment {
     }
 
 
+    /**
+     * Methode setter permettant à l'activity appelante de passer le role de l'utilisateur
+     * @param userQualification : role de l'utilisateur
+     */
     public void setUserQualification(UserQualification userQualification) {
         this.userQualification = userQualification;
     }
 
 
+    /**
+     * Methode permettant de rafraichir la liste des intervention
+     * @param -
+     */
     public void refreshList() {
 
         // Changement de la ArrayList qui nous permettra de remplire la listView
@@ -166,6 +178,7 @@ public class InterventionListFragment extends Fragment {
                     }
                 });
 
+/* Pour TEST
         addInterventionInList("01", "Inter1");
         addInterventionInList("02", "Intervention 2");
         addInterventionInList("03", "La mienne");
@@ -178,15 +191,26 @@ public class InterventionListFragment extends Fragment {
         addInterventionInList("10", "Inter10");
         addInterventionInList("11", "Intervention 11");
         addInterventionInList("12", "La notre");
-
+*/
     }
 
 
+    /**
+     * Methode demandant l'ajout d'une intervention dans la liste
+     * @param code : Reference (id) de l'intervention
+     * @param data : données de l'intervention
+     */
     public void addInterventionInList(String code, String data) {
         addInterventionInList(code, data, false);
     }
 
 
+    /**
+     * Methode demandant l'ajout d'une intervention dans la liste
+     * @param code : Reference (id) de l'intervention
+     * @param data : données de l'intervention
+     * @param initial : true pour specifier qu'il s'agit d'une intervention ajoutée pendant l'initialisation
+     */
     public void addInterventionInList(String code, String data, boolean initial) {
         // Verifier si une insertion est a faire
         if ((code == null) || (code.length() <= 0)) {
