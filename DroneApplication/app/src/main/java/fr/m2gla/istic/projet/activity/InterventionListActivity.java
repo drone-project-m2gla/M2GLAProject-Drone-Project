@@ -87,7 +87,7 @@ public class InterventionListActivity extends Activity {
         // Transferer le role vers les fragments
         bundle.putString(GeneralConstants.REF_ACT_ROLE, roleStr);
 
-        this.listFragment = this.fragmentManager.findFragmentById(R.id.fragment_intervention_list);
+       // this.listFragment = this.fragmentManager.findFragmentById(R.id.fragment_intervention_list);
 
         if (this.listFragment == null) Log.i(TAG, "Fragment null");
         else {

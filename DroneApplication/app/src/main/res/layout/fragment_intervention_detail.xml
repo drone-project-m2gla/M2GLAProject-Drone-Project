@@ -1,16 +1,11 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".InterventionDetailFragment">
-
-        <TextView
-        android:id="@+id/id_detail_intervention"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Coucou"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/interventionDetailList"
-    />
-</FrameLayout>
+        android:id="@+id/intervention_detail_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+</LinearLayout>

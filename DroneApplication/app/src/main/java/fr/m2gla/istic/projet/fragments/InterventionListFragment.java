@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
-import fr.m2gla.istic.projet.activity.NewInterventionActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -104,9 +103,9 @@ public class InterventionListFragment extends Fragment {
 
                 if (userQualification == UserQualification.CODIS) {
                     Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();
-                    InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_detail);
+                    //InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
                     String idIntervention = map.get(GeneralConstants.INTER_LIST_ELEM1).toString();
-                    fragmentDetailIntervention.setIdIntervention(idIntervention);
+                    //fragmentDetailIntervention.setIdIntervention(idIntervention);
                 }
                 else {
                     Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ELEM1) + " " + map.get(GeneralConstants.INTER_LIST_ELEM2), Toast.LENGTH_SHORT).show();

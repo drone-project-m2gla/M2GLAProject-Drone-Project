@@ -1,28 +1,24 @@
 package fr.m2gla.istic.projet.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ArrayAdapter;
+
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.constantes.Constant;
-import fr.m2gla.istic.projet.model.Intervention;
-
-import com.google.android.gms.plus.PlusOneButton;
 
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 public class InterventionDetailFragment extends Fragment {
+    private static final String TAG = "InterventionDetailFragment";
     private String idIntervention;
     private String[] titles;
     private int[] images;
@@ -35,16 +31,29 @@ public class InterventionDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_intervention_detail, container, false);
 
 
-        titles = new String[]{"", Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
+        titles = new String[]{Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
                 Constant.VALUE_VEHICULE_VSR, Constant.VALUE_VEHICULE_VLCG, Constant.VALUE_VEHICULE_VSAV};
 
-
-        images = new int[]{0, Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
+        images = new int[]{Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
                 Constant.DRAWABLE_IMG_VEHICULE_VSR, Constant.DRAWABLE_IMG_VEHICULE_VLCG, Constant.DRAWABLE_IMG_VEHICULE_VSAV};
 
+        List<Drawable> drawables = new ArrayList<Drawable>();
+        for (int imageId : images) {
+            if (imageId!=0) {
+                drawables.add(getResources().getDrawable(imageId));
+            } else {
+                drawables.add(getResources().getDrawable(R.drawable.bubble_shadow));
+            }
+        }
 
-        ListView listMoyen = (ListView) view.findViewById(R.id.interventionDetailList);
-        listMoyen.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, images));
+
+        ListView listMoyen = (ListView) view.findViewById(R.id.intervention_detail_list);
+        Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+
+        Log.i(TAG, TAG+"\nTaille   "+imagesArray.length);
+
+        listMoyen.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom_detail_moyen, titles,  imagesArray));
+
 
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,, listMoyen);
 //        setListAdapter(adapter);
@@ -57,12 +66,10 @@ public class InterventionDetailFragment extends Fragment {
 
 
 
-
     public void setIdIntervention(String idIntervention) {
         this.idIntervention = idIntervention;
         Toast.makeText(getActivity(),"bonjour  " + idIntervention,Toast.LENGTH_LONG).show();
-        TextView idTextView = (TextView) getView().findViewById(R.id.id_detail_intervention);
-        idTextView.setText(idIntervention);
+        // idTextView.setText(idIntervention);
 
     }
 }
