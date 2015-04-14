@@ -1,6 +1,7 @@
 package rest;
 
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -16,6 +17,9 @@ import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
 import entity.Position;
+import service.PushService.TypeClient;
+import service.RetrieveAddress;
+import service.impl.PushServiceImpl;
 
 /**
  * Created by arno on 12/02/15.
@@ -102,7 +106,7 @@ public class InterventionRest {
     @Path("/{id}/moyenextra")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public long getMeanListForIntervention(@PathParam("id") long id,Mean meanXtra) {
+    public Mean getMeanListForIntervention(@PathParam("id") long id,Mean meanXtra) {
 
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
@@ -113,7 +117,13 @@ public class InterventionRest {
         iD.update(intervention);
 
         iD.disconnect();
-        return meanXtra.getId();
+
+        try {
+            PushServiceImpl.getInstance().sendMessage(TypeClient.CODIS, "xtra",intervention);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return intervention.getMeansXtra().get(intervention.getMeansXtra().size()-1);
     }
 
     @GET
@@ -158,21 +168,23 @@ public class InterventionRest {
 
     @POST
     @Path("")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response setIntervention(Intervention intervention) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Intervention setIntervention(Intervention intervention) {
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
 
-        // Code temporaire a remplacé par service google pour retrouver les coordonnées GPS
-        Position p1 = new Position(Double.NaN,Double.NaN);
-        intervention.setCoordinates(p1);
-
+        RetrieveAddress adresseIntervention = new RetrieveAddress(intervention.getAddress(), intervention.getPostcode(), intervention.getCity()); 
+        
+        Position coordinatesIntervention = adresseIntervention.retrieveGps();
+        intervention.setCoordinates( coordinatesIntervention);
+        
         // Génération de la liste des moyens
         intervention.generateMeanList();
         Intervention res = iD.create(intervention);
         iD.disconnect();
 
-        return Response.status(200).entity(""+res.getId()).build();
+        return res;
     }
 
 //

@@ -24,7 +24,7 @@ public class InterventionDetailFragment extends Fragment {
             "XML Language", "PHP Language"};
 
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
-    String [] images = {Constant.COLONNE_INCENDIE_ACTIVE,Constant.GROUPE_INCENDIE_ACTIF,Constant.MOYEN_INTERVENTION_AERIEN};
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
