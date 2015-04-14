@@ -12,12 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
@@ -25,6 +19,7 @@ import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.User;
 import fr.m2gla.istic.projet.service.RestService;
 import fr.m2gla.istic.projet.service.impl.*;
+
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
@@ -99,7 +94,7 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Methode de gestion de la fin de l'application
+     * Methode de gestion de la fin de l'application appelee par bouton
      *
      * @param view : vue courante
      */
@@ -110,7 +105,7 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Methode de gestion de la validation du login
+     * Methode de gestion de la validation du login appelee par bouton
      *
      * @param view : vue courante
      */
@@ -163,16 +158,10 @@ public class MainActivity extends Activity {
     private boolean sendLoginAsync() {
 
         RestService loginSnd = RestServiceImpl.getInstance();
-        List<NameValuePair> loginList = new ArrayList<>();
-        NameValuePair loginPair = new BasicNameValuePair("username", this.loginName);
-        NameValuePair passwordPair = new BasicNameValuePair("password", this.loginPassword);
 
         User user = new User();
         user.setUsername(this.loginName);
         user.setPassword(this.loginPassword);
-
-        loginList.add(loginPair);
-        loginList.add(passwordPair);
 
         loginSnd.post(RestAPI.POST_PUSH_LOGIN, null, user, User.class, new Command() {
             /**
@@ -213,14 +202,6 @@ public class MainActivity extends Activity {
     private void postOkLoginAction() {
         Intent intent;
 
-/*
-        if (this.userQualification == UserQualification.CODIS) {
-            Toast.makeText(getApplicationContext(), "postLoginAction() : " + "CODIS", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "postLoginAction() : " + "Sapeur", Toast.LENGTH_SHORT).show();
-        }
-*/
         // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
         intent = new Intent(getApplicationContext(), InterventionListActivity.class);
 

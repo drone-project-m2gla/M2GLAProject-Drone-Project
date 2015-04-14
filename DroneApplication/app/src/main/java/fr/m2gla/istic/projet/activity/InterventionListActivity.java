@@ -28,6 +28,11 @@ public class InterventionListActivity extends Activity {
     private Fragment                            listFragment;
 
 
+    /**
+     * Methode Principale
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +97,12 @@ public class InterventionListActivity extends Activity {
     }
 
 
-    public void interventionRefresh(View view) {
+    /**
+     * Methode de rafraichissement de l'activity
+     *
+     * @param -
+     */
+    public void interventionRefresh() {
         InterventionListFragment    interventionListFragment;
 
 
@@ -102,24 +112,55 @@ public class InterventionListActivity extends Activity {
     }
 
 
+    /**
+     * Methode de rafraichissement de l'activity appelee par button
+     *
+     * @param view : vue courante
+     */
+    public void interventionRefresh(View view) {
+        interventionRefresh();
+    }
+
+
+
+    /**
+     * Methode de fin de l'activity appelee par button
+     *
+     * @param view : vue courante
+     */
     public void endInterventionSelection(View view) {
         // arret de l'activity ici
         finish();
     }
 
 
+    /**
+     * Methode de lancement de l'activity d'ajout de d'intervention appelee par button
+     *
+     * @param view : vue courante
+     */
     public void interventionSelection(View view) {
         Intent intent = new Intent(getApplicationContext(), NewInterventionActivity.class);
 
         // lancement de la seconde activité, en demandant un code retour
-        // startActivityForResult(intent, 0);
-        startActivity(intent);
+        // startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
 
-/*
+
+    /**
+     * Methode de recuperation du retours de l'activite lance
+     *
+     * @param a
+     * @param b
+     * @param retIntent
+     */
     @Override
     public void onActivityResult(int a, int b, Intent retIntent) {
+        interventionRefresh();
+
+/*
         PersoInfoData persoInfoData;
 
         persoInfoData = retIntent.getParcelableExtra(MainActivity.refReturn);
@@ -151,7 +192,7 @@ public class InterventionListActivity extends Activity {
 
 
         Toast.makeText(getApplicationContext(), persoInfoData.getNom().toString(), Toast.LENGTH_SHORT).show();
-
-    }
 */
+    }
+
 }

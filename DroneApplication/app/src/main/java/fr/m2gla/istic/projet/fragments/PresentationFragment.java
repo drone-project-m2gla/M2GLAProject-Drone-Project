@@ -14,6 +14,13 @@ public class PresentationFragment extends Fragment {
     private View                                view;
 
 
+    /**
+     * Methode d'entree
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

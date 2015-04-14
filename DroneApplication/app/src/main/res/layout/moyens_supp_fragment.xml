@@ -30,19 +30,19 @@
             android:src="@mipmap/ic_action_new" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30px"
-        android:textColor="#ffffff"
-        android:layout_gravity="center"
-        android:id="@+id/AndroidOs" />
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textSize="30px"-->
+    <!--android:textColor="#ffffff"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:id="@+id/AndroidOs" />-->
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="#ffffff"
-        android:textSize="15px"
-        android:id="@+id/Version" />
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:textColor="#ffffff"-->
+    <!--android:textSize="15px"-->
+    <!--android:id="@+id/Version" />-->
 </LinearLayout>

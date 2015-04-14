@@ -3,6 +3,7 @@ package fr.m2gla.istic.projet.service.impl;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +18,8 @@ public class RestServiceImpl implements RestService {
     private static final RestService INSTANCE = new RestServiceImpl();
     private static final String URL = "http://projm2gla1.istic.univ-rennes1.fr:8080/sitserver/rest";
 
-    protected RestServiceImpl() {}
+    protected RestServiceImpl() {
+    }
 
     public static RestService getInstance() {
         return INSTANCE;
@@ -42,6 +44,10 @@ public class RestServiceImpl implements RestService {
                         result = restTemplate.getForObject(URL + service, type, param);
                     }
                 } catch (HttpStatusCodeException e) {
+                    Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (HttpMessageNotReadableException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
                     error = true;
                     return e;
@@ -76,10 +82,11 @@ public class RestServiceImpl implements RestService {
                     T result = null;
 
                     if (param == null) {
-                        restTemplate.postForObject(URL + service, content, type);
+                        result = restTemplate.postForObject(URL + service, content, type);
                     } else {
-                        restTemplate.postForObject(URL + service, content, type, param);
+                        result = restTemplate.postForObject(URL + service, content, type, param);
                     }
+                    Log.i(TAG, "Object \t" + result);
 
                     return result;
                 } catch (HttpStatusCodeException e) {

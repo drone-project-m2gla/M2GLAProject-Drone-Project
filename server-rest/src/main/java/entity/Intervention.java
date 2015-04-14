@@ -17,7 +17,7 @@ import util.MeansByDisasterCode;
 public class Intervention extends AbstractEntity {
 
     private String address;
-    private int postcode;
+    private String postcode;
     private String city;
     private DisasterCode disasterCode;
     private List<Mean> meansList;
@@ -26,7 +26,7 @@ public class Intervention extends AbstractEntity {
     //private List<Mean> meansWaitingForApproval;
     private Position coordinates;
 
-    public Intervention(String address, int postcode, String city, DisasterCode disasterCode) {
+    public Intervention(String address, String postcode, String city, DisasterCode disasterCode) {
         this();
         this.address = address;
         this.postcode = postcode;
@@ -49,11 +49,11 @@ public class Intervention extends AbstractEntity {
         this.address = address;
     }
 
-    public int getPostcode() {
+    public String getPostcode() {
         return postcode;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
 
