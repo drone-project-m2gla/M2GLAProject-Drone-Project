@@ -2,17 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/listLayout"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/buttonLayout"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_weight=".6"
             android:orientation="vertical">
+
 
             <fragment
                 android:id="@+id/fragment_presentation"
@@ -25,44 +31,51 @@
                 class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
         </LinearLayout>
 
+        <fragment
+            android:id="@+id/fragment_detail"
+            class="fr.m2gla.istic.projet.fragments.InterventionDetailFragment"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight=".4" />
 
-        <LinearLayout
-            android:id="@+id/buttonLayout"
-            android:layout_width="fill_parent"
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/refreshInterButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:onClick="interventionRefresh"
+            android:text="@string/button_refresh" />
 
-            <Button
-                android:id="@+id/refreshInterButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="interventionRefresh"
-                android:text="@string/button_refresh" />
+        <Button
+            android:id="@+id/addInterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="interventionSelection"
+            android:text="@string/button_add" />
 
-            <Button
-                android:id="@+id/addInterButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="interventionSelection"
-                android:text="@string/button_add" />
+        <Button
+            android:id="@+id/finInterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="endInterventionSelection"
+            android:text="@string/button_return" />
 
-            <Button
-                android:id="@+id/finInterButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="endInterventionSelection"
-                android:text="@string/button_return" />
-
-        </LinearLayout>
-
+    </LinearLayout>
 
 
 </RelativeLayout>
