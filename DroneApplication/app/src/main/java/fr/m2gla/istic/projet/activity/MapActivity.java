@@ -90,8 +90,71 @@ public class MapActivity extends Activity implements
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
+        final Activity _this = this;
+
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Position position = new Position();
+                position.setLatitude(latLng.latitude);
+                position.setLongitude(latLng.longitude);
+
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_POSITION_DRONE, null, position, Void.class,
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.i(TAG, "Drone move");
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Push position error");
+                                }
+                            });
+            }
+        });
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(final Marker marker) {
+                new AlertDialog.Builder(_this)
+                        .setMessage(R.string.query_position_confirmation)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Mean mean = new Mean();
+                                mean.setId("");
+
+                                RestServiceImpl.getInstance()
+                                        .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                                new Command() {
+                                                    @Override
+                                                    public void execute(Object response) {
+                                                        Log.i(TAG, "Confirm position success");
+                                                    }
+                                                },
+                                                new Command() {
+                                                    @Override
+                                                    public void execute(Object response) {
+                                                        Log.e(TAG, "Confirm position error");
+                                                    }
+                                                });
+                            }
+                        })
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "Invalide position");
+                            }
+                        })
+                        .show();
+            }
+        });
         map = mapFragment.getMap();
         map.getUiSettings().setCompassEnabled(true);
+
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
