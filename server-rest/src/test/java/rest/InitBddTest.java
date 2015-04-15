@@ -2,12 +2,15 @@ package rest;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
+
 import dao.InterventionDAO;
 import entity.DisasterCode;
 import entity.Intervention;
 import entity.Position;
+
 import org.junit.*;
-import service.RetrieveAddress;
+
+import service.impl.RetrieveAddressImpl;
 import util.Configuration;
 
 import java.util.HashMap;

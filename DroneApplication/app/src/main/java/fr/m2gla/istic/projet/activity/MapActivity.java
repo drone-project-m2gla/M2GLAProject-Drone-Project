@@ -2,6 +2,7 @@ package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -38,42 +40,30 @@ import java.util.Map;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
+import fr.m2gla.istic.projet.model.Symbol;
+import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
-public class MapActivity extends Activity {
-
-    public enum Symbols {
-        colonne_incendie_active,
-        groupe_incendie_actif,
-        moyen_intervention_aerien_actif,
-        moyen_intervention_aerien_prevu,
-        pc_colonne_deux_fonctions_actif,
-        pc_site,
-        point_ravitaillement,
-        poste_commandement_prevu,
-        prise_eau_non_perenne,
-        prise_eau_perenne,
-        secours_a_personnes_actif,
-        secours_a_personnes_prevu,
-        vehicule_incendie_seul_actif,
-        vehicule_incendie_seul_prevu,
-        danger,
-        etoile,
-        point_sensible
-    }
+public class MapActivity extends Activity implements
+        ClusterManager.OnClusterItemInfoWindowClickListener<SymbolMarkerClusterItem>,
+        ClusterManager.OnClusterItemClickListener<SymbolMarkerClusterItem>{
 
     private static MapFragment mapFragment;
     private GoogleMap map;
     private static final String TAG = "MapActivity";
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+    // Keep track of the symbol that was last clicked on
+    private SymbolMarkerClusterItem clickedSymbolMarkerClusterItem = null;
 
-    // latitude and longitude
+    // default latitude and longitude to center map if error
     double latitude = 48.1119800 ;
     double longitude = -1.6742900;
 
+    // offset to place the icon when dropped
     private static final int OFFSET_X = -100;
     private static final int OFFSET_Y = 30;
 
@@ -92,10 +82,13 @@ public class MapActivity extends Activity {
         if (intent != null) {
             String extras = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
             Toast.makeText(getApplication(), "Bonjour\nID intervention " + extras, Toast.LENGTH_LONG);
+            MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
+            if(mSuppFragment != null){
+                mSuppFragment.setInterventionID(extras);
+            }
         }
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        map = mapFragment.getMap();
 
         final Activity _this = this;
 
@@ -159,11 +152,15 @@ public class MapActivity extends Activity {
                         .show();
             }
         });
+        map = mapFragment.getMap();
+        map.getUiSettings().setCompassEnabled(true);
+
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
-                // TODO mettre en pointiller les icons
+                // TODO: mettre en pointillés les icones
+                Log.d(TAG, "onMarkerDragStart " + marker.getId());
             }
 
             @Override
@@ -181,50 +178,59 @@ public class MapActivity extends Activity {
                 mean.setCoordinates(position);
 
                 RestServiceImpl.getInstance()
-                        .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.e(TAG, "Post new position success");
-                                    }
-                                },
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.e(TAG, "Post new position error");
-                                    }
-                                });
+                    .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Post new position success");
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Post new position error");
+                                }
+                            });
             }
         });
-
-        //Obtention de la référence du service
-        //locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        //location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<>(this, map);
         mClusterManager.setRenderer(new SymbolRendered(this, map, mClusterManager));
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        map.setOnCameraChangeListener(mClusterManager);
-        map.setOnMarkerClickListener(mClusterManager);
-
-        loadSymbols();
         mapFragment.getView().setOnDragListener(new AdapterView.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
                 if (event.getAction() == DragEvent.ACTION_DROP) {
-                    Log.i("MapActivity", event.toString());
+                    Log.i(TAG, event.toString());
 
-                    LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
-                    createSymbolMarker(latlng.latitude, latlng.longitude, Symbols.vehicule_incendie_seul_prevu, "AAA", "BBB", "ff0000", "");
-                    mClusterManager.cluster();
+                    ClipData clipData = event.getClipData();
+                    try {
+                        //Get symbol name from ClipData saved onDrag
+                        Symbol.SymbolType symbolType = Symbol.SymbolType.valueOf((String)clipData.getItemAt(0).getText());
+                        Log.d(TAG, clipData.getItemAt(0).toString());
+                        LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
+                        Symbol symbol = new Symbol(symbolType, "AAA", "BBB", "ff0000", "Description");
+                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
+                        mClusterManager.addItem(markerItem);
+                        mClusterManager.cluster();
+
+                    } catch (IllegalArgumentException e){}
                 }
                 return true;
             }
         });
+
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        map.setOnCameraChangeListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+        map.setOnInfoWindowClickListener(mClusterManager);
+        loadSymbols();
     }
 
     @Override
@@ -236,88 +242,93 @@ public class MapActivity extends Activity {
 
     public void loadSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
-                new Command() {
-                    /**
-                     * Success connection
-                     *
-                     * @param response Response object type Intervention[]
-                     */
-                    @Override
-                    public void execute(Object response) {
-                        Topographie[] topographies = (Topographie[]) response;
-                        Position pos = new Position();
-                        for (int i = 0; i < topographies.length; i++) {
-                            pos = topographies[i].getPosition();
-                            //Draw a symbol with texts and color at a position
-                            createSymbolMarker(pos.getLatitude(), pos.getLongitude(),
-                                    Symbols.valueOf(topographies[i].getFilename()),
-                                    topographies[i].getFirstContent(), topographies[i].getSecondContent(), topographies[i].getColor(),
-                                    topographies[i].getFirstContent()
-                            );
-                        }
+            new Command() {
+                /**
+                 * Success connection
+                 *
+                 * @param response Response object type Intervention[]
+                 */
+                @Override
+                public void execute(Object response) {
+                    Topographie[] topographies = (Topographie[]) response;
+                    Position pos = null;
+                    for (int i = 0; i < topographies.length; i++) {
+                        pos = topographies[i].getPosition();
+                        //Draw a symbol with texts and color at a position
+                        Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographies[i].getFilename()),
+                                topographies[i].getFirstContent(),
+                                topographies[i].getSecondContent(),
+                                topographies[i].getColor(),
+                                topographies[i].getFirstContent(),
+                                true);
+                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
+                        mClusterManager.addItem(markerItem);
+                    }
 
+                    if (pos != null) {
                         mClusterManager.cluster();
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
                     }
-                }, new Command() {
-                    /**
-                     * Error connection
-                     *
-                     * @param response Response error type HttpClientErrorException
-                     */
-                    @Override
-                    public void execute(Object response) {
-                        Log.e(TAG, "connection error");
-                        createSymbolMarker(latitude, longitude, Symbols.secours_a_personnes_prevu,
-                                "SAP", "REN", "FF0000", "SAP REN");
-                    }
-                });
+                }
+            }, new Command() {
+                /**
+                 * Error connection
+                 *
+                 * @param response Response error type HttpClientErrorException
+                 */
+                @Override
+                public void execute(Object response) {
+                    Log.e(TAG, "connection error");
+                    Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000", "SAP REN");
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
+                    mClusterManager.addItem(markerItem);
+                    mClusterManager.cluster();
+                }
+            });
     }
 
-    /**
-     * Creates a map marker at chosen coordinates using the given resource name, text contents and color.
-     *
-     * @param latitude       latitude from given point
-     * @param longitude      longitude from given point
-     * @param resourceSymbol resource name from enumeration used to choose symbol type
-     * @param textContent1   first text
-     * @param textContent2   second text
-     * @param hexaColor      symbol color
-     */
-    public void createSymbolMarker(double latitude, double longitude, Symbols resourceSymbol, String textContent1, String textContent2, String hexaColor, String description) {
-        try {
-            InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(resourceSymbol.name(), "raw", getPackageName()));
-            SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, textContent1, textContent2, hexaColor));
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
-            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
+    @Override
+    public void onClusterItemInfoWindowClick(SymbolMarkerClusterItem symbolMarkerClusterItem) {
+        Log.d(TAG, "main onClusterItemInfoWindowClick");
+        if (!symbolMarkerClusterItem.getSymbol().isTopographic()) {
+            new AlertDialog.Builder(this)
+            .setMessage(R.string.query_position_confirmation)
+            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Mean mean = new Mean();
+                    mean.setId("");
 
-            SymbolMarkerClusterItem marketItem = new SymbolMarkerClusterItem(latitude, longitude, icon, description);
-            mClusterManager.addItem(marketItem);
-
-        } catch (SVGParseException ignored) {
+                    RestServiceImpl.getInstance()
+                    .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.i(TAG, "Confirm position success");
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Confirm position error");
+                                }
+                            });
+                }
+            })
+            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i(TAG, "Invalid position");
+                }
+            })
+            .show();
         }
     }
 
-    public class SymbolMarkerClusterItem implements ClusterItem {
-        private final LatLng mPosition;
-        private BitmapDescriptor icon;
-        private String description;
-
-        public SymbolMarkerClusterItem(double lat, double lng, BitmapDescriptor icon, String description) {
-            mPosition = new LatLng(lat, lng);
-            this.icon = icon;
-            this.description = description;
-        }
-
-        @Override
-        public LatLng getPosition() {
-            return mPosition;
-        }
-
-        public BitmapDescriptor getIcon() {
-            return icon;
-        }
+    @Override
+    public boolean onClusterItemClick(SymbolMarkerClusterItem symbolMarkerClusterItem) {
+        clickedSymbolMarkerClusterItem = symbolMarkerClusterItem;
+        return false;
     }
 
     /**
@@ -331,9 +342,25 @@ public class MapActivity extends Activity {
         @Override
         protected void onBeforeClusterItemRendered(SymbolMarkerClusterItem item,
                                                    MarkerOptions markerOptions) {
-            markerOptions.icon(item.getIcon());
-            markerOptions.draggable(true);
-            markerOptions.title(item.description);
+            super.onBeforeClusterItemRendered(item, markerOptions);
+
+            try {
+                InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(item.getSymbol().getSymbolType().name(), "raw", getPackageName()));
+
+                SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, item.getSymbol()));
+
+                Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
+
+                markerOptions.icon(icon);
+                if (!item.getSymbol().isTopographic()) {
+                    markerOptions.draggable(true);
+                }
+                markerOptions.title(item.getSymbol().getDescription());
+            } catch (SVGParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

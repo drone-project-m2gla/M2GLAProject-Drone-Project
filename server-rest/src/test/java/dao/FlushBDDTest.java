@@ -3,10 +3,13 @@ package dao;
 import entity.DisasterCode;
 import entity.Intervention;
 import entity.Position;
+
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.junit.*;
-import service.RetrieveAddress;
+
+import service.impl.RetrieveAddressImpl;
 import util.Configuration;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;

@@ -23,9 +23,9 @@ import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 public class InterventionListActivity extends Activity {
     private static final String TAG = "InterListActivity";
 
-    private UserQualification                   userQualification = UserQualification.SIMPLEUSER;
-    private FragmentManager                     fragmentManager;
-    private Fragment                            listFragment;
+    private UserQualification userQualification = UserQualification.SIMPLEUSER;
+    private FragmentManager fragmentManager;
+    private Fragment listFragment;
 
 
     /**
@@ -38,10 +38,10 @@ public class InterventionListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intervention_list);
 
-        Intent              intent;
-        String              roleStr;
-        Button              addButton = (Button) findViewById(R.id.addInterButton);
-        Bundle              bundle = new Bundle();
+        Intent intent;
+        String roleStr;
+        Button addButton = (Button) findViewById(R.id.addInterButton);
+        Bundle bundle = new Bundle();
 
 
         this.fragmentManager = getFragmentManager();
@@ -55,25 +55,21 @@ public class InterventionListActivity extends Activity {
                 if (roleStr.compareTo(UserQualification.CODIS.toString()) == 0) {
                     Toast.makeText(getApplicationContext(), " - CODIS - ", Toast.LENGTH_SHORT).show();
                     this.userQualification = UserQualification.CODIS;
-                }
-                else if (roleStr.compareTo(UserQualification.SIMPLEUSER.toString()) == 0) {
+                } else if (roleStr.compareTo(UserQualification.SIMPLEUSER.toString()) == 0) {
                     Toast.makeText(getApplicationContext(), " - Sapeur - ", Toast.LENGTH_SHORT).show();
                     this.userQualification = UserQualification.SIMPLEUSER;
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), " - Aucun - ", Toast.LENGTH_SHORT).show();
                     this.userQualification = UserQualification.SIMPLEUSER;
                     roleStr = UserQualification.SIMPLEUSER.toString();
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(getApplicationContext(), " - Null - ", Toast.LENGTH_SHORT).show();
                 this.userQualification = UserQualification.SIMPLEUSER;
                 roleStr = UserQualification.SIMPLEUSER.toString();
             }
 
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), "PAS D'INTENT !", Toast.LENGTH_SHORT).show();
             roleStr = UserQualification.SIMPLEUSER.toString();
         }
@@ -91,11 +87,10 @@ public class InterventionListActivity extends Activity {
 
         if (this.listFragment == null) Log.i(TAG, "Fragment null");
         else {
-            ((InterventionListFragment)this.listFragment).setUserQualification(this.userQualification);
+            ((InterventionListFragment) this.listFragment).setUserQualification(this.userQualification);
         }
 
     }
-
 
     /**
      * Methode de rafraichissement de l'activity
@@ -103,7 +98,7 @@ public class InterventionListActivity extends Activity {
      * @param -
      */
     public void interventionRefresh() {
-        InterventionListFragment    interventionListFragment;
+        InterventionListFragment interventionListFragment;
 
 
         // Demander le rafraichissement de la liste
@@ -120,7 +115,6 @@ public class InterventionListActivity extends Activity {
     public void interventionRefresh(View view) {
         interventionRefresh();
     }
-
 
 
     /**
@@ -146,7 +140,6 @@ public class InterventionListActivity extends Activity {
         // startActivity(intent);
         startActivityForResult(intent, 0);
     }
-
 
 
     /**
