@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import fr.m2gla.istic.projet.model.SVGAdapter;
 public class ItemsAdapter extends ArrayAdapter {
 
     private final Activity activity;
-    private final Drawable[] images;
+    private Drawable[] images;
 
     private final static String TAG = "ItemsAdapter";
 
@@ -31,7 +32,9 @@ public class ItemsAdapter extends ArrayAdapter {
         super(context, textViewResourceId, objects);
         activity = (Activity) context;
         this.titles = objects;
+        Log.i(TAG, "MeanXtra Title\t" + this.titles.length);
         this.images = images;
+        Log.i(TAG, "MeanXtra Image\t" + this.images.length);
         customLayout = textViewResourceId;
     }
 
@@ -54,6 +57,9 @@ public class ItemsAdapter extends ArrayAdapter {
 
         // Declaring and Typecasting the imageView in the inflated layout
         ImageView imgImageView = (ImageView) layout.findViewById(R.id.imgLanguage);
+
+//        Log.i(TAG, "image OUT " + position + "   is   " + (images[position] == null));
+
         // Setting Special attributes for 1st element
         if (position == 0 && titles[position].equals("")) {
             // Removing the image view
@@ -66,7 +72,12 @@ public class ItemsAdapter extends ArrayAdapter {
             itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
         } else {
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(images[position], 64, 64), 50, 50, true);
+            Drawable drawable = images[position];
+            Log.i(TAG, "drawable  " + position + "   is   " + (drawable == null));
+            Log.i(TAG, "image  " + position + "   is   " + (images[position] == null));
+            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+            Log.i(TAG, "src  " + position + "   is   " + (src == null));
+            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
             imgImageView.setImageBitmap(image);
         }
         return layout;

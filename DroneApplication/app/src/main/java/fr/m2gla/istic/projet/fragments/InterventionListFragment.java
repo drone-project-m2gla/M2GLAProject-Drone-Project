@@ -53,8 +53,6 @@ public class InterventionListFragment extends Fragment {
         if (getArguments() != null) {
             roleStr = getArguments().getString(GeneralConstants.REF_ACT_ROLE);
             if (roleStr != null) {
-                Toast.makeText(this.view.getContext(), "I'm here!!! " + roleStr, Toast.LENGTH_SHORT).show();
-
                 if (roleStr.compareTo(UserQualification.CODIS.toString()) == 0) {
                     Log.i(TAG, "is Codis\t" + roleStr);
                     this.userQualification = UserQualification.CODIS;
@@ -85,8 +83,8 @@ public class InterventionListFragment extends Fragment {
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
         this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
-                new String[]{GeneralConstants.INTER_LIST_ID, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
-                new int[]{R.id.interventionId, R.id.interventionCode, R.id.interventionData});
+                new String[]{GeneralConstants.INTER_LIST_MEAN, GeneralConstants.INTER_LIST_ID, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
+                new int[]{R.id.interventionNewMean, R.id.interventionId, R.id.interventionCode, R.id.interventionData});
 
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
@@ -103,9 +101,11 @@ public class InterventionListFragment extends Fragment {
 
                 String idIntervention = map.get(GeneralConstants.INTER_LIST_ID).toString();
                 if (userQualification == UserQualification.CODIS) {
-                Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
+
                     InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
                     fragmentDetailIntervention.setIdIntervention(idIntervention);
+
                 } else {
                     Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
                     callMap(idIntervention);
@@ -169,7 +169,7 @@ public class InterventionListFragment extends Fragment {
                                 Log.w(TAG, "Element NULL");
                                 continue;
                             }
-                            addInterventionInList("" + inter.getId(), "" + inter.getDisasterCode(), "" + inter.getAddress() + " " + inter.getPostcode() + " " + inter.getCity());
+                            addInterventionInList("" + inter.getId(), "" + inter.getDisasterCode(), "[" + inter.getMeansXtra().size() + "]" , "" + inter.getAddress() + " " + inter.getPostcode() + " " + inter.getCity());
                         }
 
 
@@ -205,24 +205,26 @@ public class InterventionListFragment extends Fragment {
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param id    : Reference (id) de l'intervention
+     * @param id      : Reference (id) de l'intervention
      * @param code    : Code d'intervention
-     * @param data : données de l'intervention
+     * @param nbMeans : Nombre de moyens en attente de validation
+     * @param data    : données de l'intervention
      */
-    public void addInterventionInList(String id, String code, String data) {
-        addInterventionInList(id, code, data, false);
+    public void addInterventionInList(String id, String code, String nbMeans, String data) {
+        addInterventionInList(id, code, nbMeans, data, false);
     }
 
 
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param id    : Reference (id) de l'intervention
+     * @param id      : Reference (id) de l'intervention
      * @param code    : Code d'intervention
+     * @param nbMeans : Nombre de moyens en attente de validation
      * @param data    : données de l'intervention
      * @param initial : true pour specifier qu'il s'agit d'une intervention ajoutée pendant l'initialisation
      */
-    public void addInterventionInList(String id, String code, String data, boolean initial) {
+    public void addInterventionInList(String id, String code, String nbMeans, String data, boolean initial) {
         // Verifier si une insertion est a faire
         if ((code == null) || (code.length() <= 0)) {
             return;
@@ -234,9 +236,11 @@ public class InterventionListFragment extends Fragment {
         //Création d'une HashMap pour insérer les informations du premier element de notre listView
         map = new HashMap<String, String>();
 
-        //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put(GeneralConstants.INTER_LIST_MEAN, nbMeans);
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_ID, id);
-        //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_CODE, code);
         //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_DATA, data);
