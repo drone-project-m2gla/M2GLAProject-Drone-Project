@@ -13,7 +13,6 @@ public interface RestAPI {
 
     // Intervention block
     public static final String GET_ALL_INTERVENTION = "/intervention";
-    public static final String GET_INTERVENTION = "/intervention/{id}";
     public static final String POST_INTERVENTION = "/intervention";
     public static final String POST_POSITION_CONFIRMATION = "/intervention/{id}/moyen/emplace";
     public static final String POST_POSITION_MOVE = "/intervention/{id}/moyen/positionner";

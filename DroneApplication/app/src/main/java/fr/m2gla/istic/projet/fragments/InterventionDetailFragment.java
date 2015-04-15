@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -87,8 +89,21 @@ public class InterventionDetailFragment extends Fragment {
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
         titles = new String[listXtra.size()];
         images = new int[listXtra.size()];
+        TextView titleFragement = (TextView) this.view.findViewById(R.id.titre);
+        TextView addresseIntervention = (TextView) this.view.findViewById(R.id.addre);
+        TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.moy);
+        TextView codeIntervention = (TextView) this.view.findViewById(R.id.code);
+        addresseIntervention.setText("adresse : \n"+ intervention.getAddress().toString() +" "+ intervention.getPostcode().toString()+" "+ intervention.getCity());
+        codeIntervention.setText("Code : "+ intervention.getDisasterCode().toString());
+        Button valid = (Button)this.view.findViewById(R.id.valid);
+        Button annuler = (Button)this.view.findViewById(R.id.annuler);
         if (listXtra.size() > 0) {
 
+
+            addresseIntervention.setVisibility(View.VISIBLE);
+            titleFragement.setVisibility(View.VISIBLE);
+            titleNoMoyen.setVisibility(View.GONE);
+            codeIntervention.setVisibility(View.VISIBLE);
             for (Mean m : listXtra) {
 
                 titles[position] = m.getVehicle().toString();
@@ -99,7 +114,12 @@ public class InterventionDetailFragment extends Fragment {
             }
 
         } else {
-            Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
+
+            titleNoMoyen.setVisibility(View.VISIBLE);
+            titleFragement.setVisibility(View.GONE);
+            addresseIntervention.setVisibility(View.VISIBLE);
+            codeIntervention.setVisibility(View.VISIBLE);
         }
     }
+
 }
