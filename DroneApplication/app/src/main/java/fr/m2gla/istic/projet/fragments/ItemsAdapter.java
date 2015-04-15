@@ -82,8 +82,11 @@ public class ItemsAdapter extends ArrayAdapter {
             Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
             imgImageView.setImageBitmap(image);
         }
+        //final ViewHolder holder;
+        //Button valid = (Button)layout.findViewById(R.id.valid);
 
-        Button valid = (Button)layout.findViewById(R.id.valid);
+
+       /*  Button valid = (Button)layout.findViewById(R.id.valid);
         if (valid != null){
             valid.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,7 +95,7 @@ public class ItemsAdapter extends ArrayAdapter {
 
                 }
             });
-        }
+        }*/
         //Button annuler = (Button)layout.findViewById(R.id.annuler);
 
         return layout;
@@ -110,4 +113,14 @@ public class ItemsAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
+/*
+    private static class ViewHolder
+    {
+        TextView[] textView;
+        ImageView phoneIcon;
+        ImageView emailIcon;
+
+        int position;
+    }
+*/
 }

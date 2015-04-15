@@ -91,7 +91,7 @@ public class InterventionDetailFragment extends Fragment {
                 Intervention intervention = (Intervention) response;
                 Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
-                List<Mean> meanList = intervention.getMeansList();
+                List<Mean> meanList = intervention.getMeansXtra();
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, i, meanList);
                 List<Drawable> drawables = new ArrayList<Drawable>();
@@ -145,10 +145,8 @@ public class InterventionDetailFragment extends Fragment {
         TextView addresseIntervention = (TextView) this.view.findViewById(R.id.addre);
         TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.moy);
         TextView codeIntervention = (TextView) this.view.findViewById(R.id.code);
-
         addresseIntervention.setText("adresse : \n" + intervention.getAddress().toString() + " " + intervention.getPostcode().toString() + " " + intervention.getCity());
         codeIntervention.setText("Code : " + intervention.getDisasterCode().toString());
-
 
 
         if (listXtra.size() > 0) {
