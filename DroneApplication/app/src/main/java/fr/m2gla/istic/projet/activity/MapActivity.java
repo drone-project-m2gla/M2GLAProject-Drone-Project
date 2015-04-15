@@ -46,9 +46,7 @@ public class MapActivity extends Activity implements
         ClusterManager.OnClusterItemInfoWindowClickListener<SymbolMarkerClusterItem>,
         AdapterView.OnDragListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLongClickListener
-
-{
+        GoogleMap.OnMapLongClickListener {
     private static final String TAG = "MapActivity";
     // offsets used to place the icon when it is dropped
     private static final int OFFSET_X = -100;
@@ -62,7 +60,7 @@ public class MapActivity extends Activity implements
     private Map<String, SymbolMarkerClusterItem> markerSymbolLink;
 
     // default latitude and longitude to center map if error
-    private double latitude = 48.1119800 ;
+    private double latitude = 48.1119800;
     private double longitude = -1.6742900;
 
     // Shift used by raise on drag for map markers
@@ -134,55 +132,56 @@ public class MapActivity extends Activity implements
      */
     public void loadSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
-        new Command() {
-            /**
-             * Success connection
-             *
-             * @param response Response object type Intervention[]
-             */
-            @Override
-            public void execute(Object response) {
-            Topographie[] topographies = (Topographie[]) response;
-            Position pos = null;
-            for (Topographie topographie: topographies) {
-                pos = topographie.getPosition();
-                //Draw a symbol with texts and color at a position
-                Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
-                        topographie.getFirstContent(),
-                        topographie.getSecondContent(),
-                        topographie.getColor(),
-                        topographie.getFirstContent(),
-                        true);
-                SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                mClusterManager.addItem(markerItem);
-            }
+                new Command() {
+                    /**
+                     * Success connection
+                     *
+                     * @param response Response object type Intervention[]
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Topographie[] topographies = (Topographie[]) response;
+                        Position pos = null;
+                        for (Topographie topographie : topographies) {
+                            pos = topographie.getPosition();
+                            //Draw a symbol with texts and color at a position
+                            Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
+                                    topographie.getFirstContent(),
+                                    topographie.getSecondContent(),
+                                    topographie.getColor(),
+                                    topographie.getFirstContent(),
+                                    true);
+                            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
+                            mClusterManager.addItem(markerItem);
+                        }
 
-            if (pos != null) {
-                mClusterManager.cluster();
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
-            }
-            }
-        }, new Command() {
-            /**
-             * Error connection
-             *
-             * @param response Response error type HttpClientErrorException
-             */
-            @Override
-            public void execute(Object response) {
-            Log.e(TAG, "connection error");
-            Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000", "SAP REN");
-            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
-            mClusterManager.addItem(markerItem);
-            mClusterManager.cluster();
-            }
-        });
+                        if (pos != null) {
+                            mClusterManager.cluster();
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
+                        }
+                    }
+                }, new Command() {
+                    /**
+                     * Error connection
+                     *
+                     * @param response Response error type HttpClientErrorException
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Log.e(TAG, "connection error");
+                        Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu, "SAP", "REN", "FF0000", "SAP REN");
+                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
+                        mClusterManager.addItem(markerItem);
+                        mClusterManager.cluster();
+                    }
+                });
 
     }
 
     /**
      * Item info window click listener
      * Used to show a dialog on info window click to validate the new position
+     *
      * @param symbolMarkerClusterItem
      */
     @Override
@@ -190,43 +189,44 @@ public class MapActivity extends Activity implements
         Log.d(TAG, "main onClusterItemInfoWindowClick");
         if (!symbolMarkerClusterItem.getSymbol().isTopographic()) {
             new AlertDialog.Builder(this)
-            .setMessage(R.string.query_position_confirmation)
-            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                Mean mean = new Mean();
-                mean.setId("");
+                    .setMessage(R.string.query_position_confirmation)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Mean mean = new Mean();
+                            mean.setId("");
 
-                RestServiceImpl.getInstance()
-                .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.i(TAG, "Confirm position success");
-                            }
-                        },
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.e(TAG, "Confirm position error");
-                            }
-                        });
-                }
-            })
-            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.i(TAG, "Invalid position");
-                }
-            })
-            .show();
+                            RestServiceImpl.getInstance()
+                                    .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                            new Command() {
+                                                @Override
+                                                public void execute(Object response) {
+                                                    Log.i(TAG, "Confirm position success");
+                                                }
+                                            },
+                                            new Command() {
+                                                @Override
+                                                public void execute(Object response) {
+                                                    Log.e(TAG, "Confirm position error");
+                                                }
+                                            });
+                        }
+                    })
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "Invalid position");
+                        }
+                    })
+                    .show();
         }
     }
 
     /**
      * Map fragment drag listener used to get the dropped symbol
      * A new symbol is created and added to the map
-     * @param v current view
+     *
+     * @param v     current view
      * @param event drag element
      * @return
      */
@@ -238,7 +238,7 @@ public class MapActivity extends Activity implements
             ClipData clipData = event.getClipData();
             try {
                 //Get symbol name from ClipData saved onDrag
-                Symbol.SymbolType symbolType = Symbol.SymbolType.valueOf((String)clipData.getItemAt(0).getText());
+                Symbol.SymbolType symbolType = Symbol.SymbolType.valueOf((String) clipData.getItemAt(0).getText());
                 Log.d(TAG, clipData.getItemAt(0).toString());
                 LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
                 Symbol symbol = new Symbol(symbolType, "AAA", "BBB", "ff0000", "Description");
@@ -247,7 +247,8 @@ public class MapActivity extends Activity implements
                 mClusterManager.addItem(markerItem);
                 mClusterManager.cluster();
 
-            } catch (IllegalArgumentException ignored){}
+            } catch (IllegalArgumentException ignored) {
+            }
         }
         return true;
     }
@@ -255,6 +256,7 @@ public class MapActivity extends Activity implements
     /**
      * Marker drag listener method used when drag starts after a long click
      * Used to disable raiseOnDrag
+     *
      * @param marker dragged marker element
      */
     @Override
@@ -265,6 +267,7 @@ public class MapActivity extends Activity implements
     /**
      * Marker drag listener method used when marker is dragged
      * Used to disable raiseOnDrag
+     *
      * @param marker dragged marker element
      */
     @Override
@@ -281,9 +284,9 @@ public class MapActivity extends Activity implements
     @Override
     public void onMarkerDragEnd(Marker marker) {
         //Change symbol image to dashed one
-        if (markerSymbolLink.containsKey(marker.getId())){
+        if (markerSymbolLink.containsKey(marker.getId())) {
             Log.d(TAG, "onMarkerDragStart found " + marker.getId());
-            Symbol symbol =  markerSymbolLink.get(marker.getId()).getSymbol();
+            Symbol symbol = markerSymbolLink.get(marker.getId()).getSymbol();
             symbol.setValidated(false);
             marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), symbol));
         }
@@ -317,6 +320,7 @@ public class MapActivity extends Activity implements
     /**
      * Map long click listener
      * Allows to control drone
+     *
      * @param latLng current long click position
      */
     @Override
@@ -326,19 +330,19 @@ public class MapActivity extends Activity implements
         position.setLongitude(latLng.longitude);
 
         RestServiceImpl.getInstance()
-           .post(RestAPI.POST_POSITION_DRONE, null, position, Void.class,
-                new Command() {
-                    @Override
-                    public void execute(Object response) {
-                        Log.i(TAG, "Drone move");
-                    }
-                },
-                new Command() {
-                    @Override
-                    public void execute(Object response) {
-                        Log.e(TAG, "Push position error");
-                    }
-                });
+                .post(RestAPI.POST_POSITION_DRONE, null, position, Void.class,
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.i(TAG, "Drone move");
+                            }
+                        },
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.e(TAG, "Push position error");
+                            }
+                        });
     }
 
     /**
@@ -364,18 +368,19 @@ public class MapActivity extends Activity implements
         }
 
         @Override
-        protected void onClusterItemRendered(SymbolMarkerClusterItem clusterItem, Marker marker){
+        protected void onClusterItemRendered(SymbolMarkerClusterItem clusterItem, Marker marker) {
             markerSymbolLink.put(marker.getId(), clusterItem);
-            Log.d(TAG,"onClusterItemRendered " + marker.getId());
+            Log.d(TAG, "onClusterItemRendered " + marker.getId());
         }
     }
 
     /**
      * Whenever a marker starts to be dragged it is raised,
      * this method allows to undo this shift to simulate raiseOnDrag = false behaviour
+     *
      * @param marker dragged marker
      */
-    private void disableRaiseOnDrag(Marker marker){
+    private void disableRaiseOnDrag(Marker marker) {
         LatLng latLng = marker.getPosition();
         Point point = map.getProjection().toScreenLocation(latLng);
         point.set(point.x, point.y + SHIFT_RAISE_ON_DRAG);
@@ -386,37 +391,44 @@ public class MapActivity extends Activity implements
     /**
      * Loads current intervention symbols
      */
-    private void loadIntervention(){
+    private void loadIntervention() {
         Intent intent = getIntent();
 
         if (intent != null) {
             String idIntervention = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
             Toast.makeText(getApplication(), "Bonjour\nID intervention " + idIntervention, Toast.LENGTH_LONG).show();
+
+            // Fragment ajout de moyens supplémentaires
             MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
 
-            if (mSuppFragment != null){
+            // Fragment list des moyens supplémentaires
+            MoyensInitFragment mInitFragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
+            if (mSuppFragment != null ){
                 mSuppFragment.setInterventionID(idIntervention);
+            }
+            if(mInitFragment !=null){
+                mInitFragment.setInterventionID(idIntervention);
             }
 
             param.put("id", idIntervention);
 
             RestServiceImpl.getInstance()
-            .get(RestAPI.GET_INTERVENTION, param, Intervention.class,
-                new Command() {
-                    @Override
-                    public void execute(Object response) {
-                        Intervention intervention = (Intervention)response;
-                        Position pos = intervention.getCoordinates();
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
-                        loadSymbols();
-                    }
-                },
-                new Command() {
-                    @Override
-                    public void execute(Object response) {
-                        Log.e(TAG, "Error get intervention");
-                    }
-                });
+                    .get(RestAPI.GET_INTERVENTION, param, Intervention.class,
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Intervention intervention = (Intervention) response;
+                                    Position pos = intervention.getCoordinates();
+                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
+                                    loadSymbols();
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Error get intervention");
+                                }
+                            });
         }
     }
 
