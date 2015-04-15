@@ -40,7 +40,7 @@ public class Drone {
 		HttpClient client = new HttpClient();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ObjectMapper mapper = new ObjectMapper();
-		PostMethod postMethod = new PostMethod(Configuration.SERVER_PYTHON + "/position");
+		PostMethod postMethod = new PostMethod(Configuration.getSERVER_PYTHON() + "/position");
 
 		try {
 			mapper.writeValue(output, position);
@@ -103,7 +103,7 @@ public class Drone {
 			ObjectMapper mapper = new ObjectMapper();
 			HttpClient client = new HttpClient();
 			while (move) {
-				GetMethod get = new GetMethod(Configuration.SERVER_PYTHON + "/position");
+				GetMethod get = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
 				try {
 					client.executeMethod(get);
 

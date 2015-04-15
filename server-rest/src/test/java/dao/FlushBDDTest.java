@@ -34,7 +34,7 @@ public class FlushBDDTest {
         configs.put("COUCHBASE_HOSTNAME","148.60.11.195");
         configs.put("BUCKET_NAME","test");
         configs.put("COUCHBASE_PORT","8091");
-        Configuration.loadConfigurations(configs);
+        Configuration.loadConfigurations();
         dao.connect();
     }
 
