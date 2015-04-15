@@ -31,8 +31,6 @@ public class Symbol {
     private String color;
     private boolean validated;
     private boolean topographic;
-    /*private double latitude;
-    private double longitude;*/
 
     public Symbol(SymbolType symbolType, String firstText, String secondText, String color, String description) {
         this.symbolType = symbolType;
@@ -79,20 +77,4 @@ public class Symbol {
     public boolean isTopographic() {
         return topographic;
     }
-
-    /*public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }*/
 }
