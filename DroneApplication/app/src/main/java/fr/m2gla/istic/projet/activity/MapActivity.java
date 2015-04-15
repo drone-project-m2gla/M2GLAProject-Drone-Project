@@ -195,6 +195,7 @@ public class MapActivity extends Activity implements
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
         map.setOnInfoWindowClickListener(mClusterManager);
+        loadSymbols();
     }
 
     @Override
