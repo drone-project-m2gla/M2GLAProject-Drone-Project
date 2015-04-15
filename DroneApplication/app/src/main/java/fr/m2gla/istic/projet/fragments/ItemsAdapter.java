@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.m2gla.istic.projet.activity.R;
-import fr.m2gla.istic.projet.activity.SVGAdapter;
+import fr.m2gla.istic.projet.model.SVGAdapter;
 
 // Creating an Adapter Class
 public class ItemsAdapter extends ArrayAdapter {
