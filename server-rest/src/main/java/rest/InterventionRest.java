@@ -186,32 +186,4 @@ public class InterventionRest {
 
         return res;
     }
-
-//
-//    @POST
-//    @Path("zoneObject")
-//    @Consumes({MediaType.APPLICATION_JSON})
-//    public Response getPositionObject(GeoInterventionZone zone) {
-//        System.out.println("LA zone\t" + zone);
-//        String coordinatesZone = "Zone de survol";
-//        Zone flyoverZone = zone.getCoordinates().get(0);
-//        Iterator<Position> it = flyoverZone.positionIterator();
-//        while (it.hasNext()) {
-//            Position p = it.next();
-//            coordinatesZone += "<BR>Latitude " + p.getLatitude();
-//            coordinatesZone += " / Longitude " + p.getLongitude();
-//            coordinatesZone += "/ Altitude " + p.getAltitude();
-//        }
-//        return Response.status(200).entity("Le nom de la zone est : " + zone + "<BR>" + coordinatesZone).build();
-//    }
-//
-//    @POST
-//    @Path("position")
-//    @Consumes({MediaType.APPLICATION_JSON})
-//    public Response getPositionObject(Position zone) {
-//        return Response.status(200).entity("Le nom de la zone est : " + zone.getLatitude()).build();
-//    }
-
-
-
 }

@@ -3,6 +3,7 @@ package fr.m2gla.istic.projet.service.impl;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -17,7 +18,7 @@ public class RestServiceImpl implements RestService {
     private static final String TAG = "RestServiceImpl";
     private static final RestService INSTANCE = new RestServiceImpl();
     private static final String URL = "http://projm2gla1.istic.univ-rennes1.fr:8080/sitserver/rest";
-
+    
     protected RestServiceImpl() {
     }
 
@@ -34,6 +35,7 @@ public class RestServiceImpl implements RestService {
             protected Object doInBackground(Object[] params) {
                 RestTemplate restTemplate = new RestTemplate();
 
+                restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
                 T result = null;
@@ -76,6 +78,7 @@ public class RestServiceImpl implements RestService {
             protected Object doInBackground(Object[] params) {
                 RestTemplate restTemplate = new RestTemplate();
 
+                restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
                 try {
@@ -138,6 +141,7 @@ public class RestServiceImpl implements RestService {
             protected Object doInBackground(Object[] params) {
                 RestTemplate restTemplate = new RestTemplate();
 
+                restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
                 try {

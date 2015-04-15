@@ -21,5 +21,8 @@ public interface RestAPI {
     public static final String GET_ALL_TOPOGRAPHIE = "/topographie/1/1/1";
 
     // Demande d'un moyen supplémentaire /intervention/idIntervention/xtra
-    public static final String POST_SEND_MEAN_REQUEST="/intervention/{id}/moyenextra";
+    public static final String POST_SEND_MEAN_REQUEST = "/intervention/{id}/moyenextra";
+
+    // drone block
+    public static final String POST_POSITION_DRONE = "/drone/move";
 }

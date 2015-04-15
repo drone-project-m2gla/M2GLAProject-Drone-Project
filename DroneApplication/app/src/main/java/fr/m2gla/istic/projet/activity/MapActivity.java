@@ -99,6 +99,30 @@ public class MapActivity extends Activity {
 
         final Activity _this = this;
 
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Position position = new Position();
+                position.setLatitude(latLng.latitude);
+                position.setLongitude(latLng.longitude);
+
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_POSITION_DRONE, null, position, Void.class,
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.i(TAG, "Drone move");
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Push position error");
+                                }
+                            });
+            }
+        });
+
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(final Marker marker) {

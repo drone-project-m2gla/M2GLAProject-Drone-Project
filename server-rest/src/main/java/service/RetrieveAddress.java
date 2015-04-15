@@ -50,7 +50,7 @@ public class RetrieveAddress {
 	public Position retrieveGps(){
 		Double lng = null;
 		Double lat = null;
-		GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDcc_OP8XNo9jDmH5ooa_jrcYMPqMao4wY");
+		GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDlSqghzy1zZTnKMG0Wwc0h8neFnDs5pog");
 		GeocodingResult[] results = null;
 
 		try {
