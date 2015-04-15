@@ -4,8 +4,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".07"
+        android:text="pas de code"
+        android:textSize="17dp"
+        android:visibility="gone"
+        android:id="@+id/code" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".13"
+        android:text="No adresse"
+        android:textSize="17dp"
+        android:visibility="gone"
+        android:id="@+id/addre" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        android:text="Moyens à valider"
+        android:textSize="17dp"
+        android:visibility="gone"
+        android:id="@+id/titre" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        android:visibility="gone"
+        android:text="pas de moyen"
+        android:textSize="17dp"
+        android:id="@+id/moy" />
+
     <ListView
         android:id="@+id/intervention_detail_list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="0dp"
+        android:layout_weight=".6" />
 </LinearLayout>
