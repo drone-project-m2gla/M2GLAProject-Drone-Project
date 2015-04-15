@@ -283,10 +283,8 @@ public class MapActivity extends Activity implements
 
             try {
                 InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(item.getSymbol().getSymbolType().name(), "raw", getPackageName()));
-                is = SVGAdapter.modifySVG(is, item.getSymbol().isValidated());
 
-                SVG svg = SVG.getFromInputStream(
-                        SVGAdapter.modifySVG(is, item.getSymbol().getFirstText(), item.getSymbol().getSecondText(), item.getSymbol().getColor()));
+                SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, item.getSymbol()));
 
                 Drawable drawable = new PictureDrawable(svg.renderToPicture());
                 Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
