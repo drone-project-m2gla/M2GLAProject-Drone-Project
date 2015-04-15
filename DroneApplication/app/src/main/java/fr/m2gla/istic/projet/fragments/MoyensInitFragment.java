@@ -35,17 +35,7 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 public class MoyensInitFragment extends ListFragment {
     private static final String TAG = "MoyensInitFragment";
-    //    String[] titles = new String[]{Constant.VALUE_COLONNE_INCENDIE_ACTIVE,
-//            Constant.VALUE_GROUPE_INCENDIE_ACTIF,
-//            Constant.VALUE_MOYEN_INTERVENTION_AERIEN,
-//            Constant.VALUE_SECOUR_A_PERSONNE_PREVU,
-//            Constant.VALUE_VEHICULE_A_INCENDIE_SEUL};
-//
-//    String[] images = {Constant.SVG_COLONNE_INCENDIE_ACTIVE,
-//            Constant.SVG_GROUPE_INCENDIE_ACTIF,
-//            Constant.SVG_MOYEN_INTERVENTION_AERIEN,
-//            Constant.SVG_SECOUR_A_PERSONNE_PREVU,
-//            Constant.SVG_VEHICULE_A_INCENDIE_SEUL};
+
     private String idIntervention = "";
     private View view;
     private String[] images;
