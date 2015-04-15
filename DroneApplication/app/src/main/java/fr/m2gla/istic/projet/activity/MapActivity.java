@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
+import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.SVGAdapter;
@@ -40,26 +42,28 @@ import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 public class MapActivity extends Activity implements
-        ClusterManager.OnClusterItemInfoWindowClickListener<SymbolMarkerClusterItem> {
+        ClusterManager.OnClusterItemInfoWindowClickListener<SymbolMarkerClusterItem>{
+    private static final String TAG = "MapActivity";
+    // offset to place the icon when dropped
+    private static final int OFFSET_X = -100;
+    private static final int OFFSET_Y = 30;
 
     private static MapFragment mapFragment;
+
     private GoogleMap map;
-    private static final String TAG = "MapActivity";
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
     // Keep track of all the symbols by marker id
     private Map<String, SymbolMarkerClusterItem> markerSymbolLink = new HashMap<String, SymbolMarkerClusterItem>();
 
     // default latitude and longitude to center map if error
-    double latitude = 48.1119800 ;
-    double longitude = -1.6742900;
-
-    // offset to place the icon when dropped
-    private static final int OFFSET_X = -100;
-    private static final int OFFSET_Y = 30;
+    private double latitude = 48.1119800 ;
+    private double longitude = -1.6742900;
 
     private static final int SHIFT_RAISE_ON_DRAG = 90;
 
     private Map<String, String> param;
+
+    private boolean isDroneMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,17 +71,36 @@ public class MapActivity extends Activity implements
         setContentView(R.layout.activity_map);
 
         param = new HashMap<String, String>();
-        param.put("id", "");
-
         Intent intent = getIntent();
 
         if (intent != null) {
-            String extras = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
-            Toast.makeText(getApplication(), "Bonjour\nID intervention " + extras, Toast.LENGTH_LONG);
+            String idIntervention = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
+            Toast.makeText(getApplication(), "Bonjour\nID intervention " + idIntervention, Toast.LENGTH_LONG);
             MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
-            if(mSuppFragment != null){
-                mSuppFragment.setInterventionID(extras);
+
+            if (mSuppFragment != null){
+                mSuppFragment.setInterventionID(idIntervention);
             }
+
+            param.put("id", idIntervention);
+
+            RestServiceImpl.getInstance()
+                    .get(RestAPI.GET_INTERVENTION, param, Intervention.class,
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Intervention intervention = (Intervention)response;
+                                Position pos = intervention.getCoordinates();
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
+                                loadSymbols();
+                            }
+                        },
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.e(TAG, "Error get intervention");
+                            }
+                        });
         }
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -105,10 +128,13 @@ public class MapActivity extends Activity implements
                                         Log.e(TAG, "Push position error");
                                     }
                                 });
+        addDroneListener();
+
             }
         });
 
         map.getUiSettings().setCompassEnabled(true);
+
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -199,13 +225,23 @@ public class MapActivity extends Activity implements
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
         map.setOnInfoWindowClickListener(mClusterManager);
-        loadSymbols();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.switch_map_mode:
+                isDroneMode = !isDroneMode;
+                break;
+        }
         return true;
     }
 
@@ -254,6 +290,7 @@ public class MapActivity extends Activity implements
             mClusterManager.cluster();
             }
         });
+
     }
 
     @Override
@@ -292,6 +329,32 @@ public class MapActivity extends Activity implements
             })
             .show();
         }
+    }
+
+    public void addDroneListener() {
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Position position = new Position();
+                position.setLatitude(latLng.latitude);
+                position.setLongitude(latLng.longitude);
+
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_POSITION_DRONE, null, position, Void.class,
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.i(TAG, "Drone move");
+                                    }
+                                },
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Push position error");
+                                    }
+                                });
+            }
+        });
     }
 
     /**
