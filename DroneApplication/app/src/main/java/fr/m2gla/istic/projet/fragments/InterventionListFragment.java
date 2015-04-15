@@ -2,14 +2,17 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import fr.m2gla.istic.projet.activity.MapActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
+import fr.m2gla.istic.projet.context.InterventionListAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.Intervention;
@@ -82,7 +86,8 @@ public class InterventionListFragment extends Fragment {
 
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
-        this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
+        //this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
+        this.mSchedule = new InterventionListAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
                 new String[]{GeneralConstants.INTER_LIST_MEAN, GeneralConstants.INTER_LIST_ID, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
                 new int[]{R.id.interventionNewMean, R.id.interventionId, R.id.interventionCode, R.id.interventionData});
 
@@ -250,6 +255,10 @@ public class InterventionListFragment extends Fragment {
         if (initial != true) {
             // Mettre a jour la liste d'affichage
             this.mSchedule.notifyDataSetChanged();
+
+//            TextView textMean = (TextView) this.idList.getChildAt(listItem.size()).findViewById(R.id.interventionNewMean);
+
+//            textMean.setHighlightColor(Color.RED);
         }
     }
 
