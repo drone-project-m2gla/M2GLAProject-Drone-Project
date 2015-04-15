@@ -90,6 +90,8 @@ public class MapActivity extends Activity implements
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
+        map = mapFragment.getMap();
+
         final Activity _this = this;
 
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -152,7 +154,7 @@ public class MapActivity extends Activity implements
                         .show();
             }
         });
-        map = mapFragment.getMap();
+
         map.getUiSettings().setCompassEnabled(true);
 
 
