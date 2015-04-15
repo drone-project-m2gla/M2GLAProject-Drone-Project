@@ -42,6 +42,31 @@ public class Constant {
     public static final int DRAWABLE_IMG_VEHICULE_EPA = R.mipmap.ic_vehicule_img_epa;
     public static final int DRAWABLE_IMG_VEHICULE_FPT = R.mipmap.ic_vehicule_img_fpt;
 
+    public static int getImage(String title) {
+        int imgID = 0;
+
+        switch (title.toLowerCase()) {
+            case "vsav":
+                imgID = DRAWABLE_IMG_VEHICULE_VSAV;
+                break;
+            case "vsr":
+                imgID = DRAWABLE_IMG_VEHICULE_VSR;
+                break;
+            case "vlcg":
+                imgID = DRAWABLE_IMG_VEHICULE_VLCG;
+                break;
+            case "epa":
+                imgID = DRAWABLE_IMG_VEHICULE_EPA;
+                break;
+            case "fpt":
+                imgID = DRAWABLE_IMG_VEHICULE_FPT;
+                break;
+            default:
+                imgID = DRAWABLE_VEHICULE_FPT;
+                break;
+        }
+        return imgID;
+    }
 
     // VSAV -- Véhicule de secours et d'assistance aux victimes
     // VSR -- Véhicule secours routier

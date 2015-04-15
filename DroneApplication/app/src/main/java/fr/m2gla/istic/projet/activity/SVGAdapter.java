@@ -27,24 +27,26 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import fr.m2gla.istic.projet.model.Symbol;
+
 /**
  * Created by fernando on 4/9/15.
  */
 public class SVGAdapter {
 
-
     /**
      * Modifies the given SVG input stream by changing the texts and color with the given values
      * @param inputStream
-     * @param newText1
-     * @param newText2
-     * @param color
+     * @param symbol
      * @return
      */
-    public static InputStream modifySVG(InputStream inputStream, String newText1, String newText2, String color) {
+    public static InputStream modifySVG(InputStream inputStream, Symbol symbol) {
         InputStream isOut = null;
+        String newText1 = symbol.getFirstText();
+        String newText2 = symbol.getSecondText();
         if (newText1 == null) newText1 = "";
         if (newText2 == null) newText2 = "";
+        String color = symbol.getColor();
         if (color == null || color.length() != 6) color = "ff0000";
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -74,15 +76,27 @@ public class SVGAdapter {
                     }
                 //}
             }
+
+            NodeList pathNodes = document.getElementsByTagName("rect");
+            for (int i = 0; i < pathNodes.getLength(); i++) {
+                Node pathNode = pathNodes.item(i);
+                NamedNodeMap attribute = pathNode.getAttributes();
+                Node nodeAttrStyle = attribute.getNamedItem("style");
+                nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke:#ff00ff;", "stroke:#" + color + ";"));
+                nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;", "fill:#" + color + ";"));
+                if (symbol.isValidated()) {
+                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:.*;", "stroke-dasharray:none;"));
+                } else {
+                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:none;", "stroke-dasharray:4, 4;"));
+                }
+            }
+
             List<Node> listForms = new ArrayList<Node>();
-            NodeList pathNodes = document.getElementsByTagName("path");
+            pathNodes = document.getElementsByTagName("path");
             for (int i = 0; i < pathNodes.getLength(); i++) {
                 listForms.add(pathNodes.item(i));
             }
-            pathNodes = document.getElementsByTagName("rect");
-            for (int i = 0; i < pathNodes.getLength(); i++) {
-                listForms.add(pathNodes.item(i));
-            }
+
             pathNodes = document.getElementsByTagName("flowRoot");
             for (int i = 0; i < pathNodes.getLength(); i++) {
                 listForms.add(pathNodes.item(i));
