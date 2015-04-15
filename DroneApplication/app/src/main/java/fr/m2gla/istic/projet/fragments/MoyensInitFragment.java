@@ -35,26 +35,17 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 public class MoyensInitFragment extends ListFragment {
     private static final String TAG = "MoyensInitFragment";
-    //    String[] titles = new String[]{Constant.VALUE_COLONNE_INCENDIE_ACTIVE,
-//            Constant.VALUE_GROUPE_INCENDIE_ACTIF,
-//            Constant.VALUE_MOYEN_INTERVENTION_AERIEN,
-//            Constant.VALUE_SECOUR_A_PERSONNE_PREVU,
-//            Constant.VALUE_VEHICULE_A_INCENDIE_SEUL};
-//
-//    String[] images = {Constant.SVG_COLONNE_INCENDIE_ACTIVE,
-//            Constant.SVG_GROUPE_INCENDIE_ACTIF,
-//            Constant.SVG_MOYEN_INTERVENTION_AERIEN,
-//            Constant.SVG_SECOUR_A_PERSONNE_PREVU,
-//            Constant.SVG_VEHICULE_A_INCENDIE_SEUL};
+
     private String idIntervention = "";
     private View view;
     private String[] images;
     private String[] titles;
+    private boolean[] itemIsDragable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
-
+        Log.i(TAG, "I'm here!!!!");
         return view;
     }
 
@@ -113,22 +104,40 @@ public class MoyensInitFragment extends ListFragment {
      *
      * @param intervention
      * @param position
-     * @param listXtra
+     * @param listMean
      */
-    private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
-        titles = new String[listXtra.size()];
-        images = new String[listXtra.size()];
-        if (listXtra.size() > 0) {
+    private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
+        int meanSize = listMean.size(); // taille de la liste des moyens
+        int xtraSize = listXtra.size(); // taille des moyens supplémentaires
+        titles = new String[meanSize + xtraSize];
+        images = new String[meanSize + xtraSize];
 
-            for (Mean m : listXtra) {
+        itemIsDragable = new boolean[meanSize + xtraSize];
+        if (meanSize > 0) {
+
+            for (Mean m : listMean) {
 
                 titles[position] = m.getVehicle().toString();
 
                 images[position] = Constant.getImage(m.getVehicle().toString());
 
+                itemIsDragable[position] = false;
+
                 position++;
             }
+            if (xtraSize > 0) {
+                for (Mean m : listXtra) {
 
+                    titles[position] = m.getVehicle().toString();
+
+                    images[position] = Constant.getImage(m.getVehicle().toString());
+
+                    itemIsDragable[position] = false;
+
+                    position++;
+                }
+            }
+            Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
         }
@@ -177,9 +186,14 @@ public class MoyensInitFragment extends ListFragment {
                 Intervention intervention = (Intervention) response;
                 Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
+
                 List<Mean> meanList = intervention.getMeansList();
+                List<Mean> xtraList = intervention.getMeansXtra();
+
                 // Initialisation des titres et images.
-                initImagesTitles(intervention, i, meanList);
+                initImagesTitles(intervention, i, meanList, xtraList);
+
+                //
                 List<Drawable> drawables = new ArrayList<Drawable>();
 
                 for (String imageId : images) {

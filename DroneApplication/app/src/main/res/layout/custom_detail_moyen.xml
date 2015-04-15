@@ -23,14 +23,15 @@
         android:layout_weight=".15"
         android:layout_height="match_parent"
         android:visibility="visible"
-        android:src="@drawable/valide"
-        android:id="@+id/valid"/>
+        android:src="@drawable/valid"
+        android:id="@+id/valid"
+        android:adjustViewBounds="false" />
 
     <ImageButton
         android:layout_width="0dp"
         android:layout_weight=".15"
         android:layout_height="match_parent"
         android:visibility="visible"
-        android:src="@drawable/annuller"
+        android:src="@drawable/anuller"
         android:id="@+id/annuler"/>
 </LinearLayout>

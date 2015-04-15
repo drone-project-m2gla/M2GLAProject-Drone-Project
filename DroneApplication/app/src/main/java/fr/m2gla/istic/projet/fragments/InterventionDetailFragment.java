@@ -1,15 +1,21 @@
 package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +35,7 @@ public class InterventionDetailFragment extends Fragment {
     private static final String TAG = "InterventionDetailFragment";
     private String idIntervention = "";
     private String[] titles;
-    private int[] images;
+    private String[] images;
     private View view;
 
 
@@ -85,47 +91,65 @@ public class InterventionDetailFragment extends Fragment {
                 Intervention intervention = (Intervention) response;
                 Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
-                List<Mean> listXtra = intervention.getMeansXtra();
+                List<Mean> meanList = intervention.getMeansXtra();
                 // Initialisation des titres et images.
-                initImagesTitles(intervention, i, listXtra);
+                initImagesTitles(intervention, i, meanList);
                 List<Drawable> drawables = new ArrayList<Drawable>();
 
-                for (int imageId : images) {
-                    if (imageId != 0) {
-                        drawables.add(getResources().getDrawable(imageId));
+                for (String imageId : images) {
+                    if (!imageId.equals("")) {
+                        SVG svg = null;
+                        try {
+                            svg = SVG.getFromResource(getActivity(), getResources().getIdentifier(imageId, "raw", getActivity().getPackageName()));
+                        } catch (SVGParseException e) {
+                            e.printStackTrace();
+                        }
+                        drawables.add(new PictureDrawable(svg.renderToPicture()));
+
                     } else {
                         drawables.add(getResources().getDrawable(R.drawable.bubble_shadow));
                     }
                 }
 
-                ListView listMoyen = (ListView) view.findViewById(R.id.intervention_detail_list);
+                ListView moyensListView = (ListView) view.findViewById(R.id.intervention_detail_list);
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+                Context activity = InterventionDetailFragment.this.getActivity();
+                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
+                Log.i(TAG, "adapter  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
-                listMoyen.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom_detail_moyen, titles, imagesArray));
+                Log.i(TAG, "List\t" + (moyensListView == null));
+
+                moyensListView.setAdapter(adapter);
             }
         };
     }
-
     /**
      * Formattage des moyens extra pour l'adapter
+     *
+     * @param intervention
+     * @param position
+     * @param listXtra
+     */
+    /**
+     * Formattage des moyens extra pour l'adapter
+     *
      * @param intervention
      * @param position
      * @param listXtra
      */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
         titles = new String[listXtra.size()];
-        images = new int[listXtra.size()];
+        images = new String[listXtra.size()];
+
         TextView titleFragement = (TextView) this.view.findViewById(R.id.titre);
         TextView addresseIntervention = (TextView) this.view.findViewById(R.id.addre);
         TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.moy);
         TextView codeIntervention = (TextView) this.view.findViewById(R.id.code);
-        addresseIntervention.setText("adresse : \n"+ intervention.getAddress().toString() +" "+ intervention.getPostcode().toString()+" "+ intervention.getCity());
-        codeIntervention.setText("Code : "+ intervention.getDisasterCode().toString());
-        Button valid = (Button)this.view.findViewById(R.id.valid);
-        Button annuler = (Button)this.view.findViewById(R.id.annuler);
+        addresseIntervention.setText("adresse : \n" + intervention.getAddress().toString() + " " + intervention.getPostcode().toString() + " " + intervention.getCity());
+        codeIntervention.setText("Code : " + intervention.getDisasterCode().toString());
+
+
         if (listXtra.size() > 0) {
-
-
             addresseIntervention.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.VISIBLE);
             titleNoMoyen.setVisibility(View.GONE);
@@ -133,18 +157,18 @@ public class InterventionDetailFragment extends Fragment {
             for (Mean m : listXtra) {
 
                 titles[position] = m.getVehicle().toString();
-                int image = getResources().getIdentifier(Constant.getImage(m.getVehicle().toString()), "raw", this.getActivity().getPackageName());
-                images[position] = image;
+
+                images[position] = Constant.getImage(m.getVehicle().toString());
 
                 position++;
             }
 
         } else {
-
             titleNoMoyen.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.GONE);
             addresseIntervention.setVisibility(View.VISIBLE);
             codeIntervention.setVisibility(View.VISIBLE);
+//            Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
         }
     }
 

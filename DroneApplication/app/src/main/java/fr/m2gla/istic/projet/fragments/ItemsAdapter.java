@@ -5,12 +5,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.model.SVGAdapter;
@@ -19,7 +22,7 @@ import fr.m2gla.istic.projet.model.SVGAdapter;
 public class ItemsAdapter extends ArrayAdapter {
 
     private final Activity activity;
-    private final Drawable[] images;
+    private Drawable[] images;
 
     private final static String TAG = "ItemsAdapter";
 
@@ -31,11 +34,13 @@ public class ItemsAdapter extends ArrayAdapter {
         super(context, textViewResourceId, objects);
         activity = (Activity) context;
         this.titles = objects;
+        Log.i(TAG, "MeanXtra Title\t" + this.titles.length);
         this.images = images;
+        Log.i(TAG, "MeanXtra Image\t" + this.images.length);
         customLayout = textViewResourceId;
     }
 
-    public View getCustomView(int position, View convertView,
+    public View getCustomView(final int position, View convertView,
                               ViewGroup parent) {
 
         // Inflating the layout for the custom Spinner
@@ -54,6 +59,9 @@ public class ItemsAdapter extends ArrayAdapter {
 
         // Declaring and Typecasting the imageView in the inflated layout
         ImageView imgImageView = (ImageView) layout.findViewById(R.id.imgLanguage);
+
+//        Log.i(TAG, "image OUT " + position + "   is   " + (images[position] == null));
+
         // Setting Special attributes for 1st element
         if (position == 0 && titles[position].equals("")) {
             // Removing the image view
@@ -66,9 +74,30 @@ public class ItemsAdapter extends ArrayAdapter {
             itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
         } else {
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(images[position], 64, 64), 50, 50, true);
+            Drawable drawable = images[position];
+            Log.i(TAG, "drawable  " + position + "   is   " + (drawable == null));
+            Log.i(TAG, "image  " + position + "   is   " + (images[position] == null));
+            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+            Log.i(TAG, "src  " + position + "   is   " + (src == null));
+            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
             imgImageView.setImageBitmap(image);
         }
+        //final ViewHolder holder;
+        //Button valid = (Button)layout.findViewById(R.id.valid);
+
+
+       /*  Button valid = (Button)layout.findViewById(R.id.valid);
+        if (valid != null){
+            valid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext()," button a la position  " + position,Toast.LENGTH_LONG).show();
+
+                }
+            });
+        }*/
+        //Button annuler = (Button)layout.findViewById(R.id.annuler);
+
         return layout;
     }
 
@@ -84,4 +113,14 @@ public class ItemsAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
+/*
+    private static class ViewHolder
+    {
+        TextView[] textView;
+        ImageView phoneIcon;
+        ImageView emailIcon;
+
+        int position;
+    }
+*/
 }
