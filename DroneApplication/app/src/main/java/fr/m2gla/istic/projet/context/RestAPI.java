@@ -25,9 +25,6 @@ public interface RestAPI {
 
     public static final String POST_SEND_MEAN_REQUEST = "/intervention/{id}/moyenextra";
 
-    //Demande d'une intervention avec id
-    public static final String GET_INTERVENTION = "/intervention/{id}";
-
     // drone block
     public static final String POST_POSITION_DRONE = "/drone/move";
 
