@@ -1,4 +1,4 @@
-package fr.m2gla.istic.projet.activity;
+package fr.m2gla.istic.projet.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
