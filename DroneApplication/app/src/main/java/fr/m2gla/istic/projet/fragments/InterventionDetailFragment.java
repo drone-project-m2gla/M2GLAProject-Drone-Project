@@ -121,8 +121,8 @@ public class InterventionDetailFragment extends Fragment {
         TextView codeIntervention = (TextView) this.view.findViewById(R.id.code);
         addresseIntervention.setText("adresse : \n"+ intervention.getAddress().toString() +" "+ intervention.getPostcode().toString()+" "+ intervention.getCity());
         codeIntervention.setText("Code : "+ intervention.getDisasterCode().toString());
-        Button valid = (Button)this.view.findViewById(R.id.valid);
-        Button annuler = (Button)this.view.findViewById(R.id.annuler);
+        //Button valid = (Button)this.view.findViewById(R.id.valid);
+        //Button annuler = (Button)this.view.findViewById(R.id.annuler);
         if (listXtra.size() > 0) {
 
 

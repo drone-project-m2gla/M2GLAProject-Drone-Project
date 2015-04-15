@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.model.SVGAdapter;
@@ -35,7 +37,7 @@ public class ItemsAdapter extends ArrayAdapter {
         customLayout = textViewResourceId;
     }
 
-    public View getCustomView(int position, View convertView,
+    public View getCustomView(final int position, View convertView,
                               ViewGroup parent) {
 
         // Inflating the layout for the custom Spinner
@@ -69,6 +71,19 @@ public class ItemsAdapter extends ArrayAdapter {
             Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(images[position], 64, 64), 50, 50, true);
             imgImageView.setImageBitmap(image);
         }
+
+        Button valid = (Button)layout.findViewById(R.id.valid);
+        if (valid != null){
+            valid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext()," button a la position  " + position,Toast.LENGTH_LONG).show();
+
+                }
+            });
+        }
+        //Button annuler = (Button)layout.findViewById(R.id.annuler);
+
         return layout;
     }
 

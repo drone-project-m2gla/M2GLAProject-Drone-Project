@@ -234,25 +234,22 @@ public class MapActivity extends Activity implements
              */
             @Override
             public void execute(Object response) {
-            Topographie[] topographies = (Topographie[]) response;
-            Position pos = null;
-            for (Topographie topographie: topographies) {
-                pos = topographie.getPosition();
-                //Draw a symbol with texts and color at a position
-                Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
-                        topographie.getFirstContent(),
-                        topographie.getSecondContent(),
-                        topographie.getColor(),
-                        topographie.getFirstContent(),
-                        true);
-                SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                mClusterManager.addItem(markerItem);
-            }
+                Topographie[] topographies = (Topographie[]) response;
 
-            if (pos != null) {
+                for (Topographie topographie: topographies) {
+                    Position pos = topographie.getPosition();
+                    //Draw a symbol with texts and color at a position
+                    Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
+                            topographie.getFirstContent(),
+                            topographie.getSecondContent(),
+                            topographie.getColor(),
+                            topographie.getFirstContent(),
+                            true);
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
+                    mClusterManager.addItem(markerItem);
+                }
+
                 mClusterManager.cluster();
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
-            }
             }
         }, new Command() {
             /**
