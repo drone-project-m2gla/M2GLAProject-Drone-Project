@@ -103,9 +103,11 @@ public class InterventionListFragment extends Fragment {
 
                 String idIntervention = map.get(GeneralConstants.INTER_LIST_ID).toString();
                 if (userQualification == UserQualification.CODIS) {
-                Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
+
                     InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
                     fragmentDetailIntervention.setIdIntervention(idIntervention);
+
                 } else {
                     Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
                     callMap(idIntervention);
@@ -205,8 +207,8 @@ public class InterventionListFragment extends Fragment {
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param id    : Reference (id) de l'intervention
-     * @param code    : Code d'intervention
+     * @param id   : Reference (id) de l'intervention
+     * @param code : Code d'intervention
      * @param data : données de l'intervention
      */
     public void addInterventionInList(String id, String code, String data) {
@@ -217,7 +219,7 @@ public class InterventionListFragment extends Fragment {
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param id    : Reference (id) de l'intervention
+     * @param id      : Reference (id) de l'intervention
      * @param code    : Code d'intervention
      * @param data    : données de l'intervention
      * @param initial : true pour specifier qu'il s'agit d'une intervention ajoutée pendant l'initialisation

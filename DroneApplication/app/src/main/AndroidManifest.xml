@@ -47,20 +47,24 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".InterventionListActivity">
+        <activity
+            android:name=".InterventionListActivity"
+            android:screenOrientation="landscape">
+
             <intent-filter>
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity android:name=".SVGActivity">
-
             <intent-filter>
                 <action android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".NewInterventionActivity" />
+        <activity
+            android:name=".NewInterventionActivity"
+            android:screenOrientation="landscape" />
 
         <receiver
             android:name="fr.m2gla.istic.projet.receiver.GcmBroadcastReceiver"

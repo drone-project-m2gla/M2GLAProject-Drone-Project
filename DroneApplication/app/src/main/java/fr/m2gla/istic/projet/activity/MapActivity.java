@@ -39,6 +39,7 @@ import java.util.Map;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
@@ -83,10 +84,17 @@ public class MapActivity extends Activity implements
         if (intent != null) {
             String idIntervention = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
             Toast.makeText(getApplication(), "Bonjour\nID intervention " + idIntervention, Toast.LENGTH_LONG);
+
+            // Fragment ajout de moyens supplémentaires
             MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
 
-            if (mSuppFragment != null){
+            // Fragment list des moyens supplémentaires
+            MoyensInitFragment mInitFragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
+            if (mSuppFragment != null ){
                 mSuppFragment.setInterventionID(idIntervention);
+            }
+            if(mInitFragment !=null){
+                mInitFragment.setInterventionID(idIntervention);
             }
 
             param.put("id", idIntervention);

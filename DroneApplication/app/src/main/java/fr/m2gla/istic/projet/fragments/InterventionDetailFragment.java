@@ -40,49 +40,75 @@ public class InterventionDetailFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Set intervention id from another fragment or activity
+     *
+     * @param idIntervention
+     */
     public void setIdIntervention(String idIntervention) {
         this.idIntervention = idIntervention;
 
         if (!idIntervention.equals("")) {
             Map<String, String> map = new HashMap<>();
-            final ArrayList<String> maListe = new ArrayList<String>();
             map.put("id", idIntervention);
             RestServiceImpl.getInstance()
-                    .get(RestAPI.GET_INTERVENTION, map, Intervention.class, new Command() {
-                        @Override
-                        public void execute(Object response) {
-                            Intervention intervention = (Intervention) response;
-                            Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
-                            int i = 0;
-                            List<Mean> listXtra = intervention.getMeansXtra();
-                            // Initialisation des titres et images.
-                            initImagesTitles(intervention, i, listXtra);
-                            List<Drawable> drawables = new ArrayList<Drawable>();
-
-                            for (int imageId : images) {
-                                if (imageId != 0) {
-                                    drawables.add(getResources().getDrawable(imageId));
-                                } else {
-                                    drawables.add(getResources().getDrawable(R.drawable.bubble_shadow));
-                                }
-                            }
-
-                            ListView listMoyen = (ListView) view.findViewById(R.id.intervention_detail_list);
-                            Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
-
-                            listMoyen.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom_detail_moyen, titles, imagesArray));
-                        }
-                    }, new Command() {
-                        @Override
-                        public void execute(Object response) {
-                            Toast.makeText(getActivity(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG);
-                        }
-                    });
+                    .get(RestAPI.GET_INTERVENTION, map, Intervention.class, getCallbackSuccess(), getCallbackError());
         }
-        // idTextView.setText(idIntervention);
-
     }
 
+    /**
+     * Command error
+     *
+     * @return
+     */
+    private Command getCallbackError() {
+        return new Command() {
+            @Override
+            public void execute(Object response) {
+                Toast.makeText(getActivity(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG);
+            }
+        };
+    }
+
+    /**
+     * Command success
+     *
+     * @return
+     */
+    private Command getCallbackSuccess() {
+        return new Command() {
+            @Override
+            public void execute(Object response) {
+                Intervention intervention = (Intervention) response;
+                Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
+                int i = 0;
+                List<Mean> listXtra = intervention.getMeansXtra();
+                // Initialisation des titres et images.
+                initImagesTitles(intervention, i, listXtra);
+                List<Drawable> drawables = new ArrayList<Drawable>();
+
+                for (int imageId : images) {
+                    if (imageId != 0) {
+                        drawables.add(getResources().getDrawable(imageId));
+                    } else {
+                        drawables.add(getResources().getDrawable(R.drawable.bubble_shadow));
+                    }
+                }
+
+                ListView listMoyen = (ListView) view.findViewById(R.id.intervention_detail_list);
+                Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+
+                listMoyen.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom_detail_moyen, titles, imagesArray));
+            }
+        };
+    }
+
+    /**
+     * Formattage des moyens extra pour l'adapter
+     * @param intervention
+     * @param position
+     * @param listXtra
+     */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
         titles = new String[listXtra.size()];
         images = new int[listXtra.size()];
@@ -91,8 +117,8 @@ public class InterventionDetailFragment extends Fragment {
             for (Mean m : listXtra) {
 
                 titles[position] = m.getVehicle().toString();
-
-                images[position] = Constant.getImage(m.getVehicle().toString());
+                int image = getResources().getIdentifier(Constant.getImage(m.getVehicle().toString()), "raw", this.getActivity().getPackageName());
+                images[position] = image;
 
                 position++;
             }
