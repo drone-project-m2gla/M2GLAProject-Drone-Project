@@ -19,6 +19,7 @@ import com.caverock.androidsvg.SVGParseException;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.constantes.Constant;
 
@@ -29,7 +30,7 @@ public class MoyensInitFragment extends ListFragment {
             Constant.VALUE_SECOUR_A_PERSONNE_PREVU,
             Constant.VALUE_VEHICULE_A_INCENDIE_SEUL};
 
-    String [] images = {Constant.SVG_COLONNE_INCENDIE_ACTIVE,
+    String[] images = {Constant.SVG_COLONNE_INCENDIE_ACTIVE,
             Constant.SVG_GROUPE_INCENDIE_ACTIF,
             Constant.SVG_MOYEN_INTERVENTION_AERIEN,
             Constant.SVG_SECOUR_A_PERSONNE_PREVU,
@@ -59,7 +60,7 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -76,8 +77,8 @@ public class MoyensInitFragment extends ListFragment {
                 // Create a new ClipData using the tag as a label, the plain text MIME type, and
                 // the already-created item. This will create a new ClipDescription object within the
                 // ClipData, and set its MIME type entry to "text/plain"
-                ClipData dragData = new ClipData((String)v.getTag(),
-                        new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN},
+                ClipData dragData = new ClipData((String) v.getTag(),
+                        new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         itemSymbolName);
 
                 //ClipData.Item item = new ClipData.Item(images[position]);
