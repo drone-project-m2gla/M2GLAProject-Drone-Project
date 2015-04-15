@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 
+import java.io.InputStream;
+
+import fr.m2gla.istic.projet.model.Symbol;
+
 
 public class SVGActivity extends Activity {
     private ImageView imageView1;
@@ -22,7 +26,11 @@ public class SVGActivity extends Activity {
 
         imageView1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         try {
-            SVG svg = SVG.getFromResource(this, R.raw.vehicule_incendie_seul_prevu);
+            Symbol symbol = new Symbol(Symbol.SymbolType.colonne_incendie_active, "AAA", "BBB", "ffff00", "Desc", true);
+            InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(symbol.getSymbolType().name(), "raw", getPackageName()));
+
+            SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, symbol));
+            //SVG svg = SVG.getFromInputStream(is);
             Drawable drawable = new PictureDrawable(svg.renderToPicture());
             imageView1.setImageDrawable(drawable);
         }
