@@ -1,8 +1,9 @@
-package fr.m2gla.istic.projet.activity;
+package fr.m2gla.istic.projet.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -87,7 +88,7 @@ public class SVGAdapter {
                 if (symbol.isValidated()) {
                     nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:.*;", "stroke-dasharray:none;"));
                 } else {
-                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:none;", "stroke-dasharray:4, 4;"));
+                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:none;", "stroke-dasharray:4,4;"));
                 }
             }
 

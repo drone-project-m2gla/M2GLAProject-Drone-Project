@@ -33,6 +33,7 @@ public class RestServiceImpl implements RestService {
 
             @Override
             protected Object doInBackground(Object[] params) {
+
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
