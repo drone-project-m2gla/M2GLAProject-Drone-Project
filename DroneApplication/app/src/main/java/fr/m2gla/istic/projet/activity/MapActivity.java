@@ -106,33 +106,7 @@ public class MapActivity extends Activity implements
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         map = mapFragment.getMap();
-
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                Position position = new Position();
-                position.setLatitude(latLng.latitude);
-                position.setLongitude(latLng.longitude);
-
-                RestServiceImpl.getInstance()
-                        .post(RestAPI.POST_POSITION_DRONE, null, position, Void.class,
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.i(TAG, "Drone move");
-                                    }
-                                },
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.e(TAG, "Push position error");
-                                    }
-                                });
         addDroneListener();
-
-            }
-        });
-
         map.getUiSettings().setCompassEnabled(true);
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -148,13 +122,11 @@ public class MapActivity extends Activity implements
 
             @Override
             public void onMarkerDrag(Marker marker) {
-                // Not use
                 disableRaiseOnDrag(marker);
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-
                 if (markerSymbolLink.containsKey(marker.getId())){
                     Log.d(TAG, "onMarkerDragStart found " + marker.getId());
                     Symbol symbol =  markerSymbolLink.get(marker.getId()).getSymbol();
@@ -162,8 +134,6 @@ public class MapActivity extends Activity implements
 
                     marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), symbol));
                 }
-
-                // Not use
                 disableRaiseOnDrag(marker);
                 Position position = new Position();
                 position.setLatitude(marker.getPosition().latitude);
