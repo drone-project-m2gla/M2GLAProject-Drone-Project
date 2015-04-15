@@ -42,6 +42,9 @@ public class Constant {
     public static final int DRAWABLE_IMG_VEHICULE_EPA = R.mipmap.ic_vehicule_img_epa;
     public static final int DRAWABLE_IMG_VEHICULE_FPT = R.mipmap.ic_vehicule_img_fpt;
 
+    // image type svg variable
+    public static final String TYPE_IMG = "type";
+
     public static int getImage(String title) {
         int imgID = 0;
 
