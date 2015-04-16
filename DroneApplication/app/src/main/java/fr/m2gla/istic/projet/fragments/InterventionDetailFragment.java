@@ -162,11 +162,13 @@ public class InterventionDetailFragment extends Fragment {
             codeIntervention.setVisibility(View.VISIBLE);
             for (Mean m : listXtra) {
 
-                titles[position] = m.getVehicle().toString();
+                if (!m.getIsDeclined()) {
+                    titles[position] = m.getVehicle().toString();
 
-                images[position] = Constant.getImage(m.getVehicle().toString());
+                    images[position] = Constant.getImage(m.getVehicle().toString());
 
-                position++;
+                    position++;
+                }
             }
 
         } else {
