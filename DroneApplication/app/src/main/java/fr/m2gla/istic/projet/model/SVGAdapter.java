@@ -35,6 +35,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.model.Symbol;
 
 /**
@@ -166,19 +167,24 @@ public class SVGAdapter {
     }
 
     public static BitmapDescriptor convertSymbolToIcon(Context context, Symbol symbol){
-        BitmapDescriptor icon = null;
+        Drawable drawable = convertSymbolToDrawable(context, symbol);
+        Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
+        return icon;
+    }
+
+    public static Drawable convertSymbolToDrawable(Context context, Symbol symbol){
+        Drawable drawable;
         try {
             InputStream is = context.getResources().openRawResource(
-                    context.getResources().getIdentifier(symbol.getSymbolType().name(), "raw", context.getPackageName()));
+                    context.getResources().getIdentifier(symbol.getSymbolType().name(),
+                            "raw", context.getPackageName()));
 
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, symbol));
-
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
-            icon = BitmapDescriptorFactory.fromBitmap(image);
-        } catch (SVGParseException e) {
-            e.printStackTrace();
+            drawable = new PictureDrawable(svg.renderToPicture());
+        } catch (Exception e) {
+            drawable = context.getResources().getDrawable(R.drawable.bubble_shadow);
         }
-        return icon;
+        return drawable;
     }
 }
