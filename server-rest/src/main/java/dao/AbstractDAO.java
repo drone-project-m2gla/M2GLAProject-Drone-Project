@@ -47,10 +47,11 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     public final void connect() {
         if(currentCluster == null || currentBucket==null) {
             // Connect to a cluster
-            currentCluster = CouchbaseCluster.create(Configuration.COUCHBASE_HOSTNAME);
+            currentCluster = CouchbaseCluster.create(Configuration.getCOUCHBASE_HOSTNAME());
 
             // Open a bucket
-            currentBucket = currentCluster.openBucket(Configuration.BUCKET_NAME);
+            currentBucket = currentCluster.openBucket(Configuration.getBUCKET_NAME());
+
         }
     }
 
