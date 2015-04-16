@@ -61,32 +61,37 @@ public class ItemsAdapter extends ArrayAdapter {
             holder.imgImageView = (ImageView) convertView.findViewById(R.id.imgLanguage);
 
             // Setting Special attributes for 1st element
-            if (position == 0 && titles[position].equals("")) {
-                // Removing the image view
-                holder.imgImageView.setVisibility(View.GONE);
-                // Setting the size of the text
-                holder.itemLabelTxtView.setTextSize(20f);
-                // Setting the text Color
-                holder.itemLabelTxtView.setTextColor(Color.WHITE);
-                // Setting the value
-                holder.itemLabelTxtView.setText("Sélectionner un moyen supp.");
+//            if (position == 0 && images[position] == null) {
+//                Log.i(TAG, "Position " + 0);
+//                // Removing the image view
+//                //holder.imgImageView.setVisibility(View.GONE);
+//                // Setting the size of the text
+//                holder.itemLabelTxtView.setTextSize(20f);
+//                // Setting the text Color
+//                holder.itemLabelTxtView.setTextColor(Color.WHITE);
+//                // Setting the value
+//                holder.itemLabelTxtView.setText("Sélectionner un moyen supp.");
+//
+//            } else {
+            Log.i(TAG, "Position not 0");
 
-            } else {
-                // Setting the text using the array
-                holder.itemLabelTxtView.setText(titles[position]);
-                Drawable drawable = images[position];
-                Log.i(TAG, "drawable  " + position + "   is   " + (drawable == null));
-                Log.i(TAG, "image  " + position + "   is   " + (images[position] == null));
-                Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
-                Log.i(TAG, "src  " + position + "   is   " + (src == null));
-                Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
-                holder.imgImageView.setImageBitmap(image);
-            }
+            // Setting the text using the array
+            holder.itemLabelTxtView.setText(titles[position]);//
+            // Setting the color of the text
+            holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
+            // Setting the size of the text
+            holder.itemLabelTxtView.setTextSize(20f);
+
+            Drawable drawable = images[position];
+            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
+            holder.imgImageView.setImageBitmap(image);
+//            }
+            holder.position = position;
         } else {
             /* get the View from the existing Tag */
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.position = position;
 
 //        // Inflating the layout for the custom Spinner
 //        LayoutInflater inflater = activity.getLayoutInflater();
