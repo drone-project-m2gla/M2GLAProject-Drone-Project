@@ -95,7 +95,7 @@ public class InterventionListActivity extends Activity {
     }
 
     /**
-     * Methode de creation du menu de l'application
+     * Methode de creation du menu de l'entity
      *
      * @param menu : Objet de definition du menu principal
      */
@@ -107,13 +107,14 @@ public class InterventionListActivity extends Activity {
     }
 
     /**
-     * Methode de gestion de l'usage du menu principal
+     * Methode de gestion de l'usage du menu de l'entity
      *
      * @param item : Objet de sélection dans le menu principal
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        Intent  intent;
+        int     id = item.getItemId();
 
         // Recuperer l'option du menu selectionnee
         switch (id) {
@@ -121,16 +122,10 @@ public class InterventionListActivity extends Activity {
             //case R.id.action_settings :
             //    return true;
             case R.id.action_deconnection :
-
-                // Arret de l'activity ici
-                finish();
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 return true;
-//            case R.id.action_quit :
-//                Log.i(TAG, "Fin Application");
-
-                // Arret de l'activity ici
-//                finish();
-//                return true;
         }
 
         return super.onOptionsItemSelected(item);

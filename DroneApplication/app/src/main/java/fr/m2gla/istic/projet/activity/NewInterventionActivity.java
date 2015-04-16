@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -45,6 +47,44 @@ public class NewInterventionActivity extends Activity {
         setContentView(R.layout.activity_new_intervention);
 
         initializeElement();
+    }
+
+
+    /**
+     * Methode de creation du menu de l'entity
+     *
+     * @param menu : Objet de definition du menu principal
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_new_inter_activity, menu);
+        return true;
+    }
+
+    /**
+     * Methode de gestion de l'usage du menu de l'entity
+     *
+     * @param item : Objet de sélection dans le menu principal
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent  intent;
+        int     id = item.getItemId();
+
+        // Recuperer l'option du menu selectionnee
+        switch (id) {
+            // Reglage prevu pour plus tard
+            //case R.id.action_settings :
+            //    return true;
+            case R.id.action_deconnection :
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
