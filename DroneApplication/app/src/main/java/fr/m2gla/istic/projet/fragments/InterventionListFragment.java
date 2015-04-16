@@ -199,15 +199,17 @@ public class InterventionListFragment extends Fragment {
      * @param intervention      : Intervention
      */
     public void addInterventionInList(Intervention intervention) {
-        String  idStr, dcStr,nbExtraStr, addrStr;
+        String  idStr, dcStr,nbExtraStr, addrStr, labelStr, dateStr;
 
 
         idStr = intervention.getId();
         dcStr = intervention.getDisasterCode().toString();
         nbExtraStr = "[" + intervention.getMeansXtra().size() + "]";
         addrStr = intervention.getAddress() + " " + intervention.getPostcode() + " " + intervention.getCity();
+        labelStr = intervention.getLabel();
+        dateStr = intervention.getDateCreate();
 
-        addInterventionInList(idStr, dcStr, nbExtraStr, "", "", addrStr);
+        addInterventionInList(idStr, dcStr, nbExtraStr, labelStr, dateStr, addrStr);
     }
 
     /**

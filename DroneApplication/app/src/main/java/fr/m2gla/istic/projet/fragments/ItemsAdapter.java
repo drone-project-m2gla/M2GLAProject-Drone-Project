@@ -160,6 +160,7 @@ public class ItemsAdapter extends ArrayAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+
         return convertView;
     }
 
