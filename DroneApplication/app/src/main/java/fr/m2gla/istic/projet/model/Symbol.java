@@ -24,6 +24,7 @@ public class Symbol {
         point_sensible
     }
 
+    private String id;
     private SymbolType symbolType;
     private String description;
     private String firstText;
@@ -41,9 +42,23 @@ public class Symbol {
         this.validated = false;
     }
 
+    public Symbol(String id, SymbolType symbolType, String firstText, String secondText, String color, String description) {
+        this.id = id;
+        this.symbolType = symbolType;
+        this.description = description;
+        this.firstText = firstText;
+        this.secondText = secondText;
+        this.color = color;
+        this.validated = false;
+    }
+
     public Symbol(SymbolType symbolType, String firstText, String secondText, String color, String description, boolean topographic) {
         this(symbolType, firstText, secondText, color, description);
         this.topographic = topographic;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public SymbolType getSymbolType() {

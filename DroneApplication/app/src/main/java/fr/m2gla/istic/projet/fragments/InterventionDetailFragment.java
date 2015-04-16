@@ -91,7 +91,7 @@ public class InterventionDetailFragment extends Fragment {
                 Intervention intervention = (Intervention) response;
                 Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
-                List<Mean> meanList = intervention.getMeansList();
+                List<Mean> meanList = intervention.getMeansXtra();
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, i, meanList);
                 List<Drawable> drawables = new ArrayList<Drawable>();

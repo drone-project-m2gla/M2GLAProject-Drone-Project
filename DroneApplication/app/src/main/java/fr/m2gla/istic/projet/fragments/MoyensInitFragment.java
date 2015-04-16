@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +27,8 @@ import fr.m2gla.istic.projet.constantes.Constant;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
+import fr.m2gla.istic.projet.model.SVGAdapter;
+import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 public class MoyensInitFragment extends ListFragment {
@@ -38,9 +36,7 @@ public class MoyensInitFragment extends ListFragment {
 
     private String idIntervention = "";
     private View view;
-    private String[] images;
-    private String[] titles;
-    private boolean[] itemIsDragable;
+    private Symbol[] means;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,17 +69,25 @@ public class MoyensInitFragment extends ListFragment {
                 // ClipData.newPlainText() can create a plain text ClipData in one step.
 
                 // Create a new ClipData.Item from the ImageView Symbol Name
-                ClipData.Item itemSymbolName = new ClipData.Item(images[position]);
+                ClipData.Item item0 = new ClipData.Item(means[position].getId());
 
                 // Create a new ClipData using the tag as a label, the plain text MIME type, and
                 // the already-created item. This will create a new ClipDescription object within the
                 // ClipData, and set its MIME type entry to "text/plain"
                 ClipData dragData = new ClipData((String) v.getTag(),
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
-                        itemSymbolName);
+                        item0);
 
-                //ClipData.Item item = new ClipData.Item(images[position]);
-                //dragData.addItem(item);
+                ClipData.Item item1 = new ClipData.Item(means[position].getSymbolType().name());
+                dragData.addItem(item1);
+                ClipData.Item item2 = new ClipData.Item(means[position].getFirstText());
+                dragData.addItem(item2);
+                ClipData.Item item3 = new ClipData.Item(means[position].getSecondText());
+                dragData.addItem(item3);
+                ClipData.Item item4 = new ClipData.Item(means[position].getColor());
+                dragData.addItem(item4);
+                ClipData.Item item5 = new ClipData.Item(means[position].getDescription());
+                dragData.addItem(item5);
 
                 // Instantiates the drag shadow builder.
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
@@ -109,31 +113,22 @@ public class MoyensInitFragment extends ListFragment {
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
         int meanSize = listMean.size(); // taille de la liste des moyens
         int xtraSize = listXtra.size(); // taille des moyens supplémentaires
-        titles = new String[meanSize + xtraSize];
-        images = new String[meanSize + xtraSize];
+        means = new Symbol[meanSize + xtraSize];
 
-        itemIsDragable = new boolean[meanSize + xtraSize];
         if (meanSize > 0) {
-
             for (Mean m : listMean) {
-
-                titles[position] = m.getVehicle().toString();
-
-                images[position] = Constant.getImage(m.getVehicle().toString());
-
-                itemIsDragable[position] = false;
-
+                String meanClass = m.getVehicle().toString();
+                String meanType = Constant.getImage(meanClass);
+                means[position] = new Symbol(m.getId(),
+                       Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
                 position++;
             }
             if (xtraSize > 0) {
                 for (Mean m : listXtra) {
-
-                    titles[position] = m.getVehicle().toString();
-
-                    images[position] = Constant.getImage(m.getVehicle().toString());
-
-                    itemIsDragable[position] = false;
-
+                    String meanClass = m.getVehicle().toString();
+                    String meanType = Constant.getImage(meanClass);
+                    means[position] = new Symbol(m.getId(),
+                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
                     position++;
                 }
             }
@@ -184,7 +179,7 @@ public class MoyensInitFragment extends ListFragment {
             @Override
             public void execute(Object response) {
                 Intervention intervention = (Intervention) response;
-                Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
 
                 List<Mean> meanList = intervention.getMeansList();
@@ -193,29 +188,24 @@ public class MoyensInitFragment extends ListFragment {
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, i, meanList, xtraList);
 
-                //
+                //Listes pour générer tableaux pour adapter
                 List<Drawable> drawables = new ArrayList<Drawable>();
+                List<String> titles = new ArrayList<String>();
 
-                for (String imageId : images) {
-                    if (!imageId.equals("")) {
-                        SVG svg = null;
-                        try {
-                            svg = SVG.getFromResource(getActivity(), getResources().getIdentifier(imageId, "raw", getActivity().getPackageName()));
-                        } catch (SVGParseException e) {
-                            e.printStackTrace();
-                        }
-                        drawables.add(new PictureDrawable(svg.renderToPicture()));
-
-                    } else {
-                        drawables.add(getResources().getDrawable(R.drawable.bubble_shadow));
-                    }
+                for (Symbol mean : means) {
+                    drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
+                    titles.add(mean.getFirstText());
                 }
 
                 ListView moyensListView = getListView();
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+                String [] titlesArray = titles.toArray(new String[titles.size()]);
                 Context activity = MoyensInitFragment.this.getActivity();
-                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom, titles, imagesArray);
-                Log.i(TAG, "adapter  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
+                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
+                Log.i(TAG, "adapter  " + (adapter == null) +
+                        " \nImage array  " + imagesArray.length +
+                        " \ntitles " + (titlesArray == null) +
+                        " \nactivity  " + (activity == null));
 
                 Log.i(TAG, "List\t" + (moyensListView == null));
 

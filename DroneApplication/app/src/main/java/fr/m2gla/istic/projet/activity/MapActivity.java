@@ -132,49 +132,48 @@ public class MapActivity extends Activity implements
      */
     public void loadSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
-                new Command() {
-                    /**
-                     * Success connection
-                     *
-                     * @param response Response object type Intervention[]
-                     */
-                    @Override
-                    public void execute(Object response) {
-                        Topographie[] topographies = (Topographie[]) response;
-                        Position pos = null;
-                        for (Topographie topographie : topographies) {
-                            pos = topographie.getPosition();
-                            //Draw a symbol with texts and color at a position
-                            Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
-                                    topographie.getFirstContent(),
-                                    topographie.getSecondContent(),
-                                    topographie.getColor(),
-                                    topographie.getFirstContent(),
-                                    true);
-                            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                            mClusterManager.addItem(markerItem);
-                        }
 
-                        if (pos != null) {
-                            mClusterManager.cluster();
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
-                        }
-                    }
-                }, new Command() {
-                    /**
-                     * Error connection
-                     *
-                     * @param response Response error type HttpClientErrorException
-                     */
-                    @Override
-                    public void execute(Object response) {
-                        Log.e(TAG, "connection error");
-                        Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu, "SAP", "REN", "FF0000", "SAP REN");
-                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
-                        mClusterManager.addItem(markerItem);
-                        mClusterManager.cluster();
-                    }
-                });
+        new Command() {
+            /**
+             * Success connection
+             *
+             * @param response Response object type Intervention[]
+             */
+            @Override
+            public void execute(Object response) {
+                Topographie[] topographies = (Topographie[]) response;
+
+                for (Topographie topographie: topographies) {
+                    Position pos = topographie.getPosition();
+                    //Draw a symbol with texts and color at a position
+                    Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
+                            topographie.getFirstContent(),
+                            topographie.getSecondContent(),
+                            topographie.getColor(),
+                            topographie.getFirstContent(),
+                            true);
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
+                    mClusterManager.addItem(markerItem);
+                }
+
+                mClusterManager.cluster();
+            }
+        }, new Command() {
+            /**
+             * Error connection
+             *
+             * @param response Response error type HttpClientErrorException
+             */
+            @Override
+            public void execute(Object response) {
+            Log.e(TAG, "connection error");
+            Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000", "SAP REN");
+            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
+            mClusterManager.addItem(markerItem);
+            mClusterManager.cluster();
+            }
+        });
+
 
     }
 
@@ -187,14 +186,15 @@ public class MapActivity extends Activity implements
     @Override
     public void onClusterItemInfoWindowClick(SymbolMarkerClusterItem symbolMarkerClusterItem) {
         Log.d(TAG, "main onClusterItemInfoWindowClick");
-        if (!symbolMarkerClusterItem.getSymbol().isTopographic()) {
+        Symbol mean = symbolMarkerClusterItem.getSymbol();
+        if (!mean.isTopographic()) {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.query_position_confirmation)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Mean mean = new Mean();
-                            mean.setId("");
+                            mean.setId(mean.getId());
 
                             RestServiceImpl.getInstance()
                                     .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
@@ -237,12 +237,16 @@ public class MapActivity extends Activity implements
 
             ClipData clipData = event.getClipData();
             try {
-                //Get symbol name from ClipData saved onDrag
-                Symbol.SymbolType symbolType = Symbol.SymbolType.valueOf((String) clipData.getItemAt(0).getText());
-                Log.d(TAG, clipData.getItemAt(0).toString());
+                //Get symbol from ClipData saved onDrag
                 LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
-                Symbol symbol = new Symbol(symbolType, "AAA", "BBB", "ff0000", "Description");
-                symbol.setValidated(true);
+                Symbol symbol = new Symbol(
+                        (String)clipData.getItemAt(0).getText(),
+                        Symbol.SymbolType.valueOf((String) clipData.getItemAt(1).getText()),
+                        (String)clipData.getItemAt(2).getText(),
+                        (String)clipData.getItemAt(3).getText(),
+                        (String)clipData.getItemAt(4).getText(),
+                        (String)clipData.getItemAt(5).getText());
+                //symbol.setValidated(false);
                 SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
                 mClusterManager.addItem(markerItem);
                 mClusterManager.cluster();
@@ -403,10 +407,10 @@ public class MapActivity extends Activity implements
 
             // Fragment list des moyens supplémentaires
             MoyensInitFragment mInitFragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
-            if (mSuppFragment != null ){
+            if (mSuppFragment != null && idIntervention != null){
                 mSuppFragment.setInterventionID(idIntervention);
             }
-            if(mInitFragment !=null){
+            if(mInitFragment !=null && idIntervention != null){
                 mInitFragment.setInterventionID(idIntervention);
             }
 

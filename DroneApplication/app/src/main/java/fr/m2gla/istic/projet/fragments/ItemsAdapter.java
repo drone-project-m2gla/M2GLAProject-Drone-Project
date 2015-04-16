@@ -44,70 +44,7 @@ public class ItemsAdapter extends ArrayAdapter {
         return getCustomView(position, convertView, parent);
     }
 
-    //    // declare it final so that it could be accessed from the inner class
-//    final ViewHolder holder;
-//
-//    if (convertView == null)
-//    {
-//        LayoutInflater mInflater = (LayoutInflater) SimpleAddressBookAdapter.context
-//                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        convertView = mInflater.inflate(SimpleAddressBookAdapter.resource, parent, false);
-//
-//        holder = new ViewHolder();
-//        holder.textView = new TextView[fromList.length];
-//
-//        // get the textview's from the convertView
-//        for (int i = 0; i < fromList.length; i++) {
-//            holder.textView[i] = (TextView) convertView.findViewById(resourceList[i]);
-//        }
-//
-//        // get the phoneIcon and emailIcon as well from convertView
-//        holder.phoneIcon = (ImageView) convertView.findViewById(R.id.address_book_item_call);
-//        holder.emailIcon = (ImageView) convertView.findViewById(R.id.address_book_item_email);
-//
-//        // add a listener for phone call
-//        holder.phoneIcon.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                String phone = SimpleAddressBookAdapter.listMap.get(holder.position).get("phone");
-//                ActivityHelper.startActivity(ActivityHelper.PHONE_CALL, phone);
-//            }
-//
-//        });
-//
-//        // add listener for email
-//        holder.emailIcon.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                String email = SimpleAddressBookAdapter.listMap.get(holder.position).get("email");
-//                ActivityHelper.startActivity(ActivityHelper.EMAIL, email);
-//            }
-//
-//        });
-//
-//        // store it in a Tag as its the first time this view is generated
-//        convertView.setTag(holder);
-//
-//    }
-//    else {
-//			/* get the View from the existing Tag */
-//        holder = (ViewHolder) convertView.getTag();
-//    }
-//
-//		/* update the textView's text for this list view item/element */
-//    for (int i = 0; i < fromList.length; i++) {
-//        holder.textView[i].setText(listMap.get(position).get(fromList[i]));
-//    }
-//
-//    // store the position/index for this list view element/item
-//    holder.position = position;
-    public View getCustomView(int position, View convertView,
-                              ViewGroup parent) {
+    public View getCustomView(int position, View convertView, ViewGroup parent) {
 
         final ViewHolder holder;
 
@@ -117,6 +54,7 @@ public class ItemsAdapter extends ArrayAdapter {
             convertView = mInflater.inflate(this.customLayout, parent, false);
 
             holder = new ViewHolder();
+
             holder.itemLabelTxtView = (TextView) convertView
                     .findViewById(R.id.tvLanguage);
             // get the phoneIcon and emailIcon as well from convertView
@@ -134,6 +72,8 @@ public class ItemsAdapter extends ArrayAdapter {
                 holder.itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
             } else {
+                // Setting the text using the array
+                holder.itemLabelTxtView.setText(titles[position]);
                 Drawable drawable = images[position];
                 Log.i(TAG, "drawable  " + position + "   is   " + (drawable == null));
                 Log.i(TAG, "image  " + position + "   is   " + (images[position] == null));
@@ -142,7 +82,11 @@ public class ItemsAdapter extends ArrayAdapter {
                 Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
                 holder.imgImageView.setImageBitmap(image);
             }
+        } else {
+            /* get the View from the existing Tag */
+            holder = (ViewHolder) convertView.getTag();
         }
+        holder.position = position;
 
 //        // Inflating the layout for the custom Spinner
 //        LayoutInflater inflater = activity.getLayoutInflater();
@@ -184,6 +128,7 @@ public class ItemsAdapter extends ArrayAdapter {
 //        }
 //        return layout;
         return convertView;
+
     }
 
     // It gets a View that displays in the drop down popup the data at the specified position
