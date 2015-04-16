@@ -26,34 +26,27 @@ public class Symbol {
 
     private String id;
     private SymbolType symbolType;
-    private String description;
     private String firstText;
     private String secondText;
     private String color;
     private boolean validated;
     private boolean topographic;
 
-    public Symbol(SymbolType symbolType, String firstText, String secondText, String color, String description) {
+    public Symbol(SymbolType symbolType, String firstText, String secondText, String color) {
         this.symbolType = symbolType;
-        this.description = description;
         this.firstText = firstText;
         this.secondText = secondText;
         this.color = color;
         this.validated = false;
     }
 
-    public Symbol(String id, SymbolType symbolType, String firstText, String secondText, String color, String description) {
+    public Symbol(String id, SymbolType symbolType, String firstText, String secondText, String color) {
+        this(symbolType, firstText, secondText, color);
         this.id = id;
-        this.symbolType = symbolType;
-        this.description = description;
-        this.firstText = firstText;
-        this.secondText = secondText;
-        this.color = color;
-        this.validated = false;
     }
 
-    public Symbol(SymbolType symbolType, String firstText, String secondText, String color, String description, boolean topographic) {
-        this(symbolType, firstText, secondText, color, description);
+    public Symbol(SymbolType symbolType, String firstText, String secondText, String color, boolean topographic) {
+        this(symbolType, firstText, secondText, color);
         this.topographic = topographic;
     }
 
@@ -63,10 +56,6 @@ public class Symbol {
 
     public SymbolType getSymbolType() {
         return symbolType;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getFirstText() {

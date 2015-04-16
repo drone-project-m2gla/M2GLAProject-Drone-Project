@@ -8,10 +8,12 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -37,6 +39,9 @@ public class MoyensInitFragment extends ListFragment {
     private String idIntervention = "";
     private View view;
     private Symbol[] means;
+    ArrayAdapter adapter;
+    List<String> titles;
+    private int positionElement;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,7 +58,6 @@ public class MoyensInitFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     /**
@@ -64,6 +68,7 @@ public class MoyensInitFragment extends ListFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View v,
                                            int position, long id) {
+                positionElement = position;
                 // Create a new ClipData.
                 // This is done in two steps to provide clarity. The convenience method
                 // ClipData.newPlainText() can create a plain text ClipData in one step.
@@ -86,8 +91,6 @@ public class MoyensInitFragment extends ListFragment {
                 dragData.addItem(item3);
                 ClipData.Item item4 = new ClipData.Item(means[position].getColor());
                 dragData.addItem(item4);
-                ClipData.Item item5 = new ClipData.Item(means[position].getDescription());
-                dragData.addItem(item5);
 
                 // Instantiates the drag shadow builder.
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
@@ -99,6 +102,18 @@ public class MoyensInitFragment extends ListFragment {
                         0          // flags (not currently used, set to 0)
                 );
                 return true;
+            }
+        });
+
+        getListView().setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                if (event.getAction() == event.ACTION_DROP) {
+                    titles.remove(positionElement);
+                    //getListView().setChan
+                    adapter.notifyDataSetChanged();
+                }
+                return false;
             }
         });
     }
@@ -120,7 +135,7 @@ public class MoyensInitFragment extends ListFragment {
                 String meanClass = m.getVehicle().toString();
                 String meanType = Constant.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                       Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
+                       Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
                 position++;
             }
             if (xtraSize > 0) {
@@ -128,7 +143,7 @@ public class MoyensInitFragment extends ListFragment {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Constant.getImage(meanClass);
                     means[position] = new Symbol(m.getId(),
-                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
+                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
                     position++;
                 }
             }
@@ -190,7 +205,7 @@ public class MoyensInitFragment extends ListFragment {
 
                 //Listes pour générer tableaux pour adapter
                 List<Drawable> drawables = new ArrayList<Drawable>();
-                List<String> titles = new ArrayList<String>();
+                titles = new ArrayList<String>();
 
                 for (Symbol mean : means) {
                     drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
@@ -201,7 +216,7 @@ public class MoyensInitFragment extends ListFragment {
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 String [] titlesArray = titles.toArray(new String[titles.size()]);
                 Context activity = MoyensInitFragment.this.getActivity();
-                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
+                adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
                 Log.i(TAG, "adapter  " + (adapter == null) +
                         " \nImage array  " + imagesArray.length +
                         " \ntitles " + (titlesArray == null) +
