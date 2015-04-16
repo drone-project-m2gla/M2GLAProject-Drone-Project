@@ -29,9 +29,8 @@ public class Intervention extends AbstractEntity {
     //private List<Mean> meansWaitingForApproval;
     private Position coordinates;
 
-    public Intervention(Date dateCreate, String label, String address, String postcode, String city, DisasterCode disasterCode) {
+    public Intervention(String label, String address, String postcode, String city, DisasterCode disasterCode) {
         this();
-        this.dateCreate = dateCreate;
         this.label = label;
         this.address = address;
         this.postcode = postcode;
@@ -42,6 +41,7 @@ public class Intervention extends AbstractEntity {
 
     public Intervention() {
         super();
+        this.dateCreate = new Date();
         this.datatype = Constant.DATATYPE_INTERVENTION;
         this.meansXtra = new ArrayList<Mean>();
     }

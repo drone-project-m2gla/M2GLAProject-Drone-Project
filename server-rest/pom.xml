@@ -21,7 +21,8 @@
                 <project.BUCKET_NAME>test</project.BUCKET_NAME>
                 <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
-                <tomcatPath>/path/to/tomcat/instance</tomcatPath>
+                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
+                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
             </properties>
         </profile>
         <profile>
@@ -31,6 +32,8 @@
                 <project.BUCKET_NAME>prod</project.BUCKET_NAME>
                 <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
+                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
+                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
             </properties>
         </profile>
     </profiles>
@@ -38,6 +41,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <runSuite>**/TestSuiteDao.class</runSuite>
 	</properties>
 
 	<dependencies>
@@ -159,6 +163,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
+                    <includes>
+                        <include>${runSuite}</include>
+                    </includes>
                     <systemPropertyVariables>
 
                         <buildDirectory>${project.build.directory}</buildDirectory>

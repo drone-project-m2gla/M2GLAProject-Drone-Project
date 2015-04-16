@@ -11,6 +11,19 @@ public class Configuration {
     private static String BUCKET_NAME;
     private static String COUCHBASE_HOSTNAME;
     private static String SERVER_PYTHON;
+    private static String COUCHBASE_BUCKET_PORT;
+    private static String COUCHBASE_DESIGNDOC_PORT;
+
+
+    public static String getCOUCHBASE_BUCKET_PORT() {
+        if (COUCHBASE_BUCKET_PORT == null) {loadConfigurations();}
+        return COUCHBASE_BUCKET_PORT;
+    }
+
+    public static String getCOUCHBASE_DESIGNDOC_PORT() {
+        if (COUCHBASE_DESIGNDOC_PORT == null) {loadConfigurations();}
+        return COUCHBASE_DESIGNDOC_PORT;
+    }
 
     public static String getBUCKET_NAME() {
         if (BUCKET_NAME == null) {loadConfigurations();}
@@ -52,5 +65,7 @@ public class Configuration {
         BUCKET_NAME = prop.getProperty("BUCKET_NAME");
         COUCHBASE_HOSTNAME = prop.getProperty("COUCHBASE_HOSTNAME");
         SERVER_PYTHON = prop.getProperty("SERVER_PYTHON");
+        COUCHBASE_BUCKET_PORT = prop.getProperty("COUCHBASE_BUCKET_PORT");
+        COUCHBASE_DESIGNDOC_PORT = prop.getProperty("COUCHBASE_DESIGNDOC_PORT");
     }
 }
