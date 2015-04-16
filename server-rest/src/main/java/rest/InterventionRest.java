@@ -53,7 +53,7 @@ public class InterventionRest {
     }
 
     @POST
-    @Path("/{id}/moyen/enplace")
+    @Path("/{id}/moyen/emplace")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Mean validateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
