@@ -7,8 +7,6 @@ import util.Constant;
  *
  * This class is used for handling mean information which are available for an intervention.
  *
- *
- *
  */
 
 public class Mean extends AbstractEntity{
