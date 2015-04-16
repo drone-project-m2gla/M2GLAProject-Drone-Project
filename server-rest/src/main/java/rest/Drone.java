@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
+import service.position.GetDronePositionThread;
 import util.Configuration;
 
 import javax.ws.rs.Consumes;
@@ -30,8 +31,6 @@ import java.io.IOException;
 @Path("/drone")
 public class Drone {
 	private static final Logger LOGGER = Logger.getLogger(Drone.class);
-
-	private GetPositionThread positionThread;
 
 	@POST
 	@Path("move")
@@ -63,64 +62,19 @@ public class Drone {
 	@GET
 	@Path("startListenerPosition")
 	public void startListenerPosition() {
-		positionThread = new GetPositionThread();
-		new Thread(positionThread).start();
+        GetDronePositionThread.createNewInstance();
+		new Thread(GetDronePositionThread.getInstance()).start();
 	}
 
 	@GET
 	@Path("endListenerPosition")
 	public void endListenerPosition() {
-		positionThread.endMove();
+        GetDronePositionThread.getInstance().stopThread();
 	}
 
 	@GET
 	@Path("move")
 	public Position getPosition() {
-		return positionThread.getPosition();
+		return GetDronePositionThread.getInstance().getPosition();
 	}
-	
-	private class GetPositionThread implements Runnable {
-		private final Logger LOGGER = Logger.getLogger(GetPositionThread.class);
-
-		public Position position;
-		public boolean move;
-
-		public GetPositionThread() {
-			position = new Position(0.0, 0.0, 0.0);
-			move = true;
-		}
-		
-		public synchronized void endMove() {
-			move = false;
-		}
-		
-		public synchronized Position getPosition() {
-			return position;
-		}
-
-		@Override
-		public void run() {
-			ObjectMapper mapper = new ObjectMapper();
-			HttpClient client = new HttpClient();
-			while (move) {
-				GetMethod get = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
-				try {
-					client.executeMethod(get);
-
-					Position position = mapper.readValue(
-							get.getResponseBodyAsString(), Position.class);
-
-					if (position != null && !this.position.equals(position)) {
-						this.position = position;
-
-						PushServiceImpl.getInstance().sendMessage(
-								TypeClient.SIMPLEUSER, "droneMove", position);
-					}
-				} catch (IOException e) {
-					LOGGER.error("Get position error", e);
-				}
-			}
-		}
-	}
-
 }
