@@ -12,6 +12,23 @@
 
     <profiles>
         <profile>
+            <id>int</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <war.name>int</war.name>
+                <project.BUCKET_NAME>test</project.BUCKET_NAME>
+                <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
+                <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
+                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
+                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+                <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
+                <tomcat.http.port>8088</tomcat.http.port>
+                <tomcat.path>/sitserver_int</tomcat.path>
+            </properties>
+        </profile>
+        <profile>
             <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -23,6 +40,9 @@
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
                 <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+                <tomcat.url>http://127.0.0.1:8080/manager/text</tomcat.url>
+                <tomcat.http.port>8080</tomcat.http.port>
+                <tomcat.path>/sitserver</tomcat.path>
             </properties>
         </profile>
         <profile>
@@ -34,6 +54,9 @@
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
                 <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+                <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
+                <tomcat.http.port>8080</tomcat.http.port>
+                <tomcat.path>/sitserver</tomcat.path>
             </properties>
         </profile>
     </profiles>
@@ -152,7 +175,10 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
-                    <path>/</path>
+                    <port>${tomcat.http.port}</port>
+                    <url>${tomcat.url}</url>
+                    <path>${tomcat.path}</path>
+                    <server>TomcatServer</server>
                     <contextFile>src/main/webapp/META-INF/context.xml</contextFile>
                     <!--<staticContextPath>${webappDirectory}</staticContextPath> -->
 
