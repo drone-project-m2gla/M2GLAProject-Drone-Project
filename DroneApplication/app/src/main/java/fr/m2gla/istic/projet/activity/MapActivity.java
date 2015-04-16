@@ -466,7 +466,8 @@ public class MapActivity extends Activity implements
 
                 List<Mean> meansWithCoordinates = new ArrayList<Mean>();
                 for (Mean m: meanList){
-                    if (!Double.isNaN(m.getCoordinates().getLatitude())) {
+                    String latitude = String.valueOf(m.getCoordinates().getLatitude());
+                    if (!latitude.equals("NaN")) {
                         meansWithCoordinates.add(m);
                     }
                 }
