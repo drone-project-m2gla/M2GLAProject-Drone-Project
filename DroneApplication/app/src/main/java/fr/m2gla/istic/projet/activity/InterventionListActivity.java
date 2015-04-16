@@ -7,6 +7,8 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -93,6 +95,51 @@ public class InterventionListActivity extends Activity {
     }
 
     /**
+     * Methode de creation du menu de l'application
+     *
+     * @param menu : Objet de definition du menu principal
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_inter_list_activity, menu);
+        return true;
+    }
+
+    /**
+     * Methode de gestion de l'usage du menu principal
+     *
+     * @param item : Objet de sélection dans le menu principal
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        // Recuperer l'option du menu selectionnee
+        switch (id) {
+            // Reglage prevu pour plus tard
+            //case R.id.action_settings :
+            //    return true;
+            case R.id.action_deconnection :
+
+                // Arret de l'activity ici
+                finish();
+                return true;
+//            case R.id.action_quit :
+//                Log.i(TAG, "Fin Application");
+
+                // Arret de l'activity ici
+//                finish();
+//                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    /**
      * Methode de rafraichissement de l'activity
      *
      * @param -
@@ -152,40 +199,6 @@ public class InterventionListActivity extends Activity {
     @Override
     public void onActivityResult(int a, int b, Intent retIntent) {
         interventionRefresh();
-
-/*
-        PersoInfoData persoInfoData;
-
-        persoInfoData = retIntent.getParcelableExtra(MainActivity.refReturn);
-
-        // Verifier si une insertion est a faire
-        if ((persoInfoData == null) || (persoInfoData.getNom().length() <= 0)) {
-            return;
-        }
-
-        //On déclare la HashMap qui contiendra les informations pour un item
-        HashMap<String, String> map;
-
-        //Création d'une HashMap pour insérer les informations du premier item de notre listView
-        map = new HashMap<String, String>();
-
-        //on insère un élément nom que l'on récupérera dans le textView titre créé dans le fichier disp_item.xml
-        map.put("nom", persoInfoData.getNom());
-        //on insère un élément titre que l'on récupérera dans le textView titre créé dans le fichier disp_item.xml
-        map.put("prenom", persoInfoData.getPrenom());
-        //enfin on ajoute cette hashMap dans la arrayList
-        map.put("dateNais", persoInfoData.getDateNais());
-        //enfin on ajoute cette hashMap dans la arrayList
-        map.put("ville", persoInfoData.getVille());
-        //enfin on ajoute cette hashMap dans la arrayList
-        listItem.add(map);
-
-        // Mettre a jour la liste d'affichage
-        this.mSchedule.notifyDataSetChanged();
-
-
-        Toast.makeText(getApplicationContext(), persoInfoData.getNom().toString(), Toast.LENGTH_SHORT).show();
-*/
     }
 
 }

@@ -29,6 +29,7 @@ import fr.m2gla.istic.projet.context.InterventionListAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
@@ -205,6 +206,7 @@ public class InterventionListFragment extends Fragment {
         String      idStr, dcStr,nbExtraStr, addrStr, labelStr, dateStr;
         Long        dateLong;
         Date        date;
+        int         nbMeanExtra = 0;
         DateFormat  mediumDateFormat;
 
 
@@ -212,7 +214,12 @@ public class InterventionListFragment extends Fragment {
 
         idStr = intervention.getId();
         dcStr = intervention.getDisasterCode().toString();
-        nbExtraStr = "[" + intervention.getMeansXtra().size() + "]";
+        for (Mean m: intervention.getMeansXtra()) {
+            if (m.getIsDeclined() == false) {
+                nbMeanExtra++;
+            }
+        }
+        nbExtraStr = "[" + nbMeanExtra + "]";
         addrStr = intervention.getAddress() + " " + intervention.getPostcode() + " " + intervention.getCity();
         labelStr = intervention.getLabel();
         dateLong = Long.valueOf(intervention.getDateCreate());
