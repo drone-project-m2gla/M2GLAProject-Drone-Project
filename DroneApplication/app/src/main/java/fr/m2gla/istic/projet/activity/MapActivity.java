@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -16,12 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,14 +30,13 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.RunnableFuture;
 
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.constantes.Constant;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
@@ -56,6 +53,8 @@ import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
+
+import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
 public class MapActivity extends Activity implements
         ObserverTarget,
@@ -151,6 +150,8 @@ public class MapActivity extends Activity implements
         StrategyMoveDrone.INSTANCE = strategyMoveDrone;
         StrategyRegistery.getInstance().getStrategies().add(strategyMoveDrone);
         StrategyMoveDrone.getINSTANCE().setActivity(this);
+
+        loadTopographicSymbols();
     }
 
     @Override
@@ -188,7 +189,7 @@ public class MapActivity extends Activity implements
     /**
      * Load symbols using topographic REST service
      */
-    public void loadSymbols() {
+    public void loadTopographicSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
         new Command() {
             /**
@@ -223,10 +224,6 @@ public class MapActivity extends Activity implements
             @Override
             public void execute(Object response) {
             Log.e(TAG, "connection error");
-            Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000");
-            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
-            mClusterManager.addItem(markerItem);
-            mClusterManager.cluster();
             }
         });
     }
@@ -376,6 +373,12 @@ public class MapActivity extends Activity implements
                         public void onClick(DialogInterface dialog, int which) {
                             Mean mean = new Mean();
                             mean.setId(meanSymbol.getId());
+                            Position position = new Position();
+                            LatLng markerPosition = _marker.getPosition();
+                            position.setLatitude(markerPosition.latitude);
+                            position.setLongitude(markerPosition.longitude);
+                            mean.setCoordinates(position);
+                            mean.setInPosition(true);
 
                             RestServiceImpl.getInstance()
                                     .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
@@ -533,8 +536,9 @@ public class MapActivity extends Activity implements
                                 public void execute(Object response) {
                                     Intervention intervention = (Intervention) response;
                                     Position pos = intervention.getCoordinates();
+
                                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), ZOOM_INDEX));
-                                    loadSymbols();
+                                    loadMeansInMap();
                                 }
                             },
                             new Command() {
@@ -544,6 +548,61 @@ public class MapActivity extends Activity implements
                                 }
                             });
         }
+    }
+
+    private void loadMeansInMap(){
+        RestServiceImpl.getInstance()
+                .get(RestAPI.GET_INTERVENTION, param, Intervention.class, getCallbackSuccess(), getCallbackError());
+    }
+
+    /**
+     * Command error
+     *
+     * @return
+     */
+    private Command getCallbackError() {
+        return new Command() {
+            @Override
+            public void execute(Object response) {
+                Toast.makeText(getApplication(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
+    /**
+     * Command success
+     *
+     * @return
+     */
+    private Command getCallbackSuccess() {
+        return new Command() {
+            @Override
+            public void execute(Object response) {
+                Intervention intervention = (Intervention) response;
+                List<Mean> meanList = intervention.getMeansList();
+
+                List<Mean> meansWithCoordinates = new ArrayList<Mean>();
+                for (Mean m: meanList){
+                    String latitude = String.valueOf(m.getCoordinates().getLatitude());
+                    if (!latitude.equals("NaN")) {
+                        meansWithCoordinates.add(m);
+                    }
+                }
+
+                for (Mean m: meansWithCoordinates) {
+                    String meanClass = m.getVehicle().toString();
+                    String meanType = Constant.getImage(meanClass);
+                    Symbol symbol = new Symbol(m.getId(),
+                            valueOf(meanType), meanClass, "RNS", "ff0000");
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
+                            m.getCoordinates().getLatitude(),
+                            m.getCoordinates().getLongitude(), symbol);
+                    mClusterManager.addItem(markerItem);
+                }
+
+                mClusterManager.cluster();
+            }
+        };
     }
 
 }

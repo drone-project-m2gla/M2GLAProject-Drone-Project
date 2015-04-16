@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight=".07"
+        android:layout_weight=".1"
         android:text="pas de code"
         android:textSize="17dp"
         android:visibility="gone"
@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight=".13"
+        android:layout_weight=".2"
         android:text="No adresse"
         android:textSize="17dp"
         android:visibility="gone"
@@ -44,5 +44,5 @@
         android:id="@+id/intervention_detail_list"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight=".6" />
+        android:layout_weight=".9" />
 </LinearLayout>
