@@ -49,7 +49,7 @@ public class StrategyIntervention implements Strategy {
         Intervention intervention = (Intervention)object;
 
         Builder builder = new Builder(context)
-                    .setContentTitle(context.getString(R.string.title_notification_intervntion))
+                    .setContentTitle(context.getString(R.string.title_notification_intervention))
                     .setContentText(intervention.getAddress());
 
         Intent resultIntent = new Intent(context, InterventionListActivity.class);
