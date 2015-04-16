@@ -10,11 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.model.SVGAdapter;
@@ -41,49 +38,97 @@ public class ItemsAdapter extends ArrayAdapter {
         customLayout = textViewResourceId;
     }
 
-    public View getCustomView(final int position, View convertView,
-                              ViewGroup parent) {
+    // It gets a View that displays the data at the specified position
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return getCustomView(position, convertView, parent);
+    }
 
-        // Inflating the layout for the custom Spinner
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View layout = inflater.inflate(this.customLayout, parent, false);
+    public View getCustomView(int position, View convertView, ViewGroup parent) {
 
-        // Declaring and Typecasting the textview in the inflated layout
-        TextView itemLabelTxtView = (TextView) layout
-                .findViewById(R.id.tvLanguage);
+        final ViewHolder holder;
 
-        // Setting the text using the array
-        itemLabelTxtView.setText(titles[position]);
+        if (convertView == null) {
+            LayoutInflater mInflater = activity.getLayoutInflater();
 
-        // Setting the color of the text
-        itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
+            convertView = mInflater.inflate(this.customLayout, parent, false);
 
-        // Declaring and Typecasting the imageView in the inflated layout
-        ImageView imgImageView = (ImageView) layout.findViewById(R.id.imgLanguage);
+            holder = new ViewHolder();
 
-//        Log.i(TAG, "image OUT " + position + "   is   " + (images[position] == null));
+            holder.itemLabelTxtView = (TextView) convertView
+                    .findViewById(R.id.tvLanguage);
+            // get the phoneIcon and emailIcon as well from convertView
+            holder.imgImageView = (ImageView) convertView.findViewById(R.id.imgLanguage);
 
-        // Setting Special attributes for 1st element
-        if (position == 0 && titles[position].equals("")) {
-            // Removing the image view
-            imgImageView.setVisibility(View.GONE);
-            // Setting the size of the text
-            itemLabelTxtView.setTextSize(20f);
-            // Setting the text Color
-            itemLabelTxtView.setTextColor(Color.WHITE);
-            // Setting the value
-            itemLabelTxtView.setText("Sélectionner un moyen supp.");
+            // Setting Special attributes for 1st element
+            if (position == 0 && titles[position].equals("")) {
+                // Removing the image view
+                holder.imgImageView.setVisibility(View.GONE);
+                // Setting the size of the text
+                holder.itemLabelTxtView.setTextSize(20f);
+                // Setting the text Color
+                holder.itemLabelTxtView.setTextColor(Color.WHITE);
+                // Setting the value
+                holder.itemLabelTxtView.setText("Sélectionner un moyen supp.");
 
+            } else {
+                // Setting the text using the array
+                holder.itemLabelTxtView.setText(titles[position]);
+                Drawable drawable = images[position];
+                Log.i(TAG, "drawable  " + position + "   is   " + (drawable == null));
+                Log.i(TAG, "image  " + position + "   is   " + (images[position] == null));
+                Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+                Log.i(TAG, "src  " + position + "   is   " + (src == null));
+                Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
+                holder.imgImageView.setImageBitmap(image);
+            }
         } else {
-            Drawable drawable = images[position];
-            Log.i(TAG, "drawable  " + position + "   is   " + (drawable == null));
-            Log.i(TAG, "image  " + position + "   is   " + (images[position] == null));
-            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
-            Log.i(TAG, "src  " + position + "   is   " + (src == null));
-            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
-            imgImageView.setImageBitmap(image);
+            /* get the View from the existing Tag */
+            holder = (ViewHolder) convertView.getTag();
         }
-        return layout;
+
+        holder.position = position;
+
+//        // Inflating the layout for the custom Spinner
+//        LayoutInflater inflater = activity.getLayoutInflater();
+//        View layout = inflater.inflate(this.customLayout, parent, false);
+//
+//        // Declaring and Typecasting the textview in the inflated layout
+//        TextView itemLabelTxtView = (TextView) layout
+//                .findViewById(R.id.tvLanguage);
+//
+//        // Setting the text using the array
+//        itemLabelTxtView.setText(titles[position]);
+//
+//        // Setting the color of the text
+//        itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
+//
+//        // Declaring and Typecasting the imageView in the inflated layout
+//        ImageView imgImageView = (ImageView) layout.findViewById(R.id.imgLanguage);
+//
+//
+//        // Setting Special attributes for 1st element
+//        if (position == 0 && titles[position].equals("")) {
+//            // Removing the image view
+//            imgImageView.setVisibility(View.GONE);
+//            // Setting the size of the text
+//            itemLabelTxtView.setTextSize(20f);
+//            // Setting the text Color
+//            itemLabelTxtView.setTextColor(Color.WHITE);
+//            // Setting the value
+//            itemLabelTxtView.setText("Sélectionner un moyen supp.");
+//
+//        } else {
+//            Drawable drawable = images[position];
+//            Log.i(TAG, "drawable  " + position + "   is   " + (drawable == null));
+//            Log.i(TAG, "image  " + position + "   is   " + (images[position] == null));
+//            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+//            Log.i(TAG, "src  " + position + "   is   " + (src == null));
+//            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
+//            imgImageView.setImageBitmap(image);
+//        }
+//        return layout;
+        return convertView;
     }
 
     // It gets a View that displays in the drop down popup the data at the specified position
@@ -93,10 +138,14 @@ public class ItemsAdapter extends ArrayAdapter {
         return getCustomView(position, convertView, parent);
     }
 
-    // It gets a View that displays the data at the specified position
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+
+    /* A Static class for holding the elements of each List View Item
+     * This is created as per Google UI Guideline for faster performance */
+    private static class ViewHolder {
+        TextView itemLabelTxtView;
+        ImageView imgImageView;
+
+        int position;
     }
 
 }

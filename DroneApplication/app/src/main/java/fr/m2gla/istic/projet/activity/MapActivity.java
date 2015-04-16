@@ -186,14 +186,15 @@ public class MapActivity extends Activity implements
     @Override
     public void onClusterItemInfoWindowClick(SymbolMarkerClusterItem symbolMarkerClusterItem) {
         Log.d(TAG, "main onClusterItemInfoWindowClick");
-        if (!symbolMarkerClusterItem.getSymbol().isTopographic()) {
+        Symbol mean = symbolMarkerClusterItem.getSymbol();
+        if (!mean.isTopographic()) {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.query_position_confirmation)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Mean mean = new Mean();
-                            mean.setId("");
+                            mean.setId(mean.getId());
 
                             RestServiceImpl.getInstance()
                                     .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
@@ -236,12 +237,16 @@ public class MapActivity extends Activity implements
 
             ClipData clipData = event.getClipData();
             try {
-                //Get symbol name from ClipData saved onDrag
-                Symbol.SymbolType symbolType = Symbol.SymbolType.valueOf((String) clipData.getItemAt(0).getText());
-                Log.d(TAG, clipData.getItemAt(0).toString());
+                //Get symbol from ClipData saved onDrag
                 LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
-                Symbol symbol = new Symbol(symbolType, "AAA", "BBB", "ff0000", "Description");
-                symbol.setValidated(true);
+                Symbol symbol = new Symbol(
+                        (String)clipData.getItemAt(0).getText(),
+                        Symbol.SymbolType.valueOf((String) clipData.getItemAt(1).getText()),
+                        (String)clipData.getItemAt(2).getText(),
+                        (String)clipData.getItemAt(3).getText(),
+                        (String)clipData.getItemAt(4).getText(),
+                        (String)clipData.getItemAt(5).getText());
+                //symbol.setValidated(false);
                 SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
                 mClusterManager.addItem(markerItem);
                 mClusterManager.cluster();
@@ -402,10 +407,10 @@ public class MapActivity extends Activity implements
 
             // Fragment list des moyens supplémentaires
             MoyensInitFragment mInitFragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
-            if (mSuppFragment != null ){
+            if (mSuppFragment != null && idIntervention != null){
                 mSuppFragment.setInterventionID(idIntervention);
             }
-            if(mInitFragment !=null){
+            if(mInitFragment !=null && idIntervention != null){
                 mInitFragment.setInterventionID(idIntervention);
             }
 
