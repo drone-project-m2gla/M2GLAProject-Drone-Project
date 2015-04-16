@@ -171,10 +171,6 @@ public class MapActivity extends Activity implements
             @Override
             public void execute(Object response) {
             Log.e(TAG, "connection error");
-            Symbol symbol = new Symbol(Symbol.SymbolType.vehicule_incendie_seul_actif,"SAP", "REN", "FF0000");
-            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
-            mClusterManager.addItem(markerItem);
-            mClusterManager.cluster();
             }
         });
 
