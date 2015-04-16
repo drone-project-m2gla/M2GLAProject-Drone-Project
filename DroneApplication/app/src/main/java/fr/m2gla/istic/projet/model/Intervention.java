@@ -9,6 +9,8 @@ import java.util.List;
  */
 @JsonInclude (JsonInclude.Include.NON_NULL)
 public class Intervention extends Entity {
+    private String label;
+    private String dateCreate;
     private String address;
     private String postcode;
     private String city;
@@ -19,6 +21,22 @@ public class Intervention extends Entity {
 
     public Intervention() {
 
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(String dateCreate) {
+        this.dateCreate = dateCreate;
     }
 
     public String getAddress() {
