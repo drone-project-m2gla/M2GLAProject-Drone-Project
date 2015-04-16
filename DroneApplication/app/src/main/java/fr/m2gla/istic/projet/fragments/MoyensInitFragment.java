@@ -45,6 +45,7 @@ public class MoyensInitFragment extends ListFragment {
     List<String> titles;
     private int positionElement;
     private List<Boolean> draggable = new ArrayList();
+    private Intervention intervention;
 
 
     @Override
@@ -109,9 +110,20 @@ public class MoyensInitFragment extends ListFragment {
                     );
 
                 } else {
+                    String title = "";
+                    String message = "";
+                    if (intervention.getMeansXtra().get(positionElement).getIsDeclined()) {
+                        title = "ATTENTION!!!!!!!!!!!!!!!!!!";
+
+                        message = "Le moyen " + titles.get(positionElement) + " n'est pas encore validé.";
+                    } else {
+                        title = "INFO";
+
+                        message = "Le moyen " + titles.get(positionElement) + " n'est pas encore validé.";
+                    }
                     new AlertDialog.Builder(getActivity())
-                            .setTitle("INFO")
-                            .setMessage("Le moyen " + titles.get(positionElement) + " n'est pas encore validé.")
+                            .setTitle(title)
+                            .setMessage(message)
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -148,7 +160,7 @@ public class MoyensInitFragment extends ListFragment {
                 draggable.add(true);
                 position++;
             }
-            if (xtraSize > 0) {
+            if (xtraSize > 0 && !intervention.getMeansXtra().get(position).getIsDeclined()) {
                 for (Mean m : listXtra) {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Constant.getImage(meanClass);
@@ -205,7 +217,7 @@ public class MoyensInitFragment extends ListFragment {
         return new Command() {
             @Override
             public void execute(Object response) {
-                Intervention intervention = (Intervention) response;
+                intervention = (Intervention) response;
                 Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
 
