@@ -60,7 +60,6 @@ public class Constant {
                 imgID = SVG_VEHICULE_POST_COMMAND;
                 break;
             default:
-                imgID = SVG_VEHICULE_A_INCENDIE_SEUL;
                 break;
         }
         return imgID;

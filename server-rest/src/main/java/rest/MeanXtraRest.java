@@ -80,6 +80,6 @@ public class MeanXtraRest {
         iD.update(intervention);
 
         iD.disconnect();
-        return Response.status(200).entity("Mean " + meanXtra.getVehicle().name() + " was refused").build();
+        return Response.status(200).entity("Mean was refused").build();
     }
 }
