@@ -88,8 +88,8 @@ public class InterventionListFragment extends Fragment {
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
         //this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
         this.mSchedule = new InterventionListAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
-                new String[]{GeneralConstants.INTER_LIST_MEAN, GeneralConstants.INTER_LIST_ID, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
-                new int[]{R.id.interventionNewMean, R.id.interventionId, R.id.interventionCode, R.id.interventionData});
+                new String[]{GeneralConstants.INTER_LIST_MEAN, GeneralConstants.INTER_LIST_LABEL, GeneralConstants.INTER_LIST_DATE, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
+                new int[]{R.id.interventionNewMean, R.id.interventionLabel, R.id.interventionDate, R.id.interventionCode, R.id.interventionData});
 
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
@@ -174,7 +174,7 @@ public class InterventionListFragment extends Fragment {
                                 Log.w(TAG, "Element NULL");
                                 continue;
                             }
-                            addInterventionInList("" + inter.getId(), "" + inter.getDisasterCode(), "[" + inter.getMeansXtra().size() + "]" , "" + inter.getAddress() + " " + inter.getPostcode() + " " + inter.getCity());
+                            addInterventionInList(inter);
                         }
 
 
@@ -190,33 +190,38 @@ public class InterventionListFragment extends Fragment {
                     }
                 });
 
-/* Pour TEST
-        addInterventionInList("01", "Inter1");
-        addInterventionInList("02", "Intervention 2");
-        addInterventionInList("03", "La mienne");
-        addInterventionInList("04", "Inter4");
-        addInterventionInList("05", "Intervention 5");
-        addInterventionInList("06", "La leur");
-        addInterventionInList("07", "Inter7");
-        addInterventionInList("08", "Intervention 8");
-        addInterventionInList("09", "La votre");
-        addInterventionInList("10", "Inter10");
-        addInterventionInList("11", "Intervention 11");
-        addInterventionInList("12", "La notre");
-*/
     }
 
 
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param id      : Reference (id) de l'intervention
-     * @param code    : Code d'intervention
-     * @param nbMeans : Nombre de moyens en attente de validation
-     * @param data    : données de l'intervention
+     * @param intervention      : Intervention
      */
-    public void addInterventionInList(String id, String code, String nbMeans, String data) {
-        addInterventionInList(id, code, nbMeans, data, false);
+    public void addInterventionInList(Intervention intervention) {
+        String  idStr, dcStr,nbExtraStr, addrStr;
+
+
+        idStr = intervention.getId();
+        dcStr = intervention.getDisasterCode().toString();
+        nbExtraStr = "[" + intervention.getMeansXtra().size() + "]";
+        addrStr = intervention.getAddress() + " " + intervention.getPostcode() + " " + intervention.getCity();
+
+        addInterventionInList(idStr, dcStr, nbExtraStr, "", "", addrStr);
+    }
+
+    /**
+     * Methode demandant l'ajout d'une intervention dans la liste
+     *
+     * @param id      : Reference (id) de l'intervention
+     * @param code    : Code d'intervention
+     * @param nbMeans : Nombre de moyens en attente de validation
+     * @param label   : Nom de l'intervention
+     * @param date    : Date de l'intervention
+     * @param data    : Données de l'intervention
+     */
+    public void addInterventionInList(String id, String code, String nbMeans, String label, String date, String data) {
+        addInterventionInList(id, code, nbMeans, label, date, data, false);
     }
 
 
@@ -226,10 +231,12 @@ public class InterventionListFragment extends Fragment {
      * @param id      : Reference (id) de l'intervention
      * @param code    : Code d'intervention
      * @param nbMeans : Nombre de moyens en attente de validation
-     * @param data    : données de l'intervention
+     * @param label   : Nom de l'intervention
+     * @param date    : Date de l'intervention
+     * @param data    : Données de l'intervention
      * @param initial : true pour specifier qu'il s'agit d'une intervention ajoutée pendant l'initialisation
      */
-    public void addInterventionInList(String id, String code, String nbMeans, String data, boolean initial) {
+    public void addInterventionInList(String id, String code, String nbMeans, String label, String date, String data, boolean initial) {
         // Verifier si une insertion est a faire
         if ((code == null) || (code.length() <= 0)) {
             return;
@@ -245,6 +252,10 @@ public class InterventionListFragment extends Fragment {
         map.put(GeneralConstants.INTER_LIST_MEAN, nbMeans);
         //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_ID, id);
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put(GeneralConstants.INTER_LIST_LABEL, label);
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put(GeneralConstants.INTER_LIST_DATE, date);
         //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_CODE, code);
         //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml

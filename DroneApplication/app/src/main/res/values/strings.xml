@@ -23,7 +23,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="valider_moyens_supp">Envoyer les moyens</string>
 
-    <string name="address_text">Adresse   :</string>
+    <string name="label_text">"Nom d'intervention :"</string>
+    <string name="address_text">Adresse :</string>
     <string name="address_hint">Rue,Voie, Allée</string>
     <string name="codepostal_hint">Code Postal</string>
     <string name="ville_hint">Ville</string>

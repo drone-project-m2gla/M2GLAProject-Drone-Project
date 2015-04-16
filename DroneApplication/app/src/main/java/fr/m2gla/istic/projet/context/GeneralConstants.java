@@ -9,6 +9,8 @@ public interface GeneralConstants {
 
     // References des éléments de la liste d'intervention
     public static final String  INTER_LIST_MEAN = "mean";
+    public static final String  INTER_LIST_LABEL = "label";
+    public static final String  INTER_LIST_DATE = "date";
     public static final String  INTER_LIST_ID = "id";
     public static final String  INTER_LIST_CODE = "code";
     public static final String  INTER_LIST_DATA = "data";
