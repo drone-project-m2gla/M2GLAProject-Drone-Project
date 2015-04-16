@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,22 +83,6 @@ public class ItemsAdapter extends ArrayAdapter {
             Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
             imgImageView.setImageBitmap(image);
         }
-        //final ViewHolder holder;
-        //Button valid = (Button)layout.findViewById(R.id.valid);
-
-
-       /*  Button valid = (Button)layout.findViewById(R.id.valid);
-        if (valid != null){
-            valid.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext()," button a la position  " + position,Toast.LENGTH_LONG).show();
-
-                }
-            });
-        }*/
-        //Button annuler = (Button)layout.findViewById(R.id.annuler);
-
         return layout;
     }
 
@@ -113,14 +98,5 @@ public class ItemsAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
-/*
-    private static class ViewHolder
-    {
-        TextView[] textView;
-        ImageView phoneIcon;
-        ImageView emailIcon;
 
-        int position;
-    }
-*/
 }
