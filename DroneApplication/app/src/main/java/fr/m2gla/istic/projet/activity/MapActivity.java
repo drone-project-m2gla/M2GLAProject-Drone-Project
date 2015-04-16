@@ -322,6 +322,7 @@ public class MapActivity extends Activity implements
                             position.setLatitude(markerPosition.latitude);
                             position.setLongitude(markerPosition.longitude);
                             mean.setCoordinates(position);
+                            mean.setInPosition(true);
 
                             RestServiceImpl.getInstance()
                                     .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
