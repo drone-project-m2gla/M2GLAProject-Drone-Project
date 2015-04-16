@@ -1,10 +1,12 @@
 package fr.m2gla.istic.projet.fragments;
 
 
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,10 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,16 +36,18 @@ import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
+import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
+
 public class MoyensInitFragment extends ListFragment {
     private static final String TAG = "MoyensInitFragment";
 
     private String idIntervention = "";
     private View view;
     private Symbol[] means;
-    ArrayAdapter adapter;
     List<String> titles;
     private int positionElement;
     private List<Boolean> draggable = new ArrayList();
+    private ArrayAdapter adapter;
 
 
     @Override
@@ -104,6 +110,17 @@ public class MoyensInitFragment extends ListFragment {
                             null,      // no need to use local data
                             0          // flags (not currently used, set to 0)
                     );
+                } else {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("INFO")
+                            .setMessage("Le moyen " + titles.get(positionElement) + " n'est pas encore validé.")
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
                 }
                 return true;
             }
@@ -112,6 +129,16 @@ public class MoyensInitFragment extends ListFragment {
         getListView().setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
+
+                List<ListAdapter> arrays = Arrays.asList(getListAdapter());
+
+                Object item = arrays.get(positionElement);
+
+                arrays.remove(item);
+                titles.remove(positionElement);
+
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(), "Item delete \t" + item.toString(), Toast.LENGTH_LONG).show();
                 if (event.getAction() == event.ACTION_DROP) {
                     titles.remove(positionElement);
 
@@ -141,7 +168,7 @@ public class MoyensInitFragment extends ListFragment {
                 String meanClass = m.getVehicle().toString();
                 String meanType = Constant.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                        Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, "RNS", "ff0000");
                 draggable.add(true);
                 position++;
             }
@@ -150,7 +177,7 @@ public class MoyensInitFragment extends ListFragment {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Constant.getImage(meanClass);
                     means[position] = new Symbol(m.getId(),
-                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
+                            valueOf(meanType), meanClass, "RNS", "ff0000");
                     draggable.add(false);
                     position++;
                 }
@@ -218,7 +245,7 @@ public class MoyensInitFragment extends ListFragment {
 
                 for (Symbol mean : means) {
                     drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
-                    titles.add(mean.getFirstText());
+                    titles.add(mean.getFirstText() + " - " + mean.getId());
                 }
 
                 ListView moyensListView = getListView();
