@@ -32,7 +32,7 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
 public class InterventionDetailFragment extends Fragment {
-    private static final String TAG = "InterventionDetailFragment";
+    private static final String TAG = "Inter";
     private Intervention intervention;
 
     public String getIdIntervention() {
@@ -171,7 +171,7 @@ public class InterventionDetailFragment extends Fragment {
             titleNoMoyen.setVisibility(View.GONE);
             codeIntervention.setVisibility(View.VISIBLE);
             for (Mean m : listXtra) {
-                Log.e(TAG, "moyen " + position + "   " + (m != null) + "  Is decline    " + m.getIsDeclined());
+
                 if (!m.getIsDeclined()) {
 
                     titles[position] = m.getVehicle().toString();
