@@ -8,13 +8,17 @@ import org.codehaus.jackson.map.ObjectMapper;
 import service.PushService;
 import service.impl.PushServiceImpl;
 import util.Configuration;
+import util.Tools;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alban on 16/04/15.
  */
-public class GetDronePositionThread implements Runnable {
+public class GetDronePositionThread implements Runnable, PositionUnchangedObservable {
+    private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
     private final Logger LOGGER = Logger.getLogger(GetDronePositionThread.class);
     private static GetDronePositionThread instance = new GetDronePositionThread();
     private Position position;
@@ -54,11 +58,14 @@ public class GetDronePositionThread implements Runnable {
                 client.executeMethod(get);
                 Position position = mapper.readValue(
                         get.getResponseBodyAsString(), Position.class);
-                if (position != null && !this.position.equals(position)) {
+                if (position != null && !Tools.isSamePositions(this.position,position)) {
                     this.position = position;
-
                     PushServiceImpl.getInstance().sendMessage(
                             PushService.TypeClient.SIMPLEUSER, "droneMove", position);
+                }
+                else
+                {
+                    notifyObserversForPositionUnchanged();
                 }
                 Thread.sleep(500);
             } catch (IOException e) {
@@ -67,5 +74,28 @@ public class GetDronePositionThread implements Runnable {
                 LOGGER.error("Get position error", e);
             }
         }
+    }
+
+    @Override
+    public void addObserversPositionsUnhanged(PositionUnchangedObserver observer) {
+        this.positionObservers.add(observer);
+    }
+
+    @Override
+    public void removeObserversPositionsUnhanged(PositionUnchangedObserver observer) {
+        this.positionObservers.remove(observer);
+    }
+
+    @Override
+    public void notifyObserversForPositionUnchanged() {
+        for(PositionUnchangedObserver observer : positionObservers)
+        {
+            observer.notifyPositionUnchanged();
+        }
+    }
+
+    public void flushPositionUnchangedObservers()
+    {
+        this.positionObservers = new ArrayList<PositionUnchangedObserver>();
     }
 }
