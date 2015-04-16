@@ -1,54 +1,54 @@
 [
     {
-	"entitled":"Colonne incendie active",
-	"filename":"colonne_incendie_active",
+	"entitled":"danger",
+	"filename":"danger",
     "coordinates": {
             "longitude": -1.63847,
                 "latitude": 48.117121
         }
     "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS1",
-    "secondContent" : "Vehicule"
+    "firstContent" : "",
+    "secondContent" : ""
     },
 
  {
-	"entitled":"Moyen intervention aerien prevu",
-	"filename":"moyen_intervention_aerien_prevu",
+	"entitled":"etoile",
+	"filename":"etoile",
     "coordinates": {
             "longitude": -1.637371,
             "latitude": 48.114909
         }
     "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS2",
-    "secondContent" : "Vehicule"
+    "firstContent" : "",
+    "secondContent" : ""
     },
 
  {
-	"entitled":"Groupe incendie actif",
-	"filename":"groupe_incendie_actif",
+	"entitled":"point_sensible",
+	"filename":"point_sensible",
     "coordinates": {
             "longitude": -1.641726,
             "latitude": 48.117898
         }
     "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS3",
-    "secondContent" : "Vehicule"
+    "firstContent" : "",
+    "secondContent" : ""
     },
 
  {
-	"entitled":"Moyen intervention aerien actif",
-	"filename":"moyen_intervention_aerien_actif",
+	"entitled":"prise_eau_perenne",
+	"filename":"prise_eau_perenne",
     "coordinates": {
             "longitude": -1.639761,
             "latitude": 48.114499
         }
     "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS4",
-    "secondContent" : "Vehicule"
+    "firstContent" : "",
+    "secondContent" : ""
     },
 
  {
@@ -60,8 +60,8 @@
         }
     "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS5",
-    "secondContent" : "Vehicule"
+    "firstContent" : "",
+    "secondContent" : ""
     },
 
  {
@@ -73,8 +73,8 @@
         }
     "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS6",
-    "secondContent" : "Vehicule"
+    "firstContent" : "",
+    "secondContent" : ""
     },
 
 {
@@ -86,8 +86,8 @@
         }
     "color" : "0000ff",
     "tiret" :"true",
-    "firstContent" : "VAPS7",
-    "secondContent" : "Vehicule"
+    "firstContent" : "",
+    "secondContent" : ""
     },
     {
     	"entitled":"Prise eau non perenne",
@@ -98,8 +98,8 @@
             }
         "color" : "0000ff",
         "tiret" :"true",
-        "firstContent" : "VAPS8",
-        "secondContent" : "Vehicule"
+        "firstContent" : "",
+        "secondContent" : ""
         },
 
         {
@@ -111,46 +111,46 @@
                 }
             "color" : "0000ff",
             "tiret" :"true",
-            "firstContent" : "VAPS9",
-            "secondContent" : "Vehicule"
+            "firstContent" : "",
+            "secondContent" : ""
             },
             {
-            	"entitled":"Secours a personnes actif",
-            	"filename":"secours_a_personnes_actif",
+            	"entitled":"point_sensible",
+            	"filename":"point_sensible",
                 "coordinates": {
                         "longitude": -1.627092,
                         "latitude": 48.12021
                     }
                 "color" : "0000ff",
                 "tiret" :"true",
-                "firstContent" : "VAPS10",
-                "secondContent" : "Vehicule"
+                "firstContent" : "",
+                "secondContent" : ""
                 },
                 {
-                	"entitled":"Vehicule incendie seul actif",
-                	"filename":"vehicule_incendie_seul_actif",
+                	"entitled":"danger",
+                	"filename":"danger",
                     "coordinates": {
                             "longitude": -1.631813,
                             "latitude": 48.116428
                         }
                     "color" : "0000ff",
                     "tiret" :"true",
-                    "firstContent" : "VAPS11",
-                    "secondContent" : "Vehicule"
+                    "firstContent" : "",
+                    "secondContent" : ""
                     },
 
 
                       {
-                                    	"entitled":"Vehicule incendie seul prevu",
-                                    	"filename":"vehicule_incendie_seul_prevu",
+                                    	"entitled":"poste_commandement_prevu",
+                                    	"filename":"poste_commandement_prevu",
                                         "coordinates": {
                                                 "longitude": -1.638851,
                                                 "latitude": 48.120038
                                             }
                                         "color" : "0000ff",
                                         "tiret" :"true",
-                                        "firstContent" : "VAPS12",
-                                        "secondContent" : "Vehicule"
+                                        "firstContent" : "",
+                                        "secondContent" : ""
                                         }
 
 
