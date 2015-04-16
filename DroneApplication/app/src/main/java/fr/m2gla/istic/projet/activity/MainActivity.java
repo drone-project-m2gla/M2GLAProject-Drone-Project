@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //do whatever you need for the hardware 'back' button
+            // Pour TEST
             Log.i(TAG, "Fin Application");
         }
         return super.onKeyDown(keyCode, event);
