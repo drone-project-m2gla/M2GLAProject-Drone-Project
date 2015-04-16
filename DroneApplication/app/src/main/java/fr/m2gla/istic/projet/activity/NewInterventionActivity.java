@@ -29,6 +29,7 @@ public class NewInterventionActivity extends Activity {
     private     String                              codePostalStr;
     private     String                              ville;
     private     String                              sinistreStr;
+    private     String                              labelStr;
     private     DisasterCode                        disasterCode;
     private     Integer                             postCode;
 
@@ -69,6 +70,7 @@ public class NewInterventionActivity extends Activity {
         this.codePostalStr = "";
         this.ville = "";
         this.sinistreStr = "";
+        this.labelStr = "";
         this.disasterCode = DisasterCode.AVP;
         this.postCode = 0;
     }
@@ -98,12 +100,25 @@ public class NewInterventionActivity extends Activity {
     public void addIntervention (View view) {
 
         int         radioBSelect;
+        EditText    textLabel = (EditText) findViewById(R.id.labelGet);
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
         EditText    textCP = (EditText) findViewById(R.id.getCodePostal);
         EditText    textVille = (EditText) findViewById(R.id.getVille);
         RadioGroup  sinistreRadioG = (RadioGroup) findViewById(R.id.sinistreRadioGroup);
         RadioButton selectedRadioB;
 
+
+        // Recuperer le nom de l'intervention
+        if (textAddress.getText().length() != 0) {
+            this.labelStr = "" + textLabel.getText();
+            Toast.makeText(getApplicationContext(), this.labelStr, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Manque le nom de l'intervention", Toast.LENGTH_SHORT).show();
+            Log.i("ajoutIntervention", "Pas de nom");
+            this.initializeElement();
+            return;
+        }
 
         // Recuperer le nom de la rue
         if (textAddress.getText().length() != 0) {
