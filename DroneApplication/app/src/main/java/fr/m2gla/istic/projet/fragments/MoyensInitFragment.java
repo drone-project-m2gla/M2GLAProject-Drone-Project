@@ -44,6 +44,7 @@ public class MoyensInitFragment extends ListFragment {
     ArrayAdapter adapter;
     List<String> titles;
     private int positionElement;
+    private List<Boolean> isDeclineList = new ArrayList();
     private List<Boolean> draggable = new ArrayList();
     private Intervention intervention;
 
@@ -112,14 +113,14 @@ public class MoyensInitFragment extends ListFragment {
                 } else {
                     String title = "";
                     String message = "";
-                    if (intervention.getMeansXtra().get(positionElement).getIsDeclined()) {
+                    if (isDeclineList.get(positionElement)) {
                         title = "ATTENTION!!!!!!!!!!!!!!!!!!";
 
-                        message = "Le moyen " + titles.get(positionElement) + " n'est pas encore validé.";
+                        message = "Moyen " + titles.get(positionElement) + ".\nValidation refusée.".toUpperCase();
                     } else {
                         title = "INFO";
 
-                        message = "Le moyen " + titles.get(positionElement) + " n'est pas encore validé.";
+                        message = "Moyen " + titles.get(positionElement) + ".\nValidation en attente.".toUpperCase();
                     }
                     new AlertDialog.Builder(getActivity())
                             .setTitle(title)
@@ -147,8 +148,18 @@ public class MoyensInitFragment extends ListFragment {
      * @param listMean
      */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
-        int meanSize = listMean.size(); // taille de la liste des moyens
+        int meanSize = 0;//listMean.size(); // taille de la liste des moyens
+        for (Mean mean : listMean) {
+            Log.d(TAG, "Mean \t" + mean.getCoordinates().getLatitude());
+            String latitude = String.valueOf(mean.getCoordinates().getLatitude());
+
+            if (!latitude.equals("NaN")) {
+                listMean.remove(meanSize++);
+            }
+        }
+        Log.d(TAG, "Size\t" + listMean.size());
         int xtraSize = listXtra.size(); // taille des moyens supplémentaires
+
         means = new Symbol[meanSize + xtraSize];
 
         if (meanSize > 0) {
@@ -158,22 +169,22 @@ public class MoyensInitFragment extends ListFragment {
                 means[position] = new Symbol(m.getId(),
                         valueOf(meanType), meanClass, "RNS", "ff0000");
                 draggable.add(true);
+                isDeclineList.add(m.getIsDeclined());
                 position++;
             }
-            if (xtraSize > 0 && !intervention.getMeansXtra().get(position).getIsDeclined()) {
-                for (Mean m : listXtra) {
-                    String meanClass = m.getVehicle().toString();
-                    String meanType = Constant.getImage(meanClass);
-                    means[position] = new Symbol(m.getId(),
-                            valueOf(meanType), meanClass, "RNS", "ff0000");
-                    draggable.add(false);
-                    position++;
-                }
-            }
-            Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
         }
+        if (xtraSize > 0) {
+            for (Mean m : listXtra) {
+                String meanClass = m.getVehicle().toString();
+                String meanType = Constant.getImage(meanClass);
+                means[position] = new Symbol(m.getId(),
+                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                draggable.add(false);
+                isDeclineList.add(m.getIsDeclined());
+                position++;
+            }
+        }
+        Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -231,20 +242,22 @@ public class MoyensInitFragment extends ListFragment {
                 List<Drawable> drawables = new ArrayList<Drawable>();
                 titles = new ArrayList<String>();
 
-                for (Symbol mean : means) {
-                    drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
-                    titles.add(mean.getFirstText() + " - " + mean.getId());
+                if (means.length > 0) {
+                    for (Symbol mean : means) {
+                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
+                        titles.add(mean.getFirstText() + " - " + mean.getId());
+                    }
+
+                    ListView moyensListView = getListView();
+                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+                    String[] titlesArray = titles.toArray(new String[titles.size()]);
+                    Context activity = MoyensInitFragment.this.getActivity();
+                    adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
+
+                    Log.i(TAG, "List\t" + (moyensListView == null));
+
+                    moyensListView.setAdapter(adapter);
                 }
-
-                ListView moyensListView = getListView();
-                Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
-                String[] titlesArray = titles.toArray(new String[titles.size()]);
-                Context activity = MoyensInitFragment.this.getActivity();
-                adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
-
-                Log.i(TAG, "List\t" + (moyensListView == null));
-
-                moyensListView.setAdapter(adapter);
             }
         };
     }
