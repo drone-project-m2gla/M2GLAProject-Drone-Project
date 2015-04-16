@@ -10,18 +10,15 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +41,10 @@ public class MoyensInitFragment extends ListFragment {
     private String idIntervention = "";
     private View view;
     private Symbol[] means;
+    ArrayAdapter adapter;
     List<String> titles;
     private int positionElement;
     private List<Boolean> draggable = new ArrayList();
-    private ArrayAdapter adapter;
 
 
     @Override
@@ -110,6 +107,7 @@ public class MoyensInitFragment extends ListFragment {
                             null,      // no need to use local data
                             0          // flags (not currently used, set to 0)
                     );
+
                 } else {
                     new AlertDialog.Builder(getActivity())
                             .setTitle("INFO")
@@ -126,29 +124,7 @@ public class MoyensInitFragment extends ListFragment {
             }
         });
 
-        getListView().setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
 
-                List<ListAdapter> arrays = Arrays.asList(getListAdapter());
-
-                Object item = arrays.get(positionElement);
-
-                arrays.remove(item);
-                titles.remove(positionElement);
-
-                adapter.notifyDataSetChanged();
-                Toast.makeText(getActivity(), "Item delete \t" + item.toString(), Toast.LENGTH_LONG).show();
-                if (event.getAction() == event.ACTION_DROP) {
-                    titles.remove(positionElement);
-
-                    adapter.remove(adapter.getItem(positionElement));
-
-                    adapter.notifyDataSetChanged();
-                }
-                return false;
-            }
-        });
     }
 
     /**
