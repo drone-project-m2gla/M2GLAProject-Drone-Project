@@ -25,6 +25,13 @@
             class="fr.m2gla.istic.projet.fragments.MoyensSuppFragment"
             android:id="@+id/fragment_moyens_supp" />
 
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_weight=".1"
+            android:layout_height="0dp"
+            class="fr.m2gla.istic.projet.fragments.DroneTargetActionFragment"
+            android:id="@+id/drone_targer_action" />
+
     </LinearLayout>
 
     <fragment
