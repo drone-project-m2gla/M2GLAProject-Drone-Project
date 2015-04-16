@@ -1,20 +1,20 @@
 package fr.m2gla.istic.projet.fragments;
 
 
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,6 +33,8 @@ import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
+import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
+
 public class MoyensInitFragment extends ListFragment {
     private static final String TAG = "MoyensInitFragment";
 
@@ -42,6 +44,8 @@ public class MoyensInitFragment extends ListFragment {
     ArrayAdapter adapter;
     List<String> titles;
     private int positionElement;
+    private List<Boolean> draggable = new ArrayList();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,53 +73,58 @@ public class MoyensInitFragment extends ListFragment {
             public boolean onItemLongClick(AdapterView<?> parent, View v,
                                            int position, long id) {
                 positionElement = position;
-                // Create a new ClipData.
-                // This is done in two steps to provide clarity. The convenience method
-                // ClipData.newPlainText() can create a plain text ClipData in one step.
 
-                // Create a new ClipData.Item from the ImageView Symbol Name
-                ClipData.Item item0 = new ClipData.Item(means[position].getId());
+                if (draggable.get(positionElement)) {
+                    // Create a new ClipData.
+                    // This is done in two steps to provide clarity. The convenience method
+                    // ClipData.newPlainText() can create a plain text ClipData in one step.
 
-                // Create a new ClipData using the tag as a label, the plain text MIME type, and
-                // the already-created item. This will create a new ClipDescription object within the
-                // ClipData, and set its MIME type entry to "text/plain"
-                ClipData dragData = new ClipData((String) v.getTag(),
-                        new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
-                        item0);
+                    // Create a new ClipData.Item from the ImageView Symbol Name
+                    ClipData.Item item0 = new ClipData.Item(means[position].getId());
 
-                ClipData.Item item1 = new ClipData.Item(means[position].getSymbolType().name());
-                dragData.addItem(item1);
-                ClipData.Item item2 = new ClipData.Item(means[position].getFirstText());
-                dragData.addItem(item2);
-                ClipData.Item item3 = new ClipData.Item(means[position].getSecondText());
-                dragData.addItem(item3);
-                ClipData.Item item4 = new ClipData.Item(means[position].getColor());
-                dragData.addItem(item4);
+                    // Create a new ClipData using the tag as a label, the plain text MIME type, and
+                    // the already-created item. This will create a new ClipDescription object within the
+                    // ClipData, and set its MIME type entry to "text/plain"
+                    ClipData dragData = new ClipData((String) v.getTag(),
+                            new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                            item0);
 
-                // Instantiates the drag shadow builder.
-                View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
+                    ClipData.Item item1 = new ClipData.Item(means[position].getSymbolType().name());
+                    dragData.addItem(item1);
+                    ClipData.Item item2 = new ClipData.Item(means[position].getFirstText());
+                    dragData.addItem(item2);
+                    ClipData.Item item3 = new ClipData.Item(means[position].getSecondText());
+                    dragData.addItem(item3);
+                    ClipData.Item item4 = new ClipData.Item(means[position].getColor());
+                    dragData.addItem(item4);
 
-                // Starts the drag
-                v.startDrag(dragData,  // the data to be dragged
-                        myShadow,  // the drag shadow builder
-                        null,      // no need to use local data
-                        0          // flags (not currently used, set to 0)
-                );
+                    // Instantiates the drag shadow builder.
+                    View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
+
+                    // Starts the drag
+                    v.startDrag(dragData,  // the data to be dragged
+                            myShadow,  // the drag shadow builder
+                            null,      // no need to use local data
+                            0          // flags (not currently used, set to 0)
+                    );
+
+                } else {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("INFO")
+                            .setMessage("Le moyen " + titles.get(positionElement) + " n'est pas encore validé.")
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
                 return true;
             }
         });
 
-        getListView().setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                if (event.getAction() == event.ACTION_DROP) {
-                    titles.remove(positionElement);
-                    //getListView().setChan
-                    adapter.notifyDataSetChanged();
-                }
-                return false;
-            }
-        });
+
     }
 
     /**
@@ -135,7 +144,8 @@ public class MoyensInitFragment extends ListFragment {
                 String meanClass = m.getVehicle().toString();
                 String meanType = Constant.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                       Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                draggable.add(true);
                 position++;
             }
             if (xtraSize > 0) {
@@ -143,7 +153,8 @@ public class MoyensInitFragment extends ListFragment {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Constant.getImage(meanClass);
                     means[position] = new Symbol(m.getId(),
-                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
+                            valueOf(meanType), meanClass, "RNS", "ff0000");
+                    draggable.add(false);
                     position++;
                 }
             }
@@ -166,6 +177,7 @@ public class MoyensInitFragment extends ListFragment {
             map.put("id", idIntervention);
             RestServiceImpl.getInstance()
                     .get(RestAPI.GET_INTERVENTION, map, Intervention.class, getCallbackSuccess(), getCallbackError());
+            // Appel du drag and drop.
             listenerDragAndDrop();
         }
     }
@@ -209,18 +221,14 @@ public class MoyensInitFragment extends ListFragment {
 
                 for (Symbol mean : means) {
                     drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
-                    titles.add(mean.getFirstText());
+                    titles.add(mean.getFirstText() + " - " + mean.getId());
                 }
 
                 ListView moyensListView = getListView();
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
-                String [] titlesArray = titles.toArray(new String[titles.size()]);
+                String[] titlesArray = titles.toArray(new String[titles.size()]);
                 Context activity = MoyensInitFragment.this.getActivity();
                 adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
-                Log.i(TAG, "adapter  " + (adapter == null) +
-                        " \nImage array  " + imagesArray.length +
-                        " \ntitles " + (titlesArray == null) +
-                        " \nactivity  " + (activity == null));
 
                 Log.i(TAG, "List\t" + (moyensListView == null));
 
