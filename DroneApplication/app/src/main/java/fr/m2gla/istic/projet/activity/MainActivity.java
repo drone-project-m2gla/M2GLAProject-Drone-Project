@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,13 +63,42 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        // Recuperer l'option du menu selectionnee
+        switch (id) {
+        // Reglage prevu pour plus tard
+        //case R.id.action_settings :
+        //    return true;
+        case R.id.action_deconnection :
+            this.initializeElement();
+            return true;
+        case R.id.action_quit :
+            Log.i(TAG, "Fin Application");
+
+            // Arret de l'activity ici
+            finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    /**
+     * Methode de gestion de l'usage des touches
+     *
+     * @param keyCode : Code de la touche
+     * @param event : Evènement
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // Pour TEST
+            Log.i(TAG, "Fin Application");
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
 
 
     /**
@@ -99,6 +129,7 @@ public class MainActivity extends Activity {
      * @param view : vue courante
      */
     public void finMain(View view) {
+        Log.i(TAG, "Fin Application");
 
         // Arret de l'activity ici
         finish();

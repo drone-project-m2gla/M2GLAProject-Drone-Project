@@ -43,10 +43,10 @@ import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 public class MapActivity extends Activity implements
-        ClusterManager.OnClusterItemInfoWindowClickListener<SymbolMarkerClusterItem>,
         AdapterView.OnDragListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLongClickListener {
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnInfoWindowClickListener{
     private static final String TAG = "MapActivity";
     // offsets used to place the icon when it is dropped
     private static final int OFFSET_X = -100;
@@ -98,15 +98,13 @@ public class MapActivity extends Activity implements
         // Set map fragment drag listener to recover dropped symbols
         mapFragment.getView().setOnDragListener(this);
 
-        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
-
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
 
         // Enable info window click on each cluster element
-        map.setOnInfoWindowClickListener(mClusterManager);
+        map.setOnInfoWindowClickListener(this);
     }
 
     @Override
@@ -150,7 +148,6 @@ public class MapActivity extends Activity implements
                             topographie.getFirstContent(),
                             topographie.getSecondContent(),
                             topographie.getColor(),
-                            topographie.getFirstContent(),
                             true);
                     SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
                     mClusterManager.addItem(markerItem);
@@ -167,7 +164,7 @@ public class MapActivity extends Activity implements
             @Override
             public void execute(Object response) {
             Log.e(TAG, "connection error");
-            Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000", "SAP REN");
+            Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000");
             SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
             mClusterManager.addItem(markerItem);
             mClusterManager.cluster();
@@ -175,51 +172,6 @@ public class MapActivity extends Activity implements
         });
 
 
-    }
-
-    /**
-     * Item info window click listener
-     * Used to show a dialog on info window click to validate the new position
-     *
-     * @param symbolMarkerClusterItem
-     */
-    @Override
-    public void onClusterItemInfoWindowClick(SymbolMarkerClusterItem symbolMarkerClusterItem) {
-        Log.d(TAG, "main onClusterItemInfoWindowClick");
-        Symbol mean = symbolMarkerClusterItem.getSymbol();
-        if (!mean.isTopographic()) {
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.query_position_confirmation)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Mean mean = new Mean();
-                            mean.setId(mean.getId());
-
-                            RestServiceImpl.getInstance()
-                                    .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
-                                            new Command() {
-                                                @Override
-                                                public void execute(Object response) {
-                                                    Log.i(TAG, "Confirm position success");
-                                                }
-                                            },
-                                            new Command() {
-                                                @Override
-                                                public void execute(Object response) {
-                                                    Log.e(TAG, "Confirm position error");
-                                                }
-                                            });
-                        }
-                    })
-                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(TAG, "Invalid position");
-                        }
-                    })
-                    .show();
-        }
     }
 
     /**
@@ -244,8 +196,7 @@ public class MapActivity extends Activity implements
                         Symbol.SymbolType.valueOf((String) clipData.getItemAt(1).getText()),
                         (String)clipData.getItemAt(2).getText(),
                         (String)clipData.getItemAt(3).getText(),
-                        (String)clipData.getItemAt(4).getText(),
-                        (String)clipData.getItemAt(5).getText());
+                        (String)clipData.getItemAt(4).getText());
                 //symbol.setValidated(false);
                 SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
                 mClusterManager.addItem(markerItem);
@@ -349,6 +300,49 @@ public class MapActivity extends Activity implements
                         });
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.d(TAG, "main onClusterItemInfoWindowClick");
+        final Symbol meanSymbol = markerSymbolLink.get(marker.getId()).getSymbol();
+        final Marker _marker = marker;
+        if (!meanSymbol.isTopographic()) {
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.query_position_confirmation)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Mean mean = new Mean();
+                            mean.setId(meanSymbol.getId());
+
+                            RestServiceImpl.getInstance()
+                                    .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                            new Command() {
+                                                @Override
+                                                public void execute(Object response) {
+                                                    Log.i(TAG, "Confirm position success");
+                                                    //Change symbol image to dashed one
+                                                    meanSymbol.setValidated(true);
+                                                    _marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), meanSymbol));
+                                                }
+                                            },
+                                            new Command() {
+                                                @Override
+                                                public void execute(Object response) {
+                                                    Log.e(TAG, "Confirm position error");
+                                                }
+                                            });
+                        }
+                    })
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "Invalid position");
+                        }
+                    })
+                    .show();
+        }
+    }
+
     /**
      * Cluster rendered used to draw firemen symbols
      * All the symbols are integrated into the map that links markers and symbols
@@ -368,7 +362,7 @@ public class MapActivity extends Activity implements
             if (!item.getSymbol().isTopographic()) {
                 markerOptions.draggable(true);
             }
-            markerOptions.title(item.getSymbol().getDescription());
+            markerOptions.title("Confirmer position");
         }
 
         @Override

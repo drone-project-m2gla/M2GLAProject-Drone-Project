@@ -1,5 +1,6 @@
 package entity;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -16,6 +17,8 @@ import util.MeansByDisasterCode;
 
 public class Intervention extends AbstractEntity {
 
+	private Date dateCreate;
+	private String label;
     private String address;
     private String postcode;
     private String city;
@@ -26,8 +29,9 @@ public class Intervention extends AbstractEntity {
     //private List<Mean> meansWaitingForApproval;
     private Position coordinates;
 
-    public Intervention(String address, String postcode, String city, DisasterCode disasterCode) {
+    public Intervention(String label, String address, String postcode, String city, DisasterCode disasterCode) {
         this();
+        this.label = label;
         this.address = address;
         this.postcode = postcode;
         this.city = city;
@@ -37,6 +41,7 @@ public class Intervention extends AbstractEntity {
 
     public Intervention() {
         super();
+        this.dateCreate = new Date();
         this.datatype = Constant.DATATYPE_INTERVENTION;
         this.meansXtra = new ArrayList<Mean>();
     }
@@ -103,6 +108,23 @@ public class Intervention extends AbstractEntity {
     public void setMeansXtra(List<Mean> meansXtra) {
         this.meansXtra = meansXtra;
     }
+    
+    
+    public Date getDateCreate() {
+		return dateCreate;
+	}
+
+	public void setDateCreate(Date dateCreate) {
+		this.dateCreate = dateCreate;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
 
 }

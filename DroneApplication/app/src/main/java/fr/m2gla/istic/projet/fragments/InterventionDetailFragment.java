@@ -33,6 +33,12 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 public class InterventionDetailFragment extends Fragment {
     private static final String TAG = "InterventionDetailFragment";
+    private Intervention intervention;
+
+    public String getIdIntervention() {
+        return idIntervention;
+    }
+
     private String idIntervention = "";
     private String[] titles;
     private String[] images;
@@ -88,7 +94,7 @@ public class InterventionDetailFragment extends Fragment {
         return new Command() {
             @Override
             public void execute(Object response) {
-                Intervention intervention = (Intervention) response;
+                intervention = (Intervention) response;
                 Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
                 List<Mean> meanList = intervention.getMeansXtra();
@@ -172,4 +178,7 @@ public class InterventionDetailFragment extends Fragment {
         }
     }
 
+    public Mean getMeanXtra(int position) {
+        return intervention.getMeansXtra().get(position);
+    }
 }

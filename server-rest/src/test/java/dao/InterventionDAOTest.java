@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.junit.After;
@@ -50,7 +51,7 @@ public class InterventionDAOTest {
     @Test
     public void testCreateIntervention()
     {
-        Intervention intervention = new Intervention("263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
+        Intervention intervention = new Intervention( "Intervention 1", "263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
         RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
         Position coordinatesIntervention = adresseIntervention.getCoordinates();
         intervention.setCoordinates(coordinatesIntervention);
