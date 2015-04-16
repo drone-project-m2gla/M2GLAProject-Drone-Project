@@ -82,11 +82,11 @@ public class ItemsAdapter extends ArrayAdapter {
                 Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
                 holder.imgImageView.setImageBitmap(image);
             }
+            holder.position = position;
         } else {
             /* get the View from the existing Tag */
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.position = position;
 
 //        // Inflating the layout for the custom Spinner
 //        LayoutInflater inflater = activity.getLayoutInflater();
