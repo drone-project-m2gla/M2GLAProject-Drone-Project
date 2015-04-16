@@ -280,6 +280,7 @@ public class MapActivity extends Activity implements
      * Allows to control drone
      *
      * @param latLng current long click position
+     *
      */
     @Override
     public void onMapLongClick(LatLng latLng) {
@@ -316,6 +317,11 @@ public class MapActivity extends Activity implements
                         public void onClick(DialogInterface dialog, int which) {
                             Mean mean = new Mean();
                             mean.setId(meanSymbol.getId());
+                            Position position = new Position();
+                            LatLng markerPosition = _marker.getPosition();
+                            position.setLatitude(markerPosition.latitude);
+                            position.setLongitude(markerPosition.longitude);
+                            mean.setCoordinates(position);
 
                             RestServiceImpl.getInstance()
                                     .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
