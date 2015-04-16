@@ -39,4 +39,5 @@
     <string name="add_new_mean">Ajout de moyens supp.</string>
 
     <string name="query_position_confirmation">Confirmer la position du moyen?</string>
+    <string name="select_text_view">Ajouter un moyen supplémentaire</string>
 </resources>
