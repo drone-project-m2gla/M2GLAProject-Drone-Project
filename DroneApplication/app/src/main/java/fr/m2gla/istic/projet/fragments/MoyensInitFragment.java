@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +69,7 @@ public class MoyensInitFragment extends ListFragment {
                 // ClipData.newPlainText() can create a plain text ClipData in one step.
 
                 // Create a new ClipData.Item from the ImageView Symbol Name
-                ClipData.Item item0 = new ClipData.Item(means[position].getSymbolType().name());
+                ClipData.Item item0 = new ClipData.Item(means[position].getId());
 
                 // Create a new ClipData using the tag as a label, the plain text MIME type, and
                 // the already-created item. This will create a new ClipDescription object within the
@@ -82,14 +78,16 @@ public class MoyensInitFragment extends ListFragment {
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         item0);
 
-                ClipData.Item item1 = new ClipData.Item(means[position].getFirstText());
+                ClipData.Item item1 = new ClipData.Item(means[position].getSymbolType().name());
                 dragData.addItem(item1);
-                ClipData.Item item2 = new ClipData.Item(means[position].getSecondText());
+                ClipData.Item item2 = new ClipData.Item(means[position].getFirstText());
                 dragData.addItem(item2);
-                ClipData.Item item3 = new ClipData.Item(means[position].getColor());
+                ClipData.Item item3 = new ClipData.Item(means[position].getSecondText());
                 dragData.addItem(item3);
-                ClipData.Item item4 = new ClipData.Item(means[position].getDescription());
+                ClipData.Item item4 = new ClipData.Item(means[position].getColor());
                 dragData.addItem(item4);
+                ClipData.Item item5 = new ClipData.Item(means[position].getDescription());
+                dragData.addItem(item5);
 
                 // Instantiates the drag shadow builder.
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
@@ -121,14 +119,16 @@ public class MoyensInitFragment extends ListFragment {
             for (Mean m : listMean) {
                 String meanClass = m.getVehicle().toString();
                 String meanType = Constant.getImage(meanClass);
-                means[position] = new Symbol(Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
+                means[position] = new Symbol(m.getId(),
+                       Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
                 position++;
             }
             if (xtraSize > 0) {
                 for (Mean m : listXtra) {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Constant.getImage(meanClass);
-                    means[position] = new Symbol(Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
+                    means[position] = new Symbol(m.getId(),
+                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
                     position++;
                 }
             }
