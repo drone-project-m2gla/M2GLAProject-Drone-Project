@@ -121,4 +121,16 @@ public class Tools {
         return z;
     }
 
+    public static boolean isSamePositions(Position p1, Position p2)
+    {
+        return equivalentInGPS(p1.getLatitude(),p2.getLatitude()) && equivalentInGPS(p1.getLongitude(),p2.getLongitude());
+    }
+
+    public static boolean equivalentInGPS(double gps1, double gps2)
+    {
+        int i1 = (int) (gps1 * 100000);
+        int i2 = (int) (gps2 * 100000);
+        return i1 == i2;
+    }
+
 }
