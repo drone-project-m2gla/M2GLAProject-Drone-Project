@@ -95,7 +95,7 @@ public class ItemsAdapter extends ArrayAdapter {
                         Toast.makeText(getContext(), "button annuller " + position, Toast.LENGTH_LONG).show();
 
                         RestServiceImpl.getInstance()
-                                .post(RestAPI.POST_ANNULLER_MOYEN, map, xtraMean, Intervention.class,
+                                .post(RestAPI.POST_ANNULLER_MOYEN, map, xtraMean, String.class,
                                         new Command() {
                                             @Override
                                             public void execute(Object response) {
@@ -117,7 +117,7 @@ public class ItemsAdapter extends ArrayAdapter {
 
                         map.put("idintervention", idIntervention);
                         RestServiceImpl.getInstance()
-                                .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, Intervention.class,
+                                .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,
                                         new Command() {
                                             @Override
                                             public void execute(Object response) {
