@@ -202,8 +202,7 @@ public class NewInterventionActivity extends Activity {
 
 
         intervention = new Intervention();
-// TODO : A decommenter
-//        intervention.setLabel(this.labelStr);
+        intervention.setLabel(this.labelStr);
         intervention.setDisasterCode(this.disasterCode);
         intervention.setAddress(this.voie);
         intervention.setCity(this.ville);
