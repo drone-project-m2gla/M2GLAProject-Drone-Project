@@ -24,36 +24,38 @@ public class Symbol {
         point_sensible
     }
 
+    private String id;
     private SymbolType symbolType;
-    private String description;
     private String firstText;
     private String secondText;
     private String color;
     private boolean validated;
     private boolean topographic;
-    /*private double latitude;
-    private double longitude;*/
 
-    public Symbol(SymbolType symbolType, String firstText, String secondText, String color, String description) {
+    public Symbol(SymbolType symbolType, String firstText, String secondText, String color) {
         this.symbolType = symbolType;
-        this.description = description;
         this.firstText = firstText;
         this.secondText = secondText;
         this.color = color;
         this.validated = false;
     }
 
-    public Symbol(SymbolType symbolType, String firstText, String secondText, String color, String description, boolean topographic) {
-        this(symbolType, firstText, secondText, color, description);
+    public Symbol(String id, SymbolType symbolType, String firstText, String secondText, String color) {
+        this(symbolType, firstText, secondText, color);
+        this.id = id;
+    }
+
+    public Symbol(SymbolType symbolType, String firstText, String secondText, String color, boolean topographic) {
+        this(symbolType, firstText, secondText, color);
         this.topographic = topographic;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public SymbolType getSymbolType() {
         return symbolType;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getFirstText() {
@@ -79,20 +81,4 @@ public class Symbol {
     public boolean isTopographic() {
         return topographic;
     }
-
-    /*public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }*/
 }

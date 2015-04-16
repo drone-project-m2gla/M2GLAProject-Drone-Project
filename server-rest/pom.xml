@@ -10,9 +10,38 @@
 	<name>server-rest</name>
 	<url>http://maven.apache.org</url>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <war.name>dev</war.name>
+                <project.BUCKET_NAME>test</project.BUCKET_NAME>
+                <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
+                <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
+                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
+                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <war.name>sitserver</war.name>
+                <project.BUCKET_NAME>prod</project.BUCKET_NAME>
+                <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
+                <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
+                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
+                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+            </properties>
+        </profile>
+    </profiles>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <runSuite>**/TestSuiteDao.class</runSuite>
 	</properties>
 
 	<dependencies>
@@ -89,7 +118,6 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
@@ -119,17 +147,31 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<path>/</path>
-					<contextFile>src/main/webapp/META-INF/context.xml</contextFile>
-					<!--<staticContextPath>${webappDirectory}</staticContextPath> -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <path>/</path>
+                    <contextFile>src/main/webapp/META-INF/context.xml</contextFile>
+                    <!--<staticContextPath>${webappDirectory}</staticContextPath> -->
 
-				</configuration>
-			</plugin>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <includes>
+                        <include>${runSuite}</include>
+                    </includes>
+                    <systemPropertyVariables>
+
+                        <buildDirectory>${project.build.directory}</buildDirectory>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -141,7 +183,7 @@
 						<resource>
 							<directory>src/main/resources</directory>
 							<filtering>true</filtering>
-							<targetPath>/</targetPath>
+                            <!--<targetPath>/</targetPath>-->
 							<includes>
 								<include>**/*</include>
 							</includes>
@@ -150,5 +192,14 @@
 				</configuration>
 			</plugin>
 		</plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
 	</build>
 </project>

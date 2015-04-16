@@ -2,26 +2,34 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
+import fr.m2gla.istic.projet.context.InterventionListAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
@@ -53,8 +61,6 @@ public class InterventionListFragment extends Fragment {
         if (getArguments() != null) {
             roleStr = getArguments().getString(GeneralConstants.REF_ACT_ROLE);
             if (roleStr != null) {
-                Toast.makeText(this.view.getContext(), "I'm here!!! " + roleStr, Toast.LENGTH_SHORT).show();
-
                 if (roleStr.compareTo(UserQualification.CODIS.toString()) == 0) {
                     Log.i(TAG, "is Codis\t" + roleStr);
                     this.userQualification = UserQualification.CODIS;
@@ -84,9 +90,10 @@ public class InterventionListFragment extends Fragment {
 
 
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue disp_item
-        this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
-                new String[]{GeneralConstants.INTER_LIST_ID, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
-                new int[]{R.id.interventionId, R.id.interventionCode, R.id.interventionData});
+        //this.mSchedule = new SimpleAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
+        this.mSchedule = new InterventionListAdapter(getActivity(), this.listItem, R.layout.disp_intervention,
+                new String[]{GeneralConstants.INTER_LIST_MEAN, GeneralConstants.INTER_LIST_LABEL, GeneralConstants.INTER_LIST_DATE, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
+                new int[]{R.id.interventionNewMean, R.id.interventionLabel, R.id.interventionDate, R.id.interventionCode, R.id.interventionData});
 
         //On attribut à notre listView l'adapter que l'on vient de créer
         this.idList.setAdapter(mSchedule);
@@ -103,9 +110,11 @@ public class InterventionListFragment extends Fragment {
 
                 String idIntervention = map.get(GeneralConstants.INTER_LIST_ID).toString();
                 if (userQualification == UserQualification.CODIS) {
-                Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(), "CODIS : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
+
                     InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
                     fragmentDetailIntervention.setIdIntervention(idIntervention);
+
                 } else {
                     Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
                     callMap(idIntervention);
@@ -169,7 +178,7 @@ public class InterventionListFragment extends Fragment {
                                 Log.w(TAG, "Element NULL");
                                 continue;
                             }
-                            addInterventionInList("" + inter.getId(), "" + inter.getDisasterCode(), "" + inter.getAddress() + " " + inter.getPostcode() + " " + inter.getCity());
+                            addInterventionInList(inter);
                         }
 
 
@@ -185,44 +194,68 @@ public class InterventionListFragment extends Fragment {
                     }
                 });
 
-/* Pour TEST
-        addInterventionInList("01", "Inter1");
-        addInterventionInList("02", "Intervention 2");
-        addInterventionInList("03", "La mienne");
-        addInterventionInList("04", "Inter4");
-        addInterventionInList("05", "Intervention 5");
-        addInterventionInList("06", "La leur");
-        addInterventionInList("07", "Inter7");
-        addInterventionInList("08", "Intervention 8");
-        addInterventionInList("09", "La votre");
-        addInterventionInList("10", "Inter10");
-        addInterventionInList("11", "Intervention 11");
-        addInterventionInList("12", "La notre");
-*/
     }
 
 
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param id    : Reference (id) de l'intervention
-     * @param code    : Code d'intervention
-     * @param data : données de l'intervention
+     * @param intervention      : Intervention
      */
-    public void addInterventionInList(String id, String code, String data) {
-        addInterventionInList(id, code, data, false);
+    public void addInterventionInList(Intervention intervention) {
+        String      idStr, dcStr,nbExtraStr, addrStr, labelStr, dateStr;
+        Long        dateLong;
+        Date        date;
+        int         nbMeanExtra = 0;
+        DateFormat  mediumDateFormat;
+
+
+        mediumDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, new Locale("FR", "fr"));
+
+        idStr = intervention.getId();
+        dcStr = intervention.getDisasterCode().toString();
+        for (Mean m: intervention.getMeansXtra()) {
+            if (m.getIsDeclined() == false) {
+                nbMeanExtra++;
+            }
+        }
+        nbExtraStr = "[" + nbMeanExtra + "]";
+        addrStr = intervention.getAddress() + " " + intervention.getPostcode() + " " + intervention.getCity();
+        labelStr = intervention.getLabel();
+        dateLong = Long.valueOf(intervention.getDateCreate());
+        date = new Date(dateLong);
+        dateStr = mediumDateFormat.format(date);
+
+        addInterventionInList(idStr, dcStr, nbExtraStr, labelStr, dateStr, addrStr);
+    }
+
+    /**
+     * Methode demandant l'ajout d'une intervention dans la liste
+     *
+     * @param id      : Reference (id) de l'intervention
+     * @param code    : Code d'intervention
+     * @param nbMeans : Nombre de moyens en attente de validation
+     * @param label   : Nom de l'intervention
+     * @param date    : Date de l'intervention
+     * @param data    : Données de l'intervention
+     */
+    public void addInterventionInList(String id, String code, String nbMeans, String label, String date, String data) {
+        addInterventionInList(id, code, nbMeans, label, date, data, false);
     }
 
 
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param id    : Reference (id) de l'intervention
+     * @param id      : Reference (id) de l'intervention
      * @param code    : Code d'intervention
-     * @param data    : données de l'intervention
+     * @param nbMeans : Nombre de moyens en attente de validation
+     * @param label   : Nom de l'intervention
+     * @param date    : Date de l'intervention
+     * @param data    : Données de l'intervention
      * @param initial : true pour specifier qu'il s'agit d'une intervention ajoutée pendant l'initialisation
      */
-    public void addInterventionInList(String id, String code, String data, boolean initial) {
+    public void addInterventionInList(String id, String code, String nbMeans, String label, String date, String data, boolean initial) {
         // Verifier si une insertion est a faire
         if ((code == null) || (code.length() <= 0)) {
             return;
@@ -234,9 +267,15 @@ public class InterventionListFragment extends Fragment {
         //Création d'une HashMap pour insérer les informations du premier element de notre listView
         map = new HashMap<String, String>();
 
-        //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put(GeneralConstants.INTER_LIST_MEAN, nbMeans);
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_ID, id);
-        //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put(GeneralConstants.INTER_LIST_LABEL, label);
+        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        map.put(GeneralConstants.INTER_LIST_DATE, date);
+        //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_CODE, code);
         //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_DATA, data);
@@ -246,6 +285,10 @@ public class InterventionListFragment extends Fragment {
         if (initial != true) {
             // Mettre a jour la liste d'affichage
             this.mSchedule.notifyDataSetChanged();
+
+//            TextView textMean = (TextView) this.idList.getChildAt(listItem.size()).findViewById(R.id.interventionNewMean);
+
+//            textMean.setHighlightColor(Color.RED);
         }
     }
 

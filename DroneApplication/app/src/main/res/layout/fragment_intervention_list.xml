@@ -24,7 +24,7 @@
 
         <ListView
             android:id="@+id/interventionListView"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 

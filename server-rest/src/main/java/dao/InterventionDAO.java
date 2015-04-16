@@ -1,5 +1,9 @@
 package dao;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import util.Constant;
 import util.Tools;
 
@@ -29,7 +33,10 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
         Intervention intervention = new Intervention();
         try {
             JsonObject content = jsonDocument.content();
+        	SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
             if (Constant.DATATYPE_INTERVENTION.equals(((JsonObject) content.get("properties")).get("datatype"))) {
+            	intervention.setDateCreate(formatter.parse((String) ((JsonObject) content.get("properties")).get("dateCreate")));
+            	intervention.setLabel((String) ((JsonObject)content.get("properties")).get("label"));
                 intervention.setId(Long.parseLong(jsonDocument.id()));
                 intervention.setAddress((String) ((JsonObject)content.get("properties")).get("address"));
                 intervention.setPostcode((String) ((JsonObject)content.get("properties")).get("postcode"));
@@ -57,6 +64,8 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
     protected JsonDocument entityToJsonDocument(Intervention entity) {
         MeanDAO meanDAO = new MeanDAO();
         JsonObject properties = JsonObject.create();
+        properties.put("dateCreate", entity.getDateCreate().toString());
+        properties.put("label", entity.getLabel());
         properties.put("datatype", entity.getDataType());
         properties.put("address", entity.getAddress());
         properties.put("city", entity.getCity());

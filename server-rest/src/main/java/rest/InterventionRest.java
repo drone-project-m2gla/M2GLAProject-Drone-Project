@@ -2,6 +2,8 @@ package rest;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -53,7 +55,7 @@ public class InterventionRest {
     }
 
     @POST
-    @Path("/{id}/moyen/enplace")
+    @Path("/{id}/moyen/emplace")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Mean validateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
@@ -178,7 +180,12 @@ public class InterventionRest {
         
         Position coordinatesIntervention = adresseIntervention.getCoordinates();
         intervention.setCoordinates(coordinatesIntervention);
-        
+ 
+        Date now = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        formatter.format(now);
+        intervention.setDateCreate(now);
+       
         // Génération de la liste des moyens
         intervention.generateMeanList();
         Intervention res = iD.create(intervention);

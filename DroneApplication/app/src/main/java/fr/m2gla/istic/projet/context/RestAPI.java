@@ -13,7 +13,6 @@ public interface RestAPI {
 
     // Intervention block
     public static final String GET_ALL_INTERVENTION = "/intervention";
-    public static final String GET_INTERVENTION = "/intervention/{id}";
     public static final String POST_INTERVENTION = "/intervention";
     public static final String POST_POSITION_CONFIRMATION = "/intervention/{id}/moyen/emplace";
     public static final String POST_POSITION_MOVE = "/intervention/{id}/moyen/positionner";
@@ -23,6 +22,15 @@ public interface RestAPI {
 
     // Demande d'un moyen supplémentaire /intervention/idIntervention/xtra
     public static final String POST_SEND_MEAN_REQUEST = "/intervention/{id}/moyenextra";
+
+    //Demande d'une intervention avec id
+    public static final String GET_INTERVENTION = "/intervention/{id}";
+
+    // ajouter moyen supplementaire
+    public static final String POST_VALIDER_MOYEN = "/moyen/{idintervention}/ok";
+
+    // annuller moyen supplementaire
+    public static final String POST_ANNULLER_MOYEN = "/moyen/{idintervention}/nok";
 
     // drone block
     public static final String POST_POSITION_DRONE = "/drone/move";

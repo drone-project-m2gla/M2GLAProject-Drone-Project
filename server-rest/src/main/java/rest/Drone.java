@@ -2,6 +2,7 @@ package rest;
 
 import entity.Position;
 
+import entity.Target;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -12,17 +13,17 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
+import service.position.GetDronePositionThread;
+import service.position.TransitDroneSender;
 import util.Configuration;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by arno on 12/02/15.
@@ -31,8 +32,6 @@ import java.io.IOException;
 public class Drone {
 	private static final Logger LOGGER = Logger.getLogger(Drone.class);
 
-	private GetPositionThread positionThread;
-
 	@POST
 	@Path("move")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -40,7 +39,7 @@ public class Drone {
 		HttpClient client = new HttpClient();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ObjectMapper mapper = new ObjectMapper();
-		PostMethod postMethod = new PostMethod(Configuration.SERVER_PYTHON + "/position");
+		PostMethod postMethod = new PostMethod(Configuration.getSERVER_PYTHON() + "/position");
 
 		try {
 			mapper.writeValue(output, position);
@@ -61,66 +60,18 @@ public class Drone {
 	}
 
 	@GET
-	@Path("startListenerPosition")
-	public void startListenerPosition() {
-		positionThread = new GetPositionThread();
-		new Thread(positionThread).start();
-	}
-
-	@GET
-	@Path("endListenerPosition")
-	public void endListenerPosition() {
-		positionThread.endMove();
-	}
-
-	@GET
 	@Path("move")
+    @Produces(MediaType.APPLICATION_JSON)
 	public Position getPosition() {
-		return positionThread.getPosition();
-	}
-	
-	private class GetPositionThread implements Runnable {
-		private final Logger LOGGER = Logger.getLogger(GetPositionThread.class);
-
-		public Position position;
-		public boolean move;
-
-		public GetPositionThread() {
-			position = new Position(0.0, 0.0, 0.0);
-			move = true;
-		}
-		
-		public synchronized void endMove() {
-			move = false;
-		}
-		
-		public synchronized Position getPosition() {
-			return position;
-		}
-
-		@Override
-		public void run() {
-			ObjectMapper mapper = new ObjectMapper();
-			HttpClient client = new HttpClient();
-			while (move) {
-				GetMethod get = new GetMethod(Configuration.SERVER_PYTHON + "/position");
-				try {
-					client.executeMethod(get);
-
-					Position position = mapper.readValue(
-							get.getResponseBodyAsString(), Position.class);
-
-					if (position != null && !this.position.equals(position)) {
-						this.position = position;
-
-						PushServiceImpl.getInstance().sendMessage(
-								TypeClient.SIMPLEUSER, "droneMove", position);
-					}
-				} catch (IOException e) {
-					LOGGER.error("Get position error", e);
-				}
-			}
-		}
+		return GetDronePositionThread.getInstance().getPosition();
 	}
 
+    @POST
+    @Path("target")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void doTrajet(Target target) {
+        TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+        GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+        GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
+    }
 }

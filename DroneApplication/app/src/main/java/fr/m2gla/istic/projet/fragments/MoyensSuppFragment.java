@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,14 +24,16 @@ import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.constantes.Constant;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
+import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.RestService;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
 public class MoyensSuppFragment extends Fragment {
-    public static final String MOYEN_SUPPL_TAG = "Moyen suppl.";
+    public static final String TAG = "Moyen suppl.";
     TextView text, vers;
 
     public static ListView maListViewPerso;
@@ -45,7 +46,8 @@ public class MoyensSuppFragment extends Fragment {
     String[] titles;
     // Declaring the Integer Array with resource Id's of Images for the Spinners
     int[] images;
-    private String interventionID = "-1113935408";
+    private String interventionID = "";
+    private Symbol[] means;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,10 +57,10 @@ public class MoyensSuppFragment extends Fragment {
         moyensSpinner = (Spinner) view
                 .findViewById(R.id.moyensSpinner);
 
-        titles = new String[]{"", Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
+        titles = new String[]{Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
                 Constant.VALUE_VEHICULE_VSR, Constant.VALUE_VEHICULE_VLCG, Constant.VALUE_VEHICULE_VSAV};
 
-        images = new int[]{0, Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
+        images = new int[]{Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
                 Constant.DRAWABLE_IMG_VEHICULE_VSR, Constant.DRAWABLE_IMG_VEHICULE_VLCG, Constant.DRAWABLE_IMG_VEHICULE_VSAV};
 
         List<Drawable> drawables = new ArrayList<Drawable>();
@@ -71,23 +73,45 @@ public class MoyensSuppFragment extends Fragment {
         }
         moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, drawables.toArray(new Drawable[drawables.size()])));
 
+        for (String s : titles) {
+            Log.i(TAG, "Title \t" + titles.length + "    " + s);
+        }
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_moyen);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = moyensSpinner.getSelectedItemPosition();
-                SpinnerAdapter adapter = moyensSpinner.getAdapter();
-                String moyen = String.valueOf(position);
-                Toast.makeText(getActivity(), "Bonjour\n" + moyen + "\tValue\t" + titles[position], Toast.LENGTH_SHORT).show();
-
                 final Mean mean = new Mean();
-                if (position > 0) {
-                    mean.setVehicle(Vehicle.valueOf(titles[position]));
-                    sendRequestMeanAsync(mean);
-                }
+                mean.setVehicle(Vehicle.valueOf(titles[position]));
+                sendRequestMeanAsync(mean);
+
             }
         });
         return view;
+    }
+
+    /**
+     * Formattage des moyens extra pour l'adapter
+     *
+     * @param intervention
+     * @param position
+     */
+    private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
+        int xtraSize = listXtra.size(); // taille des moyens supplémentaires
+        means = new Symbol[xtraSize];
+
+        if (xtraSize > 0) {
+            for (Mean m : listXtra) {
+                String meanClass = m.getVehicle().toString();
+                String meanType = Constant.getImage(meanClass);
+                means[position] = new Symbol(m.getId(),
+                        Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
+                position++;
+            }
+            Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -112,7 +136,7 @@ public class MoyensSuppFragment extends Fragment {
                 // Demander la prise en compte de la validation de l'identification
                 Toast.makeText(getActivity(), "Moyen suppl.\n" + interventionID, Toast.LENGTH_SHORT).show();
                 Mean moyen = (Mean) response;
-                Log.i(MOYEN_SUPPL_TAG, "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
+                Log.i(TAG, "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
             }
         }, new Command() {
             /**
@@ -135,6 +159,6 @@ public class MoyensSuppFragment extends Fragment {
 
     public void setInterventionID(String interventionID) {
         this.interventionID = interventionID;
-        Toast.makeText(getActivity(), MOYEN_SUPPL_TAG + "\n" + interventionID, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), TAG + "\n" + interventionID, Toast.LENGTH_LONG).show();
     }
 }

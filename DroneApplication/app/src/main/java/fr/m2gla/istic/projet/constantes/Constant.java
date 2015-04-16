@@ -13,6 +13,7 @@ public class Constant {
     public static final String SVG_MOYEN_INTERVENTION_AERIEN = "moyen_intervention_aerien_prevu";
     public static final String SVG_SECOUR_A_PERSONNE_PREVU = "secours_a_personnes_prevu";
     public static final String SVG_VEHICULE_A_INCENDIE_SEUL = "vehicule_incendie_seul_prevu";
+    public static final String SVG_VEHICULE_POST_COMMAND = "poste_commandement_prevu";
 
     // Nom des moyens correspondants aux fichiers svg
     public static final String VALUE_COLONNE_INCENDIE_ACTIVE = "Colonne incendie";
@@ -42,27 +43,24 @@ public class Constant {
     public static final int DRAWABLE_IMG_VEHICULE_EPA = R.mipmap.ic_vehicule_img_epa;
     public static final int DRAWABLE_IMG_VEHICULE_FPT = R.mipmap.ic_vehicule_img_fpt;
 
-    public static int getImage(String title) {
-        int imgID = 0;
+    // image type svg variable
+    public static final String TYPE_IMG = "type";
+
+    public static String getImage(String title) {
+        String imgID = SVG_VEHICULE_A_INCENDIE_SEUL;
 
         switch (title.toLowerCase()) {
             case "vsav":
-                imgID = DRAWABLE_IMG_VEHICULE_VSAV;
+                imgID = SVG_SECOUR_A_PERSONNE_PREVU;
                 break;
             case "vsr":
-                imgID = DRAWABLE_IMG_VEHICULE_VSR;
+                imgID = SVG_COLONNE_INCENDIE_ACTIVE;
                 break;
             case "vlcg":
-                imgID = DRAWABLE_IMG_VEHICULE_VLCG;
-                break;
-            case "epa":
-                imgID = DRAWABLE_IMG_VEHICULE_EPA;
-                break;
-            case "fpt":
-                imgID = DRAWABLE_IMG_VEHICULE_FPT;
+                imgID = SVG_VEHICULE_POST_COMMAND;
                 break;
             default:
-                imgID = DRAWABLE_VEHICULE_FPT;
+                imgID = SVG_VEHICULE_A_INCENDIE_SEUL;
                 break;
         }
         return imgID;

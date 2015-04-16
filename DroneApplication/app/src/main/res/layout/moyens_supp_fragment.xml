@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:gravity="center"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/select_text_view"
+        android:id="@+id/selectTextView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight=".5" />
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layoutMoyensSupp">
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/layoutMoyensSupp"
+        android:layout_weight=".5">
 
         <Spinner
             android:layout_width="0dp"
             android:layout_weight="0.8"
             android:layout_height="match_parent"
             android:id="@+id/moyensSpinner"
-            android:layout_below="@+id/textView"
+            android:layout_below="@+id/selectTextView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -29,20 +39,4 @@
             android:onClick="ajouterMoyen"
             android:src="@mipmap/ic_action_new" />
     </LinearLayout>
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textSize="30px"-->
-    <!--android:textColor="#ffffff"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:id="@+id/AndroidOs" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:textColor="#ffffff"-->
-    <!--android:textSize="15px"-->
-    <!--android:id="@+id/Version" />-->
 </LinearLayout>

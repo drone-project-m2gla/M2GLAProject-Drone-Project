@@ -1,75 +1,161 @@
 package fr.m2gla.istic.projet.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
+import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.model.Intervention;
+import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 // Creating an Adapter Class
 public class ItemsAdapter extends ArrayAdapter {
 
     private final Activity activity;
-    private final Drawable[] images;
+    private Drawable[] images;
 
     private final static String TAG = "ItemsAdapter";
 
     private String[] titles;
     private int customLayout;
+    Intervention intervention;
 
     public ItemsAdapter(Context context, int textViewResourceId,
                         String[] objects, Drawable[] images) {
         super(context, textViewResourceId, objects);
         activity = (Activity) context;
         this.titles = objects;
+        Log.i(TAG, "MeanXtra Title\t" + this.titles.length);
         this.images = images;
+        Log.i(TAG, "MeanXtra Image\t" + this.images.length);
         customLayout = textViewResourceId;
+
     }
 
-    public View getCustomView(int position, View convertView,
-                              ViewGroup parent) {
+    // It gets a View that displays the data at the specified position
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return getCustomView(position, convertView, parent);
+    }
 
-        // Inflating the layout for the custom Spinner
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View layout = inflater.inflate(this.customLayout, parent, false);
+    public View getCustomView(final int position, View convertView, ViewGroup parent) {
 
-        // Declaring and Typecasting the textview in the inflated layout
-        TextView itemLabelTxtView = (TextView) layout
-                .findViewById(R.id.tvLanguage);
+        final ViewHolder holder;
+        Mean mean;
+        final Map<String, String> map = new HashMap<>();
 
-        // Setting the text using the array
-        itemLabelTxtView.setText(titles[position]);
+        if (convertView == null) {
+            LayoutInflater mInflater = activity.getLayoutInflater();
 
-        // Setting the color of the text
-        itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
+            convertView = mInflater.inflate(this.customLayout, parent, false);
 
-        // Declaring and Typecasting the imageView in the inflated layout
-        ImageView imgImageView = (ImageView) layout.findViewById(R.id.imgLanguage);
-        // Setting Special attributes for 1st element
-        if (position == 0 && titles[position].equals("")) {
-            // Removing the image view
-            imgImageView.setVisibility(View.GONE);
+            holder = new ViewHolder();
+
+            holder.itemLabelTxtView = (TextView) convertView
+                    .findViewById(R.id.tvLanguage);
+            // get the phoneIcon and emailIcon as well from convertView
+            holder.imgImageView = (ImageView) convertView.findViewById(R.id.imgLanguage);
+
+            holder.annullerImageButton = (ImageButton) convertView.findViewById(R.id.annuler);
+            holder.validerImageButton = (ImageButton) convertView.findViewById(R.id.valid);
+
+
+            if (holder.annullerImageButton != null) {
+                InterventionDetailFragment interventionFragment = (InterventionDetailFragment) activity.getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+
+                final String idIntervention = interventionFragment.getIdIntervention();
+                final Mean xtraMean = interventionFragment.getMeanXtra(position);
+
+                holder.annullerImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        map.put("idintervention", idIntervention);
+                        Toast.makeText(getContext(), "button annuller " + position, Toast.LENGTH_LONG).show();
+
+                        RestServiceImpl.getInstance()
+                                .post(RestAPI.POST_ANNULLER_MOYEN, map, xtraMean, Intervention.class,
+                                        new Command() {
+                                            @Override
+                                            public void execute(Object response) {
+                                                Toast.makeText(getContext(), "Moyen annuller\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                            }
+                                        }, new Command() {
+                                            @Override
+                                            public void execute(Object response) {
+                                                Toast.makeText(getContext(), "Moyen pas été annuller\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+
+                    }
+                });
+
+                holder.validerImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        map.put("idintervention", idIntervention);
+                        RestServiceImpl.getInstance()
+                                .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, Intervention.class,
+                                        new Command() {
+                                            @Override
+                                            public void execute(Object response) {
+                                                Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                            }
+                                        }, new Command() {
+                                            @Override
+                                            public void execute(Object response) {
+                                                Toast.makeText(getContext(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                    }
+                });
+            }
+            // Setting Special attributes for 1st element
+
+            Log.i(TAG, "Position not 0");
+
+            // Setting the text using the array
+            holder.itemLabelTxtView.setText(titles[position]);//
+            // Setting the color of the text
+            holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
             // Setting the size of the text
-            itemLabelTxtView.setTextSize(20f);
-            // Setting the text Color
-            itemLabelTxtView.setTextColor(Color.WHITE);
-            // Setting the value
-            itemLabelTxtView.setText("Sélectionner un moyen supp.");
+            holder.itemLabelTxtView.setTextSize(20f);
 
+            Drawable drawable = images[position];
+            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
+            holder.imgImageView.setImageBitmap(image);
+
+            holder.position = position;
         } else {
-            Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(images[position], 64, 64), 50, 50, true);
-            imgImageView.setImageBitmap(image);
+            /* get the View from the existing Tag */
+            holder = (ViewHolder) convertView.getTag();
         }
-        return layout;
+
+        return convertView;
+
     }
 
     // It gets a View that displays in the drop down popup the data at the specified position
@@ -79,9 +165,16 @@ public class ItemsAdapter extends ArrayAdapter {
         return getCustomView(position, convertView, parent);
     }
 
-    // It gets a View that displays the data at the specified position
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+
+    /* A Static class for holding the elements of each List View Item
+     * This is created as per Google UI Guideline for faster performance */
+    private static class ViewHolder {
+        TextView itemLabelTxtView;
+        ImageView imgImageView;
+        ImageButton validerImageButton;
+        ImageButton annullerImageButton;
+
+        int position;
     }
+
 }

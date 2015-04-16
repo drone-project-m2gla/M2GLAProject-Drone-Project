@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -29,6 +31,7 @@ public class NewInterventionActivity extends Activity {
     private     String                              codePostalStr;
     private     String                              ville;
     private     String                              sinistreStr;
+    private     String                              labelStr;
     private     DisasterCode                        disasterCode;
     private     Integer                             postCode;
 
@@ -44,6 +47,44 @@ public class NewInterventionActivity extends Activity {
         setContentView(R.layout.activity_new_intervention);
 
         initializeElement();
+    }
+
+
+    /**
+     * Methode de creation du menu de l'entity
+     *
+     * @param menu : Objet de definition du menu principal
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_new_inter_activity, menu);
+        return true;
+    }
+
+    /**
+     * Methode de gestion de l'usage du menu de l'entity
+     *
+     * @param item : Objet de sélection dans le menu principal
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent  intent;
+        int     id = item.getItemId();
+
+        // Recuperer l'option du menu selectionnee
+        switch (id) {
+            // Reglage prevu pour plus tard
+            //case R.id.action_settings :
+            //    return true;
+            case R.id.action_deconnection :
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -69,6 +110,7 @@ public class NewInterventionActivity extends Activity {
         this.codePostalStr = "";
         this.ville = "";
         this.sinistreStr = "";
+        this.labelStr = "";
         this.disasterCode = DisasterCode.AVP;
         this.postCode = 0;
     }
@@ -98,12 +140,25 @@ public class NewInterventionActivity extends Activity {
     public void addIntervention (View view) {
 
         int         radioBSelect;
+        EditText    textLabel = (EditText) findViewById(R.id.labelGet);
         EditText    textAddress = (EditText) findViewById(R.id.addressGet);
         EditText    textCP = (EditText) findViewById(R.id.getCodePostal);
         EditText    textVille = (EditText) findViewById(R.id.getVille);
         RadioGroup  sinistreRadioG = (RadioGroup) findViewById(R.id.sinistreRadioGroup);
         RadioButton selectedRadioB;
 
+
+        // Recuperer le nom de l'intervention
+        if (textAddress.getText().length() != 0) {
+            this.labelStr = "" + textLabel.getText();
+            Toast.makeText(getApplicationContext(), this.labelStr, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Manque le nom de l'intervention", Toast.LENGTH_SHORT).show();
+            Log.i("ajoutIntervention", "Pas de nom");
+            this.initializeElement();
+            return;
+        }
 
         // Recuperer le nom de la rue
         if (textAddress.getText().length() != 0) {
@@ -187,6 +242,7 @@ public class NewInterventionActivity extends Activity {
 
 
         intervention = new Intervention();
+        intervention.setLabel(this.labelStr);
         intervention.setDisasterCode(this.disasterCode);
         intervention.setAddress(this.voie);
         intervention.setCity(this.ville);

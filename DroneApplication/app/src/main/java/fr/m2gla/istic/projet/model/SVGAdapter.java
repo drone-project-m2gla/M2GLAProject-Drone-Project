@@ -1,9 +1,16 @@
 package fr.m2gla.istic.projet.model;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.util.Log;
+
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -28,6 +35,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.model.Symbol;
 
 /**
@@ -156,5 +164,27 @@ public class SVGAdapter {
         drawable.draw(canvas);
 
         return mutableBitmap;
+    }
+
+    public static BitmapDescriptor convertSymbolToIcon(Context context, Symbol symbol){
+        Drawable drawable = convertSymbolToDrawable(context, symbol);
+        Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
+        return icon;
+    }
+
+    public static Drawable convertSymbolToDrawable(Context context, Symbol symbol){
+        Drawable drawable;
+        try {
+            InputStream is = context.getResources().openRawResource(
+                    context.getResources().getIdentifier(symbol.getSymbolType().name(),
+                            "raw", context.getPackageName()));
+
+            SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, symbol));
+            drawable = new PictureDrawable(svg.renderToPicture());
+        } catch (Exception e) {
+            drawable = context.getResources().getDrawable(R.drawable.bubble_shadow);
+        }
+        return drawable;
     }
 }
