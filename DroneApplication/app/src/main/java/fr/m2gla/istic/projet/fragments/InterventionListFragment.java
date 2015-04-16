@@ -15,8 +15,11 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
 import fr.m2gla.istic.projet.activity.R;
@@ -199,15 +202,22 @@ public class InterventionListFragment extends Fragment {
      * @param intervention      : Intervention
      */
     public void addInterventionInList(Intervention intervention) {
-        String  idStr, dcStr,nbExtraStr, addrStr, labelStr, dateStr;
+        String      idStr, dcStr,nbExtraStr, addrStr, labelStr, dateStr;
+        Long        dateLong;
+        Date        date;
+        DateFormat  mediumDateFormat;
 
+
+        mediumDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, new Locale("FR", "fr"));
 
         idStr = intervention.getId();
         dcStr = intervention.getDisasterCode().toString();
         nbExtraStr = "[" + intervention.getMeansXtra().size() + "]";
         addrStr = intervention.getAddress() + " " + intervention.getPostcode() + " " + intervention.getCity();
         labelStr = intervention.getLabel();
-        dateStr = intervention.getDateCreate();
+        dateLong = Long.valueOf(intervention.getDateCreate());
+        date = new Date(dateLong);
+        dateStr = mediumDateFormat.format(date);
 
         addInterventionInList(idStr, dcStr, nbExtraStr, labelStr, dateStr, addrStr);
     }

@@ -34,7 +34,7 @@ public class MeanXtraRest {
         Intervention intervention = iD.getById(idintervention);
 
 
-        for (int i=0; i<=intervention.getMeansXtra().size(); i++) {
+        for (int i=0; i<intervention.getMeansXtra().size(); i++) {
             if (intervention.getMeansXtra().get(i).getId() == meanXtra.getId()) {
                 try {
                     PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "ok", intervention.getMeansXtra().get(i));
