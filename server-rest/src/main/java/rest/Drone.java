@@ -2,6 +2,7 @@ package rest;
 
 import entity.Position;
 
+import entity.Target;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -13,6 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
 import service.position.GetDronePositionThread;
+import service.position.TransitDroneSender;
 import util.Configuration;
 
 import javax.ws.rs.*;
@@ -21,6 +23,7 @@ import javax.ws.rs.core.Response;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by arno on 12/02/15.
@@ -62,4 +65,13 @@ public class Drone {
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
 	}
+
+    @POST
+    @Path("target")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void doTrajet(Target target) {
+        TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+        GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+        GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
+    }
 }
