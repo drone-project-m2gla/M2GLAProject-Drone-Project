@@ -82,10 +82,9 @@ public class MoyensSuppFragment extends Fragment {
             public void onClick(View v) {
                 int position = moyensSpinner.getSelectedItemPosition();
                 final Mean mean = new Mean();
-                if (position > 0) {
-                    mean.setVehicle(Vehicle.valueOf(titles[position]));
-                    sendRequestMeanAsync(mean);
-                }
+                mean.setVehicle(Vehicle.valueOf(titles[position]));
+                sendRequestMeanAsync(mean);
+
             }
         });
         return view;
