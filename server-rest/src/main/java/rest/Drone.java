@@ -15,10 +15,7 @@ import service.impl.PushServiceImpl;
 import service.position.GetDronePositionThread;
 import util.Configuration;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -60,20 +57,8 @@ public class Drone {
 	}
 
 	@GET
-	@Path("startListenerPosition")
-	public void startListenerPosition() {
-        GetDronePositionThread.createNewInstance();
-		new Thread(GetDronePositionThread.getInstance()).start();
-	}
-
-	@GET
-	@Path("endListenerPosition")
-	public void endListenerPosition() {
-        GetDronePositionThread.getInstance().stopThread();
-	}
-
-	@GET
 	@Path("move")
+    @Produces(MediaType.APPLICATION_JSON)
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
 	}
