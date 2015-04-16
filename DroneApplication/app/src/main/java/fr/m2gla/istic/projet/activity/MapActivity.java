@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.RunnableFuture;
 
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -53,6 +54,7 @@ import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 public class MapActivity extends Activity implements
@@ -135,7 +137,19 @@ public class MapActivity extends Activity implements
         // Enable info window click on each cluster element
         map.setOnInfoWindowClickListener(this);
 
+        droneTargetActionFragment = (DroneTargetActionFragment) getFragmentManager().findFragmentById(R.id.drone_targer_action);
+        droneTargetActionFragment.addObserver(this);
+
+        findViewById(R.id.fragment_moyens_init).setVisibility(View.VISIBLE);
+        findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
+        findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
+
         addDroneListener();
+
+        //FIXME Ca c'est moche - BM
+        StrategyMoveDrone strategyMoveDrone = new StrategyMoveDrone();
+        StrategyMoveDrone.INSTANCE = strategyMoveDrone;
+        StrategyRegistery.getInstance().getStrategies().add(strategyMoveDrone);
         StrategyMoveDrone.getINSTANCE().setActivity(this);
     }
 
@@ -394,6 +408,10 @@ public class MapActivity extends Activity implements
 
     @Override
     public void notifySend() {
+        if (drone != null) {
+            drone.remove();
+        }
+
         Position pos = droneTargetActionFragment.getTarget().getPositions().get(0);
 
         CircleOptions circleOptions = new CircleOptions()
@@ -431,9 +449,14 @@ public class MapActivity extends Activity implements
         polylineList.add(map.addPolyline(polylineOptions));
     }
 
-    public void moveDrone(Position position) {
+    public void moveDrone(final Position position) {
         if (drone != null) {
-            drone.setCenter(new LatLng(position.getLatitude(), position.getLongitude()));
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    drone.setCenter(new LatLng(position.getLatitude(), position.getLongitude()));
+                }
+            });
         }
     }
 
@@ -510,7 +533,7 @@ public class MapActivity extends Activity implements
                                 public void execute(Object response) {
                                     Intervention intervention = (Intervention) response;
                                     Position pos = intervention.getCoordinates();
-                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
+                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), ZOOM_INDEX));
                                     loadSymbols();
                                 }
                             },

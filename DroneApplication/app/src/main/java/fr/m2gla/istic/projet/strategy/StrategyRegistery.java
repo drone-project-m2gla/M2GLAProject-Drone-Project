@@ -18,9 +18,6 @@ public class StrategyRegistery {
         strategies = new ArrayList<>();
         // Add strategy impl
         strategies.add(new StrategyIntervention());
-        StrategyMoveDrone strategyMoveDrone = new StrategyMoveDrone();
-        strategies.add(strategyMoveDrone);
-        StrategyMoveDrone.INSTANCE  = strategyMoveDrone;
     }
 
     public static StrategyRegistery getInstance() {
