@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ public class MoyensInitFragment extends ListFragment {
     private String idIntervention = "";
     private View view;
     private Symbol[] means;
-    ListAdapter adapter;
+    ArrayAdapter adapter;
     List<String> titles;
     private int positionElement;
 
@@ -90,8 +91,6 @@ public class MoyensInitFragment extends ListFragment {
                 dragData.addItem(item3);
                 ClipData.Item item4 = new ClipData.Item(means[position].getColor());
                 dragData.addItem(item4);
-                ClipData.Item item5 = new ClipData.Item(means[position].getDescription());
-                dragData.addItem(item5);
 
                 // Instantiates the drag shadow builder.
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
@@ -111,6 +110,8 @@ public class MoyensInitFragment extends ListFragment {
             public boolean onDrag(View v, DragEvent event) {
                 if (event.getAction() == event.ACTION_DROP) {
                     titles.remove(positionElement);
+                    //getListView().setChan
+                    adapter.notifyDataSetChanged();
                 }
                 return false;
             }
@@ -134,7 +135,7 @@ public class MoyensInitFragment extends ListFragment {
                 String meanClass = m.getVehicle().toString();
                 String meanType = Constant.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                       Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
+                       Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
                 position++;
             }
             if (xtraSize > 0) {
@@ -142,7 +143,7 @@ public class MoyensInitFragment extends ListFragment {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Constant.getImage(meanClass);
                     means[position] = new Symbol(m.getId(),
-                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
+                            Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
                     position++;
                 }
             }
