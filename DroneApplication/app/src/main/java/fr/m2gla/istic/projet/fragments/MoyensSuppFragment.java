@@ -106,7 +106,7 @@ public class MoyensSuppFragment extends Fragment {
                 String meanClass = m.getVehicle().toString();
                 String meanType = Constant.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                        Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000", meanClass);
+                        Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
                 position++;
             }
             Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();
