@@ -21,7 +21,6 @@ public interface RestAPI {
     public static final String GET_ALL_TOPOGRAPHIE = "/topographie/1/1/1";
 
     // Demande d'un moyen supplémentaire /intervention/idIntervention/xtra
-
     public static final String POST_SEND_MEAN_REQUEST = "/intervention/{id}/moyenextra";
 
     //Demande d'une intervention avec id
@@ -32,7 +31,9 @@ public interface RestAPI {
 
     // annuller moyen supplementaire
     public static final String POST_ANNULLER_MOYEN = "/moyen/{idintervention}/nok";
+
     // drone block
     public static final String POST_POSITION_DRONE = "/drone/move";
+    public static final String POST_PARCOURS_DRONE = "/drone/target";
 
 }

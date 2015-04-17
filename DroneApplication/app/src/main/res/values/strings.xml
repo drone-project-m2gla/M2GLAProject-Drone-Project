@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Drone Application</string>
 
@@ -9,7 +10,6 @@
     <string name="no">Non</string>
 
     <string name="title_notification_intervention">Nouvelle intervention</string>
-
     <string name="presentation_text">Aux Joyeux Pompiers</string>
     <string name="url_text">URL : </string>
     <string name="url_hint">http://</string>
@@ -26,8 +26,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="valider_moyens_supp">Envoyer les moyens</string>
 
+    <string name="address_text">Adresse   :</string>
+
     <string name="label_text">"Nom d'intervention :"</string>
-    <string name="address_text">Adresse :</string>
+
     <string name="address_hint">Rue,Voie, Allée</string>
     <string name="codepostal_hint">Code Postal</string>
     <string name="ville_hint">Ville</string>
@@ -40,7 +42,15 @@
     <string name="button_add">Ajouter</string>
     <string name="button_refresh">Rafraîchir</string>
     <string name="add_new_mean">Ajout de moyens supp.</string>
-
     <string name="query_position_confirmation">Confirmer la position du moyen?</string>
+
+    <string name="switch_dorne_mode">Passer en mode drone</string>
+    <string name="switch_moyen_mode">Passer en mode gestion des moyens</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="management_target">Gestion du trajet</string>
+    <string name="validate_target">Valider</string>
+    <string name="close_target">Clore</string>
+    <string name="clean_target">Effacer</string>
     <string name="select_text_view">Ajouter un moyen supplémentaire</string>
 </resources>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.m2gla.istic.projet.strategy.impl.StrategyIntervention;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 /**
  * Created by baptiste on 09/04/15.
