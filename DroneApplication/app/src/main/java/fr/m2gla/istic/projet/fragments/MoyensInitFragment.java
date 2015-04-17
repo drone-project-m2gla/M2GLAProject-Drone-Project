@@ -148,12 +148,15 @@ public class MoyensInitFragment extends ListFragment {
      * @param listMean
      */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
+        listMean = intervention.getMeansList();
+        listXtra = intervention.getMeansXtra();
         int meanSize = 0;//listMean.size(); // taille de la liste des moyens
         for (Mean mean : listMean) {
-            Log.d(TAG, "Mean \t" + mean.getCoordinates().getLatitude());
+            String longitude = "" + mean.getCoordinates().getLongitude();
+            Log.d(TAG, "Mean \t" + longitude);
             String latitude = String.valueOf(mean.getCoordinates().getLatitude());
 
-            if (!latitude.equals("NaN")) {
+            if (!longitude.equals("NaN")) {
                 listMean.remove(meanSize++);
             }
         }
