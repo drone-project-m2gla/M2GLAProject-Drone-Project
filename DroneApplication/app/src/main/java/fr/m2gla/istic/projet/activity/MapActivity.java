@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,18 +20,26 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.constantes.Constant;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
 import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
 import fr.m2gla.istic.projet.model.Intervention;
@@ -40,17 +49,24 @@ import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
+import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.StrategyRegistery;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
+
+import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
 public class MapActivity extends Activity implements
+        ObserverTarget,
         AdapterView.OnDragListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnInfoWindowClickListener{
+        GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = "MapActivity";
     // offsets used to place the icon when it is dropped
     private static final int OFFSET_X = -100;
     private static final int OFFSET_Y = 30;
+
+    private static final int ZOOM_INDEX = 18;
 
     private static MapFragment mapFragment;
 
@@ -68,14 +84,30 @@ public class MapActivity extends Activity implements
 
     private Map<String, String> param;
 
-    private boolean isDroneMode = false;
+    private Menu menu;
+    private boolean isDroneMode;
+    private Circle drone;
+    private List<Polyline> polylineList;
+    private List<Circle> circleList;
+    private DroneTargetActionFragment droneTargetActionFragment;
+
+    @Override
+    protected void onDestroy() {
+        StrategyMoveDrone.getINSTANCE().setActivity(null);
+
+        super.onDestroy();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        isDroneMode = false;
+        polylineList = new ArrayList<Polyline>();
+        circleList = new ArrayList<Circle>();
         param = new HashMap<String, String>();
+
         markerSymbolLink = new HashMap<String, SymbolMarkerClusterItem>();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -84,8 +116,6 @@ public class MapActivity extends Activity implements
         map.getUiSettings().setCompassEnabled(true);
 
         loadIntervention();
-        // Set map's long click listener to control drone
-        map.setOnMapLongClickListener(this);
 
         // Set marker's drag listener to control marker drag & drop behaviour
         map.setOnMarkerDragListener(this);
@@ -105,13 +135,33 @@ public class MapActivity extends Activity implements
 
         // Enable info window click on each cluster element
         map.setOnInfoWindowClickListener(this);
+
+        droneTargetActionFragment = (DroneTargetActionFragment) getFragmentManager().findFragmentById(R.id.drone_targer_action);
+        droneTargetActionFragment.addObserver(this);
+
+        findViewById(R.id.fragment_moyens_init).setVisibility(View.VISIBLE);
+        findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
+        findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
+
+        addDroneListener();
+
+        //FIXME Ca c'est moche - BM
+        StrategyMoveDrone strategyMoveDrone = new StrategyMoveDrone();
+        StrategyMoveDrone.INSTANCE = strategyMoveDrone;
+        StrategyRegistery.getInstance().getStrategies().add(strategyMoveDrone);
+        StrategyMoveDrone.getINSTANCE().setActivity(this);
+
+        loadTopographicSymbols();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
 
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_map, menu);
+
+        menu.getItem(0).setTitle(R.string.switch_dorne_mode);
         return true;
     }
 
@@ -120,6 +170,17 @@ public class MapActivity extends Activity implements
         switch (item.getItemId()) {
             case R.id.switch_map_mode:
                 isDroneMode = !isDroneMode;
+                if (isDroneMode) {
+                    menu.getItem(0).setTitle(R.string.switch_moyen_mode);
+                    findViewById(R.id.fragment_moyens_init).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fragment_moyens_supp).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.drone_targer_action).setVisibility(View.VISIBLE);
+                } else {
+                    menu.getItem(0).setTitle(R.string.switch_dorne_mode);
+                    findViewById(R.id.fragment_moyens_init).setVisibility(View.VISIBLE);
+                    findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
+                    findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
+                }
                 break;
         }
         return true;
@@ -128,9 +189,8 @@ public class MapActivity extends Activity implements
     /**
      * Load symbols using topographic REST service
      */
-    public void loadSymbols() {
+    public void loadTopographicSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
-
         new Command() {
             /**
              * Success connection
@@ -164,14 +224,8 @@ public class MapActivity extends Activity implements
             @Override
             public void execute(Object response) {
             Log.e(TAG, "connection error");
-            Symbol symbol = new Symbol(Symbol.SymbolType.secours_a_personnes_prevu,"SAP", "REN", "FF0000");
-            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latitude, longitude, symbol);
-            mClusterManager.addItem(markerItem);
-            mClusterManager.cluster();
             }
         });
-
-
     }
 
     /**
@@ -217,6 +271,40 @@ public class MapActivity extends Activity implements
     @Override
     public void onMarkerDragStart(Marker marker) {
         disableRaiseOnDrag(marker);
+    }
+
+    public void addDroneListener() {
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                if (!isDroneMode) return;
+
+                Position position = new Position();
+                position.setLatitude(latLng.latitude);
+                position.setLongitude(latLng.longitude);
+
+                CircleOptions circleOptions = new CircleOptions()
+                        .center(latLng)
+                        .radius(0.2)
+                        .strokeColor(Color.BLUE);
+
+                circleList.add(map.addCircle(circleOptions));
+
+                if (!droneTargetActionFragment.getTarget().getPositions().isEmpty()) {
+                    Position pos = droneTargetActionFragment.getTarget().getPositions().get(droneTargetActionFragment.getTarget().getPositions().size() - 1);
+
+                    PolylineOptions polylineOptions = new PolylineOptions()
+                            .add(new LatLng(pos.getLatitude(), pos.getLongitude()))
+                            .add(latLng)
+                            .width(5)
+                            .color(Color.CYAN);
+
+                    polylineList.add(map.addPolyline(polylineOptions));
+                }
+
+                droneTargetActionFragment.addPosition(position);
+            }
+        });
     }
 
     /**
@@ -272,34 +360,6 @@ public class MapActivity extends Activity implements
                         });
     }
 
-    /**
-     * Map long click listener
-     * Allows to control drone
-     *
-     * @param latLng current long click position
-     */
-    @Override
-    public void onMapLongClick(LatLng latLng) {
-        Position position = new Position();
-        position.setLatitude(latLng.latitude);
-        position.setLongitude(latLng.longitude);
-
-        RestServiceImpl.getInstance()
-                .post(RestAPI.POST_POSITION_DRONE, null, position, Void.class,
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.i(TAG, "Drone move");
-                            }
-                        },
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.e(TAG, "Push position error");
-                            }
-                        });
-    }
-
     @Override
     public void onInfoWindowClick(Marker marker) {
         Log.d(TAG, "main onClusterItemInfoWindowClick");
@@ -313,6 +373,12 @@ public class MapActivity extends Activity implements
                         public void onClick(DialogInterface dialog, int which) {
                             Mean mean = new Mean();
                             mean.setId(meanSymbol.getId());
+                            Position position = new Position();
+                            LatLng markerPosition = _marker.getPosition();
+                            position.setLatitude(markerPosition.latitude);
+                            position.setLongitude(markerPosition.longitude);
+                            mean.setCoordinates(position);
+                            mean.setInPosition(true);
 
                             RestServiceImpl.getInstance()
                                     .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
@@ -340,6 +406,60 @@ public class MapActivity extends Activity implements
                         }
                     })
                     .show();
+        }
+    }
+
+    @Override
+    public void notifySend() {
+        if (drone != null) {
+            drone.remove();
+        }
+
+        Position pos = droneTargetActionFragment.getTarget().getPositions().get(0);
+
+        CircleOptions circleOptions = new CircleOptions()
+                .center(new LatLng(pos.getLatitude(), pos.getLongitude()))
+                .radius(0.4)
+                .strokeColor(Color.RED);
+
+        drone = map.addCircle(circleOptions);
+    }
+
+    @Override
+    public void notifyClear() {
+        for (Polyline polyline : polylineList) {
+            polyline.remove();
+        }
+
+        for (Circle circle : circleList) {
+            circle.remove();
+        }
+
+        polylineList.clear();
+    }
+
+    @Override
+    public void notifyClose() {
+        Position pos1 = droneTargetActionFragment.getTarget().getPositions().get(0);
+        Position pos2 = droneTargetActionFragment.getTarget().getPositions().get(droneTargetActionFragment.getTarget().getPositions().size() - 1);
+
+        PolylineOptions polylineOptions = new PolylineOptions()
+                .add(new LatLng(pos1.getLatitude(), pos1.getLongitude()))
+                .add(new LatLng(pos2.getLatitude(), pos2.getLongitude()))
+                .width(5)
+                .color(Color.CYAN);
+
+        polylineList.add(map.addPolyline(polylineOptions));
+    }
+
+    public void moveDrone(final Position position) {
+        if (drone != null) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    drone.setCenter(new LatLng(position.getLatitude(), position.getLongitude()));
+                }
+            });
         }
     }
 
@@ -394,7 +514,6 @@ public class MapActivity extends Activity implements
 
         if (intent != null) {
             String idIntervention = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
-            Toast.makeText(getApplication(), "Bonjour\nID intervention " + idIntervention, Toast.LENGTH_LONG).show();
 
             // Fragment ajout de moyens supplémentaires
             MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
@@ -417,8 +536,9 @@ public class MapActivity extends Activity implements
                                 public void execute(Object response) {
                                     Intervention intervention = (Intervention) response;
                                     Position pos = intervention.getCoordinates();
-                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), 15));
-                                    loadSymbols();
+
+                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), ZOOM_INDEX));
+                                    loadMeansInMap();
                                 }
                             },
                             new Command() {
@@ -428,6 +548,61 @@ public class MapActivity extends Activity implements
                                 }
                             });
         }
+    }
+
+    private void loadMeansInMap(){
+        RestServiceImpl.getInstance()
+                .get(RestAPI.GET_INTERVENTION, param, Intervention.class, getCallbackSuccess(), getCallbackError());
+    }
+
+    /**
+     * Command error
+     *
+     * @return
+     */
+    private Command getCallbackError() {
+        return new Command() {
+            @Override
+            public void execute(Object response) {
+                Toast.makeText(getApplication(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
+    /**
+     * Command success
+     *
+     * @return
+     */
+    private Command getCallbackSuccess() {
+        return new Command() {
+            @Override
+            public void execute(Object response) {
+                Intervention intervention = (Intervention) response;
+                List<Mean> meanList = intervention.getMeansList();
+
+                List<Mean> meansWithCoordinates = new ArrayList<Mean>();
+                for (Mean m: meanList){
+                    String latitude = String.valueOf(m.getCoordinates().getLatitude());
+                    if (!latitude.equals("NaN")) {
+                        meansWithCoordinates.add(m);
+                    }
+                }
+
+                for (Mean m: meansWithCoordinates) {
+                    String meanClass = m.getVehicle().toString();
+                    String meanType = Constant.getImage(meanClass);
+                    Symbol symbol = new Symbol(m.getId(),
+                            valueOf(meanType), meanClass, "RNS", "ff0000");
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
+                            m.getCoordinates().getLatitude(),
+                            m.getCoordinates().getLongitude(), symbol);
+                    mClusterManager.addItem(markerItem);
+                }
+
+                mClusterManager.cluster();
+            }
+        };
     }
 
 }
