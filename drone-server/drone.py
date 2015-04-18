@@ -5,7 +5,8 @@ import math
 bpymorse.set_speed(fps=60, logic_step_max=5, physics_step_max=5)
 
 # Simple quadrotor with rigid body physics
-quadrotor = Submarine()
+'''quadrotor = Submarine()'''
+quadrotor = Quadrotor()
 quadrotor.translate(x=-0, y=0, z=20)
 quadrotor.name = 'drone'
 

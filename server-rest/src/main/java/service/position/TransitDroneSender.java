@@ -31,29 +31,32 @@ public class TransitDroneSender implements PositionUnchangedObserver {
 
     @Override
     public void notifyPositionUnchanged() {
-        HttpClient client = new HttpClient();
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        ObjectMapper mapper = new ObjectMapper();
-        PostMethod postMethod = new PostMethod(Configuration.getSERVER_PYTHON() + "/position");
+        if(target.getPositions().size()>0) {
+            HttpClient client = new HttpClient();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ObjectMapper mapper = new ObjectMapper();
+            PostMethod postMethod = new PostMethod(Configuration.getSERVER_PYTHON() + "/position");
 
-        try {
-            mapper.writeValue(output, target.getPositions().get(nextIndex));
+            try {
+                mapper.writeValue(output, target.getPositions().get(nextIndex));
 
-            RequestEntity requestEntity = new StringRequestEntity(
-                    output.toString(), MediaType.APPLICATION_JSON, "UTF-8");
-            postMethod.setRequestEntity(requestEntity);
+                RequestEntity requestEntity = new StringRequestEntity(
+                        output.toString(), MediaType.APPLICATION_JSON, "UTF-8");
+                postMethod.setRequestEntity(requestEntity);
 
-            client.executeMethod(postMethod);
-        } catch (IOException e) {
-            LOGGER.error("Error target", e);
+                client.executeMethod(postMethod);
+            } catch (IOException e) {
+                LOGGER.error("Error target", e);
+            }
+            if (target.getPositions().size() > 1) {
+                if (target.isClose() && nextIndex >= target.getPositions().size()) {
+                    nextIndex = 0;
+                } else if (!target.isClose() && ((isIncrement && nextIndex >= target.getPositions().size() - 1) || (!isIncrement && nextIndex <= 0))) {
+                    isIncrement = !isIncrement;
+                }
+
+                nextIndex = nextIndex + ((isIncrement) ? 1 : -1);
+            }
         }
-
-        if (target.isClose() && nextIndex >= target.getPositions().size()) {
-            nextIndex = 0;
-        } else if (!target.isClose() && ((isIncrement && nextIndex >= target.getPositions().size() - 1) || (!isIncrement && nextIndex <= 0))) {
-            isIncrement = !isIncrement;
-        }
-
-        nextIndex = nextIndex + ((isIncrement) ? 1 : -1);
     }
 }
