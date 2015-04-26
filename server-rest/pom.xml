@@ -18,11 +18,10 @@
             </activation>
             <properties>
                 <war.name>int</war.name>
-                <project.BUCKET_NAME>test</project.BUCKET_NAME>
-                <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
+                <project.DATABASE_NAME>test</project.DATABASE_NAME>
+                <project.MONGODB_HOSTNAME>192.168.1.14</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
-                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
-                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+                <project.MONGODB_PORT>27017</project.MONGODB_PORT>
                 <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
                 <tomcat.http.port>8088</tomcat.http.port>
                 <tomcat.path>/sitserver_int</tomcat.path>
@@ -35,11 +34,10 @@
             </activation>
             <properties>
                 <war.name>dev</war.name>
-                <project.BUCKET_NAME>test</project.BUCKET_NAME>
-                <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
+                <project.DATABASE_NAME>test</project.DATABASE_NAME>
+                <project.MONGODB_HOSTNAME>192.168.1.14</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
-                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
-                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+                <project.MONGODB_PORT>27017</project.MONGODB_PORT>
                 <tomcat.url>http://127.0.0.1:8080/manager/text</tomcat.url>
                 <tomcat.http.port>8080</tomcat.http.port>
                 <tomcat.path>/sitserver</tomcat.path>
@@ -49,11 +47,10 @@
             <id>prod</id>
             <properties>
                 <war.name>sitserver</war.name>
-                <project.BUCKET_NAME>prod</project.BUCKET_NAME>
-                <project.COUCHBASE_HOSTNAME>148.60.11.195</project.COUCHBASE_HOSTNAME>
+                <project.DATABASE_NAME>test</project.DATABASE_NAME>
+                <project.MONGODB_HOSTNAME>192.168.1.14</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
-                <project.COUCHBASE_DESIGNDOC_PORT>8092</project.COUCHBASE_DESIGNDOC_PORT>
-                <project.COUCHBASE_BUCKET_PORT>8091</project.COUCHBASE_BUCKET_PORT>
+                <project.MONGODB_PORT>27017</project.MONGODB_PORT>
                 <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
                 <tomcat.http.port>8080</tomcat.http.port>
                 <tomcat.path>/sitserver</tomcat.path>
@@ -73,12 +70,12 @@
 			<artifactId>google-maps-services</artifactId>
 			<version>0.1.6</version>
 		</dependency>
-		<dependency>
-			<groupId>com.couchbase.client</groupId>
-			<artifactId>java-client</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>

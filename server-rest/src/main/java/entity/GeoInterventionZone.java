@@ -17,12 +17,6 @@ public class GeoInterventionZone extends AbstractEntity implements Serializable 
 	 */
 	private static final long serialVersionUID = 1L;
 	List<Zone> coordinates = new ArrayList<Zone>();
-    
-    
-    public GeoInterventionZone() {
-        super();
-        this.datatype = Constant.DATATYPE_GEOINTERVENTIONZONE;
-    }
 
     public List<Zone> getCoordinates() {
         return coordinates;

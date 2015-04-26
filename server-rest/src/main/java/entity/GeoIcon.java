@@ -24,11 +24,6 @@ public class GeoIcon extends AbstractEntity {
 
     private Boolean tiret;
 
-    public GeoIcon() {
-        super();
-        this.datatype = Constant.DATATYPE_GEOICON;
-    }
-
     public Position getPosition() {
         return position;
     }

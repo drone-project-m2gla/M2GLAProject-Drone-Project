@@ -42,7 +42,6 @@ public class Intervention extends AbstractEntity {
     public Intervention() {
         super();
         this.dateCreate = new Date();
-        this.datatype = Constant.DATATYPE_INTERVENTION;
         this.meansXtra = new ArrayList<Mean>();
     }
 

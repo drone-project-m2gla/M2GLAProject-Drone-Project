@@ -11,8 +11,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import dao.GeoInterventionZoneDAO;
 import entity.GeoInterventionZone;
 import entity.Position;
 import entity.Zone;
@@ -48,17 +46,6 @@ public class GeoPosition {
 
         return Response.status(200).entity("Le point est : " + point).build();
 
-    }
-
-    @POST
-    @Path("setzone")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response setGeoInterventionZone(GeoInterventionZone zone) {
-        GeoInterventionZoneDAO gIZD = new GeoInterventionZoneDAO();
-        gIZD.connect();
-        GeoInterventionZone res= gIZD.create(zone);
-        gIZD.disconnect();
-        return Response.status(200).entity("Le nom de la zone est : " + zone + "<BR>" + res.toString()).build();
     }
 
     @POST

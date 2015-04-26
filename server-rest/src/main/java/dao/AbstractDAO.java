@@ -3,20 +3,12 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import util.Configuration;
-
-import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.Cluster;
-import com.couchbase.client.java.CouchbaseCluster;
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.error.FlushDisabledException;
-import com.couchbase.client.java.view.DefaultView;
-import com.couchbase.client.java.view.DesignDocument;
-import com.couchbase.client.java.view.View;
-import com.couchbase.client.java.view.ViewQuery;
-import com.couchbase.client.java.view.ViewResult;
-import com.couchbase.client.java.view.ViewRow;
-
 import entity.AbstractEntity;
 
 /**
@@ -25,15 +17,10 @@ import entity.AbstractEntity;
  * Also use for connect and disconnect
  */
 public abstract class AbstractDAO<T extends AbstractEntity> {
-    /**
-     * Current Connection
-     */
-    protected static Cluster currentCluster;
 
-    /**
-     * Current Bucket
-     */
-    public static Bucket currentBucket;
+    private MongoClient mongoClient;
+    private MongoDatabase db;
+    protected MongoCollection collection;
 
     /**
      * datatype of T
@@ -45,13 +32,10 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      * @return Bucket to communicate with couchbase
      */
     public final void connect() {
-        if(currentCluster == null || currentBucket==null) {
-            // Connect to a cluster
-            currentCluster = CouchbaseCluster.create(Configuration.getCOUCHBASE_HOSTNAME());
-
-            // Open a bucket
-            currentBucket = currentCluster.openBucket(Configuration.getBUCKET_NAME());
-
+        if(mongoClient == null || db==null) {
+            mongoClient = new MongoClient(Configuration.getMONGODB_HOSTNAME(), Integer.parseInt(Configuration.getMONGODB_PORT()));
+            db = mongoClient.getDatabase(Configuration.getDATABASE_NAME());
+            collection = db.getCollection(datatype);
         }
     }
 
@@ -59,10 +43,11 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      * Disconnect BDD
      */
     public final void disconnect() {
-        if(currentCluster != null)
+        if(mongoClient != null)
         {
-            currentCluster.disconnect();
-            currentBucket =null;
+            mongoClient.close();
+            db =null;
+            collection = null;
         }
     }
 
@@ -71,17 +56,16 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      * @param e entity to create
      */
     public final T create(T e) {
-        JsonDocument res = currentBucket.insert(entityToJsonDocument(e));
-        return jsonDocumentToEntity(res);
+        collection.insertOne(entityToDocument(e));
+        return this.getById(e.getId());
     }
 
     /**
      * Delete an entity
      * @param e
      */
-    public final T delete(T e) {
-        JsonDocument res = currentBucket.remove(""+e.getId());
-        return jsonDocumentToEntity(res);
+    public final void delete(T e) {
+        collection.deleteOne(new BasicDBObject("_id",e.getId()));
     }
 
     /**
@@ -89,8 +73,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      * @param e
      */
     public final T update(T e) {
-        JsonDocument res = currentBucket.upsert(entityToJsonDocument(e));
-        return jsonDocumentToEntity(res);
+        collection.replaceOne(new BasicDBObject("_id", e.getId()), entityToDocument(e));
+        return this.getById(e.getId());
     }
 
     /**
@@ -99,13 +83,14 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     public final List<T> getAll()
     {
-        List<T> res = new ArrayList<T>();
-        createViewAll();
-        ViewResult result = currentBucket.query(ViewQuery.from("designDoc", "by_datatype_" + datatype));
-                // Iterate through the returned ViewRows
-        for (ViewRow row : result) {
-            res.add(jsonDocumentToEntity(row.document()));
-        }
+        final List<T> res = new ArrayList<T>();
+        FindIterable findIterable = collection.find();
+        findIterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                res.add(documentToEntity(document));
+            }
+        });
         return res;
     }
 
@@ -115,8 +100,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     public final T getById(long id)
     {
-        JsonDocument res = currentBucket.get(""+id);
-        return jsonDocumentToEntity(res);
+        FindIterable findIterable = collection.find(new BasicDBObject("_id", id));
+        return documentToEntity((Document) findIterable.first());
     }
 
     /**
@@ -125,53 +110,21 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     public boolean flush()
     {
-        if(currentBucket!=null && currentCluster!=null)
-        {
-            try
-            {
-                return currentBucket.bucketManager().flush();
-            }
-            catch (FlushDisabledException e)
-            {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return false;
+        db.drop();
+        return true;
     }
 
     /**
      * Transform a jsonDocument to entity
-     * @param jsonDocument document to transform
-     * @return entity of JsonDocument
+     * @param document document to transform
+     * @return entity of Document
      */
-    protected abstract T jsonDocumentToEntity(JsonDocument jsonDocument);
+    protected abstract T documentToEntity(Document document);
 
     /**
-     * Transform an entity to JsonDocument
+     * Transform an entity to Document
      * @param entity to transform
-     * @return jsonDoc of entity
+     * @return document of entity
      */
-    protected abstract JsonDocument entityToJsonDocument(T entity);
-
-    private void createViewAll()
-    {
-        DesignDocument designDoc = currentBucket.bucketManager().getDesignDocument("designDoc");
-
-            String viewName = "by_datatype_"+datatype;
-            String mapFunction =
-                    "function (doc, meta) {\n" +
-                            " if(doc.properties.datatype && doc.properties.datatype == '"+ datatype + "') \n" +
-                            "   { emit(doc);}\n" +
-                            "}";
-            designDoc.views().add(DefaultView.create(viewName, mapFunction, ""));
-            currentBucket.bucketManager().upsertDesignDocument(designDoc);
-    }
-
-    public void createDesignDocument()
-    {
-            List<View> views = new ArrayList<View>();
-            DesignDocument designDoc = DesignDocument.create("designDoc", views);
-            currentBucket.bucketManager().insertDesignDocument(designDoc);
-    }
+    protected abstract Document entityToDocument(T entity);
 }

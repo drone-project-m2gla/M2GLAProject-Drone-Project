@@ -29,7 +29,5 @@ public class User extends AbstractEntity {
 
     public User() {
         super();
-        this.datatype = Constant.DATATYPE_USER;
-
     }
 }

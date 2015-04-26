@@ -28,7 +28,6 @@ public class Mean extends AbstractEntity{
         this.coordinates.setAltitude(Double.NaN);
         this.coordinates.setLatitude(Double.NaN);
         this.coordinates.setLongitude(Double.NaN);
-        this.datatype = Constant.DATATYPE_MEAN;
     }
 
     public Vehicle getVehicle() {

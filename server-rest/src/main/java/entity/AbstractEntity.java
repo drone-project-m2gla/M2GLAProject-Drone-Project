@@ -14,11 +14,6 @@ public abstract class AbstractEntity {
     protected long id;
 
     /**
-     * Type of entity
-     */
-    protected String datatype;
-
-    /**
      * Basic contruct, assign a random id
      */
     public AbstractEntity()
@@ -34,10 +29,5 @@ public abstract class AbstractEntity {
     public void setId(long id)
     {
         this.id=id;
-    }
-
-    @JsonIgnore
-    public String getDataType() {
-        return datatype;
     }
 }
