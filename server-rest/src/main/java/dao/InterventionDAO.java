@@ -24,6 +24,10 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
 
     @Override
     protected Intervention documentToEntity(Document document) {
+        if(document==null)
+        {
+            return null;
+        }
         Intervention intervention = new Intervention();
         try {
         	SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
@@ -41,10 +45,6 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
         catch(Throwable t)
         {
             t.printStackTrace();
-            System.out.println(document.get("meansList"));
-            System.out.println(document.get("meansList").getClass());
-            System.out.println(((List)document.get("meansList")).get(0));
-            System.out.println(((List)document.get("meansList")).get(0).getClass());
             intervention = null;
         }
         return intervention;
@@ -52,7 +52,10 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
 
     @Override
     protected Document entityToDocument(Intervention entity) {
-        MeanDAO meanDAO = new MeanDAO();
+        if(entity==null)
+        {
+            return null;
+        }
         Document document = new Document();
         document.put("dateCreate", entity.getDateCreate().toString());
         document.put("label", entity.getLabel());

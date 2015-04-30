@@ -1,8 +1,8 @@
 package dao;
 
-import java.util.Date;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,6 +15,9 @@ import entity.DisasterCode;
 import entity.Intervention;
 import entity.Position;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /**
  * Created by alban on 16/03/15.
  */
@@ -22,18 +25,16 @@ public class InterventionDAOTest {
 
     private static InterventionDAO dao = new InterventionDAO();
 
+    private static final Logger LOGGER = Logger.getLogger(InterventionDAOTest.class);
+
     @BeforeClass
     public static void beforeAllTests() {
-        HashMap<String, String> configs = new HashMap<String, String>();
-        configs.put("COUCHBASE_HOSTNAME","148.60.11.195");
-        configs.put("BUCKET_NAME","test");
         Configuration.loadConfigurations();
         dao.connect();
     }
 
     @AfterClass
     public static void afterAllTests() {
-        //CouchbaseCluster.create(Configuration.COUCHBASE_HOSTNAME).openBucket("e").;
         dao.disconnect();
     }
 
@@ -49,100 +50,41 @@ public class InterventionDAOTest {
     }
 
     @Test
-    public void testCreateIntervention()
+    public void testInsert()
     {
         Intervention intervention = new Intervention( "Intervention 1", "263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
         RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
         Position coordinatesIntervention = adresseIntervention.getCoordinates();
         intervention.setCoordinates(coordinatesIntervention);
-        System.out.println(intervention.getId());
-        //dao.entityToJsonDocument(intervention);
-        dao.create(intervention);
-    }
-
-
-/*
-    @Test
-    public void testInsert() {
-        GeoImage geoImage = new GeoImage();
-        geoImage.setCoordinates(new Position(4.0, 9.0, 19.0));
-        geoImage.setImageIn64(Base64.encode(imagesBytes));
-        dao.entityToJsonDocument(geoImage);
-
-        GeoImage res = dao.create(geoImage);
-        assertEquals(geoImage, res);
-        assertEquals(geoImage.getId(), res.getId());
+        Intervention interventionInBase = dao.create(intervention);
+        assertEquals(intervention, interventionInBase);
     }
 
     @Test
     public void testUpdate() {
-
-        //insertion
-        GeoImage geoImage = new GeoImage();
-        geoImage.setCoordinates(new Position(4.0, 9.0, 19.0));
-        geoImage.setImageIn64(Base64.encode(imagesBytes));
-        dao.entityToJsonDocument(geoImage);
-
-        GeoImage res = dao.create(geoImage);
-        long idInbase = res.getId();
-        assertEquals(geoImage, res);
-        assertEquals(geoImage.getId(), res.getId());
-
-        // update
-        geoImage = dao.getById(idInbase);
-        geoImage.setCoordinates(new Position(3.0, 2.0, 1.2));
-        res = dao.update(geoImage);
-        assertEquals(geoImage, res);
-        assertEquals(geoImage.getId(), res.getId());
+        Intervention intervention = new Intervention( "Intervention 1", "263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
+        Position coordinatesIntervention = adresseIntervention.getCoordinates();
+        intervention.setCoordinates(coordinatesIntervention);
+        LOGGER.info(intervention.getId());
+        Intervention created = dao.create(intervention);
+        assertEquals(intervention, created);
+        created.setAddress("576 rue des Globours");
+        Intervention updated = dao.update(created);
+        assertEquals(updated, created);
+        assertEquals("576 rue des Globours", updated.getAddress());
     }
 
     @Test
     public void testDelete() {
-        //insertion
-        GeoImage geoImage = new GeoImage();
-        geoImage.setCoordinates(new Position(4.0, 9.0, 19.0));
-        geoImage.setImageIn64(Base64.encode(imagesBytes));
-
-        GeoImage res = dao.create(geoImage);
-        long idInbase = res.getId();
-        assertEquals(geoImage, res);
-        assertEquals(geoImage.getId(), res.getId());
-
-        // suppression
-        dao.delete(geoImage);
-        assertNull(dao.getById(idInbase));
+        Intervention intervention = new Intervention("Intervention 1", "263 Avenue Général Leclerc", "35000", "Rennes", DisasterCode.FHA);
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
+        Position coordinatesIntervention = adresseIntervention.getCoordinates();
+        intervention.setCoordinates(coordinatesIntervention);
+        LOGGER.info(intervention.getId());
+        Intervention created = dao.create(intervention);
+        assertEquals(intervention, created);
+        dao.delete(created);
+        assertNull(dao.getById(created.getId()));
     }
-
-    public void testGetAll()
-    {
-        //dao.createDesignDocument();
-        for(GeoImage g: dao.getAll()){
-            System.out.println(g);
-        }
-    }
-
-
-    public void testInsertSomePics() throws IOException {
-        ArrayList<String> strPath = new ArrayList<String>();
-        strPath.add("/home/alban/Images/2288305623_c21c8d2618_z.jpg");
-        strPath.add("/home/alban/Images/2288305623_c21c8d2618_z.jpg");
-        strPath.add("/home/alban/Images/Adult-Male-Gelada.jpg");
-        strPath.add("/home/alban/Images/franziskaner.png");
-        strPath.add("/home/alban/Images/GELADA 3.jpg");
-        strPath.add("/home/alban/Images/supercopter-3965283semdn.jpg");
-        for(String s : strPath)
-        {
-            Path imgPath = Paths.get(s);
-
-        byte[] byteArray = Files.readAllBytes(imgPath);
-        String base64String = Base64.encode(byteArray);
-
-        // on crée le document
-        GeoImage geoImage = new GeoImage();
-            geoImage.setCoordinates(new Position(4.0, 9.0, 19.0));
-            geoImage.setImageIn64(base64String);
-        dao.create(geoImage);
-        }
-    }
-    */
 }

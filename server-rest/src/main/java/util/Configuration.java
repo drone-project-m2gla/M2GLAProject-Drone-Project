@@ -61,7 +61,7 @@ public class Configuration {
         MONGODB_PORT = prop.getProperty("MONGODB_PORT");
         */
         DATABASE_NAME = "test";
-        MONGODB_HOSTNAME = "192.168.1.14";
+        MONGODB_HOSTNAME = "projm2gla1backup.istic.univ-rennes1.fr";
         SERVER_PYTHON = "http://projm2gla2.istic.univ-rennes1.fr:5000/robot";
         MONGODB_PORT = "27017";
     }
