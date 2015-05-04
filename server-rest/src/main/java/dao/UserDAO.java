@@ -29,6 +29,10 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     protected User documentToEntity(Document document) {
+        if(document==null)
+        {
+            return null;
+        }
         User u = new User();
         u.setId(document.getLong("_id"));
         u.setUsername(document.getString("username"));

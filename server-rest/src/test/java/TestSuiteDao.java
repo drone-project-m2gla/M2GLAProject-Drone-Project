@@ -3,6 +3,7 @@
  */
 
 import dao.InterventionDAOTest;
+import dao.UserDAOTest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -19,7 +20,8 @@ import java.io.IOException;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        InterventionDAOTest.class
+        InterventionDAOTest.class,
+        UserDAOTest.class
 })
 public class TestSuiteDao {
     @BeforeClass

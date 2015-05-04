@@ -102,6 +102,10 @@ public class Tools {
     }
 
     public static Mean documentToMean(Document document) {
+        if(document==null)
+        {
+            return null;
+        }
         Mean Mean = new Mean();
         Mean.setId(document.getLong("_id"));
         Mean.setVehicle(Vehicle.valueOf(document.getString("vehicle")));

@@ -23,6 +23,10 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
 
     @Override
     protected GeoIcon documentToEntity(Document document) {
+        if(document==null)
+        {
+            return null;
+        }
         GeoIcon u = new GeoIcon();
         u.setId(document.getLong("_id"));
         u.setEntitled(document.getString("entitled"));

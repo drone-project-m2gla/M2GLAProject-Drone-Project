@@ -20,6 +20,10 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
 
     @Override
     protected GeoImage documentToEntity(Document document) {
+        if(document==null)
+        {
+            return null;
+        }
         GeoImage geoImage = new GeoImage();
         geoImage.setId(document.getLong("_id"));
         geoImage.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
