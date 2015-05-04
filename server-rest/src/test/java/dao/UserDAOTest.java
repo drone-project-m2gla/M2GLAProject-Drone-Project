@@ -1,10 +1,8 @@
 package dao;
 
-import entity.Position;
 import entity.User;
 import org.apache.log4j.Logger;
 import org.junit.*;
-import service.impl.RetrieveAddressImpl;
 import util.Configuration;
 
 import static org.junit.Assert.assertEquals;

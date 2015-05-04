@@ -3,6 +3,7 @@
  */
 
 import dao.InterventionDAOTest;
+import dao.MeanDAOTest;
 import dao.UserDAOTest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -21,7 +22,8 @@ import java.io.IOException;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         InterventionDAOTest.class,
-        UserDAOTest.class
+        UserDAOTest.class,
+        MeanDAOTest.class
 })
 public class TestSuiteDao {
     @BeforeClass
