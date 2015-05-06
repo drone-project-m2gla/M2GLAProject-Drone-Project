@@ -40,7 +40,7 @@ public class Configuration {
     public static void loadConfigurations() {
 
 
-        /*Properties prop = new Properties();
+        Properties prop = new Properties();
         InputStream in = Configuration.class.getResourceAsStream("/maven.properties");
         try {
 
@@ -59,10 +59,11 @@ public class Configuration {
         MONGODB_HOSTNAME = prop.getProperty("MONGODB_HOSTNAME");
         SERVER_PYTHON = prop.getProperty("SERVER_PYTHON");
         MONGODB_PORT = prop.getProperty("MONGODB_PORT");
-        */
+        /*
         DATABASE_NAME = "test";
         MONGODB_HOSTNAME = "projm2gla1backup.istic.univ-rennes1.fr";
         SERVER_PYTHON = "http://projm2gla2.istic.univ-rennes1.fr:5000/robot";
         MONGODB_PORT = "27017";
+        */
     }
 }
