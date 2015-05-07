@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.mongodb.*;
@@ -33,7 +34,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     public final void connect() {
         if(mongoClient == null || db==null) {
-            mongoClient = new MongoClient(Configuration.getMONGODB_HOSTNAME(), Integer.parseInt(Configuration.getMONGODB_PORT()));
+            MongoCredential credential = MongoCredential.createCredential(Configuration.getMONGODB_USER(), Configuration.getDATABASE_NAME(), Configuration.getMONGODB_PWD().toCharArray());
+            mongoClient = new MongoClient( new ServerAddress(Configuration.getMONGODB_HOSTNAME(), Integer.parseInt(Configuration.getMONGODB_PORT())), Arrays.asList(credential));
             db = mongoClient.getDatabase(Configuration.getDATABASE_NAME());
             collection = db.getCollection(datatype);
         }

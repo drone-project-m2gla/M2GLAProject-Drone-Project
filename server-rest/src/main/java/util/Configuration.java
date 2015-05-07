@@ -12,6 +12,18 @@ public class Configuration {
     private static String MONGODB_HOSTNAME;
     private static String SERVER_PYTHON;
     private static String MONGODB_PORT;
+    private static String MONGODB_USER;
+    private static String MONGODB_PWD;
+
+    public static String getMONGODB_USER() {
+        if (MONGODB_USER == null) {loadConfigurations();}
+        return MONGODB_USER;
+    }
+
+    public static String getMONGODB_PWD() {
+        if (MONGODB_PWD == null) {loadConfigurations();}
+        return MONGODB_PWD;
+    }
 
     public static String getMONGODB_PORT() {
         if (MONGODB_PORT == null) {loadConfigurations();}
@@ -38,8 +50,6 @@ public class Configuration {
      *
      */
     public static void loadConfigurations() {
-
-
         /*Properties prop = new Properties();
         InputStream in = Configuration.class.getResourceAsStream("/maven.properties");
         try {
@@ -64,5 +74,7 @@ public class Configuration {
         MONGODB_HOSTNAME = "projm2gla1backup.istic.univ-rennes1.fr";
         SERVER_PYTHON = "http://projm2gla2.istic.univ-rennes1.fr:5000/robot";
         MONGODB_PORT = "27017";
+        MONGODB_USER = "testUser";
+        MONGODB_PWD = "pwd2testUser";
     }
 }
