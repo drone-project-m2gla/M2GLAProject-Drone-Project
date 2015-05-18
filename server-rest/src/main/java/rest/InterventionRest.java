@@ -81,7 +81,7 @@ public class InterventionRest {
     @Path("/{id}/moyen/positionner")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
+    public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) throws IOException {
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
         iD.connect();
@@ -92,6 +92,7 @@ public class InterventionRest {
             if (m.getId() == mean.getId()) {
                 m.setCoordinates(mean.getCoordinates());
                 m.setInPosition(false);
+                PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "moyenMove", m);
                 res = m;
             }
         }

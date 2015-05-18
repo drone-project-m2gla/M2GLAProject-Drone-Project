@@ -52,7 +52,6 @@ public class MoyensInitFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
-        Log.i(TAG, "I'm here!!!!");
         return view;
     }
 
@@ -148,19 +147,9 @@ public class MoyensInitFragment extends ListFragment {
      * @param listMean
      */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
-        listMean = intervention.getMeansList();
-        listXtra = intervention.getMeansXtra();
-        int meanSize = 0;//listMean.size(); // taille de la liste des moyens
-        for (Mean mean : listMean) {
-            String longitude = "" + mean.getCoordinates().getLongitude();
-            Log.d(TAG, "Mean \t" + longitude);
-            String latitude = String.valueOf(mean.getCoordinates().getLatitude());
 
-            if (!longitude.equals("NaN")) {
-                listMean.remove(meanSize++);
-            }
-        }
-        Log.d(TAG, "Size\t" + listMean.size());
+        int meanSize = listMean.size(); // taille de la liste des moyens
+
         int xtraSize = listXtra.size(); // taille des moyens supplémentaires
 
         means = new Symbol[meanSize + xtraSize];
@@ -173,6 +162,9 @@ public class MoyensInitFragment extends ListFragment {
                         valueOf(meanType), meanClass, "RNS", "ff0000");
                 draggable.add(true);
                 isDeclineList.add(m.getIsDeclined());
+
+                Log.i(TAG, "Mean - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
+
                 position++;
             }
         }
@@ -184,6 +176,9 @@ public class MoyensInitFragment extends ListFragment {
                         valueOf(meanType), meanClass, "RNS", "ff0000");
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
+
+                Log.i(TAG, "Extra - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
+
                 position++;
             }
         }
@@ -237,6 +232,9 @@ public class MoyensInitFragment extends ListFragment {
 
                 List<Mean> meanList = intervention.getMeansList();
                 List<Mean> xtraList = intervention.getMeansXtra();
+
+                Log.i(TAG, "mean size\t" + meanList.size());
+                Log.i(TAG, "xtra size\t" + xtraList.size());
 
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, i, meanList, xtraList);

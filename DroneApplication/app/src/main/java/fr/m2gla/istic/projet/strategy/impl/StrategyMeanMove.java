@@ -1,22 +1,21 @@
 package fr.m2gla.istic.projet.strategy.impl;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
-import fr.m2gla.istic.projet.model.Position;
+import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.strategy.Strategy;
 
 /**
- * Created by baptiste on 16/04/15.
+ * Created by baptiste on 18/05/15.
  */
-public class StrategyMoveDrone implements Strategy {
-    public static StrategyMoveDrone INSTANCE;
-
+public class StrategyMeanMove implements Strategy {
+    private static StrategyMeanMove INSTANCE;
     private MapActivity activity;
 
-    public StrategyMoveDrone() {}
+    public StrategyMeanMove() {}
 
-    public static StrategyMoveDrone getINSTANCE() {
+    public static StrategyMeanMove getINSTANCE() {
         if (INSTANCE == null) {
-            INSTANCE = new StrategyMoveDrone();
+            INSTANCE = new StrategyMeanMove();
         }
         return INSTANCE;
     }
@@ -27,18 +26,18 @@ public class StrategyMoveDrone implements Strategy {
 
     @Override
     public String getScopeName() {
-        return "droneMove";
+        return "moyenMove";
     }
 
     @Override
     public Class<?> getType() {
-        return Position.class;
+        return Mean.class;
     }
 
     @Override
     public void call(Object object) {
         if (activity != null) {
-            activity.moveDrone((Position) object);
+            activity.posMean((Mean) object);
         }
     }
 }

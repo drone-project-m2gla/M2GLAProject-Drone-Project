@@ -20,11 +20,12 @@ public class StrategyIntervention implements Strategy {
     private static final String TAG = "StratInter";
     private static Strategy INSTANCE;
 
-    public StrategyIntervention() {
-       INSTANCE = this;
-    }
+    public StrategyIntervention() {}
 
-    public static Strategy getInstance() {
+    public static Strategy getINSTANCE() {
+        if (INSTANCE == null) {
+            INSTANCE = new StrategyIntervention();
+        }
         return INSTANCE;
     }
 
