@@ -13,9 +13,6 @@
     <profiles>
         <profile>
             <id>int</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <war.name>int</war.name>
                 <project.MONGODB_USER>intUser</project.MONGODB_USER>
