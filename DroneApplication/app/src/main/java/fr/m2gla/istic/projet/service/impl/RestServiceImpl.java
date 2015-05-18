@@ -18,8 +18,8 @@ public class RestServiceImpl implements RestService {
     private static final String TAG = "RestServiceImpl";
     private static final RestService INSTANCE = new RestServiceImpl();
 //    private static final String URL = "http://projm2gla1.istic.univ-rennes1.fr:8080/sitserver/rest";
-//    private static final String URL = "http://projm2gla1backup.istic.univ-rennes1.fr:8080/sitserver/rest";
-    private static final String URL = "http://projm2gla1int.istic.univ-rennes1.fr:58089/sitserver/rest";
+    private static final String URL = "http://projm2gla1backup.istic.univ-rennes1.fr:8080/sitserver/rest";
+//    private static final String URL = "http://projm2gla1int.istic.univ-rennes1.fr:58089/sitserver/rest";
 //    private static final String URL = "http://148.60.13.92:8080/rest";
 //    private static final String URL = "http://148.60.13.236:8080/sitserver/rest";
 

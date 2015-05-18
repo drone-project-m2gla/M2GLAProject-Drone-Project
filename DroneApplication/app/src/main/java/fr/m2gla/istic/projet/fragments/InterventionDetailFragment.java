@@ -95,7 +95,7 @@ public class InterventionDetailFragment extends Fragment {
             @Override
             public void execute(Object response) {
                 intervention = (Intervention) response;
-                Toast.makeText(getActivity(), "  test intervetion return " + intervention.getId(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
                 List<Mean> meanList = intervention.getMeansXtra();
                 // Initialisation des titres et images.
@@ -157,16 +157,19 @@ public class InterventionDetailFragment extends Fragment {
         titles = new String[listXtraNotDeclinedSize];
         images = new String[listXtraNotDeclinedSize];
 
-        TextView titleFragement = (TextView) this.view.findViewById(R.id.titre);
-        TextView addresseIntervention = (TextView) this.view.findViewById(R.id.addre);
-        TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.moy);
-        TextView codeIntervention = (TextView) this.view.findViewById(R.id.code);
-        addresseIntervention.setText("adresse : \n" + intervention.getAddress().toString() + " " + intervention.getPostcode().toString() + " " + intervention.getCity());
+        TextView titleFragement = (TextView) this.view.findViewById(R.id.details_titre_moyen);
+        TextView addresseIntervention = (TextView) this.view.findViewById(R.id.details_adresse);
+        TextView villeIntervention = (TextView) this.view.findViewById(R.id.details_ville);
+        TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.details_moyens);
+        TextView codeIntervention = (TextView) this.view.findViewById(R.id.details_code);
+        addresseIntervention.setText("adresse : " + intervention.getAddress());
+        villeIntervention.setText(" ville :  " + intervention.getPostcode() + " " + intervention.getCity());
         codeIntervention.setText("Code : " + intervention.getDisasterCode().toString());
 
 
         if (listXtraNotDeclinedSize > 0) {
             addresseIntervention.setVisibility(View.VISIBLE);
+            villeIntervention.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.VISIBLE);
             titleNoMoyen.setVisibility(View.GONE);
             codeIntervention.setVisibility(View.VISIBLE);
@@ -187,6 +190,7 @@ public class InterventionDetailFragment extends Fragment {
             titleNoMoyen.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.GONE);
             addresseIntervention.setVisibility(View.VISIBLE);
+            villeIntervention.setVisibility(View.VISIBLE);
             codeIntervention.setVisibility(View.VISIBLE);
 //            Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
         }

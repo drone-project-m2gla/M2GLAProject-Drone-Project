@@ -10,7 +10,7 @@
         android:text="@string/intervention_details_code_text"
         android:textSize="17sp"
         android:visibility="gone"
-        android:id="@+id/code" />
+        android:id="@+id/details_code" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -18,7 +18,15 @@
         android:text="@string/intervention_details_adresse_text"
         android:textSize="17sp"
         android:visibility="gone"
-        android:id="@+id/addre" />
+        android:id="@+id/details_adresse" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/intervention_details_adresse_text"
+        android:textSize="17sp"
+        android:visibility="gone"
+        android:id="@+id/details_ville" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -26,7 +34,7 @@
         android:text="@string/intervention_details_moyen_titre"
         android:textSize="17sp"
         android:visibility="gone"
-        android:id="@+id/titre" />
+        android:id="@+id/details_titre_moyen" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -34,7 +42,7 @@
         android:visibility="gone"
         android:text="@string/intervention_details_moyen_text"
         android:textSize="17sp"
-        android:id="@+id/moy" />
+        android:id="@+id/details_moyens" />
 
     <ListView
         android:id="@+id/intervention_detail_list"

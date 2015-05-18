@@ -56,6 +56,7 @@
 
     <string name="intervention_details_code_text">"- Aucun Code -"</string>
     <string name="intervention_details_adresse_text">"- Aucune Adresse -"</string>
+    <string name="intervention_details_ville_text">"- Aucune Ville -"</string>
     <string name="intervention_details_moyen_titre">"Moyens à valider"</string>
     <string name="intervention_details_moyen_text">"- Aucune Moyen -"</string>
 </resources>
