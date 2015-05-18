@@ -6,19 +6,16 @@ package fr.m2gla.istic.projet.model;
 public class Symbol {
     public enum SymbolType {
         colonne_incendie_active,
-        groupe_incendie_actif,
-        moyen_intervention_aerien_actif,
-        moyen_intervention_aerien_prevu,
+        groupe_incendie,
+        moyen_intervention_aerien,
         pc_colonne_deux_fonctions_actif,
         pc_site,
         point_ravitaillement,
         poste_commandement_prevu,
         prise_eau_non_perenne,
         prise_eau_perenne,
-        secours_a_personnes_actif,
-        secours_a_personnes_prevu,
-        vehicule_incendie_seul_actif,
-        vehicule_incendie_seul_prevu,
+        secours_a_personnes,
+        vehicule_incendie_seul,
         danger,
         etoile,
         point_sensible

@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="vehicule_incendie_seul_actif.svg">
+   sodipodi:docname="groupe_incendie.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -61,7 +61,7 @@
        y="1006.5113" />
     <path
        style="fill:none;stroke:#ff00ff;stroke-width:1.10000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="m 38.928571,1007.005 0,-12.49996 0,0 0,0"
+       d="m 40.928571,1007.005 0,-12.49996 0,0 0,0"
        id="path3797"
        inkscape:connector-curvature="0" />
     <flowRoot
@@ -75,7 +75,8 @@
            x="-19.642857"
            y="-12.785714"
            style="font-size:6px" /></flowRegion><flowPara
-         id="flowPara3824"></flowPara></flowRoot>    <text
+         id="flowPara3824"></flowPara></flowRoot>
+     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff00ff;fill-opacity:1;stroke:none;font-family:Sans"
        x="11.071429"
@@ -101,8 +102,13 @@
          style="font-size:10px;fill:#ff00ff;fill-opacity:1">RNS</tspan></text>
     <path
        style="fill:none;stroke:#ff00ff;stroke-width:1.10000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="m 25,1006.8265 0,-12.50004 0,0 0,0"
+       d="m 23.214285,1006.8265 0,-12.50004 0,0 0,0"
        id="path3797-9"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#ff00ff;stroke-width:1.10000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       d="m 32.142854,1006.8265 0,-12.49999 0,0 0,0"
+       id="path3797-5"
        inkscape:connector-curvature="0" />
   </g>
 </svg>
