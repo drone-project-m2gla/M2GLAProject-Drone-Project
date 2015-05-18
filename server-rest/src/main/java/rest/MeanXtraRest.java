@@ -73,6 +73,14 @@ public class MeanXtraRest {
         Intervention intervention = iD.getById(idintervention);
 
 
+        LOGGER.debug("Nbre elements à valider : "+intervention.getMeansXtra().size());
+        for (int i=0; i<intervention.getMeansXtra().size(); i++) {
+            LOGGER.debug(intervention.getMeansXtra().get(i).getId()+ " - " + intervention.getMeansXtra().get(i).getVehicle()+ " - " + intervention.getMeansXtra().get(i).getisDeclined());
+        }
+
+
+
+
         for (Mean m : intervention.getMeansXtra()) {
             if (m.getId() == meanXtra.getId()) {
                 m.setisDeclined(true);
