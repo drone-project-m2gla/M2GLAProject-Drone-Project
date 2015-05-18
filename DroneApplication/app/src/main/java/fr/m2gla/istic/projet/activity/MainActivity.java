@@ -205,7 +205,7 @@ public class MainActivity extends Activity {
                 PushServiceImpl.getInstance().register(userQualification);
 
                 // Demander la prise en compte de la validation de l'identification
-                Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
                 postOkLoginAction();
             }
         }, new Command() {

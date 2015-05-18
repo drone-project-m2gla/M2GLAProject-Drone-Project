@@ -15,6 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
+
 import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
@@ -30,7 +32,7 @@ import service.impl.RetrieveAddressImpl;
  */
 @Path("/intervention")
 public class InterventionRest {
-
+	private static final Logger LOGGER = Logger.getLogger(InterventionRest.class);
 
 
     @GET
@@ -81,7 +83,7 @@ public class InterventionRest {
     @Path("/{id}/moyen/positionner")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
+    public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) throws IOException {
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
         iD.connect();
@@ -91,7 +93,9 @@ public class InterventionRest {
         for (Mean m : meanList) {
             if (m.getId() == mean.getId()) {
                 m.setCoordinates(mean.getCoordinates());
+                LOGGER.debug(mean);
                 m.setInPosition(false);
+                PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "moyenMove", m);
                 res = m;
             }
         }

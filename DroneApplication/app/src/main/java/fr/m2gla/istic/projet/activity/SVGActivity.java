@@ -27,8 +27,9 @@ public class SVGActivity extends Activity {
 
         imageView1.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         try {
-            Symbol symbol = new Symbol(Symbol.SymbolType.colonne_incendie_active, "AAA", "BBB", "ffff00");
-            symbol.setValidated(true);
+            //Symbol symbol = new Symbol(Symbol.SymbolType.colonne_incendie_active, "AAA", "BBB", "ffff00");
+            Symbol symbol = new Symbol(Symbol.SymbolType.moyen_intervention_aerien, "AAA", "BBB", "ffff00");
+            symbol.setValidated(false);
             InputStream is = getApplicationContext().getResources().openRawResource(getResources().getIdentifier(symbol.getSymbolType().name(), "raw", getPackageName()));
 
             SVG svg = SVG.getFromInputStream(SVGAdapter.modifySVG(is, symbol));
