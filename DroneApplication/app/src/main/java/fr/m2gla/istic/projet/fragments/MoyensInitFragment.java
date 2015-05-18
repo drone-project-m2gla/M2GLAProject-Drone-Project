@@ -130,7 +130,8 @@ public class MoyensInitFragment extends ListFragment {
 
                                 }
                             })
-                            .show();
+                            .show(); ListView list = new ListView(getActivity());
+                    list.getChildAt(0).setEnabled(false);
                 }
                 return true;
             }
@@ -163,7 +164,7 @@ public class MoyensInitFragment extends ListFragment {
                 draggable.add(true);
                 isDeclineList.add(m.getIsDeclined());
 
-                Log.i(TAG, "Mean - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
+                Log.i(TAG, "Mean - \tposition " + position + "\tLatitude " + m.getCoordinates().getLatitude() + "\tIs in position " + m.getInPosition());
 
                 position++;
             }
@@ -177,7 +178,7 @@ public class MoyensInitFragment extends ListFragment {
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
-                Log.i(TAG, "Extra - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
+                Log.i(TAG, "Extra - \tposition " + position + "\tLatitude " + m.getCoordinates().getLatitude() + "\tIs in position " + m.getInPosition());
 
                 position++;
             }
@@ -254,8 +255,6 @@ public class MoyensInitFragment extends ListFragment {
                     String[] titlesArray = titles.toArray(new String[titles.size()]);
                     Context activity = MoyensInitFragment.this.getActivity();
                     adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
-
-                    Log.i(TAG, "List\t" + (moyensListView == null));
 
                     moyensListView.setAdapter(adapter);
                 }
