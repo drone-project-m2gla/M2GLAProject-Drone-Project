@@ -102,7 +102,6 @@ public class SVGAdapter {
                 Node pathNode = pathNodes.item(i);
                 NamedNodeMap attribute = pathNode.getAttributes();
                 Node nodeAttrId = attribute.getNamedItem("id");
-                Log.d("", nodeAttrId.getTextContent());
                 if (!nodeAttrId.getTextContent().equals("path3982-2") && !nodeAttrId.getTextContent().equals("path3982")) {
                     Node nodeAttrStyle = attribute.getNamedItem("style");
                     nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke:#ff00ff;", "stroke:#" + color + ";"));
