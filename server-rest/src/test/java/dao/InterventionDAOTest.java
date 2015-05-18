@@ -70,7 +70,7 @@ public class InterventionDAOTest {
         created.setAddress("576 rue des Globours");
         Intervention updated = dao.update(created);
         assertEquals(updated, created);
-        assertEquals("576 rue des Globourss", updated.getAddress());
+        assertEquals("576 rue des Globours", updated.getAddress());
     }
 
     @Test
