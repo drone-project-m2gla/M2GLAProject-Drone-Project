@@ -52,7 +52,6 @@ public class MoyensInitFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
-        Log.i(TAG, "I'm here!!!!");
         return view;
     }
 
@@ -151,7 +150,6 @@ public class MoyensInitFragment extends ListFragment {
 
         int meanSize = listMean.size(); // taille de la liste des moyens
 
-        Log.d(TAG, "Size\t" + listMean.size());
         int xtraSize = listXtra.size(); // taille des moyens supplémentaires
 
         means = new Symbol[meanSize + xtraSize];
@@ -228,6 +226,9 @@ public class MoyensInitFragment extends ListFragment {
 
                 List<Mean> meanList = intervention.getMeansList();
                 List<Mean> xtraList = intervention.getMeansXtra();
+
+                Log.i(TAG, "mean size\t" + meanList.size());
+                Log.i(TAG, "xtra size\t" + xtraList.size());
 
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, i, meanList, xtraList);
