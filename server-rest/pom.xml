@@ -18,7 +18,9 @@
             </activation>
             <properties>
                 <war.name>int</war.name>
-                <project.DATABASE_NAME>test</project.DATABASE_NAME>
+                <project.MONGODB_USER>intUser</project.MONGODB_USER>
+                <project.MONGODB_PWD>pwd2intUser</project.MONGODB_PWD>
+                <project.DATABASE_NAME>int</project.DATABASE_NAME>
                 <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
@@ -34,7 +36,9 @@
             </activation>
             <properties>
                 <war.name>dev</war.name>
-                <project.DATABASE_NAME>test</project.DATABASE_NAME>
+                <project.MONGODB_USER>devUser</project.MONGODB_USER>
+                <project.MONGODB_PWD>pwd2devUser</project.MONGODB_PWD>
+                <project.DATABASE_NAME>dev</project.DATABASE_NAME>
                 <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
@@ -47,6 +51,8 @@
             <id>prod</id>
             <properties>
                 <war.name>sitserver</war.name>
+                <project.MONGODB_USER>testUser</project.MONGODB_USER>
+                <project.MONGODB_PWD>pwd2testUser</project.MONGODB_PWD>
                 <project.DATABASE_NAME>test</project.DATABASE_NAME>
                 <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>

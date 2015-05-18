@@ -3,6 +3,7 @@ package dao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import com.mongodb.*;
 import com.mongodb.client.FindIterable;
@@ -129,4 +130,5 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      * @return document of entity
      */
     protected abstract Document entityToDocument(T entity);
+
 }
