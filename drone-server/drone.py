@@ -13,14 +13,15 @@ quadrotor.name = 'drone'
 camera = VideoCamera()
 
 camera.name = "camera"
-camera.translate(x=0.05,z=-0.50)
+camera.translate(z=-0.12)
+camera.rotate(y=-1.57)
 camera.properties(cam_width=640,cam_heigth=480,cam_near=15,cam_far=500)
 camera.frequency(15)
 camera.add_interface('ros')
 quadrotor.append(camera)
 
 odometry = Odometry()
-odometry.translate(x=0.05,z=0.23)
+odometry.translate(x=0.05,z=0.05)
 odometry.add_stream('ros')
 quadrotor.append(odometry)
 
