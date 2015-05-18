@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,7 +127,7 @@ public class InterventionDetailFragment extends Fragment {
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 Context activity = InterventionDetailFragment.this.getActivity();
                 ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
-                Log.i(TAG, "adapter  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
+                Log.i(TAG, "adapterMeans  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
                 Log.i(TAG, "List\t" + (moyensListView == null));
 
@@ -137,14 +136,14 @@ public class InterventionDetailFragment extends Fragment {
         };
     }
     /**
-     * Formattage des moyens extra pour l'adapter
+     * Formattage des moyens extra pour l'adapterMeans
      *
      * @param intervention
      * @param position
      * @param listXtra
      */
     /**
-     * Formattage des moyens extra pour l'adapter
+     * Formattage des moyens extra pour l'adapterMeans
      *
      * @param intervention
      * @param position

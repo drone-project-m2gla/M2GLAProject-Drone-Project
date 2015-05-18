@@ -65,4 +65,6 @@
     <string name="intervention_details_ville_text">" Ville : "</string>
     <string name="intervention_details_moyen_titre">" Moyens à valider : "</string>
     <string name="intervention_details_moyen_text">" - Aucun Moyen en attente -"</string>
+    <string name="moyens_refuses">Moyens supp. refusés</string>
+    <string name="moyens_a_valider">Moyens supp. à validés</string>
 </resources>
