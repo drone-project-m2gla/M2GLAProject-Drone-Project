@@ -162,6 +162,9 @@ public class MoyensInitFragment extends ListFragment {
                         valueOf(meanType), meanClass, "RNS", "ff0000");
                 draggable.add(true);
                 isDeclineList.add(m.getIsDeclined());
+
+                Log.i(TAG, "Mean - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
+
                 position++;
             }
         }
@@ -173,6 +176,9 @@ public class MoyensInitFragment extends ListFragment {
                         valueOf(meanType), meanClass, "RNS", "ff0000");
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
+
+                Log.i(TAG, "Extra - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
+
                 position++;
             }
         }
