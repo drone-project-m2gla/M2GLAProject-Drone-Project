@@ -59,4 +59,5 @@
     <string name="intervention_details_ville_text">"- Aucune Ville -"</string>
     <string name="intervention_details_moyen_titre">"Moyens à valider"</string>
     <string name="intervention_details_moyen_text">"- Aucune Moyen -"</string>
+    <string name="moyens_a_placer">Moyens init. à placer</string>
 </resources>
