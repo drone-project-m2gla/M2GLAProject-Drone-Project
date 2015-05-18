@@ -151,7 +151,7 @@ public class NewInterventionActivity extends Activity {
         // Recuperer le nom de l'intervention
         if (textAddress.getText().length() != 0) {
             this.labelStr = "" + textLabel.getText();
-            Toast.makeText(getApplicationContext(), this.labelStr, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), this.labelStr, Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(getApplicationContext(), "Manque le nom de l'intervention", Toast.LENGTH_SHORT).show();
@@ -163,7 +163,7 @@ public class NewInterventionActivity extends Activity {
         // Recuperer le nom de la rue
         if (textAddress.getText().length() != 0) {
             this.voie = "" + textAddress.getText();
-            Toast.makeText(getApplicationContext(), this.voie, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), this.voie, Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(getApplicationContext(), "Manque la rue", Toast.LENGTH_SHORT).show();
@@ -175,7 +175,7 @@ public class NewInterventionActivity extends Activity {
         // Recuperer le code postal
         if (textCP.getText().length() != 0) {
             this.codePostalStr = "" + textCP.getText();
-            Toast.makeText(getApplicationContext(), "" + this.codePostalStr, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), "" + this.codePostalStr, Toast.LENGTH_SHORT).show();
             this.postCode = Integer.parseInt(this.codePostalStr);
         }
         else {
@@ -188,7 +188,7 @@ public class NewInterventionActivity extends Activity {
         // Recuperer le nom de la ville
         if (textVille.getText().length() != 0) {
             this.ville = "" + textVille.getText();
-            Toast.makeText(getApplicationContext(), this.ville, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), this.ville, Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(getApplicationContext(), "Manque la ville", Toast.LENGTH_SHORT).show();
@@ -260,7 +260,7 @@ public class NewInterventionActivity extends Activity {
                 // PushServiceImpl.getInstance().register(disasterCode);
 
                 // Demander la prise en compte de la validation de l'identification
-                //Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "Connexion", Toast.LENGTH_SHORT).show();
                 postOkNewInterventionAction();
             }
         }, new Command() {
@@ -271,7 +271,7 @@ public class NewInterventionActivity extends Activity {
             @Override
             public void execute(Object response) {
                 // Echec d'identification. Retours à l'activity principale
-               // Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "Echec de connexion", Toast.LENGTH_SHORT).show();
                 postNewInterventionAction();
                 return;
             }
