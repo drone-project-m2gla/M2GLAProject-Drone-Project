@@ -5,7 +5,7 @@ package fr.m2gla.istic.projet.model;
  */
 public class Symbol {
     public enum SymbolType {
-        colonne_incendie_active,
+        colonne_incendie,
         groupe_incendie,
         moyen_intervention_aerien,
         pc_colonne_deux_fonctions_actif,
