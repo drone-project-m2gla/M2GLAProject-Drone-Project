@@ -8,9 +8,9 @@ import fr.m2gla.istic.projet.activity.R;
 public class Constant {
 
     // Nom des fichiers svg
-    public static final String SVG_COLONNE_INCENDIE = "colonne_incendie_active";
+    public static final String SVG_COLONNE_INCENDIE = "colonne_incendie";
     public static final String SVG_GROUPE_INCENDIE = "groupe_incendie";
-    public static final String SVG_SECOUR_A_PERSONNE = "secours_a_personnes";
+    public static final String SVG_SECOURS_A_PERSONNE = "secours_a_personnes";
     public static final String SVG_VEHICULE_A_INCENDIE_SEUL = "vehicule_incendie_seul";
     public static final String SVG_VEHICULE_POST_COMMAND = "poste_commandement_prevu";
 
@@ -50,7 +50,7 @@ public class Constant {
 
         switch (title.toLowerCase()) {
             case "vsav":
-                imgID = SVG_SECOUR_A_PERSONNE;
+                imgID = SVG_SECOURS_A_PERSONNE;
                 break;
             case "vsr":
                 imgID = SVG_COLONNE_INCENDIE;
