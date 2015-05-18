@@ -92,7 +92,7 @@ public class ItemsAdapter extends ArrayAdapter {
                     public void onClick(View v) {
 
                         map.put("idintervention", idIntervention);
-                        Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
 
                         RestServiceImpl.getInstance()
                                 .post(RestAPI.POST_ANNULLER_MOYEN, map, xtraMean, String.class,
