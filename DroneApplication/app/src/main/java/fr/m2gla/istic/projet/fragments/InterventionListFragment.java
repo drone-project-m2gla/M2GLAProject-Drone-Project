@@ -220,7 +220,7 @@ public class InterventionListFragment extends Fragment {
             }
         }
         nbExtraStr = "[" + nbMeanExtra + "]";
-        addrStr = intervention.getAddress() + " " + intervention.getPostcode() + " " + intervention.getCity();
+        addrStr = intervention.getAddress() + " \n" + intervention.getPostcode() + " " + intervention.getCity();
         labelStr = intervention.getLabel();
         dateLong = Long.valueOf(intervention.getDateCreate());
         date = new Date(dateLong);
