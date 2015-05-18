@@ -21,14 +21,6 @@ public class GeoImage extends AbstractEntity {
     private String imageIn64;
 
     /**
-     * Basic contruct, assign type
-     */
-    public GeoImage()
-    {
-        super();
-        this.datatype = Constant.DATATYPE_GEOIMAGE;
-    }
-    /**
      * Image 64 code getter
      *
      * @return String

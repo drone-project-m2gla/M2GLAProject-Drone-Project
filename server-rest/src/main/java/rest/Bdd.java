@@ -47,7 +47,6 @@ public class Bdd {
                 }
                 // code qui n'a rien à voir avec le reste.
                 // On crée le design document.
-                userDAO.createDesignDocument();
                 userDAO.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();

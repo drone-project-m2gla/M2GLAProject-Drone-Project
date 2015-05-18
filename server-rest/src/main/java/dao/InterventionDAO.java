@@ -1,19 +1,13 @@
 package dao;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-
+import org.bson.Document;
 import util.Constant;
 import util.Tools;
-
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonArray;
-import com.couchbase.client.java.document.json.JsonObject;
-
 import entity.DisasterCode;
 import entity.Intervention;
-import entity.Mean;
 
 /**
  * Created by alban on 13/03/15.
@@ -29,28 +23,24 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
     }
 
     @Override
-    protected Intervention jsonDocumentToEntity(JsonDocument jsonDocument) {
+    protected Intervention documentToEntity(Document document) {
+        if(document==null)
+        {
+            return null;
+        }
         Intervention intervention = new Intervention();
         try {
-            JsonObject content = jsonDocument.content();
         	SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-            if (Constant.DATATYPE_INTERVENTION.equals(((JsonObject) content.get("properties")).get("datatype"))) {
-            	intervention.setDateCreate(formatter.parse((String) ((JsonObject) content.get("properties")).get("dateCreate")));
-            	intervention.setLabel((String) ((JsonObject)content.get("properties")).get("label"));
-                intervention.setId(Long.parseLong(jsonDocument.id()));
-                intervention.setAddress((String) ((JsonObject)content.get("properties")).get("address"));
-                intervention.setPostcode((String) ((JsonObject)content.get("properties")).get("postcode"));
-                intervention.setCity((String) ((JsonObject)content.get("properties")).get("city"));
-                intervention.setDisasterCode(DisasterCode.valueOf((String) ((JsonObject)content.get("properties")).get("disasterCode")));
-                intervention.setMeansList(Tools.jsonArrayToMeanList((JsonArray) ((JsonObject)content.get("properties")).get("meansList")));
-                if ((JsonArray) ((JsonObject)content.get("properties")).get("meansXtra") != null) {
-                    intervention.setMeansXtra(Tools.jsonArrayToMeanList((JsonArray) ((JsonObject) content.get("properties")).get("meansXtra")));
-                }
-                intervention.setCoordinates(Tools.jsonArrayToPosition(content.getArray("coordinates")));
-
-            } else {
-                throw new IllegalArgumentException();
-            }
+            intervention.setDateCreate(formatter.parse(document.getString("dateCreate")));
+            intervention.setLabel(document.getString("label"));
+            intervention.setId(document.getLong("_id"));
+            intervention.setAddress(document.getString("address"));
+            intervention.setPostcode(document.getString("postcode"));
+            intervention.setCity(document.getString("city"));
+            intervention.setDisasterCode(DisasterCode.valueOf(document.getString("disasterCode")));
+            intervention.setMeansList(Tools.documentListToMeanList(((List<Document>) document.get("meansList"))));
+            intervention.setMeansXtra(Tools.documentListToMeanList(((List<Document>) document.get("meansXtra"))));
+            intervention.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
         }
         catch(Throwable t)
         {
@@ -61,31 +51,23 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
     }
 
     @Override
-    protected JsonDocument entityToJsonDocument(Intervention entity) {
-        MeanDAO meanDAO = new MeanDAO();
-        JsonObject properties = JsonObject.create();
-        properties.put("dateCreate", entity.getDateCreate().toString());
-        properties.put("label", entity.getLabel());
-        properties.put("datatype", entity.getDataType());
-        properties.put("address", entity.getAddress());
-        properties.put("city", entity.getCity());
-        properties.put("postcode", entity.getPostcode());
-        properties.put("disasterCode", entity.getDisasterCode().toString());
-        JsonArray means = JsonArray.create();
-        for (Mean m : entity.getMeansList()) {
-            means.add(meanDAO.entityToJsonObject(m));
+    protected Document entityToDocument(Intervention entity) {
+        if(entity==null)
+        {
+            return null;
         }
-        JsonArray meansXtra = JsonArray.create();
-        for (Mean mXtra : entity.getMeansXtra()) {
-            meansXtra.add(meanDAO.entityToJsonObject(mXtra));
-        }
-        properties.put("meansList",means);
-        properties.put("meansXtra",meansXtra);
-        JsonObject jsonIntervention = JsonObject.empty()
-                .put("type", "Point")
-                .put("coordinates", Tools.positionToJsonArray(entity.getCoordinates()))
-                .put("properties", properties);
-        JsonDocument doc = JsonDocument.create("" + entity.getId(), jsonIntervention);
-        return doc;
+        Document document = new Document();
+        document.put("dateCreate", entity.getDateCreate().toString());
+        document.put("label", entity.getLabel());
+        document.put("address", entity.getAddress());
+        document.put("city", entity.getCity());
+        document.put("postcode", entity.getPostcode());
+        document.put("disasterCode", entity.getDisasterCode().toString());
+        document.put("meansList",Tools.meanListToBasicDBList(entity.getMeansList()));
+        document.put("meansXtra",Tools.meanListToBasicDBList(entity.getMeansXtra()));
+        document.put("type", "Point");
+        document.put("coordinates", Tools.positionToDocument(entity.getCoordinates()));
+        document.put("_id", entity.getId());
+        return document;
     }
 }

@@ -8,31 +8,35 @@ import java.util.Properties;
  * Created by alban on 12/03/15.
  */
 public class Configuration {
-    private static String BUCKET_NAME;
-    private static String COUCHBASE_HOSTNAME;
+    private static String DATABASE_NAME;
+    private static String MONGODB_HOSTNAME;
     private static String SERVER_PYTHON;
-    private static String COUCHBASE_BUCKET_PORT;
-    private static String COUCHBASE_DESIGNDOC_PORT;
+    private static String MONGODB_PORT;
+    private static String MONGODB_PWD;
+    private static String MONGODB_USER;
 
-
-    public static String getCOUCHBASE_BUCKET_PORT() {
-        if (COUCHBASE_BUCKET_PORT == null) {loadConfigurations();}
-        return COUCHBASE_BUCKET_PORT;
+    public static String getMONGODB_PWD()
+    {
+        if (MONGODB_PWD == null) {loadConfigurations();}
+        return MONGODB_PWD;
+    }
+    public static String getMONGODB_USER(){
+        if (MONGODB_USER == null) {loadConfigurations();}
+        return MONGODB_USER;
+    }
+    public static String getMONGODB_PORT() {
+        if (MONGODB_PORT == null) {loadConfigurations();}
+        return MONGODB_PORT;
     }
 
-    public static String getCOUCHBASE_DESIGNDOC_PORT() {
-        if (COUCHBASE_DESIGNDOC_PORT == null) {loadConfigurations();}
-        return COUCHBASE_DESIGNDOC_PORT;
+    public static String getDATABASE_NAME() {
+        if (DATABASE_NAME == null) {loadConfigurations();}
+        return DATABASE_NAME;
     }
 
-    public static String getBUCKET_NAME() {
-        if (BUCKET_NAME == null) {loadConfigurations();}
-        return BUCKET_NAME;
-    }
-
-    public static String getCOUCHBASE_HOSTNAME() {
-        if (COUCHBASE_HOSTNAME == null) {loadConfigurations();}
-        return COUCHBASE_HOSTNAME;
+    public static String getMONGODB_HOSTNAME() {
+        if (MONGODB_HOSTNAME == null) {loadConfigurations();}
+        return MONGODB_HOSTNAME;
     }
 
     public static String getSERVER_PYTHON() {
@@ -62,10 +66,12 @@ public class Configuration {
         }
 
 
-        BUCKET_NAME = prop.getProperty("BUCKET_NAME");
-        COUCHBASE_HOSTNAME = prop.getProperty("COUCHBASE_HOSTNAME");
+        DATABASE_NAME = prop.getProperty("DATABASE_NAME");
+        MONGODB_HOSTNAME = prop.getProperty("MONGODB_HOSTNAME");
         SERVER_PYTHON = prop.getProperty("SERVER_PYTHON");
-        COUCHBASE_BUCKET_PORT = prop.getProperty("COUCHBASE_BUCKET_PORT");
-        COUCHBASE_DESIGNDOC_PORT = prop.getProperty("COUCHBASE_DESIGNDOC_PORT");
+        MONGODB_PORT = prop.getProperty("MONGODB_PORT");
+
+        MONGODB_USER = prop.getProperty("MONGODB_USER");
+        MONGODB_PWD = prop.getProperty("MONGODB_PWD");
     }
 }

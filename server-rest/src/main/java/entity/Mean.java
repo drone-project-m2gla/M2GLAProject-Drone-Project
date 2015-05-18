@@ -20,6 +20,31 @@ public class Mean extends AbstractEntity{
         this();
         this.vehicle = vehicle;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Mean)) return false;
+
+        Mean mean = (Mean) o;
+
+        if (inPosition != mean.inPosition) return false;
+        if (isDeclined != mean.isDeclined) return false;
+        if (coordinates != null ? !coordinates.equals(mean.coordinates) : mean.coordinates != null) return false;
+        if (vehicle != mean.vehicle) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = vehicle != null ? vehicle.hashCode() : 0;
+        result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
+        result = 31 * result + (inPosition ? 1 : 0);
+        result = 31 * result + (isDeclined ? 1 : 0);
+        return result;
+    }
+
     public Mean() {
         super();
         this.inPosition = false;
@@ -28,7 +53,7 @@ public class Mean extends AbstractEntity{
         this.coordinates.setAltitude(Double.NaN);
         this.coordinates.setLatitude(Double.NaN);
         this.coordinates.setLongitude(Double.NaN);
-        this.datatype = Constant.DATATYPE_MEAN;
+
     }
 
     public Vehicle getVehicle() {

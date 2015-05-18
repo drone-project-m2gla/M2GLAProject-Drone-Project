@@ -62,7 +62,7 @@ public class Topographie {
 		GeoIconDAO dao = new GeoIconDAO();
 
 
-		if ((icon.getDataType() == Constant.DATATYPE_GEOICON) && (icon.getColor() != "") && 
+		if ((icon.getColor() != "") &&
 				(icon.getEntitled() != "") && (icon.getFilename() !=  "") &&  (icon.getColor() !=  "")){
 
 			dao.connect();

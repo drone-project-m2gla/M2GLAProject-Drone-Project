@@ -75,16 +75,13 @@ public class InterventionRest {
         iD.update(intervention);
         iD.disconnect();
         return res;
-
     }
-
 
     @POST
     @Path("/{id}/moyen/positionner")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
-
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
         iD.connect();
@@ -101,7 +98,6 @@ public class InterventionRest {
         iD.update(intervention);
         iD.disconnect();
         return res;
-
     }
 
     @POST
@@ -109,9 +105,7 @@ public class InterventionRest {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Mean getMeanListForIntervention(@PathParam("id") long id,Mean meanXtra) {
-
         InterventionDAO iD = new InterventionDAO();
-        Mean res = null;
         iD.connect();
         Intervention intervention = iD.getById(id);
         intervention.getMeansXtra().add(meanXtra);
@@ -132,13 +126,11 @@ public class InterventionRest {
     @Path("/{id}/moyen")
     @Produces({MediaType.APPLICATION_JSON})
     public List<Mean> getMeanListForIntervention(@PathParam("id") long id) {
-
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
         List<Mean> res = iD.getById(id).getMeansList();
         iD.disconnect();
         return res;
-
     }
 
 
@@ -146,26 +138,22 @@ public class InterventionRest {
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public Intervention getIntervention(@PathParam("id") long id) {
-
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
         Intervention res = iD.getById(id);
         iD.disconnect();
         return res;
-
     }
 
     @GET
     @Path("")
     @Produces({MediaType.APPLICATION_JSON})
     public List<Intervention> getAllIntervention() {
-
         InterventionDAO iD = new InterventionDAO();
         iD.connect();
         List<Intervention> res = iD.getAll();
         iD.disconnect();
         return res;
-
     }
 
     @POST

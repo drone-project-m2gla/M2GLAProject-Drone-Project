@@ -1,13 +1,9 @@
 package dao;
 
+import com.mongodb.BasicDBList;
+import org.bson.Document;
 import util.Constant;
-import util.Tools;
-
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonArray;
-import com.couchbase.client.java.document.json.JsonObject;
-
-import entity.GeoImage;
+import util.Tools;import entity.GeoImage;
 
 /**
  * Created by alban on 16/03/15.
@@ -23,36 +19,25 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
     }
 
     @Override
-    protected GeoImage jsonDocumentToEntity(JsonDocument jsonDocument) {
-        GeoImage geoImage = new GeoImage();
-
-        try {
-            JsonObject content = jsonDocument.content();
-            if (Constant.DATATYPE_GEOIMAGE.equals(((JsonObject)content.get("properties")).get("datatype"))) {
-                geoImage.setId(Long.parseLong(jsonDocument.id()));
-                geoImage.setCoordinates(Tools.jsonArrayToPosition((JsonArray) content.get("coordinates")));
-                geoImage.setImageIn64((String)((JsonObject)content.get("properties")).get("image"));
-            } else {
-                throw new IllegalArgumentException();
-            }
-        }
-        catch(Throwable t)
+    protected GeoImage documentToEntity(Document document) {
+        if(document==null)
         {
-            geoImage = null;
+            return null;
         }
+        GeoImage geoImage = new GeoImage();
+        geoImage.setId(document.getLong("_id"));
+        geoImage.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
+        geoImage.setImageIn64(document.getString("image"));
         return geoImage;
     }
 
     @Override
-    protected JsonDocument entityToJsonDocument(GeoImage entity) {
-        JsonObject properties = JsonObject.create();
-        properties.put("datatype", entity.getDataType());
-        properties.put("image", entity.getImageIn64());
-        JsonObject jsonGeoImage = JsonObject.empty()
-                .put("type","Point")
-                .put("coordinates", Tools.positionToJsonArray(entity.getCoordinates()))
-                .put("properties", properties);
-        JsonDocument doc = JsonDocument.create("" + entity.getId(), jsonGeoImage);
-        return doc;
+    protected Document entityToDocument(GeoImage entity) {
+        Document document = new Document();
+        document.put("image", entity.getImageIn64());
+        document.put("type","Point");
+        document.put("coordinates", Tools.positionToDocument(entity.getCoordinates()));
+        document.put("_id",entity.getId());
+        return document;
     }
 }

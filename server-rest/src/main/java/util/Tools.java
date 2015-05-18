@@ -2,123 +2,128 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.couchbase.client.java.document.json.JsonArray;
-import com.couchbase.client.java.document.json.JsonObject;
-
+import com.mongodb.BasicDBList;
 import entity.Mean;
 import entity.Position;
 import entity.Vehicle;
 import entity.Zone;
+import org.bson.Document;
 
 /**
  * Created by alban on 10/03/15.
  */
 public class Tools {
 
-    public static JsonArray positionToJsonArray(Position p)
+    public static Document positionToDocument(Position p)
     {
-        JsonArray jsonArray = JsonArray.create();
-        jsonArray.add(p.getLatitude());
-        jsonArray.add(p.getLongitude());
-        jsonArray.add(p.getAltitude());
-        return jsonArray;
+        Document document = new Document();
+        document.put("latitude", p.getLatitude());
+        document.put("longitude",p.getLongitude());
+        document.put("altitude", p.getAltitude());
+        return document;
     }
 
-    public static Position jsonArrayToPosition(JsonArray jsonArray)
+    public static Position documentToPosition(Document document)
     {
         Position p = new Position();
 
-        if (jsonArray.get(0).equals("NaN")){
+        if (document.getDouble("latitude") == null || document.getDouble("latitude").equals("NaN")){
             p.setLatitude(Double.NaN);
         }
         else
         {
-            p.setLatitude((Double)jsonArray.get(0));
+            p.setLatitude(document.getDouble("latitude"));
         }
 
-        if (jsonArray.get(1).equals("NaN")){
+        if (document.getDouble("longitude") == null || document.getDouble("longitude").equals("NaN")){
             p.setLongitude(Double.NaN);
         }
         else
         {
-            p.setLongitude((Double)jsonArray.get(1));
+            p.setLongitude(document.getDouble("longitude"));
         }
 
-        if (jsonArray.get(2).equals("NaN")){
+        if (document.get("altitude") ==null || document.get("altitude").equals("NaN")){
             p.setAltitude(Double.NaN);
         }
         else
         {
-            p.setAltitude((Double)jsonArray.get(2));
+            p.setAltitude(document.getDouble("altitude"));
         }
         return p;
     }
 
-    public static Zone jsonArrayToZone(JsonArray jsonArray) {
+    public static Zone basicDBListToZone(BasicDBList listDocuments) {
         Zone z = new Zone();
-        for(int i=0; i<jsonArray.size();i++) {
-            z.addPosition(Tools.jsonArrayToPosition((JsonArray) jsonArray.get(i)));
+        for(int i=0; i<listDocuments.size();i++) {
+            z.addPosition(Tools.documentToPosition((Document) listDocuments.get(i)));
         }
         return z;
     }
 
-    public static JsonArray zoneToJsonArray(Zone zone) {
-        JsonArray array = JsonArray.create();
+    public static BasicDBList zoneToBasicDBList(Zone zone) {
+        BasicDBList res = new BasicDBList();
         for(Position p : zone.getPositions()) {
-            array.add(Tools.positionToJsonArray(p));
+            res.add(Tools.positionToDocument(p));
         }
-        return array;
+        return res;
     }
 
-    public static List<Zone> jsonArrayToZoneList(JsonArray jsonArray) {
+    public static List<Zone> basicDBListToZoneList(BasicDBList basicDBList) {
         List<Zone> z = new ArrayList<Zone>();
-        for(int i=0; i<jsonArray.size();i++) {
-            z.add(Tools.jsonArrayToZone((JsonArray) jsonArray.get(i)));
+        for(int i=0; i<basicDBList.size();i++) {
+            z.add(Tools.basicDBListToZone((BasicDBList)basicDBList.get(i)));
         }
         return z;
     }
 
-    public static JsonArray zoneListToJsonArray(List<Zone> zones) {
-        JsonArray array = JsonArray.create();
+    public static BasicDBList zoneListToBasicDBList(List<Zone> zones) {
+        BasicDBList res = new BasicDBList();
         for(Zone zone : zones) {
-            array.add(Tools.zoneToJsonArray(zone));
+            res.add(Tools.zoneToBasicDBList(zone));
         }
-        return array;
+        return res;
     }
 
-    public static List<Mean> jsonArrayToMeanList(JsonArray jsonArray) {
+    public static List<Mean> documentListToMeanList(List<Document> documents) {
         List<Mean> z = new ArrayList<Mean>();
-        for(int i=0; i<jsonArray.size();i++) {
-            z.add(jsonToMean((JsonObject) jsonArray.get(i)));
-
+        for(int i=0; i<documents.size();i++) {
+            z.add(documentToMean(documents.get(i)));
         }
         return z;
     }
 
-    public static JsonArray meanListToJsonArray(List<Mean> means) {
-        JsonArray array = JsonArray.create();
+    public static BasicDBList meanListToBasicDBList(List<Mean> means) {
+        BasicDBList basicDBList = new BasicDBList();
         for(Mean mean : means) {
-            array.add(Tools.meanToJsonArray(mean));
+            basicDBList.add(Tools.meanToDocument(mean));
         }
-        return array;
+        return basicDBList;
     }
 
-
-    public static JsonArray meanToJsonArray(Mean mean) {
-        JsonArray array = JsonArray.create();
-        array.add(Tools.positionToJsonArray(mean.getCoordinates()));
-        return array;
+    public static Mean documentToMean(Document document) {
+        if(document==null)
+        {
+            return null;
+        }
+        Mean Mean = new Mean();
+        Mean.setId(document.getLong("_id"));
+        Mean.setVehicle(Vehicle.valueOf(document.getString("vehicle")));
+        Mean.setInPosition(document.getBoolean("inPosition"));
+        Mean.setisDeclined(document.getBoolean("isDeclined"));
+        Mean.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
+        return Mean;
     }
 
-    public static Mean jsonToMean(JsonObject jsonObject) {
-        Mean z = new Mean();
-        z.setId(((JsonObject) jsonObject.get("properties")).getLong("id"));
-        z.setVehicle(Vehicle.valueOf(((JsonObject) jsonObject.get("properties")).getString("vehicle")));
-        z.setInPosition(((JsonObject) jsonObject.get("properties")).getBoolean("inPosition"));
-        z.setisDeclined(((JsonObject) jsonObject.get("properties")).getBoolean("isDeclined"));
-        z.setCoordinates(Tools.jsonArrayToPosition(jsonObject.getArray("coordinates")));
-        return z;
+    public static Document meanToDocument(Mean entity) {
+        Document jsonMean = new Document();
+        jsonMean.put("inPosition", entity.getInPosition());
+        jsonMean.put("isDeclined", entity.getisDeclined());
+        jsonMean.put("vehicle", entity.getVehicle().toString());
+        jsonMean.put("_id", entity.getId());
+        jsonMean.put("type", "Point");
+        jsonMean.put("coordinates", Tools.positionToDocument(entity.getCoordinates()));
+        return jsonMean;
     }
 
     public static boolean isSamePositions(Position p1, Position p2)
