@@ -6,38 +6,34 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".1"
-        android:text="pas de code"
-        android:textSize="17dp"
+        android:layout_height="wrap_content"
+        android:text="@string/intervention_details_code_text"
+        android:textSize="17sp"
         android:visibility="gone"
         android:id="@+id/code" />
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".2"
-        android:text="No adresse"
-        android:textSize="17dp"
+        android:layout_height="wrap_content"
+        android:text="@string/intervention_details_adresse_text"
+        android:textSize="17sp"
         android:visibility="gone"
         android:id="@+id/addre" />
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".1"
-        android:text="Moyens à valider"
-        android:textSize="17dp"
+        android:layout_height="wrap_content"
+        android:text="@string/intervention_details_moyen_titre"
+        android:textSize="17sp"
         android:visibility="gone"
         android:id="@+id/titre" />
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".1"
+        android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="pas de moyen"
-        android:textSize="17dp"
+        android:text="@string/intervention_details_moyen_text"
+        android:textSize="17sp"
         android:id="@+id/moy" />
 
     <ListView
