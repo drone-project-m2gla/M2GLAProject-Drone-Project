@@ -54,6 +54,9 @@
     <string name="clean_target">Effacer</string>
     <string name="select_text_view">Ajouter un moyen supplémentaire</string>
 
+
+    <string name="moyens_a_placer">Moyens init. à placer</string>
+
     <string name="intervention_details_code_err">" - Aucun Code -"</string>
     <string name="intervention_details_code_text">" Code : "</string>
     <string name="intervention_details_adresse_err">" - Aucune Adresse -"</string>
