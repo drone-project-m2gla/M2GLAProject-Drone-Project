@@ -52,6 +52,7 @@ import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.StrategyRegistery;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
@@ -145,11 +146,9 @@ public class MapActivity extends Activity implements
 
         addDroneListener();
 
-        //FIXME Ca c'est moche - BM
-        StrategyMoveDrone strategyMoveDrone = new StrategyMoveDrone();
-        StrategyMoveDrone.INSTANCE = strategyMoveDrone;
-        StrategyRegistery.getInstance().getStrategies().add(strategyMoveDrone);
+        // Add activity to strategy
         StrategyMoveDrone.getINSTANCE().setActivity(this);
+        StrategyMeanMove.getINSTANCE().setActivity(this);
 
         loadTopographicSymbols();
     }
@@ -273,7 +272,7 @@ public class MapActivity extends Activity implements
         disableRaiseOnDrag(marker);
     }
 
-    public void addDroneListener() {
+    private void addDroneListener() {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -461,6 +460,15 @@ public class MapActivity extends Activity implements
                 }
             });
         }
+    }
+
+    public void posMean(final Mean mean) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "Mean move " + mean.getId(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
