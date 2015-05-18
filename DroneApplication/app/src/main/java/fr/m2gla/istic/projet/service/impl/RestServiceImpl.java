@@ -57,6 +57,10 @@ public class RestServiceImpl implements RestService {
                     Log.e(TAG, "Error http " + e.getMessage());
                     error = true;
                     return e;
+                } catch (Exception e) {
+                    Log.e(TAG, "Error " + e.getMessage());
+                    error = true;
+                    return e;
                 }
 
                 return result;
@@ -98,6 +102,10 @@ public class RestServiceImpl implements RestService {
                     return result;
                 } catch (HttpStatusCodeException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (Exception e) {
+                    Log.e(TAG, "Error " + e.getMessage());
                     error = true;
                     return e;
                 }
@@ -156,6 +164,10 @@ public class RestServiceImpl implements RestService {
                     }
                 } catch (HttpStatusCodeException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (Exception e) {
+                    Log.e(TAG, "Error " + e.getMessage());
                     error = true;
                     return e;
                 }
