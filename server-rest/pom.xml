@@ -19,7 +19,7 @@
             <properties>
                 <war.name>int</war.name>
                 <project.DATABASE_NAME>test</project.DATABASE_NAME>
-                <project.MONGODB_HOSTNAME>192.168.1.14</project.MONGODB_HOSTNAME>
+                <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
                 <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
@@ -35,7 +35,7 @@
             <properties>
                 <war.name>dev</war.name>
                 <project.DATABASE_NAME>test</project.DATABASE_NAME>
-                <project.MONGODB_HOSTNAME>192.168.1.14</project.MONGODB_HOSTNAME>
+                <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
                 <tomcat.url>http://127.0.0.1:8080/manager/text</tomcat.url>
@@ -48,7 +48,7 @@
             <properties>
                 <war.name>sitserver</war.name>
                 <project.DATABASE_NAME>test</project.DATABASE_NAME>
-                <project.MONGODB_HOSTNAME>192.168.1.14</project.MONGODB_HOSTNAME>
+                <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
                 <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
