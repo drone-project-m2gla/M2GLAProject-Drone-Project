@@ -116,7 +116,7 @@ public class InterventionListFragment extends Fragment {
                     fragmentDetailIntervention.setIdIntervention(idIntervention);
 
                 } else {
-                    Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
                     callMap(idIntervention);
                 }
 
@@ -167,7 +167,7 @@ public class InterventionListFragment extends Fragment {
 
                         intervention = (Intervention[]) response;
 
-                        Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
                         if (intervention.length == 0) {
                             return;
                         }

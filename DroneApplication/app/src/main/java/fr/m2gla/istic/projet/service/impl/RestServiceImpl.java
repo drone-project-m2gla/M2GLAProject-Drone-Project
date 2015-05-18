@@ -17,8 +17,9 @@ import fr.m2gla.istic.projet.service.RestService;
 public class RestServiceImpl implements RestService {
     private static final String TAG = "RestServiceImpl";
     private static final RestService INSTANCE = new RestServiceImpl();
-    //private static final String URL = "http://projm2gla1int.istic.univ-rennes1.fr:58089/sitserver/rest";
-    private static final String URL = "http://148.60.13.26:8080/sitserver/rest";
+    
+    private static final String URL = "http://projm2gla1backup.istic.univ-rennes1.fr:8080/sitserver/rest";
+//    private static final String URL = "http://projm2gla1int.istic.univ-rennes1.fr:58089/sitserver/rest";
 
     protected RestServiceImpl() {
     }
@@ -53,6 +54,10 @@ public class RestServiceImpl implements RestService {
                     return e;
                 } catch (HttpMessageNotReadableException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (Exception e) {
+                    Log.e(TAG, "Error " + e.getMessage());
                     error = true;
                     return e;
                 }
@@ -96,6 +101,10 @@ public class RestServiceImpl implements RestService {
                     return result;
                 } catch (HttpStatusCodeException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (Exception e) {
+                    Log.e(TAG, "Error " + e.getMessage());
                     error = true;
                     return e;
                 }
@@ -154,6 +163,10 @@ public class RestServiceImpl implements RestService {
                     }
                 } catch (HttpStatusCodeException e) {
                     Log.e(TAG, "Error http " + e.getMessage());
+                    error = true;
+                    return e;
+                } catch (Exception e) {
+                    Log.e(TAG, "Error " + e.getMessage());
                     error = true;
                     return e;
                 }
