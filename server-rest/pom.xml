@@ -13,9 +13,6 @@
     <profiles>
         <profile>
             <id>int</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <war.name>int</war.name>
                 <project.MONGODB_USER>intUser</project.MONGODB_USER>
@@ -24,9 +21,9 @@
                 <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
-                <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
+                <tomcat.url>http://projm2gla1int.istic.univ-rennes1.fr:58089/manager/text</tomcat.url>
                 <tomcat.http.port>8088</tomcat.http.port>
-                <tomcat.path>/sitserver_int</tomcat.path>
+                <tomcat.path>/sitserver</tomcat.path>
             </properties>
         </profile>
         <profile>
@@ -51,13 +48,13 @@
             <id>prod</id>
             <properties>
                 <war.name>sitserver</war.name>
-                <project.MONGODB_USER>testUser</project.MONGODB_USER>
-                <project.MONGODB_PWD>pwd2testUser</project.MONGODB_PWD>
-                <project.DATABASE_NAME>test</project.DATABASE_NAME>
+                <project.MONGODB_USER>prodUser</project.MONGODB_USER>
+                <project.MONGODB_PWD>pwd2prodUser</project.MONGODB_PWD>
+                <project.DATABASE_NAME>prod</project.DATABASE_NAME>
                 <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
-                <tomcat.url>http://projm2gla1.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
+                <tomcat.url>http://projm2gla1backup.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
                 <tomcat.http.port>8080</tomcat.http.port>
                 <tomcat.path>/sitserver</tomcat.path>
             </properties>
