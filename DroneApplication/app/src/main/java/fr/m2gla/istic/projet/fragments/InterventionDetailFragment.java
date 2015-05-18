@@ -164,16 +164,23 @@ public class InterventionDetailFragment extends Fragment {
         addresseIntervention.setText(intervention.getAddress());
         villeIntervention.setText(intervention.getPostcode() + " " + intervention.getCity());
         codeIntervention.setText(intervention.getDisasterCode().toString());
+
+        // Ajoute les couleurs aux textes
         addresseIntervention.setTextColor(Color.YELLOW);
         villeIntervention.setTextColor(Color.YELLOW);
         codeIntervention.setTextColor(Color.YELLOW);
         titleFragement.setTextColor(Color.GREEN);
+        titleNoMoyen.setTextColor(Color.GREEN);
 
 
+        // Valider l'affichage des donnees
+        codeLayout.setVisibility(View.VISIBLE);
+        adresseLayout.setVisibility(View.VISIBLE);
+        villeLayout.setVisibility(View.VISIBLE);
+
+
+        // Declencher les affichages en fonction de la presence de moyens en attente
         if (listXtraNotDeclinedSize > 0) {
-            codeLayout.setVisibility(View.VISIBLE);
-            adresseLayout.setVisibility(View.VISIBLE);
-            villeLayout.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.VISIBLE);
             titleNoMoyen.setVisibility(View.GONE);
             for (Mean m : listXtra) {
@@ -190,12 +197,8 @@ public class InterventionDetailFragment extends Fragment {
             }
 
         } else {
-            codeLayout.setVisibility(View.VISIBLE);
-            adresseLayout.setVisibility(View.VISIBLE);
-            villeLayout.setVisibility(View.VISIBLE);
-            titleNoMoyen.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.GONE);
-            villeIntervention.setVisibility(View.VISIBLE);
+            titleNoMoyen.setVisibility(View.VISIBLE);
 //            Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
         }
     }
