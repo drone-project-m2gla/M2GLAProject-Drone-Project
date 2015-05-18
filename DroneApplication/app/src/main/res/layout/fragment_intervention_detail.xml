@@ -4,29 +4,80 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/intervention_details_code_text"
-        android:textSize="17sp"
         android:visibility="gone"
-        android:id="@+id/details_code" />
+        android:id="@+id/codeDetailsLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_code_text"
+            android:textSize="17sp"
+            android:id="@+id/details_code_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_code_err"
+            android:textSize="17sp"
+            android:id="@+id/details_code" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/adresseDetailsLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_adresse_text"
+            android:textSize="17sp"
+            android:id="@+id/details_adresse_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_adresse_err"
+            android:textSize="17sp"
+            android:id="@+id/details_adresse" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/villeDetailsLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_ville_text"
+            android:textSize="17sp"
+            android:id="@+id/details_ville_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_ville_err"
+            android:textSize="17sp"
+            android:id="@+id/details_ville" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/intervention_details_adresse_text"
         android:textSize="17sp"
-        android:visibility="gone"
-        android:id="@+id/details_adresse" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/intervention_details_adresse_text"
-        android:textSize="17sp"
-        android:visibility="gone"
-        android:id="@+id/details_ville" />
+        android:id="@+id/details_separation_moyen" />
 
     <TextView
         android:layout_width="fill_parent"
