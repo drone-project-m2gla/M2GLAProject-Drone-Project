@@ -140,13 +140,6 @@ public class InterventionDetailFragment extends Fragment {
      * @param position
      * @param listXtra
      */
-    /**
-     * Formattage des moyens extra pour l'adapter
-     *
-     * @param intervention
-     * @param position
-     * @param listXtra
-     */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
         int listXtraNotDeclinedSize =0;
         for (Mean m : listXtra) {
