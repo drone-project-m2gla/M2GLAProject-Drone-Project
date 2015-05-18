@@ -8,19 +8,18 @@ import fr.m2gla.istic.projet.activity.R;
 public class Constant {
 
     // Nom des fichiers svg
-    public static final String SVG_COLONNE_INCENDIE_ACTIVE = "colonne_incendie_active";
-    public static final String SVG_GROUPE_INCENDIE_ACTIF = "groupe_incendie_actif";
-    public static final String SVG_MOYEN_INTERVENTION_AERIEN = "moyen_intervention_aerien_prevu";
-    public static final String SVG_SECOUR_A_PERSONNE_PREVU = "secours_a_personnes_prevu";
-    public static final String SVG_VEHICULE_A_INCENDIE_SEUL = "vehicule_incendie_seul_prevu";
+    public static final String SVG_COLONNE_INCENDIE = "colonne_incendie_active";
+    public static final String SVG_GROUPE_INCENDIE = "groupe_incendie";
+    public static final String SVG_SECOUR_A_PERSONNE = "secours_a_personnes";
+    public static final String SVG_VEHICULE_A_INCENDIE_SEUL = "vehicule_incendie_seul";
     public static final String SVG_VEHICULE_POST_COMMAND = "poste_commandement_prevu";
 
     // Nom des moyens correspondants aux fichiers svg
-    public static final String VALUE_COLONNE_INCENDIE_ACTIVE = "Colonne incendie";
-    public static final String VALUE_GROUPE_INCENDIE_ACTIF = "Groupe incendie";
+    public static final String VALUE_COLONNE_INCENDIE = "Colonne incendie";
+    public static final String VALUE_GROUPE_INCENDIE = "Groupe incendie";
     public static final String VALUE_MOYEN_INTERVENTION_AERIEN = "Moyen aérien";
-    public static final String VALUE_SECOUR_A_PERSONNE_PREVU = "Secours à personne";
-    public static final String VALUE_VEHICULE_A_INCENDIE_SEUL = "Véhicule incendie";
+    public static final String VALUE_SECOURS_A_PERSONNE = "Secours à personne";
+    public static final String VALUE_VEHICULE_A_INCENDIE = "Véhicule incendie";
 
     public static final String VALUE_VEHICULE_VSAV = "VSAV";
     public static final String VALUE_VEHICULE_VSR = "VSR";
@@ -51,10 +50,10 @@ public class Constant {
 
         switch (title.toLowerCase()) {
             case "vsav":
-                imgID = SVG_SECOUR_A_PERSONNE_PREVU;
+                imgID = SVG_SECOUR_A_PERSONNE;
                 break;
             case "vsr":
-                imgID = SVG_COLONNE_INCENDIE_ACTIVE;
+                imgID = SVG_COLONNE_INCENDIE;
                 break;
             case "vlcg":
                 imgID = SVG_VEHICULE_POST_COMMAND;

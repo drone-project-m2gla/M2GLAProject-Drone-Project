@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="secours_a_personnes_actif.svg">
+   sodipodi:docname="vehicule_incendie_seul.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -53,12 +53,18 @@
      id="layer1"
      transform="translate(0,-988.36218)">
     <rect
-       style="fill:none;stroke:#00ff00;stroke-width:0.998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3.992,3.992;stroke-dashoffset:0"
+       style="fill:none;stroke:#ff00ff;stroke-width:0.998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect2987"
        width="49.701824"
        height="29.701824"
        x="7.1490884"
        y="1006.5113" />
+    <path
+       style="fill:none;stroke:#ff00ff;stroke-width:1.10000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       d="m 31.428571,17.928571 0,-12.4999996 0,0 0,0"
+       id="path3797"
+       inkscape:connector-curvature="0"
+       transform="translate(0,988.36218)" />
     <flowRoot
        xml:space="preserve"
        id="flowRoot3818"
@@ -72,15 +78,27 @@
            style="font-size:6px" /></flowRegion><flowPara
          id="flowPara3824"></flowPara></flowRoot>    <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#00ff00;fill-opacity:1;stroke:none;font-family:Sans"
-       x="10.000001"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff00ff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="11.071429"
        y="1024.8622"
        id="text3826"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3828"
-         x="10.000001"
+         x="11.071429"
          y="1024.8622"
-         style="font-size:10px;fill:#00ff00;fill-opacity:1">SAMU 35</tspan></text>
+         style="font-size:10px;fill:#ff00ff;fill-opacity:1">FPT</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff00ff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="32.586456"
+       y="1024.922"
+       id="text3826-2"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3828-0"
+         x="32.586456"
+         y="1024.922"
+         style="font-size:10px;fill:#ff00ff;fill-opacity:1">RNS</tspan></text>
   </g>
 </svg>

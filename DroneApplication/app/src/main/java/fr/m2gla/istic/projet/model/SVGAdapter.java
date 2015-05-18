@@ -64,26 +64,22 @@ public class SVGAdapter {
             NodeList textNodes = document.getElementsByTagName("text");
             for (int i = 0; i < textNodes.getLength(); i++){
                 Node textNode = textNodes.item(i);
-                //NamedNodeMap attribute = textNode.getAttributes();
-                //Node nodeAttrId = attribute.getNamedItem("id");
-                //if (nodeAttrId.getTextContent().equals(textId)) {
-                    NodeList textChildNodes = textNode.getChildNodes();
-                    for (int j = 0; j < textChildNodes.getLength(); j++) {
-                        Node element = textChildNodes.item(j);
-                        if ("tspan".equals(element.getNodeName())) {
-                            if (i == 0) {
-                                element.setTextContent(newText1);
-                            } else {
-                                element.setTextContent(newText2);
-                            }
-                            NamedNodeMap attribute = element.getAttributes();
-                            Node nodeAttrStyle = attribute.getNamedItem("style");
-                            if (nodeAttrStyle != null) {
-                                nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;", "fill:#" + color + ";"));
-                            }
+                NodeList textChildNodes = textNode.getChildNodes();
+                for (int j = 0; j < textChildNodes.getLength(); j++) {
+                    Node element = textChildNodes.item(j);
+                    if ("tspan".equals(element.getNodeName())) {
+                        if (i == 0) {
+                            element.setTextContent(newText1);
+                        } else {
+                            element.setTextContent(newText2);
+                        }
+                        NamedNodeMap attribute = element.getAttributes();
+                        Node nodeAttrStyle = attribute.getNamedItem("style");
+                        if (nodeAttrStyle != null) {
+                            nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;", "fill:#" + color + ";"));
                         }
                     }
-                //}
+                }
             }
 
             NodeList pathNodes = document.getElementsByTagName("rect");
@@ -102,6 +98,28 @@ public class SVGAdapter {
 
             List<Node> listForms = new ArrayList<Node>();
             pathNodes = document.getElementsByTagName("path");
+            for (int i = 0; i < pathNodes.getLength(); i++) {
+                Node pathNode = pathNodes.item(i);
+                NamedNodeMap attribute = pathNode.getAttributes();
+                Node nodeAttrId = attribute.getNamedItem("id");
+                Log.d("", nodeAttrId.getTextContent());
+                if (!nodeAttrId.getTextContent().equals("path3982-2") && !nodeAttrId.getTextContent().equals("path3982")) {
+                    Node nodeAttrStyle = attribute.getNamedItem("style");
+                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke:#ff00ff;", "stroke:#" + color + ";"));
+                    nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;", "fill:#" + color + ";"));
+                    if (symbol.isValidated()) {
+                        nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:.*;", "stroke-dasharray:none;"));
+                    } else {
+                        nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("stroke-dasharray:none;", "stroke-dasharray:4,4;"));
+                    }
+                } else {
+                    Node nodeAttrStyle = attribute.getNamedItem("style");
+                    if (!symbol.isValidated()) {
+                        nodeAttrStyle.setTextContent(nodeAttrStyle.getTextContent().replaceAll("fill:#ff00ff;fill-opacity:1;", "fill:none;"));
+                    }
+                }
+            }
+
             for (int i = 0; i < pathNodes.getLength(); i++) {
                 listForms.add(pathNodes.item(i));
             }
