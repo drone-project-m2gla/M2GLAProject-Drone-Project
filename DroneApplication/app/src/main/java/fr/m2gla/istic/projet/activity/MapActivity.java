@@ -340,7 +340,7 @@ public class MapActivity extends Activity implements
         position.setLatitude(marker.getPosition().latitude);
         position.setLongitude(marker.getPosition().longitude);
         Mean mean = new Mean();
-        mean.setId("");
+        mean.setId(markerSymbolLink.get(marker.getId()).getSymbol().getId());
         mean.setCoordinates(position);
 
         RestServiceImpl.getInstance()
