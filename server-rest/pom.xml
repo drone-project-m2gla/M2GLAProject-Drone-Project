@@ -21,9 +21,9 @@
                 <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
                 <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
                 <project.MONGODB_PORT>27017</project.MONGODB_PORT>
-                <tomcat.url>http://projm2gla1backup.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
+                <tomcat.url>http://projm2gla1int.istic.univ-rennes1.fr:58089/manager/text</tomcat.url>
                 <tomcat.http.port>8088</tomcat.http.port>
-                <tomcat.path>/sitserver_int</tomcat.path>
+                <tomcat.path>/sitserver</tomcat.path>
             </properties>
         </profile>
         <profile>
