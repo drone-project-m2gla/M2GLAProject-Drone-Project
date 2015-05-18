@@ -117,7 +117,7 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode de gestion de la fin d'activity appelee via bouton
+     * Methode de gestion de la fin d'activity
      */
     public void endAddIntervention() {
 
@@ -129,6 +129,14 @@ public class NewInterventionActivity extends Activity {
 
         // Arret de l'activity ici
         finish();
+    }
+
+    /**
+     * Methode de gestion de la fin d'activity appelee via bouton
+     * @param view : vue courante
+     */
+    public void endAddIntervention(View view) {
+        endAddIntervention();
     }
 
 
