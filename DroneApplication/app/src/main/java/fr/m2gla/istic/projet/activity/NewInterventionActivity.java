@@ -118,9 +118,8 @@ public class NewInterventionActivity extends Activity {
 
     /**
      * Methode de gestion de la fin d'activity appelee via bouton
-     * @param view : vue courante
      */
-    public void endAddIntervention(View view) {
+    public void endAddIntervention() {
 
         /* Pour retourner un message a l'activite principale */
         Intent intent = new Intent();
@@ -288,6 +287,7 @@ public class NewInterventionActivity extends Activity {
      */
     private void postOkNewInterventionAction() {
         postNewInterventionAction();
+        endAddIntervention();
     }
 
 
