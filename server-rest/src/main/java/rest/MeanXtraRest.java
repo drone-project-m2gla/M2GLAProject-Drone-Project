@@ -5,6 +5,7 @@ import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
 import entity.Position;
+import org.apache.log4j.Logger;
 import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
 
@@ -22,6 +23,8 @@ import java.util.List;
 @Path("/moyen")
 public class MeanXtraRest {
 
+    private static final Logger LOGGER = Logger.getLogger(MeanXtraRest.class);
+
     @POST
     @Path("{idintervention}/ok")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -33,6 +36,10 @@ public class MeanXtraRest {
         iD.connect();
         Intervention intervention = iD.getById(idintervention);
 
+        LOGGER.debug("Nbre elements à valider : "+intervention.getMeansXtra().size());
+        for (int i=0; i<intervention.getMeansXtra().size(); i++) {
+            LOGGER.debug(intervention.getMeansXtra().get(i).getId()+ " - " + intervention.getMeansXtra().get(i).getVehicle()+ " - " + intervention.getMeansXtra().get(i).getisDeclined());
+        }
 
         for (int i=0; i<intervention.getMeansXtra().size(); i++) {
             if (intervention.getMeansXtra().get(i).getId() == meanXtra.getId()) {
