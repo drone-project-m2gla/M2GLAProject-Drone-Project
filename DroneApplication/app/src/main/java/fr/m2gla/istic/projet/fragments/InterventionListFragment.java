@@ -97,7 +97,7 @@ public class InterventionListFragment extends Fragment {
                 new String[]{GeneralConstants.INTER_LIST_MEAN, GeneralConstants.INTER_LIST_LABEL, GeneralConstants.INTER_LIST_DATE, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
                 new int[]{R.id.interventionNewMean, R.id.interventionLabel, R.id.interventionDate, R.id.interventionCode, R.id.interventionData});
 
-        //On attribut à notre listView l'adapter que l'on vient de créer
+        //On attribut à notre listView l'adapterMeans que l'on vient de créer
         this.idList.setAdapter(mSchedule);
 
 

@@ -91,7 +91,7 @@ public class MoyensSuppFragment extends Fragment {
     }
 
     /**
-     * Formattage des moyens extra pour l'adapter
+     * Formattage des moyens extra pour l'adapterMeans
      *
      * @param intervention
      * @param position
