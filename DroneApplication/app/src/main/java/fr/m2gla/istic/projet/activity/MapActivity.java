@@ -255,29 +255,6 @@ public class MapActivity extends Activity implements
                 mClusterManager.addItem(markerItem);
                 mClusterManager.cluster();
 
-                //Use REST to update position on confirmation
-                Position position = new Position();
-                position.setLatitude(latlng.latitude);
-                position.setLongitude(latlng.longitude);
-                Mean mean = new Mean();
-                mean.setId(symbol.getId());
-                mean.setCoordinates(position);
-
-                RestServiceImpl.getInstance()
-                        .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.e(TAG, "Post new position success");
-                                    }
-                                },
-                                new Command() {
-                                    @Override
-                                    public void execute(Object response) {
-                                        Log.e(TAG, "Post new position error");
-                                    }
-                                });
-
             } catch (IllegalArgumentException ignored) {
             }
         }
@@ -649,7 +626,7 @@ public class MapActivity extends Activity implements
                 List<Mean> meansWithCoordinates = new ArrayList<Mean>();
                 for (Mean m: meanList){
                     String latitude = String.valueOf(m.getCoordinates().getLatitude());
-                    if (!Double.isNaN(m.getCoordinates().getLatitude())) {
+                    if (!latitude.equals("NaN")) {
                         meansWithCoordinates.add(m);
                     }
                 }
