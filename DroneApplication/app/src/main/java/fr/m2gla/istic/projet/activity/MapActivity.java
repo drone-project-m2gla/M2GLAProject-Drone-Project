@@ -52,6 +52,7 @@ import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
@@ -151,6 +152,8 @@ public class MapActivity extends Activity implements
         StrategyMoveDrone.getINSTANCE().setActivity(this);
         StrategyMeanMove.getINSTANCE().setActivity(this);
         StrategyMeanValidatePosition.getINSTANCE().setActivity(this);
+        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
+
 
         loadTopographicSymbols();
     }
@@ -192,41 +195,41 @@ public class MapActivity extends Activity implements
      */
     private void loadTopographicSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
-        new Command() {
-            /**
-             * Success connection
-             *
-             * @param response Response object type Intervention[]
-             */
-            @Override
-            public void execute(Object response) {
-                Topographie[] topographies = (Topographie[]) response;
+                new Command() {
+                    /**
+                     * Success connection
+                     *
+                     * @param response Response object type Intervention[]
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Topographie[] topographies = (Topographie[]) response;
 
-                for (Topographie topographie: topographies) {
-                    Position pos = topographie.getPosition();
-                    //Draw a symbol with texts and color at a position
-                    Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
-                            topographie.getFirstContent(),
-                            topographie.getSecondContent(),
-                            topographie.getColor(),
-                            true);
-                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                    mClusterManager.addItem(markerItem);
-                }
+                        for (Topographie topographie : topographies) {
+                            Position pos = topographie.getPosition();
+                            //Draw a symbol with texts and color at a position
+                            Symbol symbol = new Symbol(Symbol.SymbolType.valueOf(topographie.getFilename()),
+                                    topographie.getFirstContent(),
+                                    topographie.getSecondContent(),
+                                    topographie.getColor(),
+                                    true);
+                            SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
+                            mClusterManager.addItem(markerItem);
+                        }
 
-                mClusterManager.cluster();
-            }
-        }, new Command() {
-            /**
-             * Error connection
-             *
-             * @param response Response error type HttpClientErrorException
-             */
-            @Override
-            public void execute(Object response) {
-            Log.e(TAG, "connection error");
-            }
-        });
+                        mClusterManager.cluster();
+                    }
+                }, new Command() {
+                    /**
+                     * Error connection
+                     *
+                     * @param response Response error type HttpClientErrorException
+                     */
+                    @Override
+                    public void execute(Object response) {
+                        Log.e(TAG, "connection error");
+                    }
+                });
     }
 
     /**
@@ -247,11 +250,11 @@ public class MapActivity extends Activity implements
                 //Get symbol from ClipData saved onDrag
                 LatLng latlng = map.getProjection().fromScreenLocation(new Point((int) event.getX() + OFFSET_X, (int) event.getY() + OFFSET_Y));
                 Symbol symbol = new Symbol(
-                        (String)clipData.getItemAt(0).getText(),
+                        (String) clipData.getItemAt(0).getText(),
                         Symbol.SymbolType.valueOf((String) clipData.getItemAt(1).getText()),
-                        (String)clipData.getItemAt(2).getText(),
-                        (String)clipData.getItemAt(3).getText(),
-                        (String)clipData.getItemAt(4).getText());
+                        (String) clipData.getItemAt(2).getText(),
+                        (String) clipData.getItemAt(3).getText(),
+                        (String) clipData.getItemAt(4).getText());
                 //symbol.setValidated(false);
                 SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
                 mClusterManager.addItem(markerItem);
@@ -262,7 +265,6 @@ public class MapActivity extends Activity implements
         }
         return true;
     }
-
 
 
     /**
@@ -466,6 +468,18 @@ public class MapActivity extends Activity implements
         }
     }
 
+
+    public void addMean(final Mean object) {
+        Log.i(TAG, "add Mean " + object.getId());
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Object update  " + object.getId());
+                Toast.makeText(getApplication(), "Coucou \nL'objet est " + object.getId(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public void posMean(final Mean mean) {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -540,6 +554,7 @@ public class MapActivity extends Activity implements
         return null;
     }
 
+
     /**
      * Cluster rendered used to draw firemen symbols
      * All the symbols are integrated into the map that links markers and symbols
@@ -599,10 +614,10 @@ public class MapActivity extends Activity implements
 
             // Fragment list des moyens supplémentaires
             MoyensInitFragment mInitFragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
-            if (mSuppFragment != null && idIntervention != null){
+            if (mSuppFragment != null && idIntervention != null) {
                 mSuppFragment.setInterventionID(idIntervention);
             }
-            if(mInitFragment !=null && idIntervention != null){
+            if (mInitFragment != null && idIntervention != null) {
                 mInitFragment.setInterventionID(idIntervention);
             }
 
@@ -629,7 +644,7 @@ public class MapActivity extends Activity implements
         }
     }
 
-    private void loadMeansInMap(){
+    private void loadMeansInMap() {
         RestServiceImpl.getInstance()
                 .get(RestAPI.GET_INTERVENTION, param, Intervention.class, getCallbackSuccess(), getCallbackError());
     }
@@ -661,14 +676,14 @@ public class MapActivity extends Activity implements
                 List<Mean> meanList = intervention.getMeansList();
 
                 List<Mean> meansWithCoordinates = new ArrayList<Mean>();
-                for (Mean m: meanList){
+                for (Mean m : meanList) {
                     String latitude = String.valueOf(m.getCoordinates().getLatitude());
                     if (!latitude.equals("NaN")) {
                         meansWithCoordinates.add(m);
                     }
                 }
 
-                for (Mean m: meansWithCoordinates) {
+                for (Mean m : meansWithCoordinates) {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Constant.getImage(meanClass);
                     Symbol symbol = new Symbol(m.getId(),

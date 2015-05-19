@@ -87,6 +87,7 @@ public class MoyensSuppFragment extends Fragment {
 
             }
         });
+
         return view;
     }
 
@@ -160,5 +161,14 @@ public class MoyensSuppFragment extends Fragment {
     public void setInterventionID(String interventionID) {
         this.interventionID = interventionID;
         Toast.makeText(getActivity(), TAG + "\n" + interventionID, Toast.LENGTH_LONG).show();
+    }
+
+    public void updateAdapter(final Mean object) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Object update  " + object.getId());
+            }
+        });
     }
 }
