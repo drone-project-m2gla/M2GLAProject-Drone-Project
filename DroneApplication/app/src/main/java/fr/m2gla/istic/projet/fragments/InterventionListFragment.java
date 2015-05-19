@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class InterventionListFragment extends Fragment {
     private ArrayList<HashMap<String, String>> listItem;
     private SimpleAdapter mSchedule;
     private View view;
+    private int lastSelectedPosition = -1;
 
 
     /**
@@ -55,7 +57,7 @@ public class InterventionListFragment extends Fragment {
 
         String roleStr;
 
-
+        this.lastSelectedPosition = -1;
         this.view = inflater.inflate(R.layout.fragment_intervention_list, container, false);
 
         if (getArguments() != null) {
@@ -115,6 +117,35 @@ public class InterventionListFragment extends Fragment {
                     InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
                     fragmentDetailIntervention.setIdIntervention(idIntervention);
 
+
+                    // Retablir la couleur de la ligne precedemment selectionnee
+/*                    if (lastSelectedPosition > -1) {
+//                        View lastLine = (View) idList.getAdapter().getItem(lastSelectedPosition);
+//                        View lastLine = idList.getChildAt(lastSelectedPosition);
+//                        View lastLine = parent.getChildAt(lastSelectedPosition);
+//                        View lastLine = (View) parent.getItemAtPosition(lastSelectedPosition);
+                        if (view != null) {
+                            LinearLayout layoutLastLine = (LinearLayout) lastLine;
+                            TextView tvNom = (TextView) layoutLastLine.findViewById(R.id.interventionLabel);
+                            tvNom.setTextColor(Color.LTGRAY);
+                        }
+                    }
+
+                    // Changer la couleur de la ligne selectionnee
+//                    View curLine = (View) idList.getAdapter().getItem(position);
+//                    View curLine = idList.getChildAt(position);
+//                    View curLine = parent.getChildAt(position);
+//                    View curLine = idList.getSelectedView();
+//                    if (curLine != null) {
+//                        LinearLayout layoutCurLine = (LinearLayout) curLine;
+                    if (view != null) {
+                        LinearLayout layoutCurLine = (LinearLayout) view;
+                        TextView tvNom = (TextView) layoutCurLine.findViewById(R.id.interventionLabel);
+                        tvNom.setTextColor(Color.YELLOW);
+                        lastSelectedPosition = position;
+                    }
+                    Toast.makeText(view.getContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
+*/
                 } else {
                     // Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
                     callMap(idIntervention);
@@ -147,6 +178,18 @@ public class InterventionListFragment extends Fragment {
      * @param -
      */
     public void refreshList() {
+
+
+/*
+        // Retablir la couleur de la ligne precedemment selectionnee
+        if (lastSelectedPosition > -1) {
+            View lastLine = idList.getChildAt(lastSelectedPosition);
+            LinearLayout layoutLastLine = (LinearLayout) lastLine;
+            TextView tvNom = (TextView)layoutLastLine.findViewById(R.id.interventionLabel);
+            tvNom.setTextColor(Color.LTGRAY);
+            lastSelectedPosition = -1;
+        }
+*/
 
         // Changement de la ArrayList qui nous permettra de remplire la listView
         this.listItem.clear();
@@ -267,18 +310,15 @@ public class InterventionListFragment extends Fragment {
         //Création d'une HashMap pour insérer les informations du premier element de notre listView
         map = new HashMap<String, String>();
 
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        //on insère les élémentsque l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_MEAN, nbMeans);
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_ID, id);
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_LABEL, label);
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_DATE, date);
-        //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_CODE, code);
-        //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_DATA, data);
+        map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
+
         //enfin on ajoute cette hashMap dans la arrayList
         listItem.add(map);
 

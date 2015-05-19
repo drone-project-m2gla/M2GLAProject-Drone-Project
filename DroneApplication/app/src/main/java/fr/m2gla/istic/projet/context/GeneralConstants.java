@@ -14,6 +14,11 @@ public interface GeneralConstants {
     public static final String  INTER_LIST_ID = "id";
     public static final String  INTER_LIST_CODE = "code";
     public static final String  INTER_LIST_DATA = "data";
+    public static final String  INTER_LIST_SELECT = "check";
+
+    // Designation de la sélection/désélection sous forme de chaine
+    public static final String  UNSELECT_DESC_STR = "O";
+    public static final String  SELECT_DESC_STR = "X";
 
     // References des éléments transitant entre les Activity
     public static final String  REF_ACT_ROLE = "role";

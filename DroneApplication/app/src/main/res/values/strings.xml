@@ -57,6 +57,8 @@
 
     <string name="moyens_a_placer">Moyens init. à placer</string>
 
+    <string name="intervention_details_nom_err">" - Aucun Nom -"</string>
+    <string name="intervention_details_nom_text">" Nom : "</string>
     <string name="intervention_details_code_err">" - Aucun Code -"</string>
     <string name="intervention_details_code_text">" Code : "</string>
     <string name="intervention_details_adresse_err">" - Aucune Adresse -"</string>
