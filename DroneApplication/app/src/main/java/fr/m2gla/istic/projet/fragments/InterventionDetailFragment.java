@@ -26,11 +26,11 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
+import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
@@ -200,7 +200,7 @@ public class InterventionDetailFragment extends Fragment {
 
                     titles[position] = m.getVehicle().toString();
 
-                    images[position] = Constant.getImage(m.getVehicle().toString());
+                    images[position] = Symbol.getImage(m.getVehicle().toString());
 
                     position++;
                 }
