@@ -67,7 +67,7 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
                 {
                     notifyObserversForPositionUnchanged();
                 }
-                Thread.sleep(500);
+                Thread.sleep(2987);
             } catch (IOException e) {
                 //LOGGER.error("Get position error", e);
             } catch (InterruptedException e) {

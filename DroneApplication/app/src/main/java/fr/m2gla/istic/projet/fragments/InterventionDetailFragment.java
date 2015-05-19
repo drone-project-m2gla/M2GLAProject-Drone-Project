@@ -2,6 +2,7 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -125,7 +127,7 @@ public class InterventionDetailFragment extends Fragment {
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 Context activity = InterventionDetailFragment.this.getActivity();
                 ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
-                Log.i(TAG, "adapter  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
+                Log.i(TAG, "adapterMeans  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
                 Log.i(TAG, "List\t" + (moyensListView == null));
 
@@ -134,19 +136,13 @@ public class InterventionDetailFragment extends Fragment {
         };
     }
     /**
-     * Formattage des moyens extra pour l'adapter
+     * Formattage des moyens extra pour l'adapterMeans
      *
      * @param intervention
      * @param position
      * @param listXtra
      */
-    /**
-     * Formattage des moyens extra pour l'adapter
-     *
-     * @param intervention
-     * @param position
-     * @param listXtra
-     */
+
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
         int listXtraNotDeclinedSize =0;
         for (Mean m : listXtra) {
@@ -157,22 +153,36 @@ public class InterventionDetailFragment extends Fragment {
         titles = new String[listXtraNotDeclinedSize];
         images = new String[listXtraNotDeclinedSize];
 
+        LinearLayout codeLayout = (LinearLayout) this.view.findViewById(R.id.codeDetailsLayout);
+        LinearLayout adresseLayout = (LinearLayout) this.view.findViewById(R.id.adresseDetailsLayout);
+        LinearLayout villeLayout = (LinearLayout) this.view.findViewById(R.id.villeDetailsLayout);
         TextView titleFragement = (TextView) this.view.findViewById(R.id.details_titre_moyen);
         TextView addresseIntervention = (TextView) this.view.findViewById(R.id.details_adresse);
         TextView villeIntervention = (TextView) this.view.findViewById(R.id.details_ville);
         TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.details_moyens);
         TextView codeIntervention = (TextView) this.view.findViewById(R.id.details_code);
-        addresseIntervention.setText("adresse : " + intervention.getAddress());
-        villeIntervention.setText(" ville :  " + intervention.getPostcode() + " " + intervention.getCity());
-        codeIntervention.setText("Code : " + intervention.getDisasterCode().toString());
+        addresseIntervention.setText(intervention.getAddress());
+        villeIntervention.setText(intervention.getPostcode() + " " + intervention.getCity());
+        codeIntervention.setText(intervention.getDisasterCode().toString());
+
+        // Ajoute les couleurs aux textes
+        addresseIntervention.setTextColor(Color.YELLOW);
+        villeIntervention.setTextColor(Color.YELLOW);
+        codeIntervention.setTextColor(Color.YELLOW);
+        titleFragement.setTextColor(Color.GREEN);
+        titleNoMoyen.setTextColor(Color.GREEN);
 
 
+        // Valider l'affichage des donnees
+        codeLayout.setVisibility(View.VISIBLE);
+        adresseLayout.setVisibility(View.VISIBLE);
+        villeLayout.setVisibility(View.VISIBLE);
+
+
+        // Declencher les affichages en fonction de la presence de moyens en attente
         if (listXtraNotDeclinedSize > 0) {
-            addresseIntervention.setVisibility(View.VISIBLE);
-            villeIntervention.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.VISIBLE);
             titleNoMoyen.setVisibility(View.GONE);
-            codeIntervention.setVisibility(View.VISIBLE);
             for (Mean m : listXtra) {
 
                 if (!m.getIsDeclined()) {
@@ -187,11 +197,8 @@ public class InterventionDetailFragment extends Fragment {
             }
 
         } else {
-            titleNoMoyen.setVisibility(View.VISIBLE);
             titleFragement.setVisibility(View.GONE);
-            addresseIntervention.setVisibility(View.VISIBLE);
-            villeIntervention.setVisibility(View.VISIBLE);
-            codeIntervention.setVisibility(View.VISIBLE);
+            titleNoMoyen.setVisibility(View.VISIBLE);
 //            Toast.makeText(getActivity(), "intervention " + intervention.getId() + "\n n'a pas de demandes de moyens extra ", Toast.LENGTH_LONG).show();
         }
     }

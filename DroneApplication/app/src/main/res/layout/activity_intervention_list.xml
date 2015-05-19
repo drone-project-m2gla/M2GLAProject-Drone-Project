@@ -29,14 +29,14 @@
                 class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight=".7" />
+                android:layout_weight=".65" />
 
             <fragment
                 android:id="@+id/fragment_intervention_detail"
                 class="fr.m2gla.istic.projet.fragments.InterventionDetailFragment"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight=".3" />
+                android:layout_weight=".35" />
         </LinearLayout>
 
 
