@@ -48,30 +48,6 @@
 		"secondContent":""
 	},
 	{
-		"entitled":"Pc colonne deux fonctions_actif",
-		"filename":"pc_colonne_deux_fonctions_actif",
-		"coordinates":{
-			"longitude":-1.612158,
-			"latitude":48.115426
-		},
-		"color":"0000ff",
-		"tiret":"true",
-		"firstContent":"",
-		"secondContent":""
-	},
-	{
-		"entitled":"Pc site",
-		"filename":"pc_site",
-		"coordinates":{
-			"longitude":-1.623938,
-			"latitude":48.115626
-		},
-		"color":"0000ff",
-		"tiret":"true",
-		"firstContent":"",
-		"secondContent":""
-	},
-	{
 		"entitled":"Point de ravitaillement",
 		"filename":"point_ravitaillement",
 		"coordinates":{
@@ -130,17 +106,5 @@
 		"tiret":"true",
 		"firstContent":"",
 		"secondContent":""
-	},
-	{
-		"entitled":"poste_commandement_prevu",
-		"filename":"poste_commandement_prevu",
-		"coordinates":{
-			"longitude":-1.638851,
-			"latitude":48.120038
-		},
-		"color":"0000ff",
-		"tiret":"true",
-		"firstContent":"",
-		"secondContent":""
-	}
+	}	
 ]
