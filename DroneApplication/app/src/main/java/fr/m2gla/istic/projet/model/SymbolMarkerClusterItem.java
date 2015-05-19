@@ -7,7 +7,7 @@ import com.google.maps.android.clustering.ClusterItem;
  * Created by fernando on 4/14/15.
  */
 public class SymbolMarkerClusterItem implements ClusterItem {
-    private final LatLng mPosition;
+    private LatLng mPosition;
     private Symbol symbol;
 
     public SymbolMarkerClusterItem(double lat, double lng, Symbol symbol) {
@@ -18,6 +18,10 @@ public class SymbolMarkerClusterItem implements ClusterItem {
     @Override
     public LatLng getPosition() {
         return mPosition;
+    }
+
+    public void setPosition(LatLng position) {
+        this.mPosition = position;
     }
 
     public Symbol getSymbol() {
