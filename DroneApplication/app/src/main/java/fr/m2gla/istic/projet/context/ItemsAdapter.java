@@ -1,4 +1,4 @@
-package fr.m2gla.istic.projet.fragments;
+package fr.m2gla.istic.projet.context;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -24,6 +24,7 @@ import java.util.Map;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;

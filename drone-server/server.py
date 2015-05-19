@@ -46,11 +46,20 @@ def callbackOdometry(data):
     '''rospy.loginfo (" postition d'odometry %s ", data.pose.pose)'''
     command.pose = data.pose.pose
 
-class Command:
+def callbackImage(data):
+    if command.saveImg:
+        command.saveImg = False
+        print("au debut du callbackImage")
+        bridge = CvBridge()
+        cv_image = bridge.imgmsg_to_cv2(data, desired_encoding="rgb8")
+        cv2.imwrite("testimage.png", cv_image)
 
+
+class Command:
     def __init__(self):
         self.cmdWaypoint = rospy.Publisher("/drone/waypoint", Pose, queue_size=10, latch=True)
-        self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry,callbackOdometry)
+        self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry, callbackOdometry)
+        self.cmdImage = rospy.Subscriber("/drone/camera/image", Image, callbackImage)
 
     def setWaypoint(self, x, y, z):
         point = gpsToPoint(y,x)
@@ -58,14 +67,8 @@ class Command:
         pose = Pose(position=point)
         self.cmdWaypoint.publish(pose)
 
-    def process_image(self, ros_image):
-        print("processing image")
-        #### direct conversion to CV2 ####
-        bridge = CvBridge()
-        cv_image = bridge.imgmsg_to_cv2(ros_image, desired_encoding="rgb8")
-        cv2.imwrite("testimage.png", cv_image)
-
 command = Command()
+command.saveImg = False
 app = Flask(__name__)
 
 @app.route('/robot/rotate', methods=['POST'])
@@ -99,10 +102,11 @@ def getPosition():
     return jsonify({"latitude": t[0], "longitude": t[1], "altitude": z}), 200
 
 @app.route('/robot/picture', methods=['GET'])
-def getpicture() :    
-    command.subscriber = rospy.Subscriber("cat/camera/image", Image, command.process_image, queue_size = 10, latch=True)
+def getpicture() :
+    command.saveImg = True
     return jsonify({"message":"reussi"})
 
 if __name__ == '__main__' :
     rospy.init_node("flask")
+    rospy.spin()
     app.run(debug=True, host='0.0.0.0', port=5000)

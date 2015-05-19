@@ -105,7 +105,7 @@ public class InterventionListFragment extends Fragment {
         this.idList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map;
+                HashMap<String, String> map, prevmap;
 
                 map = (HashMap<String, String>) idList.getItemAtPosition(position);
                 Log.i(TAG, "OnClicklistener\t" + userQualification);
@@ -119,33 +119,20 @@ public class InterventionListFragment extends Fragment {
 
 
                     // Retablir la couleur de la ligne precedemment selectionnee
-/*                    if (lastSelectedPosition > -1) {
-//                        View lastLine = (View) idList.getAdapter().getItem(lastSelectedPosition);
-//                        View lastLine = idList.getChildAt(lastSelectedPosition);
-//                        View lastLine = parent.getChildAt(lastSelectedPosition);
-//                        View lastLine = (View) parent.getItemAtPosition(lastSelectedPosition);
-                        if (view != null) {
-                            LinearLayout layoutLastLine = (LinearLayout) lastLine;
-                            TextView tvNom = (TextView) layoutLastLine.findViewById(R.id.interventionLabel);
-                            tvNom.setTextColor(Color.LTGRAY);
+                    if (lastSelectedPosition > -1) {
+                        prevmap = (HashMap<String, String>) idList.getItemAtPosition(lastSelectedPosition);
+                        if (prevmap != null) {
+                            prevmap.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
                         }
+
                     }
 
                     // Changer la couleur de la ligne selectionnee
-//                    View curLine = (View) idList.getAdapter().getItem(position);
-//                    View curLine = idList.getChildAt(position);
-//                    View curLine = parent.getChildAt(position);
-//                    View curLine = idList.getSelectedView();
-//                    if (curLine != null) {
-//                        LinearLayout layoutCurLine = (LinearLayout) curLine;
-                    if (view != null) {
-                        LinearLayout layoutCurLine = (LinearLayout) view;
-                        TextView tvNom = (TextView) layoutCurLine.findViewById(R.id.interventionLabel);
-                        tvNom.setTextColor(Color.YELLOW);
-                        lastSelectedPosition = position;
-                    }
-                    Toast.makeText(view.getContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
-*/
+                    map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.SELECT_DESC_STR);
+                    lastSelectedPosition = position;
+                    mSchedule.notifyDataSetChanged();
+//                    Toast.makeText(view.getContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
+
                 } else {
                     // Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
                     callMap(idIntervention);
@@ -179,20 +166,17 @@ public class InterventionListFragment extends Fragment {
      */
     public void refreshList() {
 
-
-/*
-        // Retablir la couleur de la ligne precedemment selectionnee
-        if (lastSelectedPosition > -1) {
-            View lastLine = idList.getChildAt(lastSelectedPosition);
-            LinearLayout layoutLastLine = (LinearLayout) lastLine;
-            TextView tvNom = (TextView)layoutLastLine.findViewById(R.id.interventionLabel);
-            tvNom.setTextColor(Color.LTGRAY);
-            lastSelectedPosition = -1;
-        }
-*/
-
         // Changement de la ArrayList qui nous permettra de remplire la listView
+        lastSelectedPosition = -1;
         this.listItem.clear();
+
+        // Effacement des details affichés
+        InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+        if (fragmentDetailIntervention != null) {
+            // Effacement seulement si le fragement existe
+            fragmentDetailIntervention.dispNoDetails();
+        }
+
 
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
                 new Command() {
