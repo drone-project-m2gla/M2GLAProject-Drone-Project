@@ -67,9 +67,13 @@ public class InterventionListAdapter extends SimpleAdapter {
 
         //(2) : Récupération des TextView de notre layout
         TextView tvMean = (TextView)layoutItem.findViewById(R.id.interventionNewMean);
+        TextView tvLabel = (TextView)layoutItem.findViewById(R.id.interventionLabel);
 
-        //(3) Changement de la couleur du fond de notre item
+        //(3) Changement de la couleur de nos item
         String  nbMean = (String) this.localListIntervention.get(position).get(GeneralConstants.INTER_LIST_MEAN);
+        String  selLine = (String) this.localListIntervention.get(position).get(GeneralConstants.INTER_LIST_SELECT);
+
+        // Changement de couleur pour le nombre de moyens en attente
         if (nbMean.compareTo("[0]") != 0) {
             tvMean.setBackgroundColor(Color.RED);
             tvMean.setTextColor(Color.YELLOW);
@@ -77,6 +81,14 @@ public class InterventionListAdapter extends SimpleAdapter {
         else {
             tvMean.setBackgroundColor(Color.TRANSPARENT);
             tvMean.setTextColor(Color.WHITE);
+        }
+
+        // Changement de couleur pour le label lorsqu'il est selectionne
+        if (selLine.compareTo(GeneralConstants.SELECT_DESC_STR) == 0) {
+            tvLabel.setTextColor(Color.YELLOW);
+        }
+        else {
+            tvLabel.setTextColor(Color.LTGRAY);
         }
 
         //(4) : Appel a la methode d'origine
