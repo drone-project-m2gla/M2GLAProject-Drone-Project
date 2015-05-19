@@ -52,6 +52,7 @@ import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
@@ -149,6 +150,7 @@ public class MapActivity extends Activity implements
         // Add activity to strategy
         StrategyMoveDrone.getINSTANCE().setActivity(this);
         StrategyMeanMove.getINSTANCE().setActivity(this);
+        StrategyMeanValidatePosition.getINSTANCE().setActivity(this);
 
         loadTopographicSymbols();
     }
@@ -496,6 +498,39 @@ public class MapActivity extends Activity implements
         });
     }
 
+    public void validateMeanPos(final Mean mean) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Position coordinate = mean.getCoordinates();
+                LatLng latlng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
+                String markerId = getMeanMarker(mean.getId());
+                if (markerId == null) {
+                    //FIXME Faire ca un peut mieux parce que c'est n'importe quoi les symbols
+                    Symbol symbol = new Symbol(
+                            mean.getId(),
+                            vehicule_incendie_seul,
+                            mean.getVehicle().toString(),
+                            "RNS",
+                            "FF0000");
+                    symbol.setValidated(true);
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
+                    mClusterManager.addItem(markerItem);
+                    mClusterManager.cluster();
+                } else {
+                    Symbol markerSymbol = markerSymbolLink.get(markerId).getSymbol();
+                    markerSymbol.setValidated(true);
+                    for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
+                        if (marker.getId().equals(markerId)) {
+                            marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), markerSymbol));
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     private String getMeanMarker(String meanId) {
         for (String markerId : markerSymbolLink.keySet()) {
             if (meanId.equals(markerSymbolLink.get(markerId).getSymbol().getId())) {
@@ -523,8 +558,10 @@ public class MapActivity extends Activity implements
             markerOptions.icon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), item.getSymbol()));
             if (!item.getSymbol().isTopographic()) {
                 markerOptions.draggable(true);
+                markerOptions.title("Confirmer position");
+            } else {
+                markerOptions.title(item.getSymbol().getFirstText());
             }
-            markerOptions.title("Confirmer position");
         }
 
         @Override
