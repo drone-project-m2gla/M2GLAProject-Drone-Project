@@ -1,157 +1,110 @@
 [
-    {
-	"entitled":"danger",
-	"filename":"danger",
-    "coordinates": {
-            "longitude": -1.63847,
-                "latitude": 48.117121
-        }
-    "color" : "0000ff",
-    "tiret" :"true",
-    "firstContent" : "",
-    "secondContent" : ""
-    },
-
- {
-	"entitled":"etoile",
-	"filename":"etoile",
-    "coordinates": {
-            "longitude": -1.637371,
-            "latitude": 48.114909
-        }
-    "color" : "0000ff",
-    "tiret" :"true",
-    "firstContent" : "",
-    "secondContent" : ""
-    },
-
- {
-	"entitled":"point_sensible",
-	"filename":"point_sensible",
-    "coordinates": {
-            "longitude": -1.641726,
-            "latitude": 48.117898
-        }
-    "color" : "0000ff",
-    "tiret" :"true",
-    "firstContent" : "",
-    "secondContent" : ""
-    },
-
- {
-	"entitled":"prise_eau_perenne",
-	"filename":"prise_eau_perenne",
-    "coordinates": {
-            "longitude": -1.639761,
-            "latitude": 48.114499
-        }
-    "color" : "0000ff",
-    "tiret" :"true",
-    "firstContent" : "",
-    "secondContent" : ""
-    },
-
- {
-	"entitled":"Pc colonne deux fonctions_actif",
-	"filename":"pc_colonne_deux_fonctions_actif",
-    "coordinates": {
-            "longitude": -1.612158,
-            "latitude": 48.115426
-        }
-    "color" : "0000ff",
-    "tiret" :"true",
-    "firstContent" : "",
-    "secondContent" : ""
-    },
-
- {
-	"entitled":"Pc site",
-	"filename":"pc_site",
-    "coordinates": {
-            "longitude": -1.623938,
-            "latitude": 48.115626
-        }
-    "color" : "0000ff",
-    "tiret" :"true",
-    "firstContent" : "",
-    "secondContent" : ""
-    },
-
-{
-	"entitled":"Point de ravitaillement",
-	"filename":"point_ravitaillement",
-    "coordinates": {
-            "longitude": -1.64443,
-            "latitude": 48.135277
-        }
-    "color" : "0000ff",
-    "tiret" :"true",
-    "firstContent" : "",
-    "secondContent" : ""
-    },
-    {
-    	"entitled":"Prise eau non perenne",
-    	"filename":"prise_eau_non_perenne",
-        "coordinates": {
-                "longitude": -1.647005,
-                "latitude": 48.126283
-            }
-        "color" : "0000ff",
-        "tiret" :"true",
-        "firstContent" : "",
-        "secondContent" : ""
-        },
-
-        {
-        	"entitled":"Prise eau perenne",
-        	"filename":"prise_eau_perenne",
-            "coordinates": {
-                    "longitude": -1.63619,
-                    "latitude": 48.119122
-                }
-            "color" : "0000ff",
-            "tiret" :"true",
-            "firstContent" : "",
-            "secondContent" : ""
-            },
-            {
-            	"entitled":"point_sensible",
-            	"filename":"point_sensible",
-                "coordinates": {
-                        "longitude": -1.627092,
-                        "latitude": 48.12021
-                    }
-                "color" : "0000ff",
-                "tiret" :"true",
-                "firstContent" : "",
-                "secondContent" : ""
-                },
-                {
-                	"entitled":"danger",
-                	"filename":"danger",
-                    "coordinates": {
-                            "longitude": -1.631813,
-                            "latitude": 48.116428
-                        }
-                    "color" : "0000ff",
-                    "tiret" :"true",
-                    "firstContent" : "",
-                    "secondContent" : ""
-                    },
-
-
-                      {
-                                    	"entitled":"poste_commandement_prevu",
-                                    	"filename":"poste_commandement_prevu",
-                                        "coordinates": {
-                                                "longitude": -1.638851,
-                                                "latitude": 48.120038
-                                            }
-                                        "color" : "0000ff",
-                                        "tiret" :"true",
-                                        "firstContent" : "",
-                                        "secondContent" : ""
-                                        }
-
-
+	{
+		"entitled":"danger",
+		"filename":"danger",
+		"coordinates":{
+			"longitude":-1.63847,
+			"latitude":48.117121
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"etoile",
+		"filename":"etoile",
+		"coordinates":{
+			"longitude":-1.637371,
+			"latitude":48.114909
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"point_sensible",
+		"filename":"point_sensible",
+		"coordinates":{
+			"longitude":-1.641726,
+			"latitude":48.117898
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"prise_eau_perenne",
+		"filename":"prise_eau_perenne",
+		"coordinates":{
+			"longitude":-1.639761,
+			"latitude":48.114499
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"Point de ravitaillement",
+		"filename":"point_ravitaillement",
+		"coordinates":{
+			"longitude":-1.64443,
+			"latitude":48.135277
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"Prise eau non perenne",
+		"filename":"prise_eau_non_perenne",
+		"coordinates":{
+			"longitude":-1.647005,
+			"latitude":48.126283
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"Prise eau perenne",
+		"filename":"prise_eau_perenne",
+		"coordinates":{
+			"longitude":-1.63619,
+			"latitude":48.119122
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"point_sensible",
+		"filename":"point_sensible",
+		"coordinates":{
+			"longitude":-1.627092,
+			"latitude":48.12021
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	},
+	{
+		"entitled":"danger",
+		"filename":"danger",
+		"coordinates":{
+			"longitude":-1.631813,
+			"latitude":48.116428
+		},
+		"color":"0000ff",
+		"tiret":"true",
+		"firstContent":"",
+		"secondContent":""
+	}	
 ]

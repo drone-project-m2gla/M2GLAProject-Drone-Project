@@ -9,6 +9,30 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:id="@+id/nomDetailsLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_nom_text"
+            android:textSize="17sp"
+            android:id="@+id/details_nom_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intervention_details_nom_err"
+            android:textSize="17sp"
+            android:id="@+id/details_nom" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         android:id="@+id/codeDetailsLayout">
 
         <TextView

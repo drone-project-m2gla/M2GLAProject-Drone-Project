@@ -1,6 +1,5 @@
 package rest;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -15,9 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import groovy.transform.Synchronized;
 import org.apache.log4j.Logger;
 
 import dao.InterventionDAO;
@@ -37,7 +34,6 @@ import service.impl.RetrieveAddressImpl;
 public class InterventionRest {
 	private static final Logger LOGGER = Logger.getLogger(InterventionRest.class);
 
-
 	@GET
 	@Path("/{id}/moyen/{idmean}")
 	@Produces({MediaType.APPLICATION_JSON})
@@ -56,7 +52,6 @@ public class InterventionRest {
 		}
 
 		return res;
-
 	}
 
 	@POST
@@ -64,7 +59,6 @@ public class InterventionRest {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	public synchronized Mean validateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
-
 		InterventionDAO iD = new InterventionDAO();
 		Mean res = null;
 		iD.connect();
@@ -74,10 +68,19 @@ public class InterventionRest {
 		for (Mean m : meanList) {
 			if (m.getId() == mean.getId()) {
 				m.setInPosition(true);
-				res = m;			}
+				res = m;
+				break;
+			}
 		}
 		iD.update(intervention);
 		iD.disconnect();
+
+		try {
+			PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "moyenValide", res);
+		} catch (IOException e) {
+			LOGGER.error("Error push service intervention", e);
+		}
+
 		return res;
 	}
 
@@ -85,7 +88,7 @@ public class InterventionRest {
 	@Path("/{id}/moyen/positionner")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public synchronized Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) throws IOException {
+	public synchronized Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
 		InterventionDAO iD = new InterventionDAO();
 		Mean res = null;
 		iD.connect();
@@ -95,14 +98,20 @@ public class InterventionRest {
 		for (Mean m : meanList) {
 			if (m.getId() == mean.getId()) {
 				m.setCoordinates(mean.getCoordinates());
-				LOGGER.debug(mean);
 				m.setInPosition(false);
-				PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "moyenMove", m);
 				res = m;
+				break;
 			}
 		}
 		iD.update(intervention);
 		iD.disconnect();
+
+		try {
+			PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "moyenMove", res);
+		} catch (IOException e) {
+			LOGGER.error("Error push service intervention", e);
+		}
+
 		return res;
 	}
 
@@ -121,10 +130,11 @@ public class InterventionRest {
 		iD.disconnect();
 
 		try {
-			PushServiceImpl.getInstance().sendMessage(TypeClient.CODIS, "xtra",intervention);
+			PushServiceImpl.getInstance().sendMessage(TypeClient.CODIS, "xtra", intervention);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error push service intervention", e);
 		}
+
 		return intervention.getMeansXtra().get(intervention.getMeansXtra().size()-1);
 	}
 
@@ -198,7 +208,13 @@ public class InterventionRest {
 		intervention.generateMeanList();
 		Intervention res = iD.create(intervention);
 		iD.disconnect();
-
+		
+		try {
+			PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "addIntervention", intervention);
+		} catch (IOException e) {
+			LOGGER.error("Error push service intervention", e);
+		}
+		
 		return res;
 	}
 }

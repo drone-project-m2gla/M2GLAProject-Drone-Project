@@ -153,27 +153,34 @@ public class InterventionDetailFragment extends Fragment {
         titles = new String[listXtraNotDeclinedSize];
         images = new String[listXtraNotDeclinedSize];
 
+        LinearLayout nomLayout = (LinearLayout) this.view.findViewById(R.id.nomDetailsLayout);
         LinearLayout codeLayout = (LinearLayout) this.view.findViewById(R.id.codeDetailsLayout);
         LinearLayout adresseLayout = (LinearLayout) this.view.findViewById(R.id.adresseDetailsLayout);
         LinearLayout villeLayout = (LinearLayout) this.view.findViewById(R.id.villeDetailsLayout);
-        TextView titleFragement = (TextView) this.view.findViewById(R.id.details_titre_moyen);
+        TextView nomIntervention = (TextView) this.view.findViewById(R.id.details_nom);
+        TextView codeIntervention = (TextView) this.view.findViewById(R.id.details_code);
         TextView addresseIntervention = (TextView) this.view.findViewById(R.id.details_adresse);
         TextView villeIntervention = (TextView) this.view.findViewById(R.id.details_ville);
+        TextView titleFragement = (TextView) this.view.findViewById(R.id.details_titre_moyen);
         TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.details_moyens);
-        TextView codeIntervention = (TextView) this.view.findViewById(R.id.details_code);
+
+        // Renseignement des champs
+        nomIntervention.setText(intervention.getLabel());
+        codeIntervention.setText(intervention.getDisasterCode().toString());
         addresseIntervention.setText(intervention.getAddress());
         villeIntervention.setText(intervention.getPostcode() + " " + intervention.getCity());
-        codeIntervention.setText(intervention.getDisasterCode().toString());
 
         // Ajoute les couleurs aux textes
+        nomIntervention.setTextColor(Color.YELLOW);
+        codeIntervention.setTextColor(Color.YELLOW);
         addresseIntervention.setTextColor(Color.YELLOW);
         villeIntervention.setTextColor(Color.YELLOW);
-        codeIntervention.setTextColor(Color.YELLOW);
         titleFragement.setTextColor(Color.GREEN);
         titleNoMoyen.setTextColor(Color.GREEN);
 
 
         // Valider l'affichage des donnees
+        nomLayout.setVisibility(View.VISIBLE);
         codeLayout.setVisibility(View.VISIBLE);
         adresseLayout.setVisibility(View.VISIBLE);
         villeLayout.setVisibility(View.VISIBLE);
