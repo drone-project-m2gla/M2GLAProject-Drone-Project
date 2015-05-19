@@ -113,7 +113,7 @@ public class Symbol {
                 color = "0000ff";
                 break;
             case VLCG:
-                color = "ff00ff";
+                color = "551a8b";
                 break;
             default:
                 break;
