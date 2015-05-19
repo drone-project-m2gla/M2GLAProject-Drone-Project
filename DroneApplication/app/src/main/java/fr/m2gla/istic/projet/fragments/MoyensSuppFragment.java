@@ -22,7 +22,7 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
@@ -57,11 +57,11 @@ public class MoyensSuppFragment extends Fragment {
         moyensSpinner = (Spinner) view
                 .findViewById(R.id.moyensSpinner);
 
-        titles = new String[]{Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
-                Constant.VALUE_VEHICULE_VSR, Constant.VALUE_VEHICULE_VLCG, Constant.VALUE_VEHICULE_VSAV};
+        titles = new String[]{GeneralConstants.VALUE_VEHICULE_EPA, GeneralConstants.VALUE_VEHICULE_FPT,
+                GeneralConstants.VALUE_VEHICULE_VSR, GeneralConstants.VALUE_VEHICULE_VLCG, GeneralConstants.VALUE_VEHICULE_VSAV};
 
-        images = new int[]{Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
-                Constant.DRAWABLE_IMG_VEHICULE_VSR, Constant.DRAWABLE_IMG_VEHICULE_VLCG, Constant.DRAWABLE_IMG_VEHICULE_VSAV};
+        images = new int[]{GeneralConstants.DRAWABLE_IMG_VEHICULE_EPA, GeneralConstants.DRAWABLE_IMG_VEHICULE_FPT,
+                GeneralConstants.DRAWABLE_IMG_VEHICULE_VSR, GeneralConstants.DRAWABLE_IMG_VEHICULE_VLCG, GeneralConstants.DRAWABLE_IMG_VEHICULE_VSAV};
 
         List<Drawable> drawables = new ArrayList<Drawable>();
         for (int imageId : images) {
@@ -103,9 +103,12 @@ public class MoyensSuppFragment extends Fragment {
         if (xtraSize > 0) {
             for (Mean m : listXtra) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                        Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
+                        Symbol.SymbolType.valueOf(meanType),
+                        meanClass,
+                        Symbol.getCityTrigram(),
+                        Symbol.getMeanColor(m.getVehicle()));
                 position++;
             }
             Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();

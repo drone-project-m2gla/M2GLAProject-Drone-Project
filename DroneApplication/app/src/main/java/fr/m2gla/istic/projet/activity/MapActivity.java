@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
@@ -240,7 +239,6 @@ public class MapActivity extends Activity implements
     @Override
     public boolean onDrag(View v, DragEvent event) {
         if (event.getAction() == DragEvent.ACTION_DROP) {
-            Log.i(TAG, event.toString());
 
             ClipData clipData = event.getClipData();
             try {
@@ -354,7 +352,7 @@ public class MapActivity extends Activity implements
     public void onMarkerDragEnd(Marker marker) {
         //Change symbol image to dashed one
         if (markerSymbolLink.containsKey(marker.getId())) {
-            Log.d(TAG, "onMarkerDragStart found " + marker.getId());
+            //Log.d(TAG, "onMarkerDragStart found " + marker.getId());
             Symbol symbol = markerSymbolLink.get(marker.getId()).getSymbol();
             symbol.setValidated(false);
             marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), symbol));
@@ -388,7 +386,7 @@ public class MapActivity extends Activity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Log.d(TAG, "main onClusterItemInfoWindowClick");
+        //Log.d(TAG, "main onClusterItemInfoWindowClick");
         final Symbol meanSymbol = markerSymbolLink.get(marker.getId()).getSymbol();
         final Marker _marker = marker;
         if (!meanSymbol.isTopographic()) {
@@ -502,17 +500,20 @@ public class MapActivity extends Activity implements
                             mean.getId(),
                             vehicule_incendie_seul,
                             mean.getVehicle().toString(),
-                            "RNS",
-                            "FF0000");
+                            Symbol.getCityTrigram(),
+                            Symbol.getMeanColor(mean.getVehicle()));
+                    symbol.setValidated(false);
                     SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
                     mClusterManager.addItem(markerItem);
                     mClusterManager.cluster();
                 } else {
                     markerSymbolLink.get(markerId).setPosition(latlng);
-
+                    Symbol markerSymbol = markerSymbolLink.get(markerId).getSymbol();
+                    markerSymbol.setValidated(false);
                     for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
                         if (marker.getId().equals(markerId)) {
                             marker.setPosition(latlng);
+                            marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), markerSymbol));
                             break;
                         }
                     }
@@ -534,8 +535,8 @@ public class MapActivity extends Activity implements
                             mean.getId(),
                             vehicule_incendie_seul,
                             mean.getVehicle().toString(),
-                            "RNS",
-                            "FF0000");
+                            Symbol.getCityTrigram(),
+                            Symbol.getMeanColor(mean.getVehicle()));
                     symbol.setValidated(true);
                     SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
                     mClusterManager.addItem(markerItem);
@@ -590,7 +591,7 @@ public class MapActivity extends Activity implements
         @Override
         protected void onClusterItemRendered(SymbolMarkerClusterItem clusterItem, Marker marker) {
             markerSymbolLink.put(marker.getId(), clusterItem);
-            Log.d(TAG, "onClusterItemRendered " + marker.getId());
+            //Log.d(TAG, "onClusterItemRendered " + marker.getId());
         }
     }
 
@@ -615,7 +616,7 @@ public class MapActivity extends Activity implements
         Intent intent = getIntent();
 
         if (intent != null) {
-            String idIntervention = intent.getStringExtra(GeneralConstants.ID_INTERVENTION);
+            String idIntervention = intent.getStringExtra(fr.m2gla.istic.projet.context.GeneralConstants.ID_INTERVENTION);
 
             // Fragment ajout de moyens supplémentaires
             MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);
@@ -693,9 +694,9 @@ public class MapActivity extends Activity implements
 
                 for (Mean m: meansWithCoordinates) {
                     String meanClass = m.getVehicle().toString();
-                    String meanType = Constant.getImage(meanClass);
+                    String meanType = Symbol.getImage(meanClass);
                     Symbol symbol = new Symbol(m.getId(),
-                            valueOf(meanType), meanClass, "RNS", "ff0000");
+                            valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                     SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
                             m.getCoordinates().getLatitude(),
                             m.getCoordinates().getLongitude(), symbol);

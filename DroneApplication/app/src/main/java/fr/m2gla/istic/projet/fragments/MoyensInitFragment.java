@@ -25,7 +25,7 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
@@ -177,9 +177,9 @@ public class MoyensInitFragment extends ListFragment {
         if (meanSize > 0) {
             for (Mean m : meanNotInPosition) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(true);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -202,9 +202,9 @@ public class MoyensInitFragment extends ListFragment {
             position = 0;
             for (Mean m : meanNotValidated) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 meansXNotValidate[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -218,9 +218,9 @@ public class MoyensInitFragment extends ListFragment {
             position = 0;
             for (Mean m : meanRefused) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 meansXRefused[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -352,6 +352,6 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     public void updateAdapter() {
-        Log.i(TAG, "Mise en place de la stategy");
+        Log.i(TAG, "Mise en place de la strategy");
     }
 }

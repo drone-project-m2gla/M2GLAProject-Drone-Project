@@ -12,5 +12,5 @@ package fr.m2gla.istic.projet.model;
  * FTP -- Fourgon pompe-tonne
  */
 public enum Vehicle {
-    VSAV,VSR,VLCG,EPA,FPT
+    VSAV,VSR,VLCG,EPA,FPT,CCGC
 }

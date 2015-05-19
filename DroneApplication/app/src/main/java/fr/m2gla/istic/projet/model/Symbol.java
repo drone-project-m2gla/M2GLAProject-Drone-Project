@@ -1,5 +1,7 @@
 package fr.m2gla.istic.projet.model;
 
+import fr.m2gla.istic.projet.context.GeneralConstants;
+
 /**
  * Created by fernando on 4/14/15.
  */
@@ -77,5 +79,49 @@ public class Symbol {
 
     public boolean isTopographic() {
         return topographic;
+    }
+
+    public static String getImage(String title) {
+        String imgID = GeneralConstants.SVG_VEHICULE_A_INCENDIE_SEUL;
+
+        /*switch (title.toLowerCase()) {
+            case "vsav":
+                imgID = SVG_SECOURS_A_PERSONNE;
+                break;
+            case "vsr":
+                imgID = SVG_COLONNE_INCENDIE;
+                break;
+            case "vlcg":
+                imgID = SVG_VEHICULE_POST_COMMAND;
+                break;
+            default:
+                break;
+        }*/
+        return imgID;
+    }
+
+    public static String getMeanColor(Vehicle vehicle) {
+        String color = "ff0000";
+        switch (vehicle) {
+            case FPT:
+                color = "ff0000";
+                break;
+            case VSAV:
+                color = "00ff00";
+                break;
+            case CCGC:
+                color = "0000ff";
+                break;
+            case VLCG:
+                color = "ff00ff";
+                break;
+            default:
+                break;
+        }
+        return color;
+    }
+
+    public static String getCityTrigram(){
+        return "RNS";
     }
 }
