@@ -25,7 +25,6 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
@@ -33,7 +32,6 @@ import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
-import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
@@ -62,7 +60,7 @@ public class MoyensInitFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
 
-        StrategyMeanSupplAdd.getINSTANCE().setMeanInitFragment(this);
+//        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
 
         return view;
     }
@@ -289,6 +287,7 @@ public class MoyensInitFragment extends ListFragment {
                 titles = new ArrayList<String>();
 
                 if (means.length > 0) {
+                    titles.clear();
                     for (Symbol mean : means) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -309,6 +308,7 @@ public class MoyensInitFragment extends ListFragment {
                 }
 
                 if (meansXRefused.length > 0) {
+                    titles.clear();
                     for (Symbol mean : meansXRefused) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -329,6 +329,7 @@ public class MoyensInitFragment extends ListFragment {
                 }
 
                 if (meansXNotValidate.length > 0) {
+                    titles.clear();
                     for (Symbol mean : meansXNotValidate) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -352,7 +353,8 @@ public class MoyensInitFragment extends ListFragment {
         };
     }
 
-    public void updateAdapter() {
-        Log.i(TAG, "Mise en place de la strategy");
+    public void updateAdapter(Mean mean) {
+        Log.i(TAG, "Mise en place de la strategy   " + mean.getId());
+//        adapterXtraNotValidate.
     }
 }
