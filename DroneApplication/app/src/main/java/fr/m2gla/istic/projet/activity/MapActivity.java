@@ -152,7 +152,6 @@ public class MapActivity extends Activity implements
         StrategyMoveDrone.getINSTANCE().setActivity(this);
         StrategyMeanMove.getINSTANCE().setActivity(this);
         StrategyMeanValidatePosition.getINSTANCE().setActivity(this);
-        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
 
 
         loadTopographicSymbols();
@@ -489,18 +488,6 @@ public class MapActivity extends Activity implements
                 }
             });
         }
-    }
-
-
-    public void addMean(final Mean object) {
-        Log.i(TAG, "add Mean " + object.getId());
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "Object update  " + object.getId());
-                Toast.makeText(getApplication(), "Coucou \nL'objet est " + object.getId(), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     public void posMean(final Mean mean) {

@@ -33,6 +33,7 @@ import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
@@ -55,13 +56,14 @@ public class MoyensInitFragment extends ListFragment {
     private Symbol[] meansXRefused;
     private ArrayAdapter adapterXtraRefused;
     private ArrayAdapter adapterXtraNotValidate;
+    private List<Drawable> drawables;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
 
-//        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
+        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
 
         return view;
     }
@@ -284,11 +286,12 @@ public class MoyensInitFragment extends ListFragment {
                 initImagesTitles(intervention, i, meanList, xtraList);
 
                 //Listes pour générer tableaux pour adapterMeans
-                List<Drawable> drawables = new ArrayList<Drawable>();
+                drawables = new ArrayList<Drawable>();
                 titles = new ArrayList<String>();
 
                 if (means.length > 0) {
                     titles.clear();
+                    drawables.clear();
                     for (Symbol mean : means) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -310,6 +313,7 @@ public class MoyensInitFragment extends ListFragment {
 
                 if (meansXRefused.length > 0) {
                     titles.clear();
+                    drawables.clear();
                     for (Symbol mean : meansXRefused) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -331,6 +335,7 @@ public class MoyensInitFragment extends ListFragment {
 
                 if (meansXNotValidate.length > 0) {
                     titles.clear();
+                    drawables.clear();
                     for (Symbol mean : meansXNotValidate) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -354,8 +359,25 @@ public class MoyensInitFragment extends ListFragment {
         };
     }
 
-    public void updateAdapter(Mean mean) {
-        Log.i(TAG, "Mise en place de la stategy   " + mean.getId());
-//        adapterXtraNotValidate.
+    public void addMean(final Mean object) {
+        Log.i(TAG, "add Mean " + object.getId());
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId() + " " + object.getVehicle(), Toast.LENGTH_LONG).show();
+                // setInterventionID(MoyensInitFragment.this.idIntervention);
+                // GET_MOYENS_DEPLOYES
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", idIntervention);
+                RestServiceImpl.getInstance()
+                        .get(RestAPI.GET_MOYENS_DEPLOYES, map, List.class, new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                List<Mean> means = (List<Mean>) response;
+                                Log.i(TAG, "success size  " + means.size());
+                            }
+                        }, getCallbackError());
+            }
+        });
     }
 }
