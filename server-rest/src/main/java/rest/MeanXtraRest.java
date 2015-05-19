@@ -29,7 +29,7 @@ public class MeanXtraRest {
     @Path("{idintervention}/ok")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response validateMeanXtra(@PathParam("idintervention") long idintervention, Mean meanXtra) {
+    public synchronized Response validateMeanXtra(@PathParam("idintervention") long idintervention, Mean meanXtra) {
 
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
@@ -65,7 +65,7 @@ public class MeanXtraRest {
     @Path("{idintervention}/nok")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response declineMeanXtra(@PathParam("idintervention") long idintervention,Mean meanXtra) {
+    public synchronized Response declineMeanXtra(@PathParam("idintervention") long idintervention,Mean meanXtra) {
 
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
