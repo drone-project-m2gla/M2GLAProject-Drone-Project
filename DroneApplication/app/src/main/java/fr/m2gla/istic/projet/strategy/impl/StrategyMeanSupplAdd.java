@@ -14,11 +14,12 @@ public class StrategyMeanSupplAdd implements Strategy {
     private static final String TAG = "Strategy moy. suppl";
     private static StrategyMeanSupplAdd INSTANCE;
 
-    public void setMeanInitFragment(MoyensInitFragment meanInitFragment) {
-        this.meanInitFragment = meanInitFragment;
+    public void setActivity(MoyensInitFragment mapActivity) {
+        this.map = mapActivity;
+        Log.i(TAG, "Setter");
     }
 
-    private MoyensInitFragment meanInitFragment;
+    private MoyensInitFragment map;
 
     public StrategyMeanSupplAdd() {
     }
@@ -35,9 +36,8 @@ public class StrategyMeanSupplAdd implements Strategy {
 
     @Override
     public void call(Object object) {
-        Log.i(TAG, "Object is " + (object == null));
-        if (meanInitFragment != null) {
-            meanInitFragment.updateAdapter();
+        if (map != null) {
+            map.addMean((Mean) object);
         }
     }
 
