@@ -51,11 +51,11 @@ import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
-import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
+import static fr.m2gla.istic.projet.model.Symbol.SymbolType.vehicule_incendie_seul;
 
 public class MapActivity extends Activity implements
         ObserverTarget,
@@ -188,7 +188,7 @@ public class MapActivity extends Activity implements
     /**
      * Load symbols using topographic REST service
      */
-    public void loadTopographicSymbols() {
+    private void loadTopographicSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
         new Command() {
             /**
@@ -260,6 +260,8 @@ public class MapActivity extends Activity implements
         }
         return true;
     }
+
+
 
     /**
      * Marker drag listener method used when drag starts after a long click
@@ -466,9 +468,41 @@ public class MapActivity extends Activity implements
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "Mean move " + mean.getId(), Toast.LENGTH_LONG).show();
+                Position coordinate = mean.getCoordinates();
+                LatLng latlng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
+                String markerId = getMeanMarker(mean.getId());
+                if (markerId == null) {
+                    //FIXME Faire ca un peut mieux parce que c'est n'importe quoi les symbols
+                    Symbol symbol = new Symbol(
+                            mean.getId(),
+                            vehicule_incendie_seul,
+                            mean.getVehicle().toString(),
+                            "RNS",
+                            "FF0000");
+                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
+                    mClusterManager.addItem(markerItem);
+                    mClusterManager.cluster();
+                } else {
+                    markerSymbolLink.get(markerId).setPosition(latlng);
+
+                    for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
+                        if (marker.getId().equals(markerId)) {
+                            marker.setPosition(latlng);
+                            break;
+                        }
+                    }
+                }
             }
         });
+    }
+
+    private String getMeanMarker(String meanId) {
+        for (String markerId : markerSymbolLink.keySet()) {
+            if (meanId.equals(markerSymbolLink.get(markerId).getSymbol().getId())) {
+                return markerId;
+            }
+        }
+        return null;
     }
 
     /**
@@ -592,7 +626,7 @@ public class MapActivity extends Activity implements
                 List<Mean> meansWithCoordinates = new ArrayList<Mean>();
                 for (Mean m: meanList){
                     String latitude = String.valueOf(m.getCoordinates().getLatitude());
-                    if (!latitude.equals("NaN")) {
+                    if (!Double.isNaN(m.getCoordinates().getLatitude())) {
                         meansWithCoordinates.add(m);
                     }
                 }
