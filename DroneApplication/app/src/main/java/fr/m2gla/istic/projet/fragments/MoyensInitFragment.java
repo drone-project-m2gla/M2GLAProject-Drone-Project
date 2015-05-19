@@ -32,6 +32,7 @@ import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
@@ -59,6 +60,9 @@ public class MoyensInitFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
+
+        StrategyMeanSupplAdd.getINSTANCE().setMeanInitFragment(this);
+
         return view;
     }
 
@@ -160,8 +164,9 @@ public class MoyensInitFragment extends ListFragment {
         int pos = 0;
 
         for (Mean m : listMean) {
-            Log.i(TAG, pos++ + "  Not is NaN******\t" + m.getCoordinates().getLatitude());
-            if ("NaN".equals(m.getCoordinates().getLatitude())) {
+            boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
+            Log.i(TAG, pos++ + "  Not is NaN******Lat  \t" + m.getCoordinates().getLatitude() + " Bool  " + isNaN);
+            if (isNaN) {
                 meanNotInPosition.add(m);
             }
         }
@@ -344,5 +349,9 @@ public class MoyensInitFragment extends ListFragment {
                 }
             }
         };
+    }
+
+    public void updateAdapter() {
+        Log.i(TAG, "Mise en place de la stategy");
     }
 }

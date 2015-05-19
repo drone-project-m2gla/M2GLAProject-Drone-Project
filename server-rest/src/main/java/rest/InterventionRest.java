@@ -74,8 +74,7 @@ public class InterventionRest {
 		for (Mean m : meanList) {
 			if (m.getId() == mean.getId()) {
 				m.setInPosition(true);
-				res = m;
-			}
+				res = m;			}
 		}
 		iD.update(intervention);
 		iD.disconnect();
