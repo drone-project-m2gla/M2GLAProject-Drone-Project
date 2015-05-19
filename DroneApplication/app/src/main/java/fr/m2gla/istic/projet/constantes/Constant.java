@@ -63,13 +63,4 @@ public class Constant {
         }
         return imgID;
     }
-
-    // VSAV -- Véhicule de secours et d'assistance aux victimes
-    // VSR -- Véhicule secours routier
-    // VLCG -- Véhicule de liaison chef de groupe
-    // EPA -- Echelle pivotante automatique
-    // FTP -- Fourgon pompe-tonne
-    public enum Vehicule {
-        VSAV, VSR, VLCG, EPA, FPT
-    }
 }
