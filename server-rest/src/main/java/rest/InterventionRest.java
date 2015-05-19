@@ -130,7 +130,7 @@ public class InterventionRest {
 		iD.disconnect();
 
 		try {
-			PushServiceImpl.getInstance().sendMessage(TypeClient.CODIS, "xtra", intervention);
+			PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "xtra", intervention);
 		} catch (IOException e) {
 			LOGGER.error("Error push service intervention", e);
 		}
