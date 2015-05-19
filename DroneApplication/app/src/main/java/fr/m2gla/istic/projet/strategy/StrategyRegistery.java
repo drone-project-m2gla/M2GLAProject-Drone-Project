@@ -7,7 +7,7 @@ import java.util.List;
  * Created by baptiste on 09/04/15.
  */
 public class StrategyRegistery {
-    private static final String TAG = "StratRegister";
+    private static final String TAG = "StrategyRegister";
     private static StrategyRegistery INSTANCE;
     private List<Strategy> strategies;
 

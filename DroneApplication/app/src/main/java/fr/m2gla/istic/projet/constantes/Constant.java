@@ -48,7 +48,7 @@ public class Constant {
     public static String getImage(String title) {
         String imgID = SVG_VEHICULE_A_INCENDIE_SEUL;
 
-        switch (title.toLowerCase()) {
+        /*switch (title.toLowerCase()) {
             case "vsav":
                 imgID = SVG_SECOURS_A_PERSONNE;
                 break;
@@ -60,7 +60,7 @@ public class Constant {
                 break;
             default:
                 break;
-        }
+        }*/
         return imgID;
     }
 }

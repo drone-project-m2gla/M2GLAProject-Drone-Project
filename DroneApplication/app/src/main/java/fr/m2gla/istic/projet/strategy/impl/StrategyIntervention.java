@@ -34,7 +34,7 @@ public class StrategyIntervention implements Strategy {
 
     @Override
     public String getScopeName() {
-        return "intervention";
+        return "addIntervention";
     }
 
     @Override
