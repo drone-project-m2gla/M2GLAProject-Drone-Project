@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import groovy.transform.Synchronized;
 import org.apache.log4j.Logger;
 
 import dao.InterventionDAO;
@@ -62,7 +63,7 @@ public class InterventionRest {
 	@Path("/{id}/moyen/emplace")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Mean validateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
+	public synchronized Mean validateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) {
 
 		InterventionDAO iD = new InterventionDAO();
 		Mean res = null;
@@ -85,7 +86,7 @@ public class InterventionRest {
 	@Path("/{id}/moyen/positionner")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) throws IOException {
+	public synchronized Mean updateMeanPositionForIntervention(@PathParam("id") long id, Mean mean) throws IOException {
 		InterventionDAO iD = new InterventionDAO();
 		Mean res = null;
 		iD.connect();
@@ -110,7 +111,7 @@ public class InterventionRest {
 	@Path("/{id}/moyenextra")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Mean getMeanListForIntervention(@PathParam("id") long id,Mean meanXtra) {
+	public synchronized Mean getMeanListForIntervention(@PathParam("id") long id,Mean meanXtra) {
 		InterventionDAO iD = new InterventionDAO();
 		iD.connect();
 		Intervention intervention = iD.getById(id);
@@ -180,7 +181,7 @@ public class InterventionRest {
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Intervention setIntervention(Intervention intervention) {
+	public synchronized Intervention setIntervention(Intervention intervention) {
 		InterventionDAO iD = new InterventionDAO();
 		iD.connect();
 
