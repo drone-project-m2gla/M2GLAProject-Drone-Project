@@ -43,27 +43,25 @@ def meterToGps(x,y):
     return (lat,lng)
 
 def callbackOdometry(data):
-    '''rospy.loginfo (" postition d'odometry %s ", data.pose.pose)'''
     command.pose = data.pose.pose
 
-class Command:
+def callbackImage(data):
+    command.saveImg = data
+    command.cmdImage.unregister()
+    rospy.sleep(1.)
+    command.cmdImage = rospy.Subscriber("/drone/camera/image", Image, callbackImage, queue_size=1)
 
+class Command:
     def __init__(self):
         self.cmdWaypoint = rospy.Publisher("/drone/waypoint", Pose, queue_size=10, latch=True)
-        self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry,callbackOdometry)
+        self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry, callbackOdometry, queue_size=1)
+        self.cmdImage = rospy.Subscriber("/drone/camera/image", Image, callbackImage, queue_size=1)
 
     def setWaypoint(self, x, y, z):
         point = gpsToPoint(y,x)
         print("Go to Point " + str(point.x) + " " + str(point.y))
         pose = Pose(position=point)
         self.cmdWaypoint.publish(pose)
-
-    def process_image(self, ros_image):
-        print("processing image")
-        #### direct conversion to CV2 ####
-        bridge = CvBridge()
-        cv_image = bridge.imgmsg_to_cv2(ros_image, desired_encoding="rgb8")
-        cv2.imwrite("testimage.png", cv_image)
 
 command = Command()
 app = Flask(__name__)
@@ -98,10 +96,19 @@ def getPosition():
 
     return jsonify({"latitude": t[0], "longitude": t[1], "altitude": z}), 200
 
+def encoreImage(img):
+    result = ""
+    for i in range(0, len(img)):
+        result += str(img[i]) + ","
+
 @app.route('/robot/picture', methods=['GET'])
-def getpicture() :    
-    command.subscriber = rospy.Subscriber("cat/camera/image", Image, command.process_image, queue_size = 10, latch=True)
-    return jsonify({"message":"reussi"})
+def getpicture() :
+    return jsonify({
+    	"width": command.saveImg.width,
+    	"height": command.saveImg.height,
+    	"encoding": command.saveImg.encoding,
+    	"image": str(command.saveImg.data)
+    })
 
 if __name__ == '__main__' :
     rospy.init_node("flask")
