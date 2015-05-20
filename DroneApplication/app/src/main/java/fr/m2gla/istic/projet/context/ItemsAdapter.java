@@ -36,15 +36,15 @@ public class ItemsAdapter extends ArrayAdapter {
 
     private final static String TAG = "ItemsAdapter";
 
-    private String[]                titles;
-    private int                     customLayout;
-    private Intervention            intervention;
-    private ArrayList<String>       myList = null;
-    private ArrayList<ViewHolder>   vhList = new ArrayList<ViewHolder>();
-    private String                  idIntervention = null;
-    private List<Mean>              meanList = null;
-    private Mean                    xtraMean;
-    private ListAdapterCommand      adapterCommand = null;
+    private String[] titles;
+    private int customLayout;
+    private Intervention intervention;
+    private ArrayList<String> myList = null;
+    private ArrayList<ViewHolder> vhList = new ArrayList<ViewHolder>();
+    private String idIntervention = null;
+    private List<Mean> meanList = null;
+    private Mean xtraMean;
+    private ListAdapterCommand adapterCommand = null;
 
     public ItemsAdapter(Context context, int textViewResourceId,
                         String[] objects, Drawable[] images) {
@@ -98,12 +98,12 @@ public class ItemsAdapter extends ArrayAdapter {
         }
 
         // NOTE : LE CODE SUIVANT DOIT ETRE SUPPRIME !
-Toast.makeText(getContext(), "Remove : " + position, Toast.LENGTH_LONG).show();
-Log.i("itemsAdapter", "Remove : " + position);
-Log.i("itemsAdapter", "Remove (List) : " + this.myList.get(position));
-Log.i("itemsAdapter", "Remove (Mean): " + this.getMeanInList(position).getVehicle());
-Log.i("itemsAdapter", "Remove (Titl): " + this.titles[position]);
-Log.i("itemsAdapter", "Remove (VHol): " + this.vhList.get(position).itemLabelTxtView.getText().toString() + " (" + this.vhList.get(position).position + ")");
+        Toast.makeText(getContext(), "Remove : " + position, Toast.LENGTH_LONG).show();
+        Log.i("itemsAdapter", "Remove : " + position);
+        Log.i("itemsAdapter", "Remove (List) : " + this.myList.get(position));
+        Log.i("itemsAdapter", "Remove (Mean): " + this.getMeanInList(position).getVehicle());
+        Log.i("itemsAdapter", "Remove (Titl): " + this.titles[position]);
+        Log.i("itemsAdapter", "Remove (VHol): " + this.vhList.get(position).itemLabelTxtView.getText().toString() + " (" + this.vhList.get(position).position + ")");
 
         sz = this.titles.length - 1;
         newTitles = new String[sz];
@@ -168,7 +168,7 @@ Log.i("itemsAdapter", "Remove (VHol): " + this.vhList.get(position).itemLabelTxt
 
             vha.position = i;
         }
-        this.vhList.remove(this.vhList.size()-1);
+        this.vhList.remove(this.vhList.size() - 1);
 
         this.notifyDataSetChanged();
     }
@@ -263,7 +263,7 @@ Log.i("itemsAdapter", "Remove (VHol): " + this.vhList.get(position).itemLabelTxt
                                             @Override
                                             public void execute(Object response) {
                                                 //Toast.makeText(getContext(), "Moyen annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-Log.i("itemsAdapter", "Moyen annulé : " + position);
+                                                Log.i("itemsAdapter", "Moyen annulé : " + position);
                                                 ItemsAdapter.this.remove(position);
                                             }
                                         }, new Command() {
@@ -290,7 +290,7 @@ Log.i("itemsAdapter", "Moyen annulé : " + position);
                                             @Override
                                             public void execute(Object response) {
                                                 //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-Log.i("itemsAdapter", "Moyen validé : " + position);
+                                                Log.i("itemsAdapter", "Moyen validé : " + position);
                                                 ItemsAdapter.this.remove(position);
                                             }
                                         }, new Command() {

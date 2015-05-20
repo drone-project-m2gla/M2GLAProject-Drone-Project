@@ -231,6 +231,8 @@ public class MoyensInitFragment extends ListFragment {
                 //Listes pour générer tableaux pour adapterMeans
                 drawables = new ArrayList<Drawable>();
                 titles = new ArrayList<String>();
+                Spinner refusedMeansSpinner = (Spinner) view.findViewById(R.id.refused_means_spinner);
+
                 if (meansXRefused.length > 0) {
                     titles.clear();
                     drawables.clear();
@@ -252,8 +254,9 @@ public class MoyensInitFragment extends ListFragment {
                     ArrayAdapter adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
 //                    refusedView.setAdapter(adapterXtraRefused);
 
-                    Spinner refusedMeansSpinner = (Spinner) view.findViewById(R.id.refused_means_spinner);
                     refusedMeansSpinner.setAdapter(adapterXtraRefused);
+                } else {
+                    refusedMeansSpinner.setVisibility(View.GONE);
                 }
                 TextView refusedTextView = (TextView) view.findViewById(R.id.moyens_refuses_textview);
                 textViewStringValue = getResources().getString(R.string.moyens_refuses);
