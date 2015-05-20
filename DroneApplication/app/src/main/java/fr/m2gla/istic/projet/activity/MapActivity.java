@@ -50,7 +50,6 @@ import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
-import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
@@ -270,6 +269,7 @@ public class MapActivity extends Activity implements
                                     @Override
                                     public void execute(Object response) {
                                         Log.e(TAG, "Post new position success");
+                                        // FIXME: Mise à jour de la liste des moyens.
                                     }
                                 },
                                 new Command() {

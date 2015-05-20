@@ -1,12 +1,10 @@
 package fr.m2gla.istic.projet.fragments;
 
 
-import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -87,63 +85,39 @@ public class MoyensInitFragment extends ListFragment {
                                            int position, long id) {
                 positionElement = position;
 
-                if (draggable.get(positionElement)) {
-                    // Create a new ClipData.
-                    // This is done in two steps to provide clarity. The convenience method
-                    // ClipData.newPlainText() can create a plain text ClipData in one step.
+                // Create a new ClipData.
+                // This is done in two steps to provide clarity. The convenience method
+                // ClipData.newPlainText() can create a plain text ClipData in one step.
 
-                    // Create a new ClipData.Item from the ImageView Symbol Name
-                    ClipData.Item item0 = new ClipData.Item(means[position].getId());
+                // Create a new ClipData.Item from the ImageView Symbol Name
+                ClipData.Item item0 = new ClipData.Item(means[position].getId());
 
-                    // Create a new ClipData using the tag as a label, the plain text MIME type, and
-                    // the already-created item. This will create a new ClipDescription object within the
-                    // ClipData, and set its MIME type entry to "text/plain"
-                    ClipData dragData = new ClipData((String) v.getTag(),
-                            new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
-                            item0);
+                // Create a new ClipData using the tag as a label, the plain text MIME type, and
+                // the already-created item. This will create a new ClipDescription object within the
+                // ClipData, and set its MIME type entry to "text/plain"
+                ClipData dragData = new ClipData((String) v.getTag(),
+                        new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                        item0);
 
-                    ClipData.Item item1 = new ClipData.Item(means[position].getSymbolType().name());
-                    dragData.addItem(item1);
-                    ClipData.Item item2 = new ClipData.Item(means[position].getFirstText());
-                    dragData.addItem(item2);
-                    ClipData.Item item3 = new ClipData.Item(means[position].getSecondText());
-                    dragData.addItem(item3);
-                    ClipData.Item item4 = new ClipData.Item(means[position].getColor());
-                    dragData.addItem(item4);
+                ClipData.Item item1 = new ClipData.Item(means[position].getSymbolType().name());
+                dragData.addItem(item1);
+                ClipData.Item item2 = new ClipData.Item(means[position].getFirstText());
+                dragData.addItem(item2);
+                ClipData.Item item3 = new ClipData.Item(means[position].getSecondText());
+                dragData.addItem(item3);
+                ClipData.Item item4 = new ClipData.Item(means[position].getColor());
+                dragData.addItem(item4);
 
-                    // Instantiates the drag shadow builder.
-                    View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
+                // Instantiates the drag shadow builder.
+                View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
 
-                    // Starts the drag
-                    v.startDrag(dragData,  // the data to be dragged
-                            myShadow,  // the drag shadow builder
-                            null,      // no need to use local data
-                            0          // flags (not currently used, set to 0)
-                    );
+                // Starts the drag
+                v.startDrag(dragData,  // the data to be dragged
+                        myShadow,  // the drag shadow builder
+                        null,      // no need to use local data
+                        0          // flags (not currently used, set to 0)
+                );
 
-                } else {
-                    String title = "";
-                    String message = "";
-                    if (isDeclineList.get(positionElement)) {
-                        title = "ATTENTION!!!!!!!!!!!!!!!!!!";
-
-                        message = "Moyen " + titles.get(positionElement) + ".\nValidation refusée.".toUpperCase();
-                    } else {
-                        title = "INFO";
-
-                        message = "Moyen " + titles.get(positionElement) + ".\nValidation en attente.".toUpperCase();
-                    }
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle(title)
-                            .setMessage(message)
-                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
-                }
                 return true;
             }
         });
@@ -177,10 +151,10 @@ public class MoyensInitFragment extends ListFragment {
 
         if (meanSize > 0) {
             for (Mean m : meanNotInPosition) {
-                String meanClass = m.getVehicle().toString();
-                String meanType = Symbol.getImage(meanClass);
+                String vehicule = m.getVehicle().toString();
+                String vehiculeName = Symbol.getImage(vehicule);
                 means[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(true);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -202,10 +176,10 @@ public class MoyensInitFragment extends ListFragment {
         if (xtraNotValidateSize > 0) {
             position = 0;
             for (Mean m : meanNotValidated) {
-                String meanClass = m.getVehicle().toString();
-                String meanType = Symbol.getImage(meanClass);
+                String vehicule = m.getVehicle().toString();
+                String vehiculeName = Symbol.getImage(vehicule);
                 meansXNotValidate[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -218,10 +192,10 @@ public class MoyensInitFragment extends ListFragment {
         if (xtraRefusedSize > 0) {
             position = 0;
             for (Mean m : meanRefused) {
-                String meanClass = m.getVehicle().toString();
-                String meanType = Symbol.getImage(meanClass);
+                String vehicule = m.getVehicle().toString();
+                String vehiculeName = Symbol.getImage(vehicule);
                 meansXRefused[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -272,7 +246,6 @@ public class MoyensInitFragment extends ListFragment {
             @Override
             public void execute(Object response) {
                 intervention = (Intervention) response;
-                Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 int i = 0;
 
                 List<Mean> meanList = intervention.getMeansList();
@@ -358,24 +331,61 @@ public class MoyensInitFragment extends ListFragment {
         };
     }
 
+    // Méthode appelé par la strategie.
     public void addMean(final Mean object) {
-        Log.i(TAG, "add Mean " + object.getId());
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId() + " " + object.getVehicle(), Toast.LENGTH_LONG).show();
-                // setInterventionID(MoyensInitFragment.this.idIntervention);
                 // GET_MOYENS_DEPLOYES
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("id", idIntervention);
                 RestServiceImpl.getInstance()
-                        .get(RestAPI.GET_MOYENS_DEPLOYES, map, List.class, new Command() {
+                        .get(RestAPI.GET_MOYENS_DEPLOYES, map, Mean[].class, new Command() {
                             @Override
                             public void execute(Object response) {
-                                List<Mean> means = (List<Mean>) response;
-                                Log.i(TAG, "success size  " + means.size());
+                                Mean[] means;
+                                means = (Mean[]) response;
+
+                                List<Symbol> symbols = new ArrayList<Symbol>();
+
+                                Log.i(TAG, "result type " + means.getClass().getName());
+                                for (int i = 0; i < means.length; i++) {
+                                    Mean m = means[i];
+                                    if (!m.getIsDeclined()) {
+                                        String vehicule = m.getVehicle().toString();
+                                        String vehiculeName = Symbol.getImage(vehicule);
+                                        Symbol s = new Symbol(m.getId(),
+                                                valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                                        symbols.add(s);
+                                    }
+                                }
+                                if (symbols.size() > 0) {
+
+                                    titles.clear();
+                                    drawables.clear();
+                                    for (Symbol symbol : symbols) {
+                                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+                                        titles.add(symbol.getFirstText() + " * " + symbol.getId());
+                                    }
+
+                                    ListView moyensListView = getListView();
+
+                                    // Set drawable to adapterMeans
+                                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+
+                                    // Set image title to adapterMeans
+                                    String[] titlesArray = titles.toArray(new String[titles.size()]);
+
+                                    // to validated
+                                    ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
+                                    adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
+                                    notValidatedView.setAdapter(adapterXtraNotValidate);
+                                }
+
+                                Log.i(TAG, "success size  " + means.length);
                             }
                         }, getCallbackError());
+                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId() + " " + object.getVehicle(), Toast.LENGTH_LONG).show();
             }
         });
     }

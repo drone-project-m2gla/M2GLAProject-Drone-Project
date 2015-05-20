@@ -55,7 +55,7 @@
     <string name="select_text_view">Ajouter un moyen supplémentaire</string>
 
 
-    <string name="moyens_a_placer">Moyens init. à placer</string>
+    <string name="moyens_a_placer">Moyens dispo à placer</string>
 
     <string name="intervention_details_nom_err">" - Aucun Nom -"</string>
     <string name="intervention_details_nom_text">" Nom : "</string>
@@ -69,4 +69,5 @@
     <string name="intervention_details_moyen_text">" - Aucun Moyen en attente -"</string>
     <string name="moyens_refuses">Moyens supp. refusés</string>
     <string name="moyens_a_valider">Moyens supp. à valider</string>
+    <string name="moyens_en_transit">Moyens en transit</string>
 </resources>
