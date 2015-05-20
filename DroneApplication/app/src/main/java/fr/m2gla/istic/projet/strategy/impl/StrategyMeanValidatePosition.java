@@ -1,24 +1,23 @@
 package fr.m2gla.istic.projet.strategy.impl;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
-import fr.m2gla.istic.projet.model.Position;
+import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.strategy.Strategy;
 import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 
 /**
- * Created by baptiste on 16/04/15.
+ * Created by fernando on 19/05/15.
  */
-public class StrategyMoveDrone implements Strategy {
-    public static StrategyMoveDrone INSTANCE;
-
+public class StrategyMeanValidatePosition implements Strategy {
+    private static StrategyMeanValidatePosition INSTANCE;
     private MapActivity activity;
 
-    public StrategyMoveDrone() {}
+    public StrategyMeanValidatePosition() {}
 
-    public static StrategyMoveDrone getINSTANCE() {
+    public static StrategyMeanValidatePosition getINSTANCE() {
         if (INSTANCE == null) {
-            INSTANCE = new StrategyMoveDrone();
-            // On s'abonne à la strategy
+            INSTANCE = new StrategyMeanValidatePosition();
+            // On s'abonne à la strategy registery
             StrategyRegistery.getInstance().addStrategy(INSTANCE);
         }
         return INSTANCE;
@@ -30,18 +29,18 @@ public class StrategyMoveDrone implements Strategy {
 
     @Override
     public String getScopeName() {
-        return "droneMove";
+        return "moyenValide";
     }
 
     @Override
     public Class<?> getType() {
-        return Position.class;
+        return Mean.class;
     }
 
     @Override
     public void call(Object object) {
         if (activity != null) {
-            activity.moveDrone((Position) object);
+            activity.validateMeanPos((Mean) object);
         }
     }
 }

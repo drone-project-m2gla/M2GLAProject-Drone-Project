@@ -25,13 +25,14 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
+import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
@@ -41,17 +42,28 @@ public class MoyensInitFragment extends ListFragment {
     private String idIntervention = "";
     private View view;
     private Symbol[] means;
-    ArrayAdapter adapter;
+    ArrayAdapter adapterMeans;
     List<String> titles;
     private int positionElement;
     private List<Boolean> isDeclineList = new ArrayList();
     private List<Boolean> draggable = new ArrayList();
     private Intervention intervention;
+    private List<Mean> meanNotInPosition = new ArrayList<>();
+    private List<Mean> meanNotValidated = new ArrayList<>();
+    private List<Mean> meanRefused = new ArrayList();
+    private Symbol[] meansXNotValidate;
+    private Symbol[] meansXRefused;
+    private ArrayAdapter adapterXtraRefused;
+    private ArrayAdapter adapterXtraNotValidate;
+    private List<Drawable> drawables;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
+
+        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
+
         return view;
     }
 
@@ -140,7 +152,7 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     * Formattage des moyens extra pour l'adapter
+     * Formattage des moyens extra pour l'adapterMeans
      *
      * @param intervention
      * @param position
@@ -148,41 +160,74 @@ public class MoyensInitFragment extends ListFragment {
      */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
 
-        int meanSize = listMean.size(); // taille de la liste des moyens
 
-        int xtraSize = listXtra.size(); // taille des moyens supplémentaires
+        int meanWithoutCoordinates = 0;
+        int pos = 0;
 
-        means = new Symbol[meanSize + xtraSize];
+        for (Mean m : listMean) {
+            boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
+            Log.i(TAG, pos++ + "  Not is NaN******Lat  \t" + m.getCoordinates().getLatitude() + " Bool  " + isNaN);
+            if (isNaN) {
+                meanNotInPosition.add(m);
+            }
+        }
+
+        int meanSize = meanNotInPosition.size(); // taille de la liste des moyens non placés sur la map
+        means = new Symbol[meanSize];
 
         if (meanSize > 0) {
-            for (Mean m : listMean) {
+            for (Mean m : meanNotInPosition) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(true);
                 isDeclineList.add(m.getIsDeclined());
 
-                Log.i(TAG, "Mean - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
-
                 position++;
             }
         }
-        if (xtraSize > 0) {
-            for (Mean m : listXtra) {
+
+        // Init list des moyens refusés et non validés
+        for (Mean m : listXtra) {
+            if (!m.getIsDeclined()) {
+                meanNotValidated.add(m);
+            } else {
+                meanRefused.add(m);
+            }
+        }
+
+        int xtraNotValidateSize = meanNotValidated.size(); // taille des moyens supplémentaires non validés
+        meansXNotValidate = new Symbol[xtraNotValidateSize];
+        if (xtraNotValidateSize > 0) {
+            position = 0;
+            for (Mean m : meanNotValidated) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
-                means[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                String meanType = Symbol.getImage(meanClass);
+                meansXNotValidate[position] = new Symbol(m.getId(),
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
-                Log.i(TAG, "Extra - \tposition " + position + "\tCoordinate " + m.getCoordinates() + "\tIs in position " + m.getInPosition());
+                position++;
+            }
+        }
+
+        int xtraRefusedSize = meanRefused.size(); // taille des moyens supplémentaires non validés
+        meansXRefused = new Symbol[xtraRefusedSize];
+        if (xtraRefusedSize > 0) {
+            position = 0;
+            for (Mean m : meanRefused) {
+                String meanClass = m.getVehicle().toString();
+                String meanType = Symbol.getImage(meanClass);
+                meansXRefused[position] = new Symbol(m.getId(),
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                draggable.add(false);
+                isDeclineList.add(m.getIsDeclined());
 
                 position++;
             }
         }
-        Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -239,27 +284,99 @@ public class MoyensInitFragment extends ListFragment {
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, i, meanList, xtraList);
 
-                //Listes pour générer tableaux pour adapter
-                List<Drawable> drawables = new ArrayList<Drawable>();
+                //Listes pour générer tableaux pour adapterMeans
+                drawables = new ArrayList<Drawable>();
                 titles = new ArrayList<String>();
 
                 if (means.length > 0) {
+                    titles.clear();
+                    drawables.clear();
                     for (Symbol mean : means) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
-                        titles.add(mean.getFirstText() + " - " + mean.getId());
+                        titles.add(mean.getFirstText() + " * " + mean.getId());
                     }
 
                     ListView moyensListView = getListView();
+
+                    // Set drawable to adapterMeans
                     Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+
+                    // Set image title to adapterMeans
                     String[] titlesArray = titles.toArray(new String[titles.size()]);
+
                     Context activity = MoyensInitFragment.this.getActivity();
-                    adapter = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
+                    adapterMeans = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
+                    moyensListView.setAdapter(adapterMeans);
 
-                    Log.i(TAG, "List\t" + (moyensListView == null));
+                }
 
-                    moyensListView.setAdapter(adapter);
+                if (meansXRefused.length > 0) {
+                    titles.clear();
+                    drawables.clear();
+                    for (Symbol mean : meansXRefused) {
+                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
+                        titles.add(mean.getFirstText() + " * " + mean.getId());
+                    }
+
+                    ListView moyensListView = getListView();
+
+                    // Set drawable to adapterMeans
+                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+
+                    // Set image title to adapterMeans
+                    String[] titlesArray = titles.toArray(new String[titles.size()]);
+
+                    // Refused
+                    ListView refusedView = (ListView) view.findViewById(R.id.list_refused);
+                    adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
+                    refusedView.setAdapter(adapterXtraRefused);
+                }
+
+                if (meansXNotValidate.length > 0) {
+                    titles.clear();
+                    drawables.clear();
+                    for (Symbol mean : meansXNotValidate) {
+                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
+                        titles.add(mean.getFirstText() + " * " + mean.getId());
+                    }
+
+                    ListView moyensListView = getListView();
+
+                    // Set drawable to adapterMeans
+                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
+
+                    // Set image title to adapterMeans
+                    String[] titlesArray = titles.toArray(new String[titles.size()]);
+
+                    // to validated
+                    ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
+                    adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
+                    notValidatedView.setAdapter(adapterXtraNotValidate);
+
                 }
             }
         };
+    }
+
+    public void addMean(final Mean object) {
+        Log.i(TAG, "add Mean " + object.getId());
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId() + " " + object.getVehicle(), Toast.LENGTH_LONG).show();
+                // setInterventionID(MoyensInitFragment.this.idIntervention);
+                // GET_MOYENS_DEPLOYES
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", idIntervention);
+                RestServiceImpl.getInstance()
+                        .get(RestAPI.GET_MOYENS_DEPLOYES, map, List.class, new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                List<Mean> means = (List<Mean>) response;
+                                Log.i(TAG, "success size  " + means.size());
+                            }
+                        }, getCallbackError());
+            }
+        });
     }
 }

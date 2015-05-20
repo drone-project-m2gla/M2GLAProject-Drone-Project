@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class InterventionListFragment extends Fragment {
     private ArrayList<HashMap<String, String>> listItem;
     private SimpleAdapter mSchedule;
     private View view;
+    private int lastSelectedPosition = -1;
 
 
     /**
@@ -55,7 +57,7 @@ public class InterventionListFragment extends Fragment {
 
         String roleStr;
 
-
+        this.lastSelectedPosition = -1;
         this.view = inflater.inflate(R.layout.fragment_intervention_list, container, false);
 
         if (getArguments() != null) {
@@ -95,7 +97,7 @@ public class InterventionListFragment extends Fragment {
                 new String[]{GeneralConstants.INTER_LIST_MEAN, GeneralConstants.INTER_LIST_LABEL, GeneralConstants.INTER_LIST_DATE, GeneralConstants.INTER_LIST_CODE, GeneralConstants.INTER_LIST_DATA},
                 new int[]{R.id.interventionNewMean, R.id.interventionLabel, R.id.interventionDate, R.id.interventionCode, R.id.interventionData});
 
-        //On attribut à notre listView l'adapter que l'on vient de créer
+        //On attribut à notre listView l'adapterMeans que l'on vient de créer
         this.idList.setAdapter(mSchedule);
 
 
@@ -103,7 +105,7 @@ public class InterventionListFragment extends Fragment {
         this.idList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map;
+                HashMap<String, String> map, prevmap;
 
                 map = (HashMap<String, String>) idList.getItemAtPosition(position);
                 Log.i(TAG, "OnClicklistener\t" + userQualification);
@@ -114,6 +116,22 @@ public class InterventionListFragment extends Fragment {
 
                     InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
                     fragmentDetailIntervention.setIdIntervention(idIntervention);
+
+
+                    // Retablir la couleur de la ligne precedemment selectionnee
+                    if (lastSelectedPosition > -1) {
+                        prevmap = (HashMap<String, String>) idList.getItemAtPosition(lastSelectedPosition);
+                        if (prevmap != null) {
+                            prevmap.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
+                        }
+
+                    }
+
+                    // Changer la couleur de la ligne selectionnee
+                    map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.SELECT_DESC_STR);
+                    lastSelectedPosition = position;
+                    mSchedule.notifyDataSetChanged();
+//                    Toast.makeText(view.getContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
 
                 } else {
                     // Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
@@ -149,7 +167,16 @@ public class InterventionListFragment extends Fragment {
     public void refreshList() {
 
         // Changement de la ArrayList qui nous permettra de remplire la listView
+        lastSelectedPosition = -1;
         this.listItem.clear();
+
+        // Effacement des details affichés
+        InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+        if (fragmentDetailIntervention != null) {
+            // Effacement seulement si le fragement existe
+            fragmentDetailIntervention.dispNoDetails();
+        }
+
 
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
                 new Command() {
@@ -220,7 +247,7 @@ public class InterventionListFragment extends Fragment {
             }
         }
         nbExtraStr = "[" + nbMeanExtra + "]";
-        addrStr = intervention.getAddress() + " " + intervention.getPostcode() + " " + intervention.getCity();
+        addrStr = intervention.getAddress() + " \n" + intervention.getPostcode() + " " + intervention.getCity();
         labelStr = intervention.getLabel();
         dateLong = Long.valueOf(intervention.getDateCreate());
         date = new Date(dateLong);
@@ -267,18 +294,15 @@ public class InterventionListFragment extends Fragment {
         //Création d'une HashMap pour insérer les informations du premier element de notre listView
         map = new HashMap<String, String>();
 
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
+        //on insère les élémentsque l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_MEAN, nbMeans);
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_ID, id);
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_LABEL, label);
-        //on insère un élément id que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_DATE, date);
-        //on insère un élément code que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_CODE, code);
-        //on insère un élément data que l'on récupérera dans le textView titre créé dans le fichier disp_intervention.xml
         map.put(GeneralConstants.INTER_LIST_DATA, data);
+        map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
+
         //enfin on ajoute cette hashMap dans la arrayList
         listItem.add(map);
 

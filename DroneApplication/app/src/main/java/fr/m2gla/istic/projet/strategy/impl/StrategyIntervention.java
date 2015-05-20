@@ -12,6 +12,7 @@ import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.application.DroneApplication;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.strategy.Strategy;
+import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 
 /**
  * Created by baptiste on 09/04/15.
@@ -25,13 +26,15 @@ public class StrategyIntervention implements Strategy {
     public static Strategy getINSTANCE() {
         if (INSTANCE == null) {
             INSTANCE = new StrategyIntervention();
+            // On s'abonne à la strategy
+            StrategyRegistery.getInstance().addStrategy(INSTANCE);
         }
         return INSTANCE;
     }
 
     @Override
     public String getScopeName() {
-        return "intervention";
+        return "addIntervention";
     }
 
     @Override

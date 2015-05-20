@@ -20,4 +20,10 @@
         <item>	09 Ariège	</item>
     </string-array>
 
+    <string-array name="optionsMoyenEngage">
+        <item>	Valider position	</item>
+        <item>	Libérer	</item>
+        <item>	Retour CRM	</item>
+    </string-array>
+
 </resources>
