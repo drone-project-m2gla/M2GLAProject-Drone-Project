@@ -47,12 +47,15 @@ def callbackOdometry(data):
 
 def callbackImage(data):
     command.saveImg = data
+    command.cmdImage.unregister()
+    rospy.sleep(1.)
+    command.cmdImage = rospy.Subscriber("/drone/camera/image", Image, callbackImage, queue_size=1)
 
 class Command:
     def __init__(self):
         self.cmdWaypoint = rospy.Publisher("/drone/waypoint", Pose, queue_size=10, latch=True)
-        self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry, callbackOdometry)
-        self.cmdImage = rospy.Subscriber("/drone/camera/image", Image, callbackImage)
+        self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry, callbackOdometry, queue_size=1)
+        self.cmdImage = rospy.Subscriber("/drone/camera/image", Image, callbackImage, queue_size=1)
 
     def setWaypoint(self, x, y, z):
         point = gpsToPoint(y,x)
