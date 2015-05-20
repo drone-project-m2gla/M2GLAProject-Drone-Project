@@ -149,6 +149,17 @@ public class InterventionRest {
 		return res;
 	}
 
+	@GET
+	@Path("/{id}/moyenXtra")
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Mean> getMeanXtraListForIntervention(@PathParam("id") long id) {
+		InterventionDAO iD = new InterventionDAO();
+		iD.connect();
+		List<Mean> res = iD.getById(id).getMeansXtra();
+		iD.disconnect();
+		return res;
+	}
+
 
 	@GET
 	@Path("{id}")

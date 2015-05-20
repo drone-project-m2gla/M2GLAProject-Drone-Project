@@ -25,7 +25,6 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
@@ -56,13 +55,14 @@ public class MoyensInitFragment extends ListFragment {
     private Symbol[] meansXRefused;
     private ArrayAdapter adapterXtraRefused;
     private ArrayAdapter adapterXtraNotValidate;
+    private List<Drawable> drawables;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
 
-        StrategyMeanSupplAdd.getINSTANCE().setMeanInitFragment(this);
+        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
 
         return view;
     }
@@ -178,9 +178,9 @@ public class MoyensInitFragment extends ListFragment {
         if (meanSize > 0) {
             for (Mean m : meanNotInPosition) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(true);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -203,9 +203,9 @@ public class MoyensInitFragment extends ListFragment {
             position = 0;
             for (Mean m : meanNotValidated) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 meansXNotValidate[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -219,9 +219,9 @@ public class MoyensInitFragment extends ListFragment {
             position = 0;
             for (Mean m : meanRefused) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 meansXRefused[position] = new Symbol(m.getId(),
-                        valueOf(meanType), meanClass, "RNS", "ff0000");
+                        valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
                 isDeclineList.add(m.getIsDeclined());
 
@@ -285,10 +285,12 @@ public class MoyensInitFragment extends ListFragment {
                 initImagesTitles(intervention, i, meanList, xtraList);
 
                 //Listes pour générer tableaux pour adapterMeans
-                List<Drawable> drawables = new ArrayList<Drawable>();
+                drawables = new ArrayList<Drawable>();
                 titles = new ArrayList<String>();
 
                 if (means.length > 0) {
+                    titles.clear();
+                    drawables.clear();
                     for (Symbol mean : means) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -309,6 +311,8 @@ public class MoyensInitFragment extends ListFragment {
                 }
 
                 if (meansXRefused.length > 0) {
+                    titles.clear();
+                    drawables.clear();
                     for (Symbol mean : meansXRefused) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -329,6 +333,8 @@ public class MoyensInitFragment extends ListFragment {
                 }
 
                 if (meansXNotValidate.length > 0) {
+                    titles.clear();
+                    drawables.clear();
                     for (Symbol mean : meansXNotValidate) {
                         drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
                         titles.add(mean.getFirstText() + " * " + mean.getId());
@@ -352,7 +358,25 @@ public class MoyensInitFragment extends ListFragment {
         };
     }
 
-    public void updateAdapter() {
-        Log.i(TAG, "Mise en place de la stategy");
+    public void addMean(final Mean object) {
+        Log.i(TAG, "add Mean " + object.getId());
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId() + " " + object.getVehicle(), Toast.LENGTH_LONG).show();
+                // setInterventionID(MoyensInitFragment.this.idIntervention);
+                // GET_MOYENS_DEPLOYES
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", idIntervention);
+                RestServiceImpl.getInstance()
+                        .get(RestAPI.GET_MOYENS_DEPLOYES, map, List.class, new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                List<Mean> means = (List<Mean>) response;
+                                Log.i(TAG, "success size  " + means.size());
+                            }
+                        }, getCallbackError());
+            }
+        });
     }
 }
