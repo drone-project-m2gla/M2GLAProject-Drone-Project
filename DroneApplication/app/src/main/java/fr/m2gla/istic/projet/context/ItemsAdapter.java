@@ -40,7 +40,6 @@ public class ItemsAdapter extends ArrayAdapter {
     private int                     customLayout;
     private Intervention            intervention;
     private ArrayList<String>       myList = null;
-    private ArrayList<ViewHolder>   vhList = new ArrayList<ViewHolder>();
     private String                  idIntervention = null;
     private List<Mean>              meanList = null;
     private Mean                    xtraMean;
@@ -94,83 +93,9 @@ public class ItemsAdapter extends ArrayAdapter {
 
         if (this.adapterCommand != null) {
             this.adapterCommand.refreshList();
-            return;
         }
 
-        // NOTE : LE CODE SUIVANT DOIT ETRE SUPPRIME !
-Toast.makeText(getContext(), "Remove : " + position, Toast.LENGTH_LONG).show();
-Log.i("itemsAdapter", "Remove : " + position);
-Log.i("itemsAdapter", "Remove (List) : " + this.myList.get(position));
-Log.i("itemsAdapter", "Remove (Mean): " + this.getMeanInList(position).getVehicle());
-Log.i("itemsAdapter", "Remove (Titl): " + this.titles[position]);
-Log.i("itemsAdapter", "Remove (VHol): " + this.vhList.get(position).itemLabelTxtView.getText().toString() + " (" + this.vhList.get(position).position + ")");
-
-        sz = this.titles.length - 1;
-        newTitles = new String[sz];
-
-
-        for (i = 0; i < position; i++) {
-            newTitles[i] = this.titles[i];
-        }
-
-        for (; i < newTitles.length; i++) {
-            newTitles[i] = this.titles[i + 1];
-        }
-
-        this.titles = newTitles;
-
-        newImage = new Drawable[this.images.length - 1];
-
-        for (i = 0; i < position; i++) {
-            newImage[i] = this.images[i];
-        }
-
-        for (; i < newImage.length; i++) {
-            newImage[i] = this.images[i + 1];
-        }
-
-        this.images = newImage;
-
-        // Changement veritable
-        if (this.myList != null) {
-            this.myList.remove(position);
-        }
-        if (this.meanList != null) {
-            int realp = getMeanPositionInList(position);
-            if (realp >= 0) {
-                this.meanList.remove(realp);
-            }
-        }
-
-        // Changement pour l'affichage
-        for (i = position; i < this.vhList.size() - 1; i++) {
-            ViewHolder vha = this.vhList.get(i);
-            ViewHolder vhb = this.vhList.get(i + 1);
-
-
-            vha.itemLabelTxtView = vhb.itemLabelTxtView;
-            vha.imgImageView = vhb.imgImageView;
-
-            vha.annullerImageButton = vhb.annullerImageButton;
-            vha.validerImageButton = vhb.validerImageButton;
-
-            // Setting the text using the array
-            vha.itemLabelTxtView.setText(titles[i]);
-            // Setting the color of the text
-            vha.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
-            // Setting the size of the text
-            vha.itemLabelTxtView.setTextSize(20f);
-
-            Drawable drawable = images[i];
-            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
-            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
-            vha.imgImageView.setImageBitmap(image);
-
-            vha.position = i;
-        }
-        this.vhList.remove(this.vhList.size()-1);
-
-        this.notifyDataSetChanged();
+        // Pas de fonction de suppression par defaut
     }
 
     private Mean getMeanInList(int position) {
@@ -241,8 +166,6 @@ Log.i("itemsAdapter", "Remove (VHol): " + this.vhList.get(position).itemLabelTxt
 
             holder.annullerImageButton = (ImageButton) convertView.findViewById(R.id.annuler);
             holder.validerImageButton = (ImageButton) convertView.findViewById(R.id.valid);
-
-            vhList.add(position, holder);
 
 
             if ((holder.annullerImageButton != null) && (this.meanList != null) && (this.idIntervention != null)) {
