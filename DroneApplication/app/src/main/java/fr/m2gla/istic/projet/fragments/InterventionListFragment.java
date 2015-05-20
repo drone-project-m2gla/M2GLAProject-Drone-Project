@@ -2,19 +2,14 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -43,6 +38,7 @@ public class InterventionListFragment extends Fragment {
     private SimpleAdapter mSchedule;
     private View view;
     private int lastSelectedPosition = -1;
+    private String  selectedInterventionId = null;
 
 
     /**
@@ -223,6 +219,15 @@ public class InterventionListFragment extends Fragment {
 
     }
 
+    public void refreshList(String idIntervention) {
+
+        // Recuperer l'id de l'intervention selectionnee
+        this.selectedInterventionId = idIntervention;
+
+        // Refraichir la liste d'intervention
+        refreshList();
+    }
+
 
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
@@ -301,7 +306,19 @@ public class InterventionListFragment extends Fragment {
         map.put(GeneralConstants.INTER_LIST_DATE, date);
         map.put(GeneralConstants.INTER_LIST_CODE, code);
         map.put(GeneralConstants.INTER_LIST_DATA, data);
-        map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
+        if ((this.selectedInterventionId != null) && (id.compareTo(this.selectedInterventionId) == 0)) {
+            map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.SELECT_DESC_STR);
+
+            // Afficher les details de l'intervention pre-selectionnee
+            InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+            fragmentDetailIntervention.setIdIntervention(this.selectedInterventionId);
+
+            this.lastSelectedPosition = listItem.size();
+
+        }
+        else {
+            map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
+        }
 
         //enfin on ajoute cette hashMap dans la arrayList
         listItem.add(map);

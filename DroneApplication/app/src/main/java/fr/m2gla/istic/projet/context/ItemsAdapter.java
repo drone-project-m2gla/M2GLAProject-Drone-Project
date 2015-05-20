@@ -38,13 +38,16 @@ public class ItemsAdapter extends ArrayAdapter {
 
     private final static String TAG = "ItemsAdapter";
 
-    private String[] titles;
-    private int customLayout;
-    Intervention intervention;
-    private ArrayList<String>   myList = null;
-    private String  idIntervention = null;
-    private List<Mean> meanList = null;
-    private Mean        xtraMean;
+    private String[]                titles;
+    private int                     customLayout;
+    Intervention                    intervention;
+    private ArrayList<String>       myList = null;
+    private ArrayList<ViewHolder>   vhList = new ArrayList<ViewHolder>();
+    private String                  idIntervention = null;
+    private List<Mean>              meanList = null;
+    private Mean                    xtraMean;
+    private ListAdapterCommand      adapterCommand = null;
+
 
     public ItemsAdapter(Context context, int textViewResourceId,
                         String[] objects, Drawable[] images) {
@@ -58,7 +61,7 @@ public class ItemsAdapter extends ArrayAdapter {
     }
 
     public ItemsAdapter(Context context, int textViewResourceId, ArrayList<String> objects,
-                        Drawable[] images, String idInter, List<Mean> xtMeanList) {
+                        Drawable[] images, String idInter, List<Mean> xtMeanList, ListAdapterCommand cmd) {
         super(context, textViewResourceId, objects);
         this.activity = (Activity) context;
         this.myList = objects;
@@ -69,6 +72,7 @@ public class ItemsAdapter extends ArrayAdapter {
         this.images = images;
         Log.i(TAG, "MeanXtra Image\t" + this.images.length);
         customLayout = textViewResourceId;
+        this.adapterCommand = cmd;
     }
 
 
@@ -77,15 +81,23 @@ public class ItemsAdapter extends ArrayAdapter {
         Drawable[]  newImage;
         int         i, sz;
 
+
         if (position >= this.titles.length) {
             return;
         }
+
+        if (this.adapterCommand != null) {
+            this.adapterCommand.refreshList();
+            return;
+        }
+
+        // NOTE : LE CODE SUIVANT DOIT ETRE SUPPRIME !
 Toast.makeText(getContext(), "Remove : " + position, Toast.LENGTH_LONG).show();
 Log.i("itemsAdapter", "Remove : " + position);
 Log.i("itemsAdapter", "Remove (List) : " + this.myList.get(position));
 Log.i("itemsAdapter", "Remove (Mean): " + this.getMeanInList(position).getVehicle());
 Log.i("itemsAdapter", "Remove (Titl): " + this.titles[position]);
-Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + this.getMeanInList(position).getVehicle(), Toast.LENGTH_LONG).show();
+Log.i("itemsAdapter", "Remove (VHol): " + this.vhList.get(position).itemLabelTxtView.getText().toString() + " (" + this.vhList.get(position).position + ")");
 
         sz = this.titles.length - 1;
         newTitles = new String[sz];
@@ -101,11 +113,6 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
 
         this.titles = newTitles;
 
-/*        for (i = position; i < sz; i++) {
-            this.titles[i] = this.titles[i + 1];
-        }
-        this.titles[i] = null;
-*/
         newImage = new Drawable[this.images.length - 1];
 
         for (i = 0; i < position; i++) {
@@ -129,6 +136,33 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
             }
         }
 
+        // Changement pour l'affichage
+        for (i = position; i < this.vhList.size() - 1; i++) {
+            ViewHolder vha = this.vhList.get(i);
+            ViewHolder vhb = this.vhList.get(i + 1);
+
+
+            vha.itemLabelTxtView = vhb.itemLabelTxtView;
+            vha.imgImageView = vhb.imgImageView;
+
+            vha.annullerImageButton = vhb.annullerImageButton;
+            vha.validerImageButton = vhb.validerImageButton;
+
+            // Setting the text using the array
+            vha.itemLabelTxtView.setText(titles[i]);
+            // Setting the color of the text
+            vha.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
+            // Setting the size of the text
+            vha.itemLabelTxtView.setTextSize(20f);
+
+            Drawable drawable = images[i];
+            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
+            vha.imgImageView.setImageBitmap(image);
+
+            vha.position = i;
+        }
+        this.vhList.remove(this.vhList.size()-1);
 
         this.notifyDataSetChanged();
     }
@@ -204,12 +238,10 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
             holder.annullerImageButton = (ImageButton) convertView.findViewById(R.id.annuler);
             holder.validerImageButton = (ImageButton) convertView.findViewById(R.id.valid);
 
+            vhList.add(position, holder);
+
 
             if ((holder.annullerImageButton != null) && (this.meanList != null) && (this.idIntervention != null)) {
-                //InterventionDetailFragment interventionFragment = (InterventionDetailFragment) activity.getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
-
-                //final String idIntervention = interventionFragment.getIdIntervention();
-                //final Mean xtraMean = interventionFragment.getMeanXtra(position);
 
                 holder.annullerImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -217,7 +249,6 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
 
                         ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
                         if (ItemsAdapter.this.xtraMean == null) return;
-                        ItemsAdapter.this.remove(position);
 
                         map.put("idintervention", idIntervention);
                         //Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
@@ -227,7 +258,9 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
                                         new Command() {
                                             @Override
                                             public void execute(Object response) {
-                                                Toast.makeText(getContext(), "Moyen annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                                //Toast.makeText(getContext(), "Moyen annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+Log.i("itemsAdapter", "Moyen annulé : " + position);
+                                                ItemsAdapter.this.remove(position);
                                             }
                                         }, new Command() {
                                             @Override
@@ -245,7 +278,6 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
 
                         ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
                         if (ItemsAdapter.this.xtraMean == null) return;
-                        ItemsAdapter.this.remove(position);
 
                         map.put("idintervention", idIntervention);
                         RestServiceImpl.getInstance()
@@ -253,7 +285,9 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
                                         new Command() {
                                             @Override
                                             public void execute(Object response) {
-                                                Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                                //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+Log.i("itemsAdapter", "Moyen validé : " + position);
+                                                ItemsAdapter.this.remove(position);
                                             }
                                         }, new Command() {
                                             @Override
@@ -266,10 +300,10 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
             }
             // Setting Special attributes for 1st element
 
-            Log.i(TAG, "Position not 0");
+            // Log.i(TAG, "Position not 0");
 
             // Setting the text using the array
-            holder.itemLabelTxtView.setText(titles[position]);//
+            holder.itemLabelTxtView.setText(titles[position]);
             // Setting the color of the text
             holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
             // Setting the size of the text

@@ -27,6 +27,7 @@ import java.util.Map;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
+import fr.m2gla.istic.projet.context.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
@@ -34,7 +35,7 @@ import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
-public class InterventionDetailFragment extends Fragment {
+public class InterventionDetailFragment extends Fragment implements ListAdapterCommand {
     private static final String TAG = "Inter";
     private Intervention intervention;
 
@@ -128,7 +129,7 @@ public class InterventionDetailFragment extends Fragment {
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 Context activity = InterventionDetailFragment.this.getActivity();
 //                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
-                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titlesList, imagesArray, getIdIntervention(), meanList);
+                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titlesList, imagesArray, getIdIntervention(), meanList, InterventionDetailFragment.this);
                 Log.i(TAG, "adapterMeans  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
                 Log.i(TAG, "List\t" + (moyensListView == null));
@@ -249,5 +250,16 @@ public class InterventionDetailFragment extends Fragment {
 
     public Mean getMeanXtra(int position) {
         return intervention.getMeansXtra().get(position);
+    }
+
+    @Override
+    public boolean refreshList() {
+
+        // Demander un rafraichissement de la liste des interventions et des details de
+        // l'intervention en cours
+        InterventionListFragment fragmentListIntervention = (InterventionListFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_list);
+        fragmentListIntervention.refreshList(idIntervention);
+
+        return false;
     }
 }
