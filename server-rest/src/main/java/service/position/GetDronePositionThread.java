@@ -50,30 +50,30 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 
     @Override
     public void run() {
-        ObjectMapper mapper = new ObjectMapper();
-        HttpClient client = new HttpClient();
-        while (continueThread) {
-            GetMethod get = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
-            try {
-                client.executeMethod(get);
-                Position position = mapper.readValue(
-                        get.getResponseBodyAsString(), Position.class);
-                if (position != null && !Tools.isSamePositions(this.position,position)) {
-                    this.position = position;
-                    PushServiceImpl.getInstance().sendMessage(
-                            PushService.TypeClient.SIMPLEUSER, "droneMove", position);
-                }
-                else
-                {
-                    notifyObserversForPositionUnchanged();
-                }
-                Thread.sleep(2987);
-            } catch (IOException e) {
-                //LOGGER.error("Get position error", e);
-            } catch (InterruptedException e) {
-                //LOGGER.error("Get position error", e);
-            }
-        }
+//        ObjectMapper mapper = new ObjectMapper();
+//        HttpClient client = new HttpClient();
+//        while (continueThread) {
+//            GetMethod get = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
+//            try {
+//                client.executeMethod(get);
+//                Position position = mapper.readValue(
+//                        get.getResponseBodyAsString(), Position.class);
+//                if (position != null && !Tools.isSamePositions(this.position,position)) {
+//                    this.position = position;
+//                    PushServiceImpl.getInstance().sendMessage(
+//                            PushService.TypeClient.SIMPLEUSER, "droneMove", position);
+//                }
+//                else
+//                {
+//                    notifyObserversForPositionUnchanged();
+//                }
+//                Thread.sleep(2987);
+//            } catch (IOException e) {
+//                //LOGGER.error("Get position error", e);
+//            } catch (InterruptedException e) {
+//                //LOGGER.error("Get position error", e);
+//            }
+//        }
     }
 
     @Override
