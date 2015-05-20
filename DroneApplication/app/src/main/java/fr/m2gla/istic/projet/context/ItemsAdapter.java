@@ -1,7 +1,6 @@
 package fr.m2gla.istic.projet.context;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -23,12 +22,11 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.context.RestAPI;
-import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+
 
 // Creating an Adapter Class
 public class ItemsAdapter extends ArrayAdapter {
@@ -40,7 +38,7 @@ public class ItemsAdapter extends ArrayAdapter {
 
     private String[]                titles;
     private int                     customLayout;
-    Intervention                    intervention;
+    private Intervention            intervention;
     private ArrayList<String>       myList = null;
     private ArrayList<ViewHolder>   vhList = new ArrayList<ViewHolder>();
     private String                  idIntervention = null;
@@ -60,18 +58,27 @@ public class ItemsAdapter extends ArrayAdapter {
         customLayout = textViewResourceId;
     }
 
+    public ItemsAdapter(Context context, int textViewResourceId,
+                        String[] objects, Drawable[] images, ListAdapterCommand cmd) {
+        this(context, textViewResourceId, objects, images);
+        this.adapterCommand = cmd;
+    }
+
     public ItemsAdapter(Context context, int textViewResourceId, ArrayList<String> objects,
-                        Drawable[] images, String idInter, List<Mean> xtMeanList, ListAdapterCommand cmd) {
+                        Drawable[] images, String idInter, List<Mean> xtMeanList) {
         super(context, textViewResourceId, objects);
         this.activity = (Activity) context;
         this.myList = objects;
         this.idIntervention = idInter;
         this.meanList = xtMeanList;
         this.titles = objects.toArray(new String[objects.size()]);
-        Log.i(TAG, "MeanXtra Title\t" + this.titles.length);
         this.images = images;
-        Log.i(TAG, "MeanXtra Image\t" + this.images.length);
         customLayout = textViewResourceId;
+    }
+
+    public ItemsAdapter(Context context, int textViewResourceId, ArrayList<String> objects,
+                        Drawable[] images, String idInter, List<Mean> xtMeanList, ListAdapterCommand cmd) {
+        this(context, textViewResourceId, objects, images, idInter, xtMeanList);
         this.adapterCommand = cmd;
     }
 
@@ -331,9 +338,13 @@ Log.i("itemsAdapter", "Moyen validé : " + position);
         return getCustomView(position, convertView, parent);
     }
 
+    // Permettre de preciser la commande apres creation
+    public void setAdapterCommand(ListAdapterCommand adapterCommand) {
+        this.adapterCommand = adapterCommand;
+    }
 
     /* A Static class for holding the elements of each List View Item
-     * This is created as per Google UI Guideline for faster performance */
+         * This is created as per Google UI Guideline for faster performance */
     private static class ViewHolder {
         TextView itemLabelTxtView;
         ImageView imgImageView;
