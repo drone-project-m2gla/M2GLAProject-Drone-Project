@@ -215,9 +215,9 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
                     @Override
                     public void onClick(View v) {
 
-                        ItemsAdapter.this.remove(position);
                         ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
                         if (ItemsAdapter.this.xtraMean == null) return;
+                        ItemsAdapter.this.remove(position);
 
                         map.put("idintervention", idIntervention);
                         //Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
@@ -243,9 +243,9 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
                     @Override
                     public void onClick(View v) {
 
-                        ItemsAdapter.this.remove(position);
                         ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
                         if (ItemsAdapter.this.xtraMean == null) return;
+                        ItemsAdapter.this.remove(position);
 
                         map.put("idintervention", idIntervention);
                         RestServiceImpl.getInstance()
