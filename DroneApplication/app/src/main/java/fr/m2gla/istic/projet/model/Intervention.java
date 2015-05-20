@@ -87,12 +87,12 @@ public class Intervention extends Entity {
         this.coordinates = position;
     }
 
-    public List<Mean> getMeansXtra() {
-        return meansXtra;
-    }
-
-    public void setMeansXtra(List<Mean> meansXtra) {
-        this.meansXtra = meansXtra;
-    }
+//    public List<Mean> getMeansXtra() {
+//        return meansXtra;
+//    }
+//
+//    public void setMeansXtra(List<Mean> meansXtra) {
+//        this.meansXtra = meansXtra;
+//    }
 
 }
