@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
+import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
@@ -125,6 +127,7 @@ public class MapActivity extends Activity implements
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<>(this, map);
         mClusterManager.setRenderer(new SymbolRendered(this, map, mClusterManager));
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<SymbolMarkerClusterItem>(new GridBasedAlgorithm<SymbolMarkerClusterItem>()));
 
         // Set map fragment drag listener to recover dropped symbols
         mapFragment.getView().setOnDragListener(this);
@@ -391,44 +394,114 @@ public class MapActivity extends Activity implements
         final Marker _marker = marker;
         if (!meanSymbol.isTopographic()) {
             new AlertDialog.Builder(this)
-                    .setMessage(R.string.query_position_confirmation)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
+                    .setTitle(R.string.actions_moyens)
+                    .setItems(R.array.optionsMoyenEngage, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Mean mean = new Mean();
-                            mean.setId(meanSymbol.getId());
-                            Position position = new Position();
-                            LatLng markerPosition = _marker.getPosition();
-                            position.setLatitude(markerPosition.latitude);
-                            position.setLongitude(markerPosition.longitude);
-                            mean.setCoordinates(position);
-                            mean.setInPosition(true);
+                            // The 'which' argument contains the index position of the selected item
+                            switch (which) {
+                                case 0: {
+                                    // Valider la position du moyen
+                                    Mean mean = new Mean();
+                                    mean.setId(meanSymbol.getId());
+                                    Position position = new Position();
+                                    LatLng markerPosition = _marker.getPosition();
+                                    position.setLatitude(markerPosition.latitude);
+                                    position.setLongitude(markerPosition.longitude);
+                                    mean.setCoordinates(position);
+                                    mean.setInPosition(true);
 
-                            RestServiceImpl.getInstance()
-                                    .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
-                                            new Command() {
-                                                @Override
-                                                public void execute(Object response) {
-                                                    Log.i(TAG, "Confirm position success");
-                                                    //Change symbol image to dashed one
-                                                    meanSymbol.setValidated(true);
-                                                    _marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), meanSymbol));
-                                                }
-                                            },
-                                            new Command() {
-                                                @Override
-                                                public void execute(Object response) {
-                                                    Log.e(TAG, "Confirm position error");
-                                                }
-                                            });
-                        }
-                    })
-                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(TAG, "Invalid position");
-                        }
-                    })
+                                    RestServiceImpl.getInstance()
+                                            .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                                    new Command() {
+                                                        @Override
+                                                        public void execute(Object response) {
+                                                            Log.i(TAG, "Confirm position success");
+                                                            //Change symbol image to dashed one
+                                                            meanSymbol.setValidated(true);
+                                                            _marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), meanSymbol));
+                                                        }
+                                                    },
+                                                    new Command() {
+                                                        @Override
+                                                        public void execute(Object response) {
+                                                            Log.e(TAG, "Confirm position error");
+                                                        }
+                                                    }
+                                            );
+                                    break;
+                                }
+                                case 1: {
+                                    //TODO: Libérer le moyen
+                                    // Supprimer ses coordonnées
+                                    // Supprimer le marker
+                                    // TODO : Le supprimer de la liste de moyens validés
+                                    Mean mean = new Mean();
+                                    mean.setId(meanSymbol.getId());
+                                    Position position = new Position();
+                                    position.setLatitude(Double.NaN);
+                                    position.setLongitude(Double.NaN);
+                                    mean.setCoordinates(position);
+                                    mean.setInPosition(false);
+
+                                    RestServiceImpl.getInstance()
+                                            //TODO: utiliser la méthode post correcte
+                                            .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                                    new Command() {
+                                                        @Override
+                                                        public void execute(Object response) {
+                                                            String markerId = _marker.getId();
+                                                            Log.i(TAG, "Libérer moyen success");
+                                                            mClusterManager.removeItem(markerSymbolLink.get(markerId));
+                                                            mClusterManager.cluster();
+                                                            markerSymbolLink.remove(markerId);
+                                                        }
+                                                    },
+                                                    new Command() {
+                                                        @Override
+                                                        public void execute(Object response) {
+                                                            Log.e(TAG, "Libérer moyen error");
+                                                        }
+                                                    }
+                                            );
+                                    break;
+                                }
+                                case 2: {
+                                    //TODO: Retour CRM, disponible pour mettre sur la carte
+                                    // Supprimer ses coordonnées
+                                    // Supprimer le marker
+                                    // Ajouter dans la liste de moyens validés (automatique si la liste se rafraîchit)
+                                    Mean mean = new Mean();
+                                    mean.setId(meanSymbol.getId());
+                                    Position position = new Position();
+                                    position.setLatitude(Double.NaN);
+                                    position.setLongitude(Double.NaN);
+                                    mean.setCoordinates(position);
+                                    mean.setInPosition(false);
+
+                                    RestServiceImpl.getInstance()
+                                            //TODO: utiliser la méthode post correcte
+                                            .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                                    new Command() {
+                                                        @Override
+                                                        public void execute(Object response) {
+                                                            String markerId = _marker.getId();
+                                                            Log.i(TAG, "Retour CRM success");
+                                                            mClusterManager.removeItem(markerSymbolLink.get(markerId));
+                                                            mClusterManager.cluster();
+                                                            markerSymbolLink.remove(markerId);
+                                                        }
+                                                    },
+                                                    new Command() {
+                                                        @Override
+                                                        public void execute(Object response) {
+                                                            Log.e(TAG, "Retour CRM error");
+                                                        }
+                                                    }
+                                            );
+                                    break;
+                                }
+                            }
+                        }})
                     .show();
         }
     }
@@ -583,7 +656,7 @@ public class MapActivity extends Activity implements
             markerOptions.icon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), item.getSymbol()));
             if (!item.getSymbol().isTopographic()) {
                 markerOptions.draggable(true);
-                markerOptions.title("Confirmer position");
+                markerOptions.title("Action sur le moyen");
             } else {
                 markerOptions.title(item.getSymbol().getFirstText());
             }
