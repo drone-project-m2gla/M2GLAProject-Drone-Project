@@ -54,14 +54,14 @@ public class MoyensInitFragment extends ListFragment {
     private List<String> moyensDisponiblesTitle = new ArrayList<>();
     private List<Drawable> moyensDisponiblesDrawable = new ArrayList<>();
 
-    // Moyens non validés
-    private List<String> meansNotValidateTitle = new ArrayList<>();
-    private List<Drawable> meansNotValidateDrawable = new ArrayList<>();
-
     // Moyens en transit
     private List<String> moyensTransitTitle = new ArrayList<>();
     private List<Drawable> moyensTransitDrawable = new ArrayList<>();
 
+
+    // Moyens non validés
+    List<String> meansNotValidateTitle = new ArrayList<>();
+    List<Drawable> meansNotValidateDrawable = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -320,8 +320,6 @@ public class MoyensInitFragment extends ListFragment {
 
     // Méthode appelé par la strategie.
     public void addMean(final Mean object) {
-        meansNotValidateDrawable.clear();
-        meansNotValidateTitle.clear();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -332,13 +330,11 @@ public class MoyensInitFragment extends ListFragment {
                         .get(RestAPI.GET_MOYENS_DEPLOYES, map, Mean[].class, new Command() {
                             @Override
                             public void execute(Object response) {
-                                Mean[] means;
-                                means = (Mean[]) response;
+                                Mean[] means = (Mean[]) response;
 
                                 createNotValidateMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
                             }
                         }, getCallbackError());
-                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -349,8 +345,8 @@ public class MoyensInitFragment extends ListFragment {
      * @param means
      */
     private void createNotValidateMeansView(Mean[] means) {
-        meansNotValidateDrawable.clear();
         meansNotValidateTitle.clear();
+        meansNotValidateDrawable.clear();
         for (int i = 0; i < means.length; i++) {
             Mean m = means[i];
             if (!m.getIsDeclined()) {
@@ -365,7 +361,6 @@ public class MoyensInitFragment extends ListFragment {
                 meansNotValidateDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
             }
         }
-        ListView moyensListView = getListView();
 
         // Set drawable to adapterMeans
         Drawable[] imagesArray = meansNotValidateDrawable.toArray(new Drawable[meansNotValidateDrawable.size()]);

@@ -276,9 +276,23 @@ public class ItemsAdapter extends ArrayAdapter {
             holder.imgImageView.setImageBitmap(image);
 
             holder.position = position;
+            convertView.setTag(holder);
         } else {
             /* get the View from the existing Tag */
             holder = (ViewHolder) convertView.getTag();
+            // Setting the text using the array
+            holder.itemLabelTxtView.setText(titles[position]);//
+            // Setting the color of the text
+            holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
+            // Setting the size of the text
+            holder.itemLabelTxtView.setTextSize(20f);
+
+            Drawable drawable = images[position];
+            Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
+            Bitmap image = Bitmap.createScaledBitmap(src, 50, 50, true);
+            holder.imgImageView.setImageBitmap(image);
+
+            holder.position = position;
         }
 
         return convertView;
