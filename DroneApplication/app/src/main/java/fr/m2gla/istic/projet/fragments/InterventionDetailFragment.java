@@ -45,6 +45,7 @@ public class InterventionDetailFragment extends Fragment {
     private String idIntervention = "";
     private String[] titles;
     private String[] images;
+    private ArrayList<String>   titlesList;
     private View view = null;
 
 
@@ -99,10 +100,9 @@ public class InterventionDetailFragment extends Fragment {
             public void execute(Object response) {
                 intervention = (Intervention) response;
                 // Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
-                int i = 0;
                 List<Mean> meanList = intervention.getMeansXtra();
                 // Initialisation des titres et images.
-                initImagesTitles(intervention, i, meanList);
+                initImagesTitles(intervention, meanList);
                 List<Drawable> drawables = new ArrayList<Drawable>();
 
                 if (images.length > 0) {
@@ -127,7 +127,8 @@ public class InterventionDetailFragment extends Fragment {
                 ListView moyensListView = (ListView) view.findViewById(R.id.intervention_detail_list);
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 Context activity = InterventionDetailFragment.this.getActivity();
-                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
+//                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
+                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titlesList, imagesArray, getIdIntervention(), meanList);
                 Log.i(TAG, "adapterMeans  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
                 Log.i(TAG, "List\t" + (moyensListView == null));
@@ -142,11 +143,11 @@ public class InterventionDetailFragment extends Fragment {
      * Formattage des moyens extra pour l'adapterMeans
      *
      * @param intervention
-     * @param position
      * @param listXtra
      */
-    private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
-        int listXtraNotDeclinedSize =0;
+    private void initImagesTitles(Intervention intervention, List<Mean> listXtra) {
+        int listXtraNotDeclinedSize = 0;
+
         for (Mean m : listXtra) {
             if (!m.getIsDeclined()){
                 listXtraNotDeclinedSize++;
@@ -154,6 +155,7 @@ public class InterventionDetailFragment extends Fragment {
         }
         titles = new String[listXtraNotDeclinedSize];
         images = new String[listXtraNotDeclinedSize];
+        titlesList = new ArrayList<String>();
 
         LinearLayout nomLayout = (LinearLayout) this.view.findViewById(R.id.nomDetailsLayout);
         LinearLayout codeLayout = (LinearLayout) this.view.findViewById(R.id.codeDetailsLayout);
@@ -194,11 +196,13 @@ public class InterventionDetailFragment extends Fragment {
         if (listXtraNotDeclinedSize > 0) {
             titleFragement.setVisibility(View.VISIBLE);
             titleNoMoyen.setVisibility(View.GONE);
+            int position = 0;
             for (Mean m : listXtra) {
 
                 if (!m.getIsDeclined()) {
 
                     titles[position] = m.getVehicle().toString();
+                    titlesList.add(m.getVehicle().toString());
 
                     images[position] = Symbol.getImage(m.getVehicle().toString());
 
