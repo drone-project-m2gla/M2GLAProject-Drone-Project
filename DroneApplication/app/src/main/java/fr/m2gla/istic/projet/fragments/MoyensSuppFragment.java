@@ -22,15 +22,17 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
+import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.RestService;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+
+import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
 
 public class MoyensSuppFragment extends Fragment {
@@ -57,21 +59,22 @@ public class MoyensSuppFragment extends Fragment {
 
         moyensSpinner = (Spinner) view
                 .findViewById(R.id.moyensSpinner);
-
-        titles = new String[]{GeneralConstants.VALUE_VEHICULE_EPA, GeneralConstants.VALUE_VEHICULE_FPT,
-                GeneralConstants.VALUE_VEHICULE_VSR, GeneralConstants.VALUE_VEHICULE_VLCG, GeneralConstants.VALUE_VEHICULE_VSAV};
-
-        images = new int[]{GeneralConstants.DRAWABLE_IMG_VEHICULE_EPA, GeneralConstants.DRAWABLE_IMG_VEHICULE_FPT,
-                GeneralConstants.DRAWABLE_IMG_VEHICULE_VSR, GeneralConstants.DRAWABLE_IMG_VEHICULE_VLCG, GeneralConstants.DRAWABLE_IMG_VEHICULE_VSAV};
-
         List<Drawable> drawables = new ArrayList<Drawable>();
-        for (int imageId : images) {
-            if (imageId != 0) {
-                drawables.add(getResources().getDrawable(imageId));
-            } else {
-                drawables.add(null);
-            }
+
+        titles = new String[Vehicle.values().length];
+        int i = 0;
+        for (Vehicle v : Vehicle.values()) {
+            String vehicule = v.toString();
+            String vehiculeName = Symbol.getImage(vehicule);
+
+            Symbol symbol = new Symbol(valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(v));
+
+            String title = vehicule;
+
+            titles[i++] = title;
+            drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
         }
+
         moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, drawables.toArray(new Drawable[drawables.size()])));
 
         for (String s : titles) {
@@ -157,22 +160,8 @@ public class MoyensSuppFragment extends Fragment {
         });
     }
 
-    public void change(String txt, String txt1) {
-        text.setText(txt);
-        vers.setText(txt1);
-    }
-
     public void setInterventionID(String interventionID) {
         this.interventionID = interventionID;
         Toast.makeText(getActivity(), TAG + "\n" + interventionID, Toast.LENGTH_LONG).show();
-    }
-
-    public void updateAdapter(final Mean object) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "Object update  " + object.getId());
-            }
-        });
     }
 }

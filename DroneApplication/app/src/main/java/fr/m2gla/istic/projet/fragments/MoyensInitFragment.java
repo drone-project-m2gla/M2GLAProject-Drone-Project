@@ -7,13 +7,14 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -42,18 +43,24 @@ public class MoyensInitFragment extends ListFragment {
     private Symbol[] means;
     ArrayAdapter adapterMeans;
     List<String> titles;
-    private int positionElement;
     private List<Boolean> isDeclineList = new ArrayList();
     private List<Boolean> draggable = new ArrayList();
     private Intervention intervention;
     private List<Mean> meanNotInPosition = new ArrayList<>();
-    private List<Mean> meanNotValidated = new ArrayList<>();
     private List<Mean> meanRefused = new ArrayList();
-    private Symbol[] meansXNotValidate;
     private Symbol[] meansXRefused;
-    private ArrayAdapter adapterXtraRefused;
-    private ArrayAdapter adapterXtraNotValidate;
     private List<Drawable> drawables;
+    // Moyens disponibles
+    private List<String> moyensDisponiblesTitle = new ArrayList<>();
+    private List<Drawable> moyensDisponiblesDrawable = new ArrayList<>();
+
+    // Moyens non validés
+    private List<String> meansNotValidateTitle = new ArrayList<>();
+    private List<Drawable> meansNotValidateDrawable = new ArrayList<>();
+
+    // Moyens en transit
+    private List<String> moyensTransitTitle = new ArrayList<>();
+    private List<Drawable> moyensTransitDrawable = new ArrayList<>();
 
 
     @Override
@@ -83,14 +90,14 @@ public class MoyensInitFragment extends ListFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View v,
                                            int position, long id) {
-                positionElement = position;
-
                 // Create a new ClipData.
                 // This is done in two steps to provide clarity. The convenience method
                 // ClipData.newPlainText() can create a plain text ClipData in one step.
 
                 // Create a new ClipData.Item from the ImageView Symbol Name
-                ClipData.Item item0 = new ClipData.Item(means[position].getId());
+                Symbol symbol = means[position];
+
+                ClipData.Item item0 = new ClipData.Item(symbol.getId());
 
                 // Create a new ClipData using the tag as a label, the plain text MIME type, and
                 // the already-created item. This will create a new ClipDescription object within the
@@ -99,13 +106,13 @@ public class MoyensInitFragment extends ListFragment {
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         item0);
 
-                ClipData.Item item1 = new ClipData.Item(means[position].getSymbolType().name());
+                ClipData.Item item1 = new ClipData.Item(symbol.getSymbolType().name());
                 dragData.addItem(item1);
-                ClipData.Item item2 = new ClipData.Item(means[position].getFirstText());
+                ClipData.Item item2 = new ClipData.Item(symbol.getFirstText());
                 dragData.addItem(item2);
-                ClipData.Item item3 = new ClipData.Item(means[position].getSecondText());
+                ClipData.Item item3 = new ClipData.Item(symbol.getSecondText());
                 dragData.addItem(item3);
-                ClipData.Item item4 = new ClipData.Item(means[position].getColor());
+                ClipData.Item item4 = new ClipData.Item(symbol.getColor());
                 dragData.addItem(item4);
 
                 // Instantiates the drag shadow builder.
@@ -134,58 +141,6 @@ public class MoyensInitFragment extends ListFragment {
      */
     private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
 
-
-        int meanWithoutCoordinates = 0;
-        int pos = 0;
-
-        for (Mean m : listMean) {
-            boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
-            Log.i(TAG, pos++ + "  Not is NaN******Lat  \t" + m.getCoordinates().getLatitude() + " Bool  " + isNaN);
-            if (isNaN) {
-                meanNotInPosition.add(m);
-            }
-        }
-
-        int meanSize = meanNotInPosition.size(); // taille de la liste des moyens non placés sur la map
-        means = new Symbol[meanSize];
-
-        if (meanSize > 0) {
-            for (Mean m : meanNotInPosition) {
-                String vehicule = m.getVehicle().toString();
-                String vehiculeName = Symbol.getImage(vehicule);
-                means[position] = new Symbol(m.getId(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
-                draggable.add(true);
-                isDeclineList.add(m.getIsDeclined());
-
-                position++;
-            }
-        }
-
-        // Init list des moyens refusés et non validés
-        for (Mean m : listXtra) {
-            if (!m.getIsDeclined()) {
-                meanNotValidated.add(m);
-            } else {
-                meanRefused.add(m);
-            }
-        }
-
-        int xtraNotValidateSize = meanNotValidated.size(); // taille des moyens supplémentaires non validés
-        meansXNotValidate = new Symbol[xtraNotValidateSize];
-        if (xtraNotValidateSize > 0) {
-            position = 0;
-            for (Mean m : meanNotValidated) {
-                String vehicule = m.getVehicle().toString();
-                String vehiculeName = Symbol.getImage(vehicule);
-                meansXNotValidate[position] = new Symbol(m.getId(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
-                draggable.add(false);
-                isDeclineList.add(m.getIsDeclined());
-
-                position++;
-            }
-        }
 
         int xtraRefusedSize = meanRefused.size(); // taille des moyens supplémentaires non validés
         meansXRefused = new Symbol[xtraRefusedSize];
@@ -251,44 +206,37 @@ public class MoyensInitFragment extends ListFragment {
                 List<Mean> meanList = intervention.getMeansList();
                 List<Mean> xtraList = intervention.getMeansXtra();
 
-                Log.i(TAG, "mean size\t" + meanList.size());
-                Log.i(TAG, "xtra size\t" + xtraList.size());
+                List<Mean> meanNotValidateList = new ArrayList<>();
+                // Init list des moyens refusés et non validés
+                for (Mean m : xtraList) {
+                    if (!m.getIsDeclined()) {
+                        meanNotValidateList.add(m);
+                    } else {
+                        meanRefused.add(m);
+                    }
+                }
+                createNotValidateMeansView(meanNotValidateList.toArray(new Mean[meanNotValidateList.size()])); // Appel de la méthode qui cré la view des moyens demandés.
+                // Done moyens refusés.
 
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, i, meanList, xtraList);
 
+
+                // Appel de la méthode qui cré la view des moyens disponibles.
+                createAvailableMeansView(meanList);
+
+                String textViewStringValue;
+                String valueOfTextView;
+
                 //Listes pour générer tableaux pour adapterMeans
                 drawables = new ArrayList<Drawable>();
                 titles = new ArrayList<String>();
-
-                if (means.length > 0) {
-                    titles.clear();
-                    drawables.clear();
-                    for (Symbol mean : means) {
-                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
-                        titles.add(mean.getFirstText() + " * " + mean.getId());
-                    }
-
-                    ListView moyensListView = getListView();
-
-                    // Set drawable to adapterMeans
-                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
-
-                    // Set image title to adapterMeans
-                    String[] titlesArray = titles.toArray(new String[titles.size()]);
-
-                    Context activity = MoyensInitFragment.this.getActivity();
-                    adapterMeans = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
-                    moyensListView.setAdapter(adapterMeans);
-
-                }
-
                 if (meansXRefused.length > 0) {
                     titles.clear();
                     drawables.clear();
-                    for (Symbol mean : meansXRefused) {
-                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
-                        titles.add(mean.getFirstText() + " * " + mean.getId());
+                    for (Symbol symbol : meansXRefused) {
+                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+                        titles.add(symbol.getFirstText() + " * " + symbol.getId());
                     }
 
                     ListView moyensListView = getListView();
@@ -300,39 +248,80 @@ public class MoyensInitFragment extends ListFragment {
                     String[] titlesArray = titles.toArray(new String[titles.size()]);
 
                     // Refused
-                    ListView refusedView = (ListView) view.findViewById(R.id.list_refused);
-                    adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
-                    refusedView.setAdapter(adapterXtraRefused);
+//                    ListView refusedView = (ListView) view.findViewById(R.id.list_refused);
+                    ArrayAdapter adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
+//                    refusedView.setAdapter(adapterXtraRefused);
+
+                    Spinner refusedMeansSpinner = (Spinner) view.findViewById(R.id.refused_means_spinner);
+                    refusedMeansSpinner.setAdapter(adapterXtraRefused);
                 }
-
-                if (meansXNotValidate.length > 0) {
-                    titles.clear();
-                    drawables.clear();
-                    for (Symbol mean : meansXNotValidate) {
-                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), mean));
-                        titles.add(mean.getFirstText() + " * " + mean.getId());
-                    }
-
-                    ListView moyensListView = getListView();
-
-                    // Set drawable to adapterMeans
-                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
-
-                    // Set image title to adapterMeans
-                    String[] titlesArray = titles.toArray(new String[titles.size()]);
-
-                    // to validated
-                    ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
-                    adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
-                    notValidatedView.setAdapter(adapterXtraNotValidate);
-
-                }
+                TextView refusedTextView = (TextView) view.findViewById(R.id.moyens_refuses_textview);
+                textViewStringValue = getResources().getString(R.string.moyens_refuses);
+                valueOfTextView = textViewStringValue + (" (" + meansXRefused.length + ")");
+                refusedTextView.setText(valueOfTextView);
             }
         };
     }
 
+    /**
+     * méthode qui cré la view des moyens disponibles.
+     *
+     * @param meanList
+     */
+    private void createAvailableMeansView(List<Mean> meanList) {
+
+        int pos = 0;
+        for (Mean m : meanList) {
+            boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
+            if (isNaN) {
+                meanNotInPosition.add(m);
+            }
+        }
+
+        int meanSize = meanNotInPosition.size(); // taille de la liste des moyens non placés sur la map
+        means = new Symbol[meanSize];
+
+        if (meanNotInPosition.size() > 0) {
+            for (Mean m : meanNotInPosition) {
+                String vehicule = m.getVehicle().toString();
+                String vehiculeName = Symbol.getImage(vehicule);
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+
+                means[pos++] = symbol;
+
+                String title = vehicule + " * " + m.getId();
+
+                moyensDisponiblesTitle.add(title);
+                moyensDisponiblesDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+            }
+        }
+
+
+        // Set drawable to adapterMeans
+        Drawable[] imagesArray = moyensDisponiblesDrawable.toArray(new Drawable[moyensDisponiblesDrawable.size()]);//drawables.toArray(new Drawable[drawables.size()]);
+
+        // Set image title to adapterMeans
+        String[] titlesArray = moyensDisponiblesTitle.toArray(new String[moyensDisponiblesTitle.size()]); //titles.toArray(new String[titles.size()]);
+
+        Context activity = this.getActivity();
+        adapterMeans = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
+
+
+        ListView moyensListView = getListView();
+        moyensListView.setAdapter(adapterMeans);
+
+
+        TextView dispoTextView = (TextView) view.findViewById(R.id.moyens_dispo_textview);
+        String textViewStringValue = getResources().getString(R.string.moyens_a_placer);
+        String valueOfTextView = textViewStringValue + (" (" + moyensDisponiblesDrawable.size() + ")");
+        dispoTextView.setText(valueOfTextView);
+    }
+
     // Méthode appelé par la strategie.
     public void addMean(final Mean object) {
+        meansNotValidateDrawable.clear();
+        meansNotValidateTitle.clear();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -346,47 +335,52 @@ public class MoyensInitFragment extends ListFragment {
                                 Mean[] means;
                                 means = (Mean[]) response;
 
-                                List<Symbol> symbols = new ArrayList<Symbol>();
-
-                                Log.i(TAG, "result type " + means.getClass().getName());
-                                for (int i = 0; i < means.length; i++) {
-                                    Mean m = means[i];
-                                    if (!m.getIsDeclined()) {
-                                        String vehicule = m.getVehicle().toString();
-                                        String vehiculeName = Symbol.getImage(vehicule);
-                                        Symbol s = new Symbol(m.getId(),
-                                                valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
-                                        symbols.add(s);
-                                    }
-                                }
-                                if (symbols.size() > 0) {
-
-                                    titles.clear();
-                                    drawables.clear();
-                                    for (Symbol symbol : symbols) {
-                                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
-                                        titles.add(symbol.getFirstText() + " * " + symbol.getId());
-                                    }
-
-                                    ListView moyensListView = getListView();
-
-                                    // Set drawable to adapterMeans
-                                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
-
-                                    // Set image title to adapterMeans
-                                    String[] titlesArray = titles.toArray(new String[titles.size()]);
-
-                                    // to validated
-                                    ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
-                                    adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
-                                    notValidatedView.setAdapter(adapterXtraNotValidate);
-                                }
-
-                                Log.i(TAG, "success size  " + means.length);
+                                createNotValidateMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
                             }
                         }, getCallbackError());
-                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId() + " " + object.getVehicle(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Demande de moyen\nn° " + object.getId(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    /**
+     * méthode qui cré la view des moyens demandés.
+     *
+     * @param means
+     */
+    private void createNotValidateMeansView(Mean[] means) {
+        meansNotValidateDrawable.clear();
+        meansNotValidateTitle.clear();
+        for (int i = 0; i < means.length; i++) {
+            Mean m = means[i];
+            if (!m.getIsDeclined()) {
+                String vehicule = m.getVehicle().toString();
+                String vehiculeName = Symbol.getImage(vehicule);
+
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+
+                String title = vehicule + " * " + m.getId();
+                meansNotValidateTitle.add(title);
+                meansNotValidateDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+            }
+        }
+        ListView moyensListView = getListView();
+
+        // Set drawable to adapterMeans
+        Drawable[] imagesArray = meansNotValidateDrawable.toArray(new Drawable[meansNotValidateDrawable.size()]);
+
+        // Set image title to adapterMeans
+        String[] titlesArray = meansNotValidateTitle.toArray(new String[meansNotValidateTitle.size()]);
+
+        TextView notValidatedTextView = (TextView) view.findViewById(R.id.moyens_supp_textview);
+        String textViewStringValue = getResources().getString(R.string.moyens_a_valider);
+        String valueOfTextView = textViewStringValue + (" (" + titlesArray.length + ")");
+        notValidatedTextView.setText(valueOfTextView);
+
+        // to validated
+        ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
+        ArrayAdapter adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
+        notValidatedView.setAdapter(adapterXtraNotValidate);
     }
 }

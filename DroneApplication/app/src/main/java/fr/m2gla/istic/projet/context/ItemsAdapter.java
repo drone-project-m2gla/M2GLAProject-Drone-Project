@@ -1,7 +1,6 @@
 package fr.m2gla.istic.projet.context;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -23,8 +22,6 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.context.RestAPI;
-import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
@@ -41,10 +38,10 @@ public class ItemsAdapter extends ArrayAdapter {
     private String[] titles;
     private int customLayout;
     Intervention intervention;
-    private ArrayList<String>   myList = null;
-    private String  idIntervention = null;
+    private ArrayList<String> myList = null;
+    private String idIntervention = null;
     private List<Mean> meanList = null;
-    private Mean        xtraMean;
+    private Mean xtraMean;
 
     public ItemsAdapter(Context context, int textViewResourceId,
                         String[] objects, Drawable[] images) {
@@ -73,19 +70,19 @@ public class ItemsAdapter extends ArrayAdapter {
 
 
     public void remove(int position) {
-        String[]    newTitles;
-        Drawable[]  newImage;
-        int         i, sz;
+        String[] newTitles;
+        Drawable[] newImage;
+        int i, sz;
 
         if (position >= this.titles.length) {
             return;
         }
-Toast.makeText(getContext(), "Remove : " + position, Toast.LENGTH_LONG).show();
-Log.i("itemsAdapter", "Remove : " + position);
-Log.i("itemsAdapter", "Remove (List) : " + this.myList.get(position));
-Log.i("itemsAdapter", "Remove (Mean): " + this.getMeanInList(position).getVehicle());
-Log.i("itemsAdapter", "Remove (Titl): " + this.titles[position]);
-Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + this.getMeanInList(position).getVehicle(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Remove : " + position, Toast.LENGTH_LONG).show();
+        Log.i("itemsAdapter", "Remove : " + position);
+        Log.i("itemsAdapter", "Remove (List) : " + this.myList.get(position));
+        Log.i("itemsAdapter", "Remove (Mean): " + this.getMeanInList(position).getVehicle());
+        Log.i("itemsAdapter", "Remove (Titl): " + this.titles[position]);
+        Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + this.getMeanInList(position).getVehicle(), Toast.LENGTH_LONG).show();
 
         sz = this.titles.length - 1;
         newTitles = new String[sz];
@@ -96,7 +93,7 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
         }
 
         for (; i < newTitles.length; i++) {
-            newTitles[i] = this.titles[i+1];
+            newTitles[i] = this.titles[i + 1];
         }
 
         this.titles = newTitles;
@@ -113,7 +110,7 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
         }
 
         for (; i < newImage.length; i++) {
-            newImage[i] = this.images[i+1];
+            newImage[i] = this.images[i + 1];
         }
 
         this.images = newImage;
@@ -144,15 +141,14 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
             if (!m.getIsDeclined()) {
                 if (i == position) {
                     return (m);
-                }
-                else if (i > position) {
+                } else if (i > position) {
                     return (null);
                 }
                 i++;
             }
         }
 
-        return(null);
+        return (null);
     }
 
     private int getMeanPositionInList(int position) {
@@ -166,8 +162,7 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
             if (!m.getIsDeclined()) {
                 if (i == position) {
                     return (j);
-                }
-                else if (i > position) {
+                } else if (i > position) {
                     return (-1);
                 }
                 i++;
@@ -175,7 +170,7 @@ Toast.makeText(getContext(), "Remove : " + this.myList.get(position) + " " + thi
             j++;
         }
 
-        return(-1);
+        return (-1);
     }
 
     // It gets a View that displays the data at the specified position
