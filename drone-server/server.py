@@ -101,19 +101,29 @@ def getPosition():
     z = command.pose.position.z
     t = meterToGps(x,y)
 
-    return jsonify({"latitude": t[0], "longitude": t[1], "altitude": z}), 200
+    return jsonify({
+    	"latitude": t[0],
+    	"longitude": t[1],
+    	"altitude": z
+    }), 200
 
 @app.route('/robot/picture', methods=['GET'])
 def getpicture() :
-    print command.saveImg
+    x = command.pose.position.x
+    y = command.pose.position.y
+    z = command.pose.position.z
+    t = meterToGps(x,y)
     cv_image = CvBridge().imgmsg_to_cv2(command.saveImg, "rgba8")
-    cv2.imwrite("toto.png", cv_image)
+    image = cv2.imencode('.png', cv_image, [1, 90])
 
     return jsonify({
+    	"latitude": t[0],
+    	"longitude": t[1],
+    	"altitude": z,
     	"width": command.saveImg.width,
     	"height": command.saveImg.height,
     	"encoding": command.saveImg.encoding,
-    	"image": base64.b64encode(cv_image)
+    	"image": base64.b64encode(image[1])
     })
 
 if __name__ == '__main__' :
