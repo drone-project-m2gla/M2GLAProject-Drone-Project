@@ -45,7 +45,7 @@ public class UserServices {
         	userData = new User();
         }
         
-        return Response.status(status).entity(userData).build();
+        return Response.status(status).entity(user).build();
     }
 
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
