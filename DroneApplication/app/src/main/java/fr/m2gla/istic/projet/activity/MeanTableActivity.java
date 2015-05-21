@@ -140,15 +140,16 @@ public class MeanTableActivity extends Activity {
         return new Command() {
             @Override
             public void execute(Object response) {
-                TableLayout titleTable = (TableLayout) findViewById(R.id.titleMeanTable);
-                TableLayout table = (TableLayout) findViewById(R.id.meanTable);
-                TableRow    row;
-                TextView    tv1,tv2;
-                Long        dateLong;
-                Date        date;
-                DateFormat  mediumDateFormat;
-                List<Mean>  meanList;
-                String      dateStr;
+                TableLayout     titleTable = (TableLayout) findViewById(R.id.titleMeanTable);
+                TableLayout     table = (TableLayout) findViewById(R.id.meanTable);
+                TableRow        row;
+                TextView        tv;
+                Long            dateLong;
+                Date            date;
+                DateFormat      mediumDateFormat;
+                List<Mean>      meanList;
+                String          dateStr;
+                List<String>    dateList;
 
 
                 intervention = (Intervention) response;
@@ -165,52 +166,75 @@ public class MeanTableActivity extends Activity {
                 // Mise en place de la ligne de titres
                 row = new TableRow(MeanTableActivity.this);
                 for (int i = 0; i < titleMeanTab.length; i++) {
-                    tv1 = new TextView(MeanTableActivity.this);
-                    tv1.setText(titleMeanTab[i]);
-                    tv1.setGravity(Gravity.CENTER);
-                    tv1.setTextColor(Color.YELLOW);
-                    tv1.setTextSize(20);
-                    tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
-                    row.addView(tv1);
+                    tv = new TextView(MeanTableActivity.this);
+                    tv.setText(titleMeanTab[i]);
+                    tv.setGravity(Gravity.CENTER);
+                    tv.setTextColor(Color.YELLOW);
+                    tv.setTextSize(20);
+                    tv.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
+                    row.addView(tv);
                 }
                 row.setPadding(1, 3, 1, 8);
                 titleTable.addView(row);
 
                 // pour chaque ligne
                 for (Mean m:meanList) {
+                    String  str;
+
+                    // Verifier si le moyen est a afficher
+                    str = m.getDateRefused();
+                    if ((str == null) || (str.compareTo("") == 0)) {
+                        continue;
+                    }
+
+
                     // création d'une nouvelle ligne
                     row = new TableRow(MeanTableActivity.this);
 
                     // création cellule
-                    tv1 = new TextView(MeanTableActivity.this);
+                    tv = new TextView(MeanTableActivity.this);
 
                     // ajout du texte
-                    tv1.setText(m.getVehicle().toString());
+                    tv.setText(m.getVehicle().toString());
 
                     // centrage dans la cellule
-                    tv1.setGravity(Gravity.CENTER);
+                    tv.setGravity(Gravity.CENTER);
 
                     // adaptation de la largeur de colonne à l'écran :
-                    tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
+                    tv.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
 
-                    // Cellule des dates
-                    dateLong = Long.valueOf(m.getDateRequested());
-                    date = new Date(dateLong);
-                    dateStr = mediumDateFormat.format(date);
+                    // ajout de la cellule à la ligne
+                    row.addView(tv);
 
+                    // Cellules des dates
+                    dateList = new ArrayList<String>();
+                    dateList.add(m.getDateRequested());
+                    dateList.add(m.getDateActivated());
+                    dateList.add(m.getDateArrived());
+                    dateList.add(m.getDateEngaged());
+                    dateList.add(m.getDateReleased());
 
+                    for (String s:dateList) {
+                        tv = new TextView(MeanTableActivity.this);
+                        if ((s == null) || (s.compareTo("") == 0)) {
+                            dateStr = " ";
+                        }
+                        else {
+                            dateLong = Long.valueOf(m.getDateRequested());
+                            date = new Date(dateLong);
+                            dateStr = mediumDateFormat.format(date);
+                        }
+                        tv.setText(dateStr);
 
-                    tv2 = new TextView(MeanTableActivity.this);
-                    tv2.setText(m.getCoordinates().toString());
-                    tv2.setGravity(Gravity.CENTER);
-                    tv2.setLayoutParams( new TableRow.LayoutParams( 0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
+                        tv.setGravity(Gravity.CENTER);
+                        tv.setLayoutParams( new TableRow.LayoutParams( 0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
+                        row.addView(tv);
+                    }
 
-                    // ajout des cellules à la ligne
-                    row.addView(tv1);
-                    row.addView(tv2);
+                    // Formatage de ligne
                     row.setPadding(1, 1, 1, 1);
 
-                    // ajout de la ligne au tableau
+                    // Ajout de la ligne au tableau
                     table.addView(row);
                 }
             }
