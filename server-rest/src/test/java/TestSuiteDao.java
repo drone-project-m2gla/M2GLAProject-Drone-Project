@@ -9,9 +9,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import dao.InterventionDAOTest;
-import dao.MeanDAOTest;
-import dao.UserDAOTest;
+import dao.*;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -35,7 +33,9 @@ import java.util.Set;
 @Suite.SuiteClasses({
         InterventionDAOTest.class,
         UserDAOTest.class,
-        MeanDAOTest.class
+        MeanDAOTest.class,
+        GeoIconDAOTest.class,
+        GeoImageDAOTest.class
 })
 public class TestSuiteDao {
     @BeforeClass
