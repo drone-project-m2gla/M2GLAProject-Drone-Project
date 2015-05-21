@@ -16,6 +16,7 @@ import android.widget.Toast;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 
 import fr.m2gla.istic.projet.context.UserQualification;
+import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 
 /**
@@ -194,6 +195,31 @@ public class InterventionListActivity extends Activity {
     @Override
     public void onActivityResult(int a, int b, Intent retIntent) {
         interventionRefresh();
+    }
+
+    /**
+     * Methode de lancement de l'activity d'affichage des moyens appelee par button
+     *
+     * @param view : vue courante
+     */
+    public void MeanTableViewCall(View view) {
+        Intent  intent;
+        String  idIntervention;
+
+        // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
+        intent = new Intent(getApplicationContext(), MeanTableActivity.class);
+
+        // Demander un rafraichissement de la liste des interventions et des details de
+        // l'intervention en cours
+        InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+        idIntervention = fragmentDetailIntervention.getIdIntervention();
+
+        // Ajout de données supplémentaires dans l'intent
+        intent.putExtra(GeneralConstants.REF_ACT_IDINTER, "" + idIntervention);
+
+        // Lancement de l'activité, suivante
+        startActivity(intent);
+
     }
 
 }
