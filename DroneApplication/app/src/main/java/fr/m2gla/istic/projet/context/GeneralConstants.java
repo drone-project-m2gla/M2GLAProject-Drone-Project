@@ -24,6 +24,7 @@ public interface GeneralConstants {
 
     // References des éléments transitant entre les Activity
     public static final String  REF_ACT_ROLE = "role";
+    public static final String  REF_ACT_IDINTER = "idIntervention";
 
     // Id de l'intervention à transmettre à d'autres activités
     public static final String ID_INTERVENTION = "idIntervention";

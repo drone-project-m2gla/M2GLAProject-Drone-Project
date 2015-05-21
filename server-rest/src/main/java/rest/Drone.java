@@ -1,9 +1,12 @@
 package rest;
 
+import entity.ImageDrone;
 import entity.Position;
-
 import entity.Target;
+import groovyjarjarantlr.ASdebug.IASDebugStream;
+
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
@@ -17,10 +20,14 @@ import service.position.GetDronePositionThread;
 import service.position.TransitDroneSender;
 import util.Configuration;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +39,9 @@ import java.util.List;
 public class Drone {
 	private static final Logger LOGGER = Logger.getLogger(Drone.class);
 
+	/**
+	 * Just for test
+	 */
 	@POST
 	@Path("move")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -59,11 +69,42 @@ public class Drone {
 		return Response.status(postMethod.getStatusCode()).build();
 	}
 
+	/**
+	 * Just for test
+	 * @throws IOException 
+	 * @throws HttpException 
+	 */
+	@GET
+	@Path("testImage")
+	@Produces("image/jpeg")
+	public byte[] getTestImage() throws HttpException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		HttpClient client = new HttpClient();
+		GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/picture");
+		client.executeMethod(getImage);
+		ImageDrone image = mapper.readValue(getImage.getResponseBodyAsString(), ImageDrone.class);
+		return image.getImage();
+	}
+
 	@GET
 	@Path("move")
-    @Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
+	}
+
+	@GET
+	@Path("image")
+	@Produces("image/jpeg")
+	public byte[] getImage() throws IOException {
+		ImageDrone image = GetDronePositionThread.getInstance().getImage();
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		BufferedImage inputImage = ImageIO.read(new ByteArrayInputStream(image.getImage()));
+		BufferedImage outputImage = new BufferedImage(image.getWidth(),
+				image.getHeight(), BufferedImage.TYPE_INT_RGB);
+		outputImage.createGraphics().drawImage(inputImage, 0, 0, Color.WHITE, null);
+		ImageIO.write(outputImage, "jpg", output);
+		return output.toByteArray();
 	}
 
     @POST

@@ -1,10 +1,13 @@
 package service.position;
 
+import entity.ImageDrone;
 import entity.Position;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+
 import service.PushService;
 import service.impl.PushServiceImpl;
 import util.Configuration;
@@ -22,6 +25,7 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
     private final Logger LOGGER = Logger.getLogger(GetDronePositionThread.class);
     private static GetDronePositionThread instance = new GetDronePositionThread();
     private Position position;
+    private ImageDrone image;
     private boolean continueThread;
 
     private GetDronePositionThread() {
@@ -29,13 +33,11 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
         continueThread = true;
     }
 
-    public static GetDronePositionThread getInstance()
-    {
+    public static GetDronePositionThread getInstance() {
         return instance;
     }
 
-    public static void createNewInstance()
-    {
+    public static void createNewInstance() {
         instance.stopThread();
         instance = new GetDronePositionThread();
     }
@@ -48,32 +50,37 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
         return position;
     }
 
+    public synchronized ImageDrone getImage() {
+        return image;
+    }
+
     @Override
     public void run() {
-//        ObjectMapper mapper = new ObjectMapper();
-//        HttpClient client = new HttpClient();
-//        while (continueThread) {
-//            GetMethod get = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
-//            try {
-//                client.executeMethod(get);
-//                Position position = mapper.readValue(
-//                        get.getResponseBodyAsString(), Position.class);
-//                if (position != null && !Tools.isSamePositions(this.position,position)) {
-//                    this.position = position;
-//                    PushServiceImpl.getInstance().sendMessage(
-//                            PushService.TypeClient.SIMPLEUSER, "droneMove", position);
-//                }
-//                else
-//                {
-//                    notifyObserversForPositionUnchanged();
-//                }
-//                Thread.sleep(2987);
-//            } catch (IOException e) {
-//                //LOGGER.error("Get position error", e);
-//            } catch (InterruptedException e) {
-//                //LOGGER.error("Get position error", e);
-//            }
-//        }
+        ObjectMapper mapper = new ObjectMapper();
+        HttpClient client = new HttpClient();
+        while (continueThread) {
+            GetMethod getPosition = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
+            try {
+                client.executeMethod(getPosition);
+                Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
+                if (position != null && !Tools.isSamePositions(this.position, position)) {
+                    this.position = position;
+                    //PushServiceImpl.getInstance().sendMessage(
+                    //        PushService.TypeClient.SIMPLEUSER, "droneMove", position);
+
+                    GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/image");
+                    client.executeMethod(getImage);
+                    this.image = mapper.readValue(getImage.getResponseBodyAsString(), ImageDrone.class);
+                } else {
+                    notifyObserversForPositionUnchanged();
+                }
+                Thread.sleep(2987);
+            } catch (IOException e) {
+                //LOGGER.error("Get position error", e);
+            } catch (InterruptedException e) {
+                //LOGGER.error("Get position error", e);
+            }
+        }
     }
 
     @Override
@@ -88,14 +95,12 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 
     @Override
     public void notifyObserversForPositionUnchanged() {
-        for(PositionUnchangedObserver observer : positionObservers)
-        {
+        for(PositionUnchangedObserver observer : positionObservers) {
             observer.notifyPositionUnchanged();
         }
     }
 
-    public void flushPositionUnchangedObservers()
-    {
+    public void flushPositionUnchangedObservers() {
         this.positionObservers = new ArrayList<PositionUnchangedObserver>();
     }
 }

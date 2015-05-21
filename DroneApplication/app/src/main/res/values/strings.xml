@@ -41,6 +41,7 @@
     <string name="intervention_list_text">Interventions en cours</string>
     <string name="button_add">Ajouter</string>
     <string name="button_refresh">Rafraîchir</string>
+    <string name="button_MeanTableView">Afficher Tous les moyens</string>
     <string name="add_new_mean">Ajout de moyens supp.</string>
     <string name="query_position_confirmation">Confirmer la position du moyen?</string>
 

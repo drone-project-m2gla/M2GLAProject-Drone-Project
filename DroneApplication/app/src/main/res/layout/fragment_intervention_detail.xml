@@ -97,6 +97,24 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/meanTableButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/refreshInterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="MeanTableViewCall"
+            android:text="@string/button_MeanTableView" />
+
+    </LinearLayout>
+
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

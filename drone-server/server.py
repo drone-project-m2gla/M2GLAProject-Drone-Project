@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request
-from flask_restful import abort
+import base64
 import math
 import rospy
+import cv2
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose
 from geometry_msgs.msg import Point
@@ -53,6 +54,9 @@ def callbackImage(data):
 
 class Command:
     def __init__(self):
+        odometry = Odometry()
+        self.pose = odometry.pose.pose
+        self.saveImg = Image()
         self.cmdWaypoint = rospy.Publisher("/drone/waypoint", Pose, queue_size=10, latch=True)
         self.cmdOdometry = rospy.Subscriber("/drone/odometry",Odometry, callbackOdometry, queue_size=1)
         self.cmdImage = rospy.Subscriber("/drone/camera/image", Image, callbackImage, queue_size=1)
@@ -69,7 +73,8 @@ app = Flask(__name__)
 @app.route('/robot/rotate', methods=['POST'])
 def rotate() :
     if not request.json or not 'd' in request.json:
-        abort(400)
+        print(400)
+        return 400
     
     d = request.json['d']
     
@@ -79,7 +84,9 @@ def rotate() :
 def setPosition():
     global command
     if not request.json or not 'latitude' in request.json or not 'longitude' in request.json or not 'altitude' in request.json:
-        abort(400)    
+        print(400)
+        return 400
+
     x = request.json['longitude']
     y = request.json['latitude']
     z = request.json['altitude']
@@ -94,20 +101,29 @@ def getPosition():
     z = command.pose.position.z
     t = meterToGps(x,y)
 
-    return jsonify({"latitude": t[0], "longitude": t[1], "altitude": z}), 200
-
-def encoreImage(img):
-    result = ""
-    for i in range(0, len(img)):
-        result += str(img[i]) + ","
+    return jsonify({
+    	"latitude": t[0],
+    	"longitude": t[1],
+    	"altitude": z
+    }), 200
 
 @app.route('/robot/picture', methods=['GET'])
 def getpicture() :
+    x = command.pose.position.x
+    y = command.pose.position.y
+    z = command.pose.position.z
+    t = meterToGps(x,y)
+    cv_image = CvBridge().imgmsg_to_cv2(command.saveImg, "rgba8")
+    image = cv2.imencode('.png', cv_image, [1, 90])
+
     return jsonify({
+    	"latitude": t[0],
+    	"longitude": t[1],
+    	"altitude": z,
     	"width": command.saveImg.width,
     	"height": command.saveImg.height,
     	"encoding": command.saveImg.encoding,
-    	"image": str(command.saveImg.data)
+    	"image": base64.b64encode(image[1])
     })
 
 if __name__ == '__main__' :

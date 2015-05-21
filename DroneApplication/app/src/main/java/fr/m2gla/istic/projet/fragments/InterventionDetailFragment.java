@@ -2,6 +2,7 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
@@ -24,8 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.m2gla.istic.projet.activity.InterventionListActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.RestAPI;
@@ -38,10 +41,6 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 public class InterventionDetailFragment extends Fragment implements ListAdapterCommand {
     private static final String TAG = "Inter";
     private Intervention intervention;
-
-    public String getIdIntervention() {
-        return idIntervention;
-    }
 
     private String idIntervention = "";
     private String[] titles;
@@ -162,6 +161,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         LinearLayout codeLayout = (LinearLayout) this.view.findViewById(R.id.codeDetailsLayout);
         LinearLayout adresseLayout = (LinearLayout) this.view.findViewById(R.id.adresseDetailsLayout);
         LinearLayout villeLayout = (LinearLayout) this.view.findViewById(R.id.villeDetailsLayout);
+        LinearLayout buttonLayout = (LinearLayout) this.view.findViewById(R.id.meanTableButtonLayout);
         ListView newMeanList = (ListView) this.view.findViewById(R.id.intervention_detail_list);
         TextView nomIntervention = (TextView) this.view.findViewById(R.id.details_nom);
         TextView codeIntervention = (TextView) this.view.findViewById(R.id.details_code);
@@ -190,6 +190,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         codeLayout.setVisibility(View.VISIBLE);
         adresseLayout.setVisibility(View.VISIBLE);
         villeLayout.setVisibility(View.VISIBLE);
+        buttonLayout.setVisibility(View.VISIBLE);
         newMeanList.setVisibility(View.VISIBLE);
 
 
@@ -233,6 +234,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         LinearLayout codeLayout = (LinearLayout) this.view.findViewById(R.id.codeDetailsLayout);
         LinearLayout adresseLayout = (LinearLayout) this.view.findViewById(R.id.adresseDetailsLayout);
         LinearLayout villeLayout = (LinearLayout) this.view.findViewById(R.id.villeDetailsLayout);
+        LinearLayout buttonLayout = (LinearLayout) this.view.findViewById(R.id.meanTableButtonLayout);
         ListView newMeanList = (ListView) this.view.findViewById(R.id.intervention_detail_list);
         TextView titleFragement = (TextView) this.view.findViewById(R.id.details_titre_moyen);
         TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.details_moyens);
@@ -242,6 +244,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         codeLayout.setVisibility(View.GONE);
         adresseLayout.setVisibility(View.GONE);
         villeLayout.setVisibility(View.GONE);
+        buttonLayout.setVisibility(View.GONE);
         newMeanList.setVisibility(View.GONE);
         titleFragement.setVisibility(View.GONE);
         titleNoMoyen.setVisibility(View.GONE);
@@ -262,4 +265,9 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
         return false;
     }
+
+    public String getIdIntervention() {
+        return idIntervention;
+    }
+
 }
