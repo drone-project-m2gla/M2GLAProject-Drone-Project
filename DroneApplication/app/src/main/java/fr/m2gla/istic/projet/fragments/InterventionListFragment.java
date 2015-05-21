@@ -346,7 +346,7 @@ public class InterventionListFragment extends Fragment {
 
 
         // Ajouter l'id dans l'intent
-        intent.putExtra(GeneralConstants.ID_INTERVENTION, idIntervention);
+        intent.putExtra(GeneralConstants.REF_ACT_IDINTER, idIntervention);
 
         // lancement de l'activité d'affichage de la carte
         startActivity(intent);
