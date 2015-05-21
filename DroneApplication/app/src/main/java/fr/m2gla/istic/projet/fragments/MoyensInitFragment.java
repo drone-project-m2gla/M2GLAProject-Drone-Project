@@ -63,8 +63,8 @@ public class MoyensInitFragment extends ListFragment {
 
 
     // Moyens non validés
-    List<String> meansNotValidateTitle = new ArrayList<>();
-    List<Drawable> meansNotValidateDrawable = new ArrayList<>();
+    List<String> meansRequestedTitle = new ArrayList<>();
+    List<Drawable> meansRequestedDrawable = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -210,22 +210,22 @@ public class MoyensInitFragment extends ListFragment {
                 int i = 0;
 
                 List<Mean> meanList = intervention.meansArrived();
-                List<Mean> xtraList = intervention.meansRequested();
+                List<Mean> requestedList = intervention.meansRequested();
 
                 List<Mean> meanNotValidateList = new ArrayList<>();
                 // Init list des moyens refusés et non validés
-                for (Mean m : xtraList) {
+                for (Mean m : requestedList) {
                     if (!m.refusedMeans()) {
                         meanNotValidateList.add(m);
                     } else {
                         meanRefused.add(m);
                     }
                 }
-                createNotValidateMeansView(meanNotValidateList.toArray(new Mean[meanNotValidateList.size()])); // Appel de la méthode qui cré la view des moyens demandés.
+                createRequestedMeansView(meanNotValidateList.toArray(new Mean[meanNotValidateList.size()])); // Appel de la méthode qui cré la view des moyens demandés.
                 // Done moyens refusés.
 
                 // Initialisation des titres et images.
-                initImagesTitles(intervention, i, meanList, xtraList);
+                initImagesTitles(intervention, i, meanList, requestedList);
 
 
                 // Appel de la méthode qui cré la view des moyens disponibles.
@@ -346,7 +346,7 @@ public class MoyensInitFragment extends ListFragment {
                             public void execute(Object response) {
                                 Mean[] means = (Mean[]) response;
 
-                                createNotValidateMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
+                                createRequestedMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
                             }
                         }, getCallbackError());
             }
@@ -378,9 +378,9 @@ public class MoyensInitFragment extends ListFragment {
      *
      * @param means
      */
-    private void createNotValidateMeansView(Mean[] means) {
-        meansNotValidateTitle.clear();
-        meansNotValidateDrawable.clear();
+    private void createRequestedMeansView(Mean[] means) {
+        meansRequestedTitle.clear();
+        meansRequestedDrawable.clear();
         for (int i = 0; i < means.length; i++) {
             Mean m = means[i];
             if (!m.refusedMeans()) {
@@ -391,16 +391,16 @@ public class MoyensInitFragment extends ListFragment {
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
 
                 String title = vehicule + " * " + m.getId();
-                meansNotValidateTitle.add(title);
-                meansNotValidateDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+                meansRequestedTitle.add(title);
+                meansRequestedDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
             }
         }
 
         // Set drawable to adapterMeans
-        Drawable[] imagesArray = meansNotValidateDrawable.toArray(new Drawable[meansNotValidateDrawable.size()]);
+        Drawable[] imagesArray = meansRequestedDrawable.toArray(new Drawable[meansRequestedDrawable.size()]);
 
         // Set image title to adapterMeans
-        String[] titlesArray = meansNotValidateTitle.toArray(new String[meansNotValidateTitle.size()]);
+        String[] titlesArray = meansRequestedTitle.toArray(new String[meansRequestedTitle.size()]);
 
         TextView notValidatedTextView = (TextView) view.findViewById(R.id.moyens_supp_textview);
         String textViewStringValue = getResources().getString(R.string.moyens_a_valider);

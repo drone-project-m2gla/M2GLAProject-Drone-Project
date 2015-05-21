@@ -109,6 +109,9 @@ public class Mean extends Entity {
         return this.meanState == MeanState.REFUSED;
     }
 
+    public boolean requestedMeans() {
+        return this.meanState == MeanState.REQUESTED;
+    }
 
 //    public boolean refusedMeans() {
 //        return refusedMeans;
