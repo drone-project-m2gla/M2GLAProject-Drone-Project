@@ -26,9 +26,12 @@ import android.widget.Toast;
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
@@ -41,6 +44,7 @@ import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.Strategy;
 
 /**
  * Created by david on 21/05/15.
@@ -50,6 +54,15 @@ public class MeanTableActivity extends Activity {
     private static final    String TAG = "MeanTableActivity";
     private String          idIntervention = null;
     private Intervention    intervention = null;
+
+    private String          titleMeanTab[] = {
+                                GeneralConstants.MEAN_TABLE_1,
+                                GeneralConstants.MEAN_TABLE_2,
+                                GeneralConstants.MEAN_TABLE_3,
+                                GeneralConstants.MEAN_TABLE_4,
+                                GeneralConstants.MEAN_TABLE_5,
+                                GeneralConstants.MEAN_TABLE_6
+                            };
 
 
     /**
@@ -128,51 +141,65 @@ public class MeanTableActivity extends Activity {
             @Override
             public void execute(Object response) {
                 TableLayout titleTable = (TableLayout) findViewById(R.id.titleMeanTable);
-                TableLayout table = (TableLayout) findViewById(R.id.meanTable); // on prend le tableau défini dans le layout
-                TableRow    row; // création d'un élément : ligne
-                TextView    tv1,tv2; // création des cellules
+                TableLayout table = (TableLayout) findViewById(R.id.meanTable);
+                TableRow    row;
+                TextView    tv1,tv2;
+                Long        dateLong;
+                Date        date;
+                DateFormat  mediumDateFormat;
+                List<Mean>  meanList;
+                String      dateStr;
+
 
                 intervention = (Intervention) response;
-                // Toast.makeText(getApplicationContext(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
-                List<Mean> meanList = intervention.getMeansList();
+                meanList = intervention.getMeansList();
+
+                // Initialisations
+                mediumDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, new Locale("FR", "fr"));
+
 
                 // Effacement des tables
                 titleTable.removeAllViews();
                 table.removeAllViews();
 
-                // Contruction de la ligne de titre
-                row = new TableRow(MeanTableActivity.this); // création d'une nouvelle ligne
-                tv1 = new TextView(MeanTableActivity.this); // création cellule
-                tv1.setText("VEHICULE"); // ajout du texte
-                tv1.setGravity(Gravity.CENTER); // centrage dans la cellule
-                tv1.setTextColor(Color.YELLOW);
-                tv1.setTextSize(20);
-                // adaptation de la largeur de colonne à l'écran :
-                tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
-                row.addView(tv1);
-                tv1 = new TextView(MeanTableActivity.this); // création cellule
-                tv1.setText("DONNEES"); // ajout du texte
-                tv1.setGravity(Gravity.CENTER); // centrage dans la cellule
-                tv1.setTextColor(Color.YELLOW);
-                tv1.setTextSize(20);
-                // adaptation de la largeur de colonne à l'écran :
-                tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
-                row.addView(tv1);
+                // Mise en place de la ligne de titres
+                row = new TableRow(MeanTableActivity.this);
+                for (int i = 0; i < titleMeanTab.length; i++) {
+                    tv1 = new TextView(MeanTableActivity.this);
+                    tv1.setText(titleMeanTab[i]);
+                    tv1.setGravity(Gravity.CENTER);
+                    tv1.setTextColor(Color.YELLOW);
+                    tv1.setTextSize(20);
+                    tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
+                    row.addView(tv1);
+                }
                 row.setPadding(1, 3, 1, 8);
                 titleTable.addView(row);
 
                 // pour chaque ligne
                 for (Mean m:meanList) {
+                    // création d'une nouvelle ligne
+                    row = new TableRow(MeanTableActivity.this);
 
-                    row = new TableRow(MeanTableActivity.this); // création d'une nouvelle ligne
+                    // création cellule
+                    tv1 = new TextView(MeanTableActivity.this);
 
-                    tv1 = new TextView(MeanTableActivity.this); // création cellule
-                    tv1.setText(m.getVehicle().toString()); // ajout du texte
-                    tv1.setGravity(Gravity.CENTER); // centrage dans la cellule
+                    // ajout du texte
+                    tv1.setText(m.getVehicle().toString());
+
+                    // centrage dans la cellule
+                    tv1.setGravity(Gravity.CENTER);
+
                     // adaptation de la largeur de colonne à l'écran :
                     tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
 
-                    // idem 2ème cellule
+                    // Cellule des dates
+                    dateLong = Long.valueOf(m.getDateRequested());
+                    date = new Date(dateLong);
+                    dateStr = mediumDateFormat.format(date);
+
+
+
                     tv2 = new TextView(MeanTableActivity.this);
                     tv2.setText(m.getCoordinates().toString());
                     tv2.setGravity(Gravity.CENTER);
