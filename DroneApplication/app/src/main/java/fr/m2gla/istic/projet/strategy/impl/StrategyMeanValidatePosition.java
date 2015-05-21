@@ -40,7 +40,7 @@ public class StrategyMeanValidatePosition implements Strategy {
     @Override
     public void call(Object object) {
         if (activity != null) {
-            activity.validateMeanPos((Mean) object);
+            activity.updateMeans((Mean) object);
         }
     }
 }

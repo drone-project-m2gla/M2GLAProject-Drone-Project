@@ -88,6 +88,7 @@ public class MapActivity extends Activity implements
 
     private Menu menu;
     private boolean isDroneMode;
+    private boolean isDragging;
     private Circle drone;
     private List<Polyline> polylineList;
     private List<Circle> circleList;
@@ -126,7 +127,6 @@ public class MapActivity extends Activity implements
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<>(this, map);
         mClusterManager.setRenderer(new SymbolRendered(this, map, mClusterManager));
-        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<SymbolMarkerClusterItem>(new GridBasedAlgorithm<SymbolMarkerClusterItem>()));
 
         // Set map fragment drag listener to recover dropped symbols
         mapFragment.getView().setOnDragListener(this);
@@ -139,8 +139,8 @@ public class MapActivity extends Activity implements
         // Enable info window click on each cluster element
         map.setOnInfoWindowClickListener(this);
 
-        //droneTargetActionFragment = (DroneTargetActionFragment) getFragmentManager().findFragmentById(R.id.drone_targer_action);
-        //droneTargetActionFragment.addObserver(this);
+        droneTargetActionFragment = (DroneTargetActionFragment) getFragmentManager().findFragmentById(R.id.drone_targer_action);
+        droneTargetActionFragment.addObserver(this);
 
         findViewById(R.id.fragment_moyens_init).setVisibility(View.VISIBLE);
         findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
@@ -152,7 +152,6 @@ public class MapActivity extends Activity implements
         StrategyMoveDrone.getINSTANCE().setActivity(this);
         StrategyMeanMove.getINSTANCE().setActivity(this);
         StrategyMeanValidatePosition.getINSTANCE().setActivity(this);
-
 
         loadTopographicSymbols();
     }
@@ -264,17 +263,6 @@ public class MapActivity extends Activity implements
                                     public void execute(Object response) {
                                         Log.e(TAG, "Post new position success");
                                         // FIXME: Mise à jour de la liste des moyens.
-                                        //Get symbol from ClipData saved onDrag
-                                        /*Symbol symbol = new Symbol(
-                                                (String) clipData.getItemAt(0).getText(),
-                                                Symbol.SymbolType.valueOf((String) clipData.getItemAt(1).getText()),
-                                                (String) clipData.getItemAt(2).getText(),
-                                                (String) clipData.getItemAt(3).getText(),
-                                                (String) clipData.getItemAt(4).getText());
-                                        //symbol.setValidated(false);
-                                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
-                                        mClusterManager.addItem(markerItem);
-                                        mClusterManager.cluster();*/
                                         loadMeansInMap();
                                     }
                                 },
@@ -377,10 +365,6 @@ public class MapActivity extends Activity implements
                                 Log.e(TAG, "Post new position success");
                                 //Change symbol image to dashed one
                                 if (markerSymbolLink.containsKey(markerId)) {
-                                    //Log.d(TAG, "onMarkerDragStart found " + markerId);
-                                    /*Symbol symbol = markerSymbolLink.get(markerId).getSymbol();
-                                    symbol.setValidated(false);
-                                    marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), symbol));*/
                                     loadMeansInMap();
                                 }
                             }
@@ -423,10 +407,6 @@ public class MapActivity extends Activity implements
                                                         @Override
                                                         public void execute(Object response) {
                                                             Log.i(TAG, "Confirm position success");
-                                                            //Change symbol image to dashed one
-                                                            /*meanSymbol.setValidated(true);
-                                                            _marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), meanSymbol));
-                                                            */
                                                             loadMeansInMap();
                                                         }
                                                     },
@@ -459,11 +439,7 @@ public class MapActivity extends Activity implements
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {
-                                                            /*String markerId = _marker.getId();
                                                             Log.i(TAG, "Libérer moyen success");
-                                                            mClusterManager.removeItem(markerSymbolLink.get(markerId));
-                                                            mClusterManager.cluster();
-                                                            markerSymbolLink.remove(markerId);*/
                                                             loadMeansInMap();
                                                         }
                                                     },
@@ -496,11 +472,7 @@ public class MapActivity extends Activity implements
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {
-                                                            /*String markerId = _marker.getId();
-                                                            Log.i(TAG, "Retour CRM success");
-                                                            mClusterManager.removeItem(markerSymbolLink.get(markerId));
-                                                            mClusterManager.cluster();
-                                                            markerSymbolLink.remove(markerId);*/
+                                                            Log.e(TAG, "Retour CRM success");
                                                             loadMeansInMap();
                                                         }
                                                     },
@@ -574,85 +546,14 @@ public class MapActivity extends Activity implements
         }
     }
 
-    public void posMean(final Mean mean) {
+    public void updateMeans(final Mean mean) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                /*Position coordinate = mean.getCoordinates();
-                LatLng latlng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
-                String markerId = getMeanMarker(mean.getId());
-                if (markerId == null) {
-                    //FIXME Faire ca un peut mieux parce que c'est n'importe quoi les symbols
-                    Symbol symbol = new Symbol(
-                            mean.getId(),
-                            vehicule_incendie_seul,
-                            mean.getVehicle().toString(),
-                            Symbol.getCityTrigram(),
-                            Symbol.getMeanColor(mean.getVehicle()));
-                    symbol.setValidated(false);
-                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
-                    mClusterManager.addItem(markerItem);
-                    mClusterManager.cluster();
-                } else {
-                    markerSymbolLink.get(markerId).setPosition(latlng);
-                    Symbol markerSymbol = markerSymbolLink.get(markerId).getSymbol();
-                    markerSymbol.setValidated(false);
-                    for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
-                        if (marker.getId().equals(markerId)) {
-                            marker.setPosition(latlng);
-                            marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), markerSymbol));
-                            break;
-                        }
-                    }
-                }*/
                 loadMeansInMap();
             }
         });
     }
-
-    public void validateMeanPos(final Mean mean) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                /*Position coordinate = mean.getCoordinates();
-                LatLng latlng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
-                String markerId = getMeanMarker(mean.getId());
-                if (markerId == null) {
-                    //FIXME Faire ca un peut mieux parce que c'est n'importe quoi les symbols
-                    Symbol symbol = new Symbol(
-                            mean.getId(),
-                            vehicule_incendie_seul,
-                            mean.getVehicle().toString(),
-                            Symbol.getCityTrigram(),
-                            Symbol.getMeanColor(mean.getVehicle()));
-                    symbol.setValidated(true);
-                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
-                    mClusterManager.addItem(markerItem);
-                    mClusterManager.cluster();
-                } else {
-                    Symbol markerSymbol = markerSymbolLink.get(markerId).getSymbol();
-                    markerSymbol.setValidated(true);
-                    for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
-                        if (marker.getId().equals(markerId)) {
-                            marker.setIcon(SVGAdapter.convertSymbolToIcon(getApplicationContext(), markerSymbol));
-                            break;
-                        }
-                    }
-                }*/
-                loadMeansInMap();
-            }
-        });
-    }
-
-    /*private String getMeanMarker(String meanId) {
-        for (String markerId : markerSymbolLink.keySet()) {
-            if (meanId.equals(markerSymbolLink.get(markerId).getSymbol().getId())) {
-                return markerId;
-            }
-        }
-        return null;
-    }*/
-
 
     /**
      * Cluster rendered used to draw firemen symbols
@@ -777,8 +678,6 @@ public class MapActivity extends Activity implements
 
                 List<Mean> meansWithCoordinates = new ArrayList<Mean>();
                 for (Mean m : meanList) {
-                    //String latitude = String.valueOf(m.getCoordinates().getLatitude());
-                    //if (!latitude.equals("NaN")) {
                     if (!Double.isNaN(m.getCoordinates().getLatitude()) && !Double.isNaN(m.getCoordinates().getLongitude())) {
                         meansWithCoordinates.add(m);
                     }
