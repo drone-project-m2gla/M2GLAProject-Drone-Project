@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,13 @@ import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.context.ViewHolder;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMovingMap;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
@@ -41,12 +44,10 @@ public class MoyensInitFragment extends ListFragment {
     private String idIntervention = "";
     private View view;
     private Symbol[] means;
-    ArrayAdapter adapterMeans;
     List<String> titles;
     private List<Boolean> isDeclineList = new ArrayList();
     private List<Boolean> draggable = new ArrayList();
     private Intervention intervention;
-    private List<Mean> meanNotInPosition = new ArrayList<>();
     private List<Mean> meanRefused = new ArrayList();
     private Symbol[] meansXRefused;
     private List<Drawable> drawables;
@@ -67,7 +68,8 @@ public class MoyensInitFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
 
-        StrategyMeanSupplAdd.getINSTANCE().setActivity(this);
+        StrategyMeanSupplAdd.getINSTANCE().setFragment(this);
+        StrategyMeanMovingMap.getINSTANCE().setFragment(this);
 
         return view;
     }
@@ -102,7 +104,8 @@ public class MoyensInitFragment extends ListFragment {
                 // Create a new ClipData using the tag as a label, the plain text MIME type, and
                 // the already-created item. This will create a new ClipDescription object within the
                 // ClipData, and set its MIME type entry to "text/plain"
-                ClipData dragData = new ClipData((String) v.getTag(),
+                ViewHolder holder = (ViewHolder) v.getTag();
+                ClipData dragData = new ClipData(holder.toString(),
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         item0);
 
@@ -273,7 +276,12 @@ public class MoyensInitFragment extends ListFragment {
      */
     private void createAvailableMeansView(List<Mean> meanList) {
 
+        moyensDisponiblesDrawable.clear();
+        moyensDisponiblesTitle.clear();
+
         int pos = 0;
+
+        List<Mean> meanNotInPosition = new ArrayList<>();
         for (Mean m : meanList) {
             boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
             if (isNaN) {
@@ -308,7 +316,7 @@ public class MoyensInitFragment extends ListFragment {
         String[] titlesArray = moyensDisponiblesTitle.toArray(new String[moyensDisponiblesTitle.size()]); //titles.toArray(new String[titles.size()]);
 
         Context activity = this.getActivity();
-        adapterMeans = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
+        ArrayAdapter adapterMeans = new ItemsAdapter(activity, R.layout.custom, titlesArray, imagesArray);
 
 
         ListView moyensListView = getListView();
@@ -322,20 +330,40 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     // Méthode appelé par la strategie.
-    public void addMean(final Mean object) {
+    public void addMeanStrategy(final Mean object) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // GET_MOYENS_DEPLOYES
+                // GET_MOYENS_EXTRAS
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("id", idIntervention);
                 RestServiceImpl.getInstance()
-                        .get(RestAPI.GET_MOYENS_DEPLOYES, map, Mean[].class, new Command() {
+                        .get(RestAPI.GET_MOYENS_EXTRAS, map, Mean[].class, new Command() {
                             @Override
                             public void execute(Object response) {
                                 Mean[] means = (Mean[]) response;
 
                                 createNotValidateMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
+                            }
+                        }, getCallbackError());
+            }
+        });
+    }
+
+    // Méthode appelé par la strategie.
+    public void movingMapMeanStrategy(final Mean object) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // GET_MOYENS_EXTRAS
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", idIntervention);
+                RestServiceImpl.getInstance()
+                        .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Mean[] means = (Mean[]) response;
+                                createAvailableMeansView(Arrays.asList(means)); // Appel de la méthode qui cré la view des moyens demandés.
                             }
                         }, getCallbackError());
             }

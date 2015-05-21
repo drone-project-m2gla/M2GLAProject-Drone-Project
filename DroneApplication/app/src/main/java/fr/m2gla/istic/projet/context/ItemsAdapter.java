@@ -276,16 +276,4 @@ public class ItemsAdapter extends ArrayAdapter {
     public void setAdapterCommand(ListAdapterCommand adapterCommand) {
         this.adapterCommand = adapterCommand;
     }
-
-    /* A Static class for holding the elements of each List View Item
-         * This is created as per Google UI Guideline for faster performance */
-    private static class ViewHolder {
-        TextView itemLabelTxtView;
-        ImageView imgImageView;
-        ImageButton validerImageButton;
-        ImageButton annullerImageButton;
-
-        int position;
-    }
-
 }
