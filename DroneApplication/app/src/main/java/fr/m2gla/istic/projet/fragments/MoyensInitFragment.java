@@ -7,6 +7,7 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +63,8 @@ public class MoyensInitFragment extends ListFragment {
 
 
     // Moyens non validés
-    List<String> meansNotValidateTitle = new ArrayList<>();
-    List<Drawable> meansNotValidateDrawable = new ArrayList<>();
+    List<String> meansRequestedTitle = new ArrayList<>();
+    List<Drawable> meansRequestedDrawable = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -157,7 +158,7 @@ public class MoyensInitFragment extends ListFragment {
                 meansXRefused[position] = new Symbol(m.getId(),
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
-                isDeclineList.add(m.getIsDeclined());
+                isDeclineList.add(m.refusedMeans());
 
                 position++;
             }
@@ -208,23 +209,23 @@ public class MoyensInitFragment extends ListFragment {
                 intervention = (Intervention) response;
                 int i = 0;
 
-                List<Mean> meanList = intervention.getMeansList();
-                List<Mean> xtraList = intervention.getMeansXtra();
+                List<Mean> meanList = intervention.meansArrived();
+                List<Mean> requestedList = intervention.meansRequested();
 
                 List<Mean> meanNotValidateList = new ArrayList<>();
                 // Init list des moyens refusés et non validés
-                for (Mean m : xtraList) {
-                    if (!m.getIsDeclined()) {
+                for (Mean m : requestedList) {
+                    if (!m.refusedMeans()) {
                         meanNotValidateList.add(m);
                     } else {
                         meanRefused.add(m);
                     }
                 }
-                createNotValidateMeansView(meanNotValidateList.toArray(new Mean[meanNotValidateList.size()])); // Appel de la méthode qui cré la view des moyens demandés.
+                createRequestedMeansView(meanNotValidateList.toArray(new Mean[meanNotValidateList.size()])); // Appel de la méthode qui cré la view des moyens demandés.
                 // Done moyens refusés.
 
                 // Initialisation des titres et images.
-                initImagesTitles(intervention, i, meanList, xtraList);
+                initImagesTitles(intervention, i, meanList, requestedList);
 
 
                 // Appel de la méthode qui cré la view des moyens disponibles.
@@ -283,19 +284,19 @@ public class MoyensInitFragment extends ListFragment {
 
         int pos = 0;
 
-        List<Mean> meanNotInPosition = new ArrayList<>();
-        for (Mean m : meanList) {
-            boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
-            if (isNaN) {
-                meanNotInPosition.add(m);
-            }
-        }
+        Log.i(TAG, "Dispo  " + meanList.size());
+//        for (Mean m : meanList) {
+//            boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
+//            if (isNaN) {
+//                meanList.add(m);
+//            }
+//        }
 
-        int meanSize = meanNotInPosition.size(); // taille de la liste des moyens non placés sur la map
+        int meanSize = meanList.size(); // taille de la liste des moyens non placés sur la map
         means = new Symbol[meanSize];
 
-        if (meanNotInPosition.size() > 0) {
-            for (Mean m : meanNotInPosition) {
+        if (meanList.size() > 0) {
+            for (Mean m : meanList) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
                 Symbol symbol = new Symbol(m.getId(),
@@ -336,16 +337,16 @@ public class MoyensInitFragment extends ListFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // GET_MOYENS_EXTRAS
+                // GET_MOYENS_DISPO
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("id", idIntervention);
                 RestServiceImpl.getInstance()
-                        .get(RestAPI.GET_MOYENS_EXTRAS, map, Mean[].class, new Command() {
+                        .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
                             @Override
                             public void execute(Object response) {
                                 Mean[] means = (Mean[]) response;
 
-                                createNotValidateMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
+                                createRequestedMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
                             }
                         }, getCallbackError());
             }
@@ -357,7 +358,7 @@ public class MoyensInitFragment extends ListFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // GET_MOYENS_EXTRAS
+                // GET_MOYENS_DISPO
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("id", idIntervention);
                 RestServiceImpl.getInstance()
@@ -377,12 +378,12 @@ public class MoyensInitFragment extends ListFragment {
      *
      * @param means
      */
-    private void createNotValidateMeansView(Mean[] means) {
-        meansNotValidateTitle.clear();
-        meansNotValidateDrawable.clear();
+    private void createRequestedMeansView(Mean[] means) {
+        meansRequestedTitle.clear();
+        meansRequestedDrawable.clear();
         for (int i = 0; i < means.length; i++) {
             Mean m = means[i];
-            if (!m.getIsDeclined()) {
+            if (m.requestedMean()) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
 
@@ -390,16 +391,16 @@ public class MoyensInitFragment extends ListFragment {
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
 
                 String title = vehicule + " * " + m.getId();
-                meansNotValidateTitle.add(title);
-                meansNotValidateDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+                meansRequestedTitle.add(title);
+                meansRequestedDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
             }
         }
 
         // Set drawable to adapterMeans
-        Drawable[] imagesArray = meansNotValidateDrawable.toArray(new Drawable[meansNotValidateDrawable.size()]);
+        Drawable[] imagesArray = meansRequestedDrawable.toArray(new Drawable[meansRequestedDrawable.size()]);
 
         // Set image title to adapterMeans
-        String[] titlesArray = meansNotValidateTitle.toArray(new String[meansNotValidateTitle.size()]);
+        String[] titlesArray = meansRequestedTitle.toArray(new String[meansRequestedTitle.size()]);
 
         TextView notValidatedTextView = (TextView) view.findViewById(R.id.moyens_supp_textview);
         String textViewStringValue = getResources().getString(R.string.moyens_a_valider);

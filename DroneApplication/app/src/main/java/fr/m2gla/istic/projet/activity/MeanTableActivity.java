@@ -135,7 +135,6 @@ public class MeanTableActivity extends Activity {
                 intervention = (Intervention) response;
                 // Toast.makeText(getApplicationContext(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 List<Mean> meanList = intervention.getMeansList();
-                List<Mean> xtraMeanList = intervention.getMeansXtra();
 
                 // Effacement des tables
                 titleTable.removeAllViews();
@@ -187,31 +186,6 @@ public class MeanTableActivity extends Activity {
                     // ajout de la ligne au tableau
                     table.addView(row);
                 }
-
-                // pour chaque ligne
-                for (Mean m:xtraMeanList) {
-                    row = new TableRow(MeanTableActivity.this); // création d'une nouvelle ligne
-
-                    tv1 = new TextView(MeanTableActivity.this); // création cellule
-                    tv1.setText(m.getVehicle().toString()); // ajout du texte
-                    tv1.setGravity(Gravity.CENTER); // centrage dans la cellule
-                    // adaptation de la largeur de colonne à l'écran :
-                    tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
-
-                    // idem 2ème cellule
-                    tv2 = new TextView(MeanTableActivity.this);
-                    tv2.setText(m.getCoordinates().toString());
-                    tv2.setGravity(Gravity.CENTER);
-                    tv2.setLayoutParams( new TableRow.LayoutParams( 0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1 ) );
-
-                    // ajout des cellules à la ligne
-                    row.addView(tv1);
-                    row.addView(tv2);
-
-                    // ajout de la ligne au tableau
-                    table.addView(row);
-                }
-
             }
         };
     }

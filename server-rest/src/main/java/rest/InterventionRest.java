@@ -296,7 +296,6 @@ public class InterventionRest {
 		iD.disconnect();
 
 
-        System.out.println("res = " + res);
 		if (res != null) {
             Collections.sort(res, new Comparator<Intervention>() {
                 public int compare(Intervention c1, Intervention c2) {
@@ -308,9 +307,6 @@ public class InterventionRest {
                 }
             });
         }
-
-		System.out.println(res.toString().replaceAll(",", "\n"));
-
 
 		return res;
 	}

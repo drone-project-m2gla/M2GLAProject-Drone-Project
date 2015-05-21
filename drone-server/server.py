@@ -117,9 +117,11 @@ def getpicture() :
     image = cv2.imencode('.png', cv_image, [1, 90])
 
     return jsonify({
-    	"latitude": t[0],
-    	"longitude": t[1],
-    	"altitude": z,
+    	"position": {
+    		"latitude": t[0],
+    		"longitude": t[1],
+    		"altitude": z
+    	},
     	"width": command.saveImg.width,
     	"height": command.saveImg.height,
     	"encoding": command.saveImg.encoding,
