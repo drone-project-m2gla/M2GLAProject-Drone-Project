@@ -1,14 +1,19 @@
 package entity;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-
 public class ImageDrone extends AbstractEntity {
+	private Position position;
 	private int width;
 	private int height;
 	private String encoding;
-	private byte[] image;
+	private String image;
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
+	}
 
 	public int getWidth() {
 		return width;
@@ -34,12 +39,11 @@ public class ImageDrone extends AbstractEntity {
 		this.encoding = encoding;
 	}
 
-	public byte[] getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(String strImage) throws DecoderException {
-		
-		this.image = Base64.decodeBase64(strImage);
+	public void setImage(String strImage) {
+		this.image = strImage;
 	}
 }
