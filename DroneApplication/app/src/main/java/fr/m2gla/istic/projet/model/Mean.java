@@ -2,8 +2,6 @@ package fr.m2gla.istic.projet.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.Date;
-
 /**
  * Created by baptiste on 10/04/15.
  */
@@ -14,12 +12,11 @@ public class Mean extends Entity {
     private boolean inPosition;
     //    private boolean refusedMeans;
     private MeanState meanState;
-    private Date dateRefused;
-    private Date dateRequested;
-    private Date dateActivated;
-    private Date dateArrived;
-    private Date dateEngaged;
-    private Date dateReleased;
+    private String dateRefused;
+    private String dateRequested;
+    private String dateActivated;
+    private String dateArrived;
+    private String dateEngaged;
 
     public Vehicle getVehicle() {
         return vehicle;
@@ -41,12 +38,12 @@ public class Mean extends Entity {
         return inPosition;
     }
 
-    public void setInPosition(boolean inPosition) {
-        this.inPosition = inPosition;
-    }
-
     public boolean isInPosition() {
         return inPosition;
+    }
+
+    public void setInPosition(boolean inPosition) {
+        this.inPosition = inPosition;
     }
 
     public MeanState getMeanState() {
@@ -57,59 +54,61 @@ public class Mean extends Entity {
         this.meanState = meanState;
     }
 
-    public Date getDateRefused() {
+    public String getDateRefused() {
         return dateRefused;
     }
 
-    public void setDateRefused(Date dateRefused) {
+    public void setDateRefused(String dateRefused) {
         this.dateRefused = dateRefused;
     }
 
-    public Date getDateRequested() {
+    public String getDateRequested() {
         return dateRequested;
     }
 
-    public void setDateRequested(Date dateRequested) {
+    public void setDateRequested(String dateRequested) {
         this.dateRequested = dateRequested;
     }
 
-    public Date getDateActivated() {
+    public String getDateActivated() {
         return dateActivated;
     }
 
-    public void setDateActivated(Date dateActivated) {
+    public void setDateActivated(String dateActivated) {
         this.dateActivated = dateActivated;
     }
 
-    public Date getDateArrived() {
+    public String getDateArrived() {
         return dateArrived;
     }
 
-    public void setDateArrived(Date dateArrived) {
+    public void setDateArrived(String dateArrived) {
         this.dateArrived = dateArrived;
     }
 
-    public Date getDateEngaged() {
+    public String getDateEngaged() {
         return dateEngaged;
     }
 
-    public void setDateEngaged(Date dateEngaged) {
+    public void setDateEngaged(String dateEngaged) {
         this.dateEngaged = dateEngaged;
     }
 
-    public Date getDateReleased() {
+    public String getDateReleased() {
         return dateReleased;
     }
 
-    public void setDateReleased(Date dateReleased) {
+    public void setDateReleased(String dateReleased) {
         this.dateReleased = dateReleased;
     }
+
+    private String dateReleased;
 
     public boolean refusedMeans() {
         return this.meanState == MeanState.REFUSED;
     }
 
-    public boolean requestedMeans() {
+    public boolean requestedMean() {
         return this.meanState == MeanState.REQUESTED;
     }
 
