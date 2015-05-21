@@ -26,8 +26,13 @@ public interface GeneralConstants {
     public static final String  REF_ACT_ROLE = "role";
     public static final String  REF_ACT_IDINTER = "idIntervention";
 
-    // Id de l'intervention à transmettre à d'autres activités
-    public static final String ID_INTERVENTION = "idIntervention";
+    // Designation des colonnes de la table des moyens
+    public static final String  MEAN_TABLE_1 = "VEHICULES";
+    public static final String  MEAN_TABLE_2 = "DEMANDE";
+    public static final String  MEAN_TABLE_3 = "DECLENCHE";
+    public static final String  MEAN_TABLE_4 = "ARRIVE";
+    public static final String  MEAN_TABLE_5 = "ENGAGE";
+    public static final String  MEAN_TABLE_6 = "LIBERE";
 
     // Nom des fichiers svg
     public static final String SVG_COLONNE_INCENDIE = "colonne_incendie";

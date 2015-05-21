@@ -5,6 +5,8 @@ import org.bson.Document;
 import util.Constant;
 import util.Tools;import entity.GeoImage;
 
+import java.util.ArrayList;
+
 /**
  * Created by alban on 16/03/15.
  */
@@ -26,7 +28,7 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         }
         GeoImage geoImage = new GeoImage();
         geoImage.setId(document.getLong("_id"));
-        geoImage.setCoordinates(Tools.arrayListToPosition((BasicDBList) document.get("coordinates")));
+        geoImage.setCoordinates(Tools.arrayListToPosition((ArrayList) document.get("coordinates")));
         geoImage.setImageIn64(document.getString("image"));
         return geoImage;
     }
