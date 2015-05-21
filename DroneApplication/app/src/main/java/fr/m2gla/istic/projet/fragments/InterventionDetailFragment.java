@@ -2,7 +2,6 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
@@ -25,10 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.m2gla.istic.projet.activity.InterventionListActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.RestAPI;
@@ -100,7 +97,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             public void execute(Object response) {
                 intervention = (Intervention) response;
                 // Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
-                List<Mean> meanList = intervention.getMeansXtra();
+                List<Mean> meanList = intervention.meansRequested();
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, meanList);
                 List<Drawable> drawables = new ArrayList<Drawable>();
@@ -149,7 +146,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         int listXtraNotDeclinedSize = 0;
 
         for (Mean m : listXtra) {
-            if (!m.getIsDeclined()){
+            if (!m.refusedMeans()){
                 listXtraNotDeclinedSize++;
             }
         }
@@ -201,7 +198,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             int position = 0;
             for (Mean m : listXtra) {
 
-                if (!m.getIsDeclined()) {
+                if (!m.refusedMeans()) {
 
                     titles[position] = m.getVehicle().toString();
                     titlesList.add(m.getVehicle().toString());
@@ -252,7 +249,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
 
     public Mean getMeanXtra(int position) {
-        return intervention.getMeansXtra().get(position);
+        return intervention.meansRequested().get(position);
     }
 
     @Override

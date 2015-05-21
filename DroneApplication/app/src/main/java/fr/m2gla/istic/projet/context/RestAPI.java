@@ -37,9 +37,9 @@ public interface RestAPI {
     public static final String POST_PARCOURS_DRONE = "/drone/target";
 
     // get des moyens extra d'une intervention
-    public static final String GET_MOYENS_EXTRAS = "/intervention/{id}/moyenXtra";
-
-    // get des moyens dispo d'une intervention
     public static final String GET_MOYENS_DISPO = "/intervention/{id}/moyen";
+
+//    // get des moyens dispo d'une intervention
+//    public static final String GET_MOYENS_DISPO1 = "/intervention/{id}/moyen";
 
 }

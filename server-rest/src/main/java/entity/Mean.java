@@ -30,7 +30,7 @@ public class Mean extends AbstractEntity{
         this();
         this.vehicle = vehicle;
         if (isInitialMean) {
-            this.dateEngaged = this.dateRequested;
+            this.dateActivated = this.dateRequested;
             this.meanState = MeanState.ACTIVATED;
         }
     }

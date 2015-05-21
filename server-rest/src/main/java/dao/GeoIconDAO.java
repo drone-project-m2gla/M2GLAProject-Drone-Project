@@ -6,6 +6,8 @@ import util.Constant;
 import util.Tools;
 import entity.GeoIcon;
 
+import java.util.ArrayList;
+
 /**
  * Created by jerem on 08/04/15.
  */
@@ -31,7 +33,7 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
         u.setId(document.getLong("_id"));
         u.setEntitled(document.getString("entitled"));
         u.setFilename(document.getString("filename"));
-        u.setPosition(Tools.documentToPosition((Document)document.get("coordinates")));
+        u.setPosition(Tools.arrayListToPosition((ArrayList) document.get("coordinates")));
         u.setColor(document.getString("color"));
         u.setTiret(document.getBoolean("tiret"));
         u.setFirstContent(document.getString("firstContent"));
@@ -50,7 +52,7 @@ public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
         document.put("secondContent", u.getSecondContent());
         document.put("tiret", u.getTiret());
         document.put("color", u.getColor());
-        document.put("coordinates", Tools.positionToDocument(u.getPosition()));
+        document.put("coordinates", Tools.positionToBasicDBList(u.getPosition()));
         document.put("type", "Point");
         return document;
 

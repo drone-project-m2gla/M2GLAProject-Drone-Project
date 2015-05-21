@@ -10,14 +10,13 @@ public class Mean extends Entity {
     private Vehicle vehicle;
     private Position coordinates;
     private boolean inPosition;
-    private boolean isDeclined;
-//    private MeanState meanState;
-//    private Date dateRefused;
-//    private Date dateRequested;
-//    private Date dateActivated;
-//    private Date dateArrived;
-//    private Date dateEngaged;
-//    private Date dateReleased;
+    //    private boolean refusedMeans;
+    private MeanState meanState;
+    private String dateRefused;
+    private String dateRequested;
+    private String dateActivated;
+    private String dateArrived;
+    private String dateEngaged;
 
     public Vehicle getVehicle() {
         return vehicle;
@@ -39,80 +38,85 @@ public class Mean extends Entity {
         return inPosition;
     }
 
-    public void setInPosition(boolean inPosition) {
-        this.inPosition = inPosition;
-    }
-
     public boolean isInPosition() {
         return inPosition;
     }
 
-//    public MeanState getMeanState() {
-//        return meanState;
-//    }
-//
-//    public void setMeanState(MeanState meanState) {
-//        this.meanState = meanState;
-//    }
-//
-//    public Date getDateRefused() {
-//        return dateRefused;
-//    }
-//
-//    public void setDateRefused(Date dateRefused) {
-//        this.dateRefused = dateRefused;
-//    }
-//
-//    public Date getDateRequested() {
-//        return dateRequested;
-//    }
-//
-//    public void setDateRequested(Date dateRequested) {
-//        this.dateRequested = dateRequested;
-//    }
-//
-//    public Date getDateActivated() {
-//        return dateActivated;
-//    }
-//
-//    public void setDateActivated(Date dateActivated) {
-//        this.dateActivated = dateActivated;
-//    }
-//
-//    public Date getDateArrived() {
-//        return dateArrived;
-//    }
-//
-//    public void setDateArrived(Date dateArrived) {
-//        this.dateArrived = dateArrived;
-//    }
-//
-//    public Date getDateEngaged() {
-//        return dateEngaged;
-//    }
-//
-//    public void setDateEngaged(Date dateEngaged) {
-//        this.dateEngaged = dateEngaged;
-//    }
-//
-//    public Date getDateReleased() {
-//        return dateReleased;
-//    }
-//
-//    public void setDateReleased(Date dateReleased) {
-//        this.dateReleased = dateReleased;
-//    }
-
-//    public boolean getIsDeclined() {
-//        return String.valueOf(this.meanState).equals(MeanState.REFUSED);
-//    }
-
-
-    public boolean getIsDeclined() {
-        return isDeclined;
+    public void setInPosition(boolean inPosition) {
+        this.inPosition = inPosition;
     }
 
-    public void setIsDeclined(boolean isDeclined) {
-        this.isDeclined = isDeclined;
+    public MeanState getMeanState() {
+        return meanState;
     }
+
+    public void setMeanState(MeanState meanState) {
+        this.meanState = meanState;
+    }
+
+    public String getDateRefused() {
+        return dateRefused;
+    }
+
+    public void setDateRefused(String dateRefused) {
+        this.dateRefused = dateRefused;
+    }
+
+    public String getDateRequested() {
+        return dateRequested;
+    }
+
+    public void setDateRequested(String dateRequested) {
+        this.dateRequested = dateRequested;
+    }
+
+    public String getDateActivated() {
+        return dateActivated;
+    }
+
+    public void setDateActivated(String dateActivated) {
+        this.dateActivated = dateActivated;
+    }
+
+    public String getDateArrived() {
+        return dateArrived;
+    }
+
+    public void setDateArrived(String dateArrived) {
+        this.dateArrived = dateArrived;
+    }
+
+    public String getDateEngaged() {
+        return dateEngaged;
+    }
+
+    public void setDateEngaged(String dateEngaged) {
+        this.dateEngaged = dateEngaged;
+    }
+
+    public String getDateReleased() {
+        return dateReleased;
+    }
+
+    public void setDateReleased(String dateReleased) {
+        this.dateReleased = dateReleased;
+    }
+
+    private String dateReleased;
+
+    public boolean refusedMeans() {
+        return this.meanState == MeanState.REFUSED;
+    }
+
+    public boolean requestedMean() {
+        return this.meanState == MeanState.REQUESTED;
+    }
+
+//    public boolean refusedMeans() {
+//        return refusedMeans;
+//    }
+//
+//    public void setIsDeclined(boolean refusedMeans) {
+//        this.refusedMeans = refusedMeans;
+//    }
 }

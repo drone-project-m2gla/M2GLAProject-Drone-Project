@@ -1,28 +1,23 @@
 package service.position;
 
-import entity.ImageDrone;
-import entity.Position;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import service.PushService;
-import service.impl.PushServiceImpl;
-import util.Configuration;
-import util.Tools;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import util.Configuration;
+import util.Tools;
+import entity.ImageDrone;
+import entity.Position;
 
 /**
  * Created by alban on 16/04/15.
  */
 public class GetDronePositionThread implements Runnable, PositionUnchangedObservable {
     private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
-    private final Logger LOGGER = Logger.getLogger(GetDronePositionThread.class);
     private static GetDronePositionThread instance = new GetDronePositionThread();
     private Position position;
     private ImageDrone image;
@@ -65,10 +60,11 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
                 Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
                 if (position != null && !Tools.isSamePositions(this.position, position)) {
                     this.position = position;
+                    //FIXME Reactive pull service
                     //PushServiceImpl.getInstance().sendMessage(
                     //        PushService.TypeClient.SIMPLEUSER, "droneMove", position);
 
-                    GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/image");
+                    GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/picture");
                     client.executeMethod(getImage);
                     this.image = mapper.readValue(getImage.getResponseBodyAsString(), ImageDrone.class);
                 } else {

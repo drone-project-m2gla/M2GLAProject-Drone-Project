@@ -614,7 +614,7 @@ public class MapActivity extends Activity implements
         Intent intent = getIntent();
 
         if (intent != null) {
-            String idIntervention = intent.getStringExtra(fr.m2gla.istic.projet.context.GeneralConstants.ID_INTERVENTION);
+            String idIntervention = intent.getStringExtra(fr.m2gla.istic.projet.context.GeneralConstants.REF_ACT_IDINTER);
 
             // Fragment ajout de moyens supplémentaires
             MoyensSuppFragment mSuppFragment = (MoyensSuppFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_supp);

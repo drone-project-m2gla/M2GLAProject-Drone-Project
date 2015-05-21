@@ -1,7 +1,11 @@
 package fr.m2gla.istic.projet.model;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -9,6 +13,7 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Intervention extends Entity {
+    private static final String TAG = "Intervention";
     private String label;
     private String dateCreate;
     private String address;
@@ -17,7 +22,7 @@ public class Intervention extends Entity {
     private DisasterCode disasterCode;
     private List<Mean> meansList;
     private Position coordinates;
-    private List<Mean> meansXtra;
+    // private List<Mean> meansXtra;
 
     public Intervention() {
 
@@ -87,24 +92,81 @@ public class Intervention extends Entity {
         this.coordinates = position;
     }
 
-//    public List<Mean> getMeansXtra() {
-//        List<Mean> means = new ArrayList();
-//        Iterator<Mean> it = this.getMeansList().iterator();
-//        while (it.hasNext()) {
-//            Mean m = it.next();
-//            if (String.valueOf(m.getMeanState()).equals(MeanState.REQUESTED)) {
-//                means.add(m);
-//            }
-//        }
-//        return means;
+    /**
+     * Moyens demandés
+     *
+     * @return
+     */
+    public List<Mean> meansRequested() {
+        List<Mean> means = new ArrayList();
+        Iterator<Mean> it = this.getMeansList().iterator();
+        while (it.hasNext()) {
+            Mean m = it.next();
+            Log.i(TAG, "Mean " + m.getMeanState());
+            if (m.getMeanState() == MeanState.REQUESTED) {
+                means.add(m);
+            }
+        }
+        return means;
+    }
+
+    /**
+     * Moyens disponibles
+     *
+     * @return
+     */
+    public List<Mean> meansArrived() {
+        List<Mean> means = new ArrayList();
+        Iterator<Mean> it = this.getMeansList().iterator();
+        while (it.hasNext()) {
+            Mean m = it.next();
+            if (m.getMeanState() == MeanState.ARRIVED) {
+                means.add(m);
+            }
+        }
+        return means;
+    }
+
+    /**
+     * Moyens en transit
+     *
+     * @return
+     */
+    public List<Mean> meansTransit() {
+        List<Mean> means = new ArrayList();
+        Iterator<Mean> it = this.getMeansList().iterator();
+        while (it.hasNext()) {
+            Mean m = it.next();
+            if (m.getMeanState() == MeanState.ACTIVATED) {
+                means.add(m);
+            }
+        }
+        return means;
+    }
+    /**
+     * Moyens en transit
+     *
+     * @return
+     */
+    public List<Mean> meansRefused() {
+        List<Mean> means = new ArrayList();
+        Iterator<Mean> it = this.getMeansList().iterator();
+        while (it.hasNext()) {
+            Mean m = it.next();
+            Log.i(TAG, "Mean " + m.getMeanState());
+            if (m.getMeanState() == MeanState.REFUSED) {
+                means.add(m);
+            }
+        }
+        return means;
+    }
+
+//    public List<Mean> meansRequested() {
+//        return meansXtra;
 //    }
-
-    public List<Mean> getMeansXtra() {
-        return meansXtra;
-    }
-
-    public void setMeansXtra(List<Mean> meansXtra) {
-        this.meansXtra = meansXtra;
-    }
+//
+//    public void setMeansXtra(List<Mean> meansXtra) {
+//        this.meansXtra = meansXtra;
+//    }
 
 }

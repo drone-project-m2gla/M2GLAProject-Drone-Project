@@ -25,7 +25,6 @@ import fr.m2gla.istic.projet.context.InterventionListAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.Intervention;
-import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
@@ -38,7 +37,7 @@ public class InterventionListFragment extends Fragment {
     private SimpleAdapter mSchedule;
     private View view;
     private int lastSelectedPosition = -1;
-    private String  selectedInterventionId = null;
+    private String selectedInterventionId = null;
 
 
     /**
@@ -232,25 +231,29 @@ public class InterventionListFragment extends Fragment {
     /**
      * Methode demandant l'ajout d'une intervention dans la liste
      *
-     * @param intervention      : Intervention
+     * @param intervention : Intervention
      */
     public void addInterventionInList(Intervention intervention) {
-        String      idStr, dcStr,nbExtraStr, addrStr, labelStr, dateStr;
-        Long        dateLong;
-        Date        date;
-        int         nbMeanExtra = 0;
-        DateFormat  mediumDateFormat;
+        String idStr, dcStr, nbExtraStr, addrStr, labelStr, dateStr;
+        Long dateLong;
+        Date date;
+        int nbMeanExtra = 0;
+        DateFormat mediumDateFormat;
 
 
         mediumDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, new Locale("FR", "fr"));
 
         idStr = intervention.getId();
         dcStr = intervention.getDisasterCode().toString();
-        for (Mean m: intervention.getMeansXtra()) {
-            if (m.getIsDeclined() == false) {
-                nbMeanExtra++;
-            }
-        }
+//        for (Mean m: intervention.meansRequested()) {
+//            if (m.refusedMeans() == false) {
+//                nbMeanExtra++;
+//            }
+//        }
+
+
+        nbMeanExtra = intervention.meansRequested().size();
+        Log.i(TAG, "Size  " + nbMeanExtra);
         nbExtraStr = "[" + nbMeanExtra + "]";
         addrStr = intervention.getAddress() + " \n" + intervention.getPostcode() + " " + intervention.getCity();
         labelStr = intervention.getLabel();
@@ -315,8 +318,7 @@ public class InterventionListFragment extends Fragment {
 
             this.lastSelectedPosition = listItem.size();
 
-        }
-        else {
+        } else {
             map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
         }
 
@@ -344,7 +346,7 @@ public class InterventionListFragment extends Fragment {
 
 
         // Ajouter l'id dans l'intent
-        intent.putExtra(GeneralConstants.ID_INTERVENTION, idIntervention);
+        intent.putExtra(GeneralConstants.REF_ACT_IDINTER, idIntervention);
 
         // lancement de l'activité d'affichage de la carte
         startActivity(intent);
