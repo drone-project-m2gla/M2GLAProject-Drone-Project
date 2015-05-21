@@ -101,7 +101,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             public void execute(Object response) {
                 intervention = (Intervention) response;
                 // Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
-                List<Mean> meanList = intervention.getMeansXtra();
+                List<Mean> meanList = intervention.meansRequested();
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, meanList);
                 List<Drawable> drawables = new ArrayList<Drawable>();
@@ -150,7 +150,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         int listXtraNotDeclinedSize = 0;
 
         for (Mean m : listXtra) {
-            if (!m.getIsDeclined()){
+            if (!m.meanIsDeclined()){
                 listXtraNotDeclinedSize++;
             }
         }
@@ -200,7 +200,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             int position = 0;
             for (Mean m : listXtra) {
 
-                if (!m.getIsDeclined()) {
+                if (!m.meanIsDeclined()) {
 
                     titles[position] = m.getVehicle().toString();
                     titlesList.add(m.getVehicle().toString());
@@ -249,7 +249,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
 
     public Mean getMeanXtra(int position) {
-        return intervention.getMeansXtra().get(position);
+        return intervention.meansRequested().get(position);
     }
 
     @Override
