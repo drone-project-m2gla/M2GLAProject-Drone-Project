@@ -163,6 +163,12 @@ public class MeanTableActivity extends Activity {
                 titleTable.removeAllViews();
                 table.removeAllViews();
 
+                // Ajout du nom de l'intervention
+                tv = (TextView) findViewById(R.id.meanTableIdDisp);
+                tv.setText(intervention.getLabel());
+                tv.setGravity(Gravity.CENTER);
+                tv.setTextColor(Color.GREEN);
+
                 // Mise en place de la ligne de titres
                 row = new TableRow(MeanTableActivity.this);
                 for (int i = 0; i < titleMeanTab.length; i++) {
@@ -183,7 +189,7 @@ public class MeanTableActivity extends Activity {
 
                     // Verifier si le moyen est a afficher
                     str = m.getDateRefused();
-                    if ((str == null) || (str.compareTo("") == 0)) {
+                    if ((str != null) && (str.compareTo("") != 0)) {
                         continue;
                     }
 
@@ -217,10 +223,10 @@ public class MeanTableActivity extends Activity {
                     for (String s:dateList) {
                         tv = new TextView(MeanTableActivity.this);
                         if ((s == null) || (s.compareTo("") == 0)) {
-                            dateStr = " ";
+                            dateStr = " - ";
                         }
                         else {
-                            dateLong = Long.valueOf(m.getDateRequested());
+                            dateLong = Long.valueOf(s);
                             date = new Date(dateLong);
                             dateStr = mediumDateFormat.format(date);
                         }
