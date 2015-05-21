@@ -261,13 +261,15 @@ public class InterventionRest {
 		return res;
 	}
 
+
+    // Attention cette liste renvoie la liste de tous les moyens !
 	@GET
 	@Path("/{id}/moyenXtra")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Mean> getMeanXtraListForIntervention(@PathParam("id") long id) {
 		InterventionDAO iD = new InterventionDAO();
 		iD.connect();
-		List<Mean> res = iD.getById(id).getMeansXtra();
+		List<Mean> res = iD.getById(id).getMeansList();
 		iD.disconnect();
 		return res;
 	}
