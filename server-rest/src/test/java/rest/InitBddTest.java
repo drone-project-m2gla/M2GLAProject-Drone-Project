@@ -25,7 +25,6 @@ public class InitBddTest {
 
     @AfterClass
     public static void afterAllTests() {
-        //CouchbaseCluster.create(Configuration.COUCHBASE_HOSTNAME).openBucket("e").;
         dao.disconnect();
     }
 

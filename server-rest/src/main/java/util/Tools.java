@@ -11,41 +11,23 @@ import org.bson.Document;
  */
 public class Tools {
 
-    public static Document positionToDocument(Position p)
+    public static BasicDBList positionToBasicDBList(Position p)
     {
-        Document document = new Document();
-        document.put("latitude", p.getLatitude());
-        document.put("longitude",p.getLongitude());
-        document.put("altitude", p.getAltitude());
-        return document;
+        BasicDBList basicDBList = new BasicDBList();
+        basicDBList.add(p.getLatitude());
+        basicDBList.add(p.getLongitude());
+        basicDBList.add(p.getAltitude());
+        return basicDBList;
     }
 
-    public static Position documentToPosition(Document document)
+    public static Position arrayListToPosition(ArrayList arrayList)
     {
         Position p = new Position();
-
-        if (document.getDouble("latitude") == null || document.getDouble("latitude").equals("NaN")){
-            p.setLatitude(Double.NaN);
-        }
-        else
+        if(arrayList !=null || arrayList.size() != 3)
         {
-            p.setLatitude(document.getDouble("latitude"));
-        }
-
-        if (document.getDouble("longitude") == null || document.getDouble("longitude").equals("NaN")){
-            p.setLongitude(Double.NaN);
-        }
-        else
-        {
-            p.setLongitude(document.getDouble("longitude"));
-        }
-
-        if (document.get("altitude") ==null || document.get("altitude").equals("NaN")){
-            p.setAltitude(Double.NaN);
-        }
-        else
-        {
-            p.setAltitude(document.getDouble("altitude"));
+            p.setLatitude((Double) arrayList.get(0));
+            p.setLongitude((Double) arrayList.get(1));
+            p.setAltitude((Double) arrayList.get(2));
         }
         return p;
     }
@@ -53,7 +35,7 @@ public class Tools {
     public static Zone basicDBListToZone(BasicDBList listDocuments) {
         Zone z = new Zone();
         for(int i=0; i<listDocuments.size();i++) {
-            z.addPosition(Tools.documentToPosition((Document) listDocuments.get(i)));
+            z.addPosition(Tools.arrayListToPosition((BasicDBList) listDocuments.get(i)));
         }
         return z;
     }
@@ -61,15 +43,15 @@ public class Tools {
     public static BasicDBList zoneToBasicDBList(Zone zone) {
         BasicDBList res = new BasicDBList();
         for(Position p : zone.getPositions()) {
-            res.add(Tools.positionToDocument(p));
+            res.add(Tools.positionToBasicDBList(p));
         }
         return res;
     }
 
-    public static List<Zone> basicDBListToZoneList(BasicDBList basicDBList) {
+    public static List<Zone> arrayListToZoneList(ArrayList arrayList) {
         List<Zone> z = new ArrayList<Zone>();
-        for(int i=0; i<basicDBList.size();i++) {
-            z.add(Tools.basicDBListToZone((BasicDBList)basicDBList.get(i)));
+        for(int i=0; i<arrayList.size();i++) {
+            z.add(Tools.basicDBListToZone((BasicDBList)arrayList.get(i)));
         }
         return z;
     }
@@ -115,7 +97,7 @@ public class Tools {
         Mean.setDateEngaged(document.getDate("dateEngaged"));
         Mean.setDateReleased(document.getDate("dateReleased"));
         Mean.setDateRefused(document.getDate("dateRefused"));
-        Mean.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
+        Mean.setCoordinates(Tools.arrayListToPosition((ArrayList) document.get("coordinates")));
         return Mean;
     }
 
@@ -133,7 +115,7 @@ public class Tools {
         jsonMean.put("dateRefused",entity.getDateRefused());
         jsonMean.put("_id", entity.getId());
         jsonMean.put("type", "Point");
-        jsonMean.put("coordinates", Tools.positionToDocument(entity.getCoordinates()));
+        jsonMean.put("coordinates", Tools.positionToBasicDBList(entity.getCoordinates()));
         return jsonMean;
     }
 
