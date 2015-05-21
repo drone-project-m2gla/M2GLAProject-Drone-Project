@@ -3,10 +3,7 @@ package util;
 import java.util.ArrayList;
 import java.util.List;
 import com.mongodb.BasicDBList;
-import entity.Mean;
-import entity.Position;
-import entity.Vehicle;
-import entity.Zone;
+import entity.*;
 import org.bson.Document;
 
 /**
@@ -110,7 +107,14 @@ public class Tools {
         Mean.setId(document.getLong("_id"));
         Mean.setVehicle(Vehicle.valueOf(document.getString("vehicle")));
         Mean.setInPosition(document.getBoolean("inPosition"));
-        Mean.setisDeclined(document.getBoolean("isDeclined"));
+        //Mean.setisDeclined(document.getBoolean("isDeclined"));
+        Mean.setMeanState(MeanState.valueOf(document.getString("meanState")));
+        Mean.setDateRequested(document.getDate("dateRequested"));
+        Mean.setDateActivated(document.getDate("dateActivated"));
+        Mean.setDateArrived(document.getDate("dateArrived"));
+        Mean.setDateEngaged(document.getDate("dateEngaged"));
+        Mean.setDateReleased(document.getDate("dateReleased"));
+        Mean.setDateRefused(document.getDate("dateRefused"));
         Mean.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
         return Mean;
     }
@@ -118,8 +122,15 @@ public class Tools {
     public static Document meanToDocument(Mean entity) {
         Document jsonMean = new Document();
         jsonMean.put("inPosition", entity.getInPosition());
-        jsonMean.put("isDeclined", entity.getisDeclined());
+        //jsonMean.put("isDeclined", entity.getisDeclined());
+        jsonMean.put("meanState", entity.getMeanState().toString());
         jsonMean.put("vehicle", entity.getVehicle().toString());
+        jsonMean.put("dateRequested",entity.getDateRequested());
+        jsonMean.put("dateActivated",entity.getDateActivated());
+        jsonMean.put("dateArrived",entity.getDateArrived());
+        jsonMean.put("dateEngaged",entity.getDateEngaged());
+        jsonMean.put("dateReleased",entity.getDateReleased());
+        jsonMean.put("dateRefused",entity.getDateRefused());
         jsonMean.put("_id", entity.getId());
         jsonMean.put("type", "Point");
         jsonMean.put("coordinates", Tools.positionToDocument(entity.getCoordinates()));

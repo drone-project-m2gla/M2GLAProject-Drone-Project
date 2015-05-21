@@ -15,8 +15,9 @@ camera = VideoCamera()
 
 camera.name = "camera"
 camera.translate(z=-0.12)
-camera.rotate(y=-1.57)
-camera.properties(cam_width=640,cam_heigth=480,cam_near=1,cam_far=50,capturing=True,Vertical_Flip=False)
+camera.rotate(y=-1.57,x=-1.57)
+#camera.properties(cam_width=160,cam_heigth=120,cam_near=1,cam_far=50,capturing=True,Vertical_Flip=False)
+camera.properties(cam_near=1,cam_far=50,capturing=True,Vertical_Flip=False)
 camera.frequency(50)
 camera.add_interface('ros')
 quadrotor.append(camera)

@@ -20,18 +20,18 @@ public class MeansByDisasterCode {
         List<Mean> meanList = new ArrayList<Mean>();
         switch (d) {
             case SAP:
-                meanList.add(new Mean(Vehicle.VSAV));
+                meanList.add(new Mean(Vehicle.VSAV,true));
                 break;
             case AVP:
-                meanList.add(new Mean(Vehicle.VSAV));
-                meanList.add(new Mean(Vehicle.VSR));
-                meanList.add(new Mean(Vehicle.VLCG));
+                meanList.add(new Mean(Vehicle.VSAV,true));
+                meanList.add(new Mean(Vehicle.VSR,true));
+                meanList.add(new Mean(Vehicle.VLCG,true));
                 break;
             case FHA:
-                meanList.add(new Mean(Vehicle.FPT));
-                meanList.add(new Mean(Vehicle.FPT));
-                meanList.add(new Mean(Vehicle.EPA));
-                meanList.add(new Mean(Vehicle.VLCG));
+                meanList.add(new Mean(Vehicle.FPT,true));
+                meanList.add(new Mean(Vehicle.FPT,true));
+                meanList.add(new Mean(Vehicle.EPA,true));
+                meanList.add(new Mean(Vehicle.VLCG,true));
                 break;
         }
         return meanList;

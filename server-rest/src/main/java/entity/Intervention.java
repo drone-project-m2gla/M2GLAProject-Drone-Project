@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import util.Constant;
+import util.Datetime;
 import util.MeansByDisasterCode;
 
 
@@ -24,8 +25,7 @@ public class Intervention extends AbstractEntity {
     private String city;
     private DisasterCode disasterCode;
     private List<Mean> meansList;
-
-    private List<Mean> meansXtra;
+   // private List<Mean> meansXtra;
     private Position coordinates;
 
     public Intervention(String label, String address, String postcode, String city, DisasterCode disasterCode) {
@@ -40,11 +40,8 @@ public class Intervention extends AbstractEntity {
 
     public Intervention() {
         super();
-        Date date = new Date();
-        // On enleve les millisecondes
-        date.setTime(date.getTime() - (date.getTime() % 1000));
-        this.dateCreate = date;
-        this.meansXtra = new ArrayList<Mean>();
+        this.dateCreate = Datetime.getCurrentDate();
+       // this.meansXtra = new ArrayList<Mean>();
     }
 
     public String getAddress() {
@@ -102,13 +99,13 @@ public class Intervention extends AbstractEntity {
     }
 
 
-    public List<Mean> getMeansXtra() {
-        return meansXtra;
-    }
-
-    public void setMeansXtra(List<Mean> meansXtra) {
-        this.meansXtra = meansXtra;
-    }
+//    public List<Mean> getMeansXtra() {
+//        return meansXtra;
+//    }
+//
+//    public void setMeansXtra(List<Mean> meansXtra) {
+//        this.meansXtra = meansXtra;
+//    }
 
 
     public Date getDateCreate() {
@@ -138,7 +135,7 @@ public class Intervention extends AbstractEntity {
                 ", city='" + city + '\'' +
                 ", disasterCode=" + disasterCode +
                 ", meansList=" + meansList +
-                ", meansXtra=" + meansXtra +
+              //  ", meansXtra=" + meansXtra +
                 ", coordinates=" + coordinates +
                 '}';
     }
@@ -156,7 +153,7 @@ public class Intervention extends AbstractEntity {
         if (disasterCode != that.disasterCode) return false;
         if (label != null ? !label.equals(that.label) : that.label != null) return false;
         if (meansList != null ? !meansList.equals(that.meansList) : that.meansList != null) return false;
-        if (meansXtra != null ? !meansXtra.equals(that.meansXtra) : that.meansXtra != null) return false;
+    //    if (meansXtra != null ? !meansXtra.equals(that.meansXtra) : that.meansXtra != null) return false;
         if (postcode != null ? !postcode.equals(that.postcode) : that.postcode != null) return false;
 
         return true;
@@ -171,7 +168,7 @@ public class Intervention extends AbstractEntity {
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (disasterCode != null ? disasterCode.hashCode() : 0);
         result = 31 * result + (meansList != null ? meansList.hashCode() : 0);
-        result = 31 * result + (meansXtra != null ? meansXtra.hashCode() : 0);
+      //  result = 31 * result + (meansXtra != null ? meansXtra.hashCode() : 0);
         result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
         return result;
     }
