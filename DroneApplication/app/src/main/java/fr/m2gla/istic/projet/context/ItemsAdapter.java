@@ -106,7 +106,7 @@ public class ItemsAdapter extends ArrayAdapter {
         int i = 0;
         for (Mean m : this.meanList) {
 
-            if (!m.meanIsDeclined()) {
+            if (!m.refusedMeans()) {
                 if (i == position) {
                     return (m);
                 } else if (i > position) {
@@ -127,7 +127,7 @@ public class ItemsAdapter extends ArrayAdapter {
         int i = 0, j = 0;
         for (Mean m : this.meanList) {
 
-            if (!m.meanIsDeclined()) {
+            if (!m.refusedMeans()) {
                 if (i == position) {
                     return (j);
                 } else if (i > position) {

@@ -12,7 +12,7 @@ public class Mean extends Entity {
     private Vehicle vehicle;
     private Position coordinates;
     private boolean inPosition;
-    //    private boolean meanIsDeclined;
+    //    private boolean refusedMeans;
     private MeanState meanState;
     private Date dateRefused;
     private Date dateRequested;
@@ -105,16 +105,16 @@ public class Mean extends Entity {
         this.dateReleased = dateReleased;
     }
 
-    public boolean meanIsDeclined() {
+    public boolean refusedMeans() {
         return this.meanState == MeanState.REFUSED;
     }
 
 
-//    public boolean meanIsDeclined() {
-//        return meanIsDeclined;
+//    public boolean refusedMeans() {
+//        return refusedMeans;
 //    }
 //
-//    public void setIsDeclined(boolean meanIsDeclined) {
-//        this.meanIsDeclined = meanIsDeclined;
+//    public void setIsDeclined(boolean refusedMeans) {
+//        this.refusedMeans = refusedMeans;
 //    }
 }

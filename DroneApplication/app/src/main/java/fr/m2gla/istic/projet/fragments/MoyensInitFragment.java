@@ -156,7 +156,7 @@ public class MoyensInitFragment extends ListFragment {
                 meansXRefused[position] = new Symbol(m.getId(),
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
                 draggable.add(false);
-                isDeclineList.add(m.meanIsDeclined());
+                isDeclineList.add(m.refusedMeans());
 
                 position++;
             }
@@ -213,7 +213,7 @@ public class MoyensInitFragment extends ListFragment {
                 List<Mean> meanNotValidateList = new ArrayList<>();
                 // Init list des moyens refusés et non validés
                 for (Mean m : xtraList) {
-                    if (!m.meanIsDeclined()) {
+                    if (!m.refusedMeans()) {
                         meanNotValidateList.add(m);
                     } else {
                         meanRefused.add(m);
@@ -381,7 +381,7 @@ public class MoyensInitFragment extends ListFragment {
         meansNotValidateDrawable.clear();
         for (int i = 0; i < means.length; i++) {
             Mean m = means[i];
-            if (!m.meanIsDeclined()) {
+            if (!m.refusedMeans()) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
 

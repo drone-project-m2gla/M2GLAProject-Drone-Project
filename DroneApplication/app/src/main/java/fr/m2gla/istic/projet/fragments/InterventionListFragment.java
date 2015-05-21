@@ -246,7 +246,7 @@ public class InterventionListFragment extends Fragment {
         idStr = intervention.getId();
         dcStr = intervention.getDisasterCode().toString();
 //        for (Mean m: intervention.meansRequested()) {
-//            if (m.meanIsDeclined() == false) {
+//            if (m.refusedMeans() == false) {
 //                nbMeanExtra++;
 //            }
 //        }
