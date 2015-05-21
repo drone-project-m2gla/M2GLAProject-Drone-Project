@@ -1,6 +1,9 @@
 package entity;
 
 import util.Constant;
+import util.Datetime;
+
+import java.util.Date;
 
 /**
  * Created by arno on 07/04/15.
@@ -14,11 +17,22 @@ public class Mean extends AbstractEntity{
     private Vehicle vehicle;
     private Position coordinates;
     private boolean inPosition;
-    private boolean isDeclined;
+    //private boolean isDeclined;
+    private MeanState meanState;
+    private Date dateRefused;
+    private Date dateRequested;
+    private Date dateActivated;
+    private Date dateArrived;
+    private Date dateEngaged;
+    private Date dateReleased;
 
-    public Mean(Vehicle vehicle) {
+    public Mean(Vehicle vehicle,Boolean isInitialMean) {
         this();
         this.vehicle = vehicle;
+        if (isInitialMean) {
+            this.dateEngaged = this.dateRequested;
+            this.meanState = MeanState.ACTIVATED;
+        }
     }
 
     @Override
@@ -29,9 +43,16 @@ public class Mean extends AbstractEntity{
         Mean mean = (Mean) o;
 
         if (inPosition != mean.inPosition) return false;
-        if (isDeclined != mean.isDeclined) return false;
+        //if (isDeclined != mean.isDeclined) return false;
         if (coordinates != null ? !coordinates.equals(mean.coordinates) : mean.coordinates != null) return false;
         if (vehicle != mean.vehicle) return false;
+        if (dateRequested != null ? !dateRequested.equals(mean.dateRequested) : mean.dateRequested != null) return false;
+        if (dateActivated != null ? !dateActivated.equals(mean.dateActivated) : mean.dateActivated != null) return false;
+        if (dateArrived != null ? !dateArrived.equals(mean.dateArrived) : mean.dateArrived != null) return false;
+        if (dateEngaged != null ? !dateEngaged.equals(mean.dateEngaged) : mean.dateEngaged != null) return false;
+        if (dateReleased != null ? !dateReleased.equals(mean.dateReleased) : mean.dateReleased != null) return false;
+        if (dateRefused != null ? !dateRefused.equals(mean.dateRefused) : mean.dateRefused != null) return false;
+        if (meanState != mean.meanState) return false;
 
         return true;
     }
@@ -41,19 +62,20 @@ public class Mean extends AbstractEntity{
         int result = vehicle != null ? vehicle.hashCode() : 0;
         result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
         result = 31 * result + (inPosition ? 1 : 0);
-        result = 31 * result + (isDeclined ? 1 : 0);
+        //  result = 31 * result + (isDeclined ? 1 : 0);
         return result;
     }
 
     public Mean() {
         super();
         this.inPosition = false;
-        this.isDeclined = false;
+        // this.isDeclined = false;
         this.coordinates = new Position();
         this.coordinates.setAltitude(Double.NaN);
         this.coordinates.setLatitude(Double.NaN);
         this.coordinates.setLongitude(Double.NaN);
-
+        this.dateRequested = Datetime.getCurrentDate();
+        this.meanState = MeanState.REQUESTED;
     }
 
     public Vehicle getVehicle() {
@@ -80,13 +102,68 @@ public class Mean extends AbstractEntity{
         this.inPosition = inPosition;
     }
 
-    public boolean getisDeclined() {
-        return isDeclined;
+    public MeanState getMeanState() {
+        return meanState;
     }
 
-    public void setisDeclined(boolean isDeclined) {
-        this.isDeclined = isDeclined;
+    public void setMeanState(MeanState meanState) {
+        this.meanState = meanState;
     }
+
+    public Date getDateRequested() {
+        return dateRequested;
+    }
+
+    public void setDateRequested(Date dateRequested) {
+        this.dateRequested = dateRequested;
+    }
+
+    public Date getDateActivated() {
+        return dateActivated;
+    }
+
+    public void setDateActivated(Date dateActivated) {
+        this.dateActivated = dateActivated;
+    }
+
+    public Date getDateArrived() {
+        return dateArrived;
+    }
+
+    public void setDateArrived(Date dateArrived) {
+        this.dateArrived = dateArrived;
+    }
+
+    public Date getDateEngaged() {
+        return dateEngaged;
+    }
+
+    public void setDateEngaged(Date dateEngaged) {
+        this.dateEngaged = dateEngaged;
+    }
+
+    public Date getDateReleased() {
+        return dateReleased;
+    }
+
+    public void setDateReleased(Date dateReleased) {
+        this.dateReleased = dateReleased;
+    }
+
+    public Date getDateRefused() {
+        return dateRefused;
+    }
+
+    public void setDateRefused(Date dateRefused) {
+        this.dateRefused = dateRefused;
+    }
+//    public boolean getisDeclined() {
+//        return isDeclined;
+//    }
+//
+//    public void setisDeclined(boolean isDeclined) {
+//        this.isDeclined = isDeclined;
+//    }
 
 
 }

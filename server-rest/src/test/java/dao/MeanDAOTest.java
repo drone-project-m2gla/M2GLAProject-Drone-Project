@@ -47,7 +47,7 @@ public class MeanDAOTest {
         Mean mean = new Mean();
         mean.setCoordinates(new Position(34,78,39));
         mean.setInPosition(true);
-        mean.setisDeclined(true);
+       // mean.setisDeclined(true);
         mean.setVehicle(Vehicle.VSAV);
         Mean meanInBase = dao.create(mean);
         assertEquals(mean, meanInBase);
@@ -58,14 +58,14 @@ public class MeanDAOTest {
         Mean mean = new Mean();
         mean.setCoordinates(new Position(34, 78, 39));
         mean.setInPosition(true);
-        mean.setisDeclined(true);
+     //   mean.setisDeclined(true);
         mean.setVehicle(Vehicle.VSAV);
         Mean meanInBase = dao.create(mean);
         assertEquals(mean, meanInBase);
-        meanInBase.setisDeclined(false);
+       // meanInBase.setisDeclined(false);
         Mean updated = dao.update(meanInBase);
         assertEquals(meanInBase,updated);
-        assertEquals(false, updated.getisDeclined());
+       // assertEquals(false, updated.getisDeclined());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MeanDAOTest {
         Mean mean = new Mean();
         mean.setCoordinates(new Position(34, 78, 39));
         mean.setInPosition(true);
-        mean.setisDeclined(true);
+       // mean.setisDeclined(true);
         mean.setVehicle(Vehicle.VSAV);
         Mean meanInBase = dao.create(mean);
         assertEquals(mean, meanInBase);

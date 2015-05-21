@@ -4,15 +4,18 @@ package rest;
 import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
+import entity.MeanState;
 import entity.Position;
 import org.apache.log4j.Logger;
 import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
+import util.Datetime;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,31 +36,34 @@ public class MeanXtraRest {
 
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
+        Boolean meanCanBeChanged = false;
         iD.connect();
         Intervention intervention = iD.getById(idintervention);
 
-        LOGGER.debug("Nbre elements à valider : "+intervention.getMeansXtra().size());
-        for (int i=0; i<intervention.getMeansXtra().size(); i++) {
-            LOGGER.debug(intervention.getMeansXtra().get(i).getId()+ " - " + intervention.getMeansXtra().get(i).getVehicle()+ " - " + intervention.getMeansXtra().get(i).getisDeclined());
-        }
-
-        for (int i=0; i<intervention.getMeansXtra().size(); i++) {
-            if (intervention.getMeansXtra().get(i).getId() == meanXtra.getId()) {
+        for (int i=0; i<intervention.getMeansList().size(); i++) {
+            if (intervention.getMeansList().get(i).getId() == meanXtra.getId() && intervention.getMeansList().get(i).getMeanState() == MeanState.REQUESTED) {
                 try {
-                    PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "ok", intervention.getMeansXtra().get(i));
+                    PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "ok", intervention.getMeansList().get(i));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                intervention.getMeansList().add(intervention.getMeansXtra().get(i));
-                intervention.getMeansXtra().remove(intervention.getMeansXtra().get(i));
-
+                intervention.getMeansList().get(i).setDateActivated(Datetime.getCurrentDate());
+                intervention.getMeansList().get(i).setMeanState(MeanState.ACTIVATED);
+                meanCanBeChanged = true;
             }
         }
 
-        iD.update(intervention);
-        iD.disconnect();
 
-        return Response.status(200).entity("Mean is now available").build();
+        if (meanCanBeChanged) {
+            iD.update(intervention);
+            iD.disconnect();
+            return Response.status(200).entity("Mean is now available").build();
+        }
+        else {
+            iD.disconnect();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Mean is already activated by Codis").build();
+        }
+
     }
 
 
@@ -69,32 +75,32 @@ public class MeanXtraRest {
 
         InterventionDAO iD = new InterventionDAO();
         Mean res = null;
+        Boolean meanCanBeChanged = false;
         iD.connect();
         Intervention intervention = iD.getById(idintervention);
 
-
-        LOGGER.debug("Nbre elements à valider : "+intervention.getMeansXtra().size());
-        for (int i=0; i<intervention.getMeansXtra().size(); i++) {
-            LOGGER.debug(intervention.getMeansXtra().get(i).getId()+ " - " + intervention.getMeansXtra().get(i).getVehicle()+ " - " + intervention.getMeansXtra().get(i).getisDeclined());
-        }
-
-
-
-
-        for (Mean m : intervention.getMeansXtra()) {
-            if (m.getId() == meanXtra.getId()) {
-                m.setisDeclined(true);
+        for (Mean m : intervention.getMeansList()) {
+            if (m.getId() == meanXtra.getId() && m.getMeanState() == MeanState.REQUESTED) {
                 try {
                     PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "nok", m);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                m.setDateRefused(Datetime.getCurrentDate());
+                m.setMeanState(MeanState.REFUSED);
+                meanCanBeChanged = true;
             }
         }
 
-        iD.update(intervention);
-
-        iD.disconnect();
-        return Response.status(200).entity("Mean was refused").build();
+        if (meanCanBeChanged) {
+            iD.update(intervention);
+            iD.disconnect();
+            return Response.status(200).entity("Mean was refused").build();
+        }
+        else {
+            iD.disconnect();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Mean cannot be refused by Codis due to its current state").build();
+        }
     }
+
 }
