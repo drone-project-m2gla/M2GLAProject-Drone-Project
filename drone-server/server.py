@@ -105,14 +105,15 @@ def getPosition():
 
 @app.route('/robot/picture', methods=['GET'])
 def getpicture() :
-    cv_image = CvBridge().imgmsg_to_cv2(command.saveImg	, "rgba8")
-    image = cv2.imdecode(cv_image)
+    print command.saveImg
+    cv_image = CvBridge().imgmsg_to_cv2(command.saveImg, "rgba8")
+    cv2.imwrite("toto.png", cv_image)
 
     return jsonify({
     	"width": command.saveImg.width,
     	"height": command.saveImg.height,
     	"encoding": command.saveImg.encoding,
-    	"image": base64.b64encode(image)
+    	"image": base64.b64encode(cv_image)
     })
 
 if __name__ == '__main__' :
