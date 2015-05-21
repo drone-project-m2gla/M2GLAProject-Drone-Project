@@ -383,7 +383,7 @@ public class MoyensInitFragment extends ListFragment {
         meansRequestedDrawable.clear();
         for (int i = 0; i < means.length; i++) {
             Mean m = means[i];
-            if (!m.refusedMeans()) {
+            if (m.requestedMean()) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
 

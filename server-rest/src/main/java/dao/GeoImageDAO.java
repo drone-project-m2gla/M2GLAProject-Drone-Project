@@ -26,7 +26,7 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         }
         GeoImage geoImage = new GeoImage();
         geoImage.setId(document.getLong("_id"));
-        geoImage.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
+        geoImage.setCoordinates(Tools.arrayListToPosition((BasicDBList) document.get("coordinates")));
         geoImage.setImageIn64(document.getString("image"));
         return geoImage;
     }
@@ -36,7 +36,7 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         Document document = new Document();
         document.put("image", entity.getImageIn64());
         document.put("type","Point");
-        document.put("coordinates", Tools.positionToDocument(entity.getCoordinates()));
+        document.put("coordinates", Tools.positionToBasicDBList(entity.getCoordinates()));
         document.put("_id",entity.getId());
         return document;
     }
