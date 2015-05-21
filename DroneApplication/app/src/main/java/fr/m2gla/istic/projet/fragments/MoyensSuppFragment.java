@@ -22,14 +22,17 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
+import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
+import fr.m2gla.istic.projet.model.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.RestService;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+
+import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
 
 public class MoyensSuppFragment extends Fragment {
@@ -56,26 +59,24 @@ public class MoyensSuppFragment extends Fragment {
 
         moyensSpinner = (Spinner) view
                 .findViewById(R.id.moyensSpinner);
-
-        titles = new String[]{Constant.VALUE_VEHICULE_EPA, Constant.VALUE_VEHICULE_FPT,
-                Constant.VALUE_VEHICULE_VSR, Constant.VALUE_VEHICULE_VLCG, Constant.VALUE_VEHICULE_VSAV};
-
-        images = new int[]{Constant.DRAWABLE_IMG_VEHICULE_EPA, Constant.DRAWABLE_IMG_VEHICULE_FPT,
-                Constant.DRAWABLE_IMG_VEHICULE_VSR, Constant.DRAWABLE_IMG_VEHICULE_VLCG, Constant.DRAWABLE_IMG_VEHICULE_VSAV};
-
         List<Drawable> drawables = new ArrayList<Drawable>();
-        for (int imageId : images) {
-            if (imageId != 0) {
-                drawables.add(getResources().getDrawable(imageId));
-            } else {
-                drawables.add(null);
-            }
+
+        titles = new String[Vehicle.values().length];
+        int i = 0;
+        for (Vehicle v : Vehicle.values()) {
+            String vehicule = v.toString();
+            String vehiculeName = Symbol.getImage(vehicule);
+
+            Symbol symbol = new Symbol(valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(v));
+
+            String title = vehicule;
+
+            titles[i++] = title;
+            drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
         }
+
         moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, drawables.toArray(new Drawable[drawables.size()])));
 
-        for (String s : titles) {
-            Log.i(TAG, "Title \t" + titles.length + "    " + s);
-        }
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_moyen);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +88,7 @@ public class MoyensSuppFragment extends Fragment {
 
             }
         });
+
         return view;
     }
 
@@ -103,9 +105,12 @@ public class MoyensSuppFragment extends Fragment {
         if (xtraSize > 0) {
             for (Mean m : listXtra) {
                 String meanClass = m.getVehicle().toString();
-                String meanType = Constant.getImage(meanClass);
+                String meanType = Symbol.getImage(meanClass);
                 means[position] = new Symbol(m.getId(),
-                        Symbol.SymbolType.valueOf(meanType), meanClass, "RNS", "ff0000");
+                        Symbol.SymbolType.valueOf(meanType),
+                        meanClass,
+                        Symbol.getCityTrigram(),
+                        Symbol.getMeanColor(m.getVehicle()));
                 position++;
             }
             Toast.makeText(getActivity(), "Nombre de demandes supplémentaires " + xtraSize, Toast.LENGTH_LONG).show();
@@ -152,13 +157,7 @@ public class MoyensSuppFragment extends Fragment {
         });
     }
 
-    public void change(String txt, String txt1) {
-        text.setText(txt);
-        vers.setText(txt1);
-    }
-
     public void setInterventionID(String interventionID) {
         this.interventionID = interventionID;
-        Toast.makeText(getActivity(), TAG + "\n" + interventionID, Toast.LENGTH_LONG).show();
     }
 }

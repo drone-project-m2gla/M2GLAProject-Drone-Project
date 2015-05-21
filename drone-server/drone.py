@@ -7,6 +7,7 @@ bpymorse.set_speed(fps=60, logic_step_max=5, physics_step_max=5)
 # Simple quadrotor with rigid body physics
 '''quadrotor = Submarine()'''
 quadrotor = Quadrotor()
+'''quadrotor = B21()'''
 quadrotor.translate(x=-0, y=0, z=20)
 quadrotor.name = 'drone'
 
@@ -15,8 +16,8 @@ camera = VideoCamera()
 camera.name = "camera"
 camera.translate(z=-0.12)
 camera.rotate(y=-1.57)
-camera.properties(cam_width=640,cam_heigth=480,cam_near=15,cam_far=500)
-camera.frequency(15)
+camera.properties(cam_width=640,cam_heigth=480,cam_near=1,cam_far=50,capturing=True,Vertical_Flip=False)
+camera.frequency(50)
 camera.add_interface('ros')
 quadrotor.append(camera)
 
@@ -27,6 +28,7 @@ quadrotor.append(odometry)
 
 motion = RotorcraftWaypoint()
 motion.name = 'waypoint'
+motion.speed = 0.25
 # read a Pose message
 motion.add_stream('ros')
 
@@ -46,5 +48,5 @@ env.show_framerate(True)
 env.set_camera_location([10.0, -10.0, 10.0])
 env.set_camera_rotation([1.0470, 0, 0.7854])
 env.set_camera_clip(clip_start=1, clip_end=500)
-
+env.select_display_camera(camera)
 env.create()

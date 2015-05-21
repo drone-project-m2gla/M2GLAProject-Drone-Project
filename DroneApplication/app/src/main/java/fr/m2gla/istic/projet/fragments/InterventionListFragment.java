@@ -2,19 +2,14 @@ package fr.m2gla.istic.projet.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -43,6 +38,7 @@ public class InterventionListFragment extends Fragment {
     private SimpleAdapter mSchedule;
     private View view;
     private int lastSelectedPosition = -1;
+    private String  selectedInterventionId = null;
 
 
     /**
@@ -105,7 +101,7 @@ public class InterventionListFragment extends Fragment {
         this.idList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map;
+                HashMap<String, String> map, prevmap;
 
                 map = (HashMap<String, String>) idList.getItemAtPosition(position);
                 Log.i(TAG, "OnClicklistener\t" + userQualification);
@@ -119,33 +115,20 @@ public class InterventionListFragment extends Fragment {
 
 
                     // Retablir la couleur de la ligne precedemment selectionnee
-/*                    if (lastSelectedPosition > -1) {
-//                        View lastLine = (View) idList.getAdapter().getItem(lastSelectedPosition);
-//                        View lastLine = idList.getChildAt(lastSelectedPosition);
-//                        View lastLine = parent.getChildAt(lastSelectedPosition);
-//                        View lastLine = (View) parent.getItemAtPosition(lastSelectedPosition);
-                        if (view != null) {
-                            LinearLayout layoutLastLine = (LinearLayout) lastLine;
-                            TextView tvNom = (TextView) layoutLastLine.findViewById(R.id.interventionLabel);
-                            tvNom.setTextColor(Color.LTGRAY);
+                    if (lastSelectedPosition > -1) {
+                        prevmap = (HashMap<String, String>) idList.getItemAtPosition(lastSelectedPosition);
+                        if (prevmap != null) {
+                            prevmap.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
                         }
+
                     }
 
                     // Changer la couleur de la ligne selectionnee
-//                    View curLine = (View) idList.getAdapter().getItem(position);
-//                    View curLine = idList.getChildAt(position);
-//                    View curLine = parent.getChildAt(position);
-//                    View curLine = idList.getSelectedView();
-//                    if (curLine != null) {
-//                        LinearLayout layoutCurLine = (LinearLayout) curLine;
-                    if (view != null) {
-                        LinearLayout layoutCurLine = (LinearLayout) view;
-                        TextView tvNom = (TextView) layoutCurLine.findViewById(R.id.interventionLabel);
-                        tvNom.setTextColor(Color.YELLOW);
-                        lastSelectedPosition = position;
-                    }
-                    Toast.makeText(view.getContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
-*/
+                    map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.SELECT_DESC_STR);
+                    lastSelectedPosition = position;
+                    mSchedule.notifyDataSetChanged();
+//                    Toast.makeText(view.getContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
+
                 } else {
                     // Toast.makeText(view.getContext(), "Sapeur : " + map.get(GeneralConstants.INTER_LIST_ID) + " " + map.get(GeneralConstants.INTER_LIST_CODE) + " " + map.get(GeneralConstants.INTER_LIST_DATA), Toast.LENGTH_SHORT).show();
                     callMap(idIntervention);
@@ -179,20 +162,17 @@ public class InterventionListFragment extends Fragment {
      */
     public void refreshList() {
 
-
-/*
-        // Retablir la couleur de la ligne precedemment selectionnee
-        if (lastSelectedPosition > -1) {
-            View lastLine = idList.getChildAt(lastSelectedPosition);
-            LinearLayout layoutLastLine = (LinearLayout) lastLine;
-            TextView tvNom = (TextView)layoutLastLine.findViewById(R.id.interventionLabel);
-            tvNom.setTextColor(Color.LTGRAY);
-            lastSelectedPosition = -1;
-        }
-*/
-
         // Changement de la ArrayList qui nous permettra de remplire la listView
+        lastSelectedPosition = -1;
         this.listItem.clear();
+
+        // Effacement des details affichés
+        InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+        if (fragmentDetailIntervention != null) {
+            // Effacement seulement si le fragement existe
+            fragmentDetailIntervention.dispNoDetails();
+        }
+
 
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_INTERVENTION, null, Intervention[].class,
                 new Command() {
@@ -237,6 +217,15 @@ public class InterventionListFragment extends Fragment {
                     }
                 });
 
+    }
+
+    public void refreshList(String idIntervention) {
+
+        // Recuperer l'id de l'intervention selectionnee
+        this.selectedInterventionId = idIntervention;
+
+        // Refraichir la liste d'intervention
+        refreshList();
     }
 
 
@@ -317,7 +306,19 @@ public class InterventionListFragment extends Fragment {
         map.put(GeneralConstants.INTER_LIST_DATE, date);
         map.put(GeneralConstants.INTER_LIST_CODE, code);
         map.put(GeneralConstants.INTER_LIST_DATA, data);
-        map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
+        if ((this.selectedInterventionId != null) && (id.compareTo(this.selectedInterventionId) == 0)) {
+            map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.SELECT_DESC_STR);
+
+            // Afficher les details de l'intervention pre-selectionnee
+            InterventionDetailFragment fragmentDetailIntervention = (InterventionDetailFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_detail);
+            fragmentDetailIntervention.setIdIntervention(this.selectedInterventionId);
+
+            this.lastSelectedPosition = listItem.size();
+
+        }
+        else {
+            map.put(GeneralConstants.INTER_LIST_SELECT, GeneralConstants.UNSELECT_DESC_STR);
+        }
 
         //enfin on ajoute cette hashMap dans la arrayList
         listItem.add(map);

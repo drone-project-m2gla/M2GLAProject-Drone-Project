@@ -11,7 +11,6 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-
         <fragment
             android:id="@+id/fragment_presentation"
             class="fr.m2gla.istic.projet.fragments.PresentationFragment"
@@ -38,10 +37,7 @@
                 android:layout_height="fill_parent"
                 android:layout_weight=".35" />
         </LinearLayout>
-
-
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/buttonLayout"
@@ -76,6 +72,4 @@
             android:text="@string/button_return" />
 
     </LinearLayout>
-
-
 </RelativeLayout>

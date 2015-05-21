@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -12,6 +11,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/moyens_dispo_textview"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight=".15"
@@ -27,38 +27,67 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.25"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/moyens_transit_textview"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight=".15"
-            android:text="@string/moyens_a_valider" />
+            android:text="@string/moyens_en_transit" />
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.85"
+            android:id="@+id/list_en_transit" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/moyens_supp_textview"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".25"
+            android:text="@string/moyens_a_valider" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
             android:id="@+id/list_not_validated" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.1"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/moyens_refuses_textview"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight=".15"
+            android:layout_weight=".35"
             android:text="@string/moyens_refuses" />
 
-        <ListView
-            android:layout_width="match_parent"
+        <!--<ListView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="0.35"-->
+        <!--android:id="@+id/list_refused" />-->
+
+        <Spinner
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.85"
-            android:id="@+id/list_refused" />
+            android:layout_weight="0.65"
+            android:id="@+id/refused_means_spinner" />
+
     </LinearLayout>
 </LinearLayout>

@@ -26,14 +26,16 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
-import fr.m2gla.istic.projet.constantes.Constant;
+import fr.m2gla.istic.projet.context.ItemsAdapter;
+import fr.m2gla.istic.projet.context.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
+import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
-public class InterventionDetailFragment extends Fragment {
+public class InterventionDetailFragment extends Fragment implements ListAdapterCommand {
     private static final String TAG = "Inter";
     private Intervention intervention;
 
@@ -44,7 +46,8 @@ public class InterventionDetailFragment extends Fragment {
     private String idIntervention = "";
     private String[] titles;
     private String[] images;
-    private View view;
+    private ArrayList<String>   titlesList;
+    private View view = null;
 
 
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
@@ -98,10 +101,9 @@ public class InterventionDetailFragment extends Fragment {
             public void execute(Object response) {
                 intervention = (Intervention) response;
                 // Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
-                int i = 0;
                 List<Mean> meanList = intervention.getMeansXtra();
                 // Initialisation des titres et images.
-                initImagesTitles(intervention, i, meanList);
+                initImagesTitles(intervention, meanList);
                 List<Drawable> drawables = new ArrayList<Drawable>();
 
                 if (images.length > 0) {
@@ -126,7 +128,8 @@ public class InterventionDetailFragment extends Fragment {
                 ListView moyensListView = (ListView) view.findViewById(R.id.intervention_detail_list);
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 Context activity = InterventionDetailFragment.this.getActivity();
-                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
+//                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
+                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titlesList, imagesArray, getIdIntervention(), meanList, InterventionDetailFragment.this);
                 Log.i(TAG, "adapterMeans  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
                 Log.i(TAG, "List\t" + (moyensListView == null));
@@ -135,16 +138,17 @@ public class InterventionDetailFragment extends Fragment {
             }
         };
     }
+
+
     /**
      * Formattage des moyens extra pour l'adapterMeans
      *
      * @param intervention
-     * @param position
      * @param listXtra
      */
+    private void initImagesTitles(Intervention intervention, List<Mean> listXtra) {
+        int listXtraNotDeclinedSize = 0;
 
-    private void initImagesTitles(Intervention intervention, int position, List<Mean> listXtra) {
-        int listXtraNotDeclinedSize =0;
         for (Mean m : listXtra) {
             if (!m.getIsDeclined()){
                 listXtraNotDeclinedSize++;
@@ -152,11 +156,13 @@ public class InterventionDetailFragment extends Fragment {
         }
         titles = new String[listXtraNotDeclinedSize];
         images = new String[listXtraNotDeclinedSize];
+        titlesList = new ArrayList<String>();
 
         LinearLayout nomLayout = (LinearLayout) this.view.findViewById(R.id.nomDetailsLayout);
         LinearLayout codeLayout = (LinearLayout) this.view.findViewById(R.id.codeDetailsLayout);
         LinearLayout adresseLayout = (LinearLayout) this.view.findViewById(R.id.adresseDetailsLayout);
         LinearLayout villeLayout = (LinearLayout) this.view.findViewById(R.id.villeDetailsLayout);
+        ListView newMeanList = (ListView) this.view.findViewById(R.id.intervention_detail_list);
         TextView nomIntervention = (TextView) this.view.findViewById(R.id.details_nom);
         TextView codeIntervention = (TextView) this.view.findViewById(R.id.details_code);
         TextView addresseIntervention = (TextView) this.view.findViewById(R.id.details_adresse);
@@ -184,19 +190,22 @@ public class InterventionDetailFragment extends Fragment {
         codeLayout.setVisibility(View.VISIBLE);
         adresseLayout.setVisibility(View.VISIBLE);
         villeLayout.setVisibility(View.VISIBLE);
+        newMeanList.setVisibility(View.VISIBLE);
 
 
         // Declencher les affichages en fonction de la presence de moyens en attente
         if (listXtraNotDeclinedSize > 0) {
             titleFragement.setVisibility(View.VISIBLE);
             titleNoMoyen.setVisibility(View.GONE);
+            int position = 0;
             for (Mean m : listXtra) {
 
                 if (!m.getIsDeclined()) {
 
                     titles[position] = m.getVehicle().toString();
+                    titlesList.add(m.getVehicle().toString());
 
-                    images[position] = Constant.getImage(m.getVehicle().toString());
+                    images[position] = Symbol.getImage(m.getVehicle().toString());
 
                     position++;
                 }
@@ -210,7 +219,47 @@ public class InterventionDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Effacement de l'affichage
+     *
+    */
+    public void dispNoDetails() {
+        // Verifier si une vue est a effacer
+        if (this.view == null) {
+            return;
+        }
+
+        LinearLayout nomLayout = (LinearLayout) this.view.findViewById(R.id.nomDetailsLayout);
+        LinearLayout codeLayout = (LinearLayout) this.view.findViewById(R.id.codeDetailsLayout);
+        LinearLayout adresseLayout = (LinearLayout) this.view.findViewById(R.id.adresseDetailsLayout);
+        LinearLayout villeLayout = (LinearLayout) this.view.findViewById(R.id.villeDetailsLayout);
+        ListView newMeanList = (ListView) this.view.findViewById(R.id.intervention_detail_list);
+        TextView titleFragement = (TextView) this.view.findViewById(R.id.details_titre_moyen);
+        TextView titleNoMoyen = (TextView) this.view.findViewById(R.id.details_moyens);
+
+        // Valider le non affichage des donnees
+        nomLayout.setVisibility(View.GONE);
+        codeLayout.setVisibility(View.GONE);
+        adresseLayout.setVisibility(View.GONE);
+        villeLayout.setVisibility(View.GONE);
+        newMeanList.setVisibility(View.GONE);
+        titleFragement.setVisibility(View.GONE);
+        titleNoMoyen.setVisibility(View.GONE);
+    }
+
+
     public Mean getMeanXtra(int position) {
         return intervention.getMeansXtra().get(position);
+    }
+
+    @Override
+    public boolean refreshList() {
+
+        // Demander un rafraichissement de la liste des interventions et des details de
+        // l'intervention en cours
+        InterventionListFragment fragmentListIntervention = (InterventionListFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_list);
+        fragmentListIntervention.refreshList(idIntervention);
+
+        return false;
     }
 }

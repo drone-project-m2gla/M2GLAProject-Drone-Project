@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by baptiste on 10/04/15.
  */
-@JsonInclude (JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Intervention extends Entity {
     private String label;
     private String dateCreate;
@@ -86,6 +86,18 @@ public class Intervention extends Entity {
     public void setCoordinates(Position position) {
         this.coordinates = position;
     }
+
+//    public List<Mean> getMeansXtra() {
+//        List<Mean> means = new ArrayList();
+//        Iterator<Mean> it = this.getMeansList().iterator();
+//        while (it.hasNext()) {
+//            Mean m = it.next();
+//            if (String.valueOf(m.getMeanState()).equals(MeanState.REQUESTED)) {
+//                means.add(m);
+//            }
+//        }
+//        return means;
+//    }
 
     public List<Mean> getMeansXtra() {
         return meansXtra;
