@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.m2gla.istic.projet.activity.MapActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
@@ -93,6 +94,7 @@ public class MoyensInitFragment extends ListFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View v,
                                            int position, long id) {
+                MapActivity.setDraggingMode();
                 // Create a new ClipData.
                 // This is done in two steps to provide clarity. The convenience method
                 // ClipData.newPlainText() can create a plain text ClipData in one step.
@@ -110,14 +112,14 @@ public class MoyensInitFragment extends ListFragment {
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         item0);
 
-                ClipData.Item item1 = new ClipData.Item(symbol.getSymbolType().name());
+                /*ClipData.Item item1 = new ClipData.Item(symbol.getSymbolType().name());
                 dragData.addItem(item1);
                 ClipData.Item item2 = new ClipData.Item(symbol.getFirstText());
                 dragData.addItem(item2);
                 ClipData.Item item3 = new ClipData.Item(symbol.getSecondText());
                 dragData.addItem(item3);
                 ClipData.Item item4 = new ClipData.Item(symbol.getColor());
-                dragData.addItem(item4);
+                dragData.addItem(item4);*/
 
                 // Instantiates the drag shadow builder.
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);

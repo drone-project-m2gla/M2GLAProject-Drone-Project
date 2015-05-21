@@ -28,8 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
-import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
@@ -56,7 +54,6 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
-import static fr.m2gla.istic.projet.model.Symbol.SymbolType.vehicule_incendie_seul;
 
 public class MapActivity extends Activity implements
         ObserverTarget,
@@ -77,10 +74,6 @@ public class MapActivity extends Activity implements
     // Keep track of all the symbols by marker id
     private Map<String, SymbolMarkerClusterItem> markerSymbolLink;
 
-    // default latitude and longitude to center map if error
-    private double latitude = 48.1119800;
-    private double longitude = -1.6742900;
-
     // Shift used by raise on drag for map markers
     private static final int SHIFT_RAISE_ON_DRAG = 90;
 
@@ -88,7 +81,7 @@ public class MapActivity extends Activity implements
 
     private Menu menu;
     private boolean isDroneMode;
-    private boolean isDragging;
+    private static boolean isDragging;
     private Circle drone;
     private List<Polyline> polylineList;
     private List<Circle> circleList;
@@ -97,7 +90,6 @@ public class MapActivity extends Activity implements
     @Override
     protected void onDestroy() {
         StrategyMoveDrone.getINSTANCE().setActivity(null);
-
         super.onDestroy();
     }
 
@@ -107,6 +99,7 @@ public class MapActivity extends Activity implements
         setContentView(R.layout.activity_map);
 
         isDroneMode = false;
+        isDragging = false;
         polylineList = new ArrayList<Polyline>();
         circleList = new ArrayList<Circle>();
         param = new HashMap<String, String>();
@@ -256,6 +249,7 @@ public class MapActivity extends Activity implements
                 mean.setId((String) clipData.getItemAt(0).getText());
                 mean.setCoordinates(position);
 
+                isDragging = false;
                 RestServiceImpl.getInstance()
                         .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
                                 new Command() {
@@ -263,6 +257,17 @@ public class MapActivity extends Activity implements
                                     public void execute(Object response) {
                                         Log.e(TAG, "Post new position success");
                                         // FIXME: Mise à jour de la liste des moyens.
+                                        //Get symbol from ClipData saved onDrag
+                                        /*Symbol symbol = new Symbol(
+                                                (String) clipData.getItemAt(0).getText(),
+                                                Symbol.SymbolType.valueOf((String) clipData.getItemAt(1).getText()),
+                                                (String) clipData.getItemAt(2).getText(),
+                                                (String) clipData.getItemAt(3).getText(),
+                                                (String) clipData.getItemAt(4).getText());
+                                        symbol.setValidated(false);
+                                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
+                                        mClusterManager.addItem(markerItem);
+                                        mClusterManager.cluster();*/
                                         loadMeansInMap();
                                     }
                                 },
@@ -289,6 +294,7 @@ public class MapActivity extends Activity implements
      */
     @Override
     public void onMarkerDragStart(Marker marker) {
+        isDragging = true;
         disableRaiseOnDrag(marker);
     }
 
@@ -357,6 +363,8 @@ public class MapActivity extends Activity implements
         mean.setCoordinates(position);
 
         final String markerId = marker.getId();
+
+        isDragging = false;
         RestServiceImpl.getInstance()
                 .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
                         new Command() {
@@ -421,7 +429,7 @@ public class MapActivity extends Activity implements
                                     break;
                                 }
                                 case 1: {
-                                    //TODO: Libérer le moyen
+                                    // TODO: Libérer le moyen
                                     // Supprimer ses coordonnées
                                     // Supprimer le marker
                                     // TODO : Le supprimer de la liste de moyens validés
@@ -456,8 +464,7 @@ public class MapActivity extends Activity implements
                                 case 2: {
                                     //TODO: Retour CRM, disponible pour mettre sur la carte
                                     // Supprimer ses coordonnées
-                                    // Supprimer le marker
-                                    // Ajouter dans la liste de moyens validés (automatique si la liste se rafraîchit)
+                                    // Ajouter dans la liste de moyens validés (automatique car la liste se rafraîchit)
                                     Mean mean = new Mean();
                                     mean.setId(meanSymbol.getId());
                                     Position position = new Position();
@@ -646,8 +653,11 @@ public class MapActivity extends Activity implements
     }
 
     private void loadMeansInMap() {
-        RestServiceImpl.getInstance()
-                .get(RestAPI.GET_INTERVENTION, param, Intervention.class, getCallbackSuccess(), getCallbackError());
+        if (!isDragging) {
+            RestServiceImpl.getInstance()
+                    .get(RestAPI.GET_INTERVENTION, param, Intervention.class,
+                            getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
+        }
     }
 
     /**
@@ -655,7 +665,7 @@ public class MapActivity extends Activity implements
      *
      * @return
      */
-    private Command getCallbackError() {
+    private Command getCallbackMeanUpdateError() {
         return new Command() {
             @Override
             public void execute(Object response) {
@@ -669,7 +679,7 @@ public class MapActivity extends Activity implements
      *
      * @return
      */
-    private Command getCallbackSuccess() {
+    private Command getCallbackMeanUpdateSuccess() {
         return new Command() {
             @Override
             public void execute(Object response) {
@@ -697,10 +707,12 @@ public class MapActivity extends Activity implements
 
                     mClusterManager.addItem(markerItem);
                 }
-
                 mClusterManager.cluster();
             }
         };
     }
 
+    public static void setDraggingMode(){
+        isDragging = true;
+    }
 }
