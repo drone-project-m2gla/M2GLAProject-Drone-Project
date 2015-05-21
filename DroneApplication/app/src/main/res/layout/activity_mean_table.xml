@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
 
     <LinearLayout
+        android:id="@+id/TableDescLayout"
+        android:layout_above="@+id/activityTableButtonLayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonLayout"
-        android:layout_alignParentTop="true"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
-        <fragment
-            android:id="@+id/fragment_presentation"
-            class="fr.m2gla.istic.projet.fragments.PresentationFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/list_layout"
+        <TableLayout
             android:layout_width="fill_parent"
+            android:stretchColumns="0"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:id="@+id/titleMeanTable">
+        </TableLayout>
 
-            <fragment
-                android:id="@+id/fragment_intervention_list"
-                class="fr.m2gla.istic.projet.fragments.InterventionListFragment"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight=".65" />
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/scrollMeanTable"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
 
-            <fragment
-                android:id="@+id/fragment_intervention_detail"
-                class="fr.m2gla.istic.projet.fragments.InterventionDetailFragment"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight=".35" />
-        </LinearLayout>
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:stretchColumns="0"
+                android:layout_height="wrap_content"
+                android:id="@+id/meanTable">
+            </TableLayout>
+
+        </ScrollView>
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/buttonLayout"
+        android:id="@+id/activityTableButtonLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -52,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="interventionRefresh"
+            android:onClick="MeanTableViewRefresh"
             android:text="@string/button_refresh" />
 
         <Button
@@ -68,8 +67,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="endInterventionSelection"
+            android:onClick="endMeanTableView"
             android:text="@string/button_return" />
 
     </LinearLayout>
+
+
 </RelativeLayout>

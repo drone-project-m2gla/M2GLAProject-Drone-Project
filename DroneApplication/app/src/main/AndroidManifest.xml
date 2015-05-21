@@ -48,6 +48,14 @@
         </activity>
 
         <activity
+            android:name=".MeanTableActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".InterventionListActivity"
             android:screenOrientation="landscape">
 
