@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class Datetime {
 
-    public Date getCurrentDate()
+    public static Date getCurrentDate()
     {
         Date date = new Date();
 
