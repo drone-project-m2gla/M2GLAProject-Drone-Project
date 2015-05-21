@@ -60,10 +60,11 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
                 Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
                 if (position != null && !Tools.isSamePositions(this.position, position)) {
                     this.position = position;
+                    //FIXME Reactive pull service
                     //PushServiceImpl.getInstance().sendMessage(
                     //        PushService.TypeClient.SIMPLEUSER, "droneMove", position);
 
-                    GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/image");
+                    GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/picture");
                     client.executeMethod(getImage);
                     this.image = mapper.readValue(getImage.getResponseBodyAsString(), ImageDrone.class);
                 } else {
