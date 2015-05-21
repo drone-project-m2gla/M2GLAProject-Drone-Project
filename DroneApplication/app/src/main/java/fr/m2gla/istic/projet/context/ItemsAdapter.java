@@ -36,14 +36,14 @@ public class ItemsAdapter extends ArrayAdapter {
 
     private final static String TAG = "ItemsAdapter";
 
-    private String[]                titles;
-    private int                     customLayout;
-    private Intervention            intervention;
-    private ArrayList<String>       myList = null;
-    private String                  idIntervention = null;
-    private List<Mean>              meanList = null;
-    private Mean                    xtraMean;
-    private ListAdapterCommand      adapterCommand = null;
+    private String[] titles;
+    private int customLayout;
+    private Intervention intervention;
+    private ArrayList<String> myList = null;
+    private String idIntervention = null;
+    private List<Mean> meanList = null;
+    private Mean xtraMean;
+    private ListAdapterCommand adapterCommand = null;
 
     public ItemsAdapter(Context context, int textViewResourceId,
                         String[] objects, Drawable[] images) {
@@ -186,7 +186,7 @@ public class ItemsAdapter extends ArrayAdapter {
                                             @Override
                                             public void execute(Object response) {
                                                 //Toast.makeText(getContext(), "Moyen annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-Log.i("itemsAdapter", "Moyen annulé : " + position);
+                                                Log.i("itemsAdapter", "Moyen annulé : " + position);
                                                 ItemsAdapter.this.remove(position);
                                             }
                                         }, new Command() {
@@ -213,7 +213,7 @@ Log.i("itemsAdapter", "Moyen annulé : " + position);
                                             @Override
                                             public void execute(Object response) {
                                                 //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-Log.i("itemsAdapter", "Moyen validé : " + position);
+                                                Log.i("itemsAdapter", "Moyen validé : " + position);
                                                 ItemsAdapter.this.remove(position);
                                             }
                                         }, new Command() {
@@ -276,16 +276,4 @@ Log.i("itemsAdapter", "Moyen validé : " + position);
     public void setAdapterCommand(ListAdapterCommand adapterCommand) {
         this.adapterCommand = adapterCommand;
     }
-
-    /* A Static class for holding the elements of each List View Item
-         * This is created as per Google UI Guideline for faster performance */
-    private static class ViewHolder {
-        TextView itemLabelTxtView;
-        ImageView imgImageView;
-        ImageButton validerImageButton;
-        ImageButton annullerImageButton;
-
-        int position;
-    }
-
 }

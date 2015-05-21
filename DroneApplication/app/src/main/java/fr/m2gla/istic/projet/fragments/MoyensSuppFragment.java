@@ -77,9 +77,6 @@ public class MoyensSuppFragment extends Fragment {
 
         moyensSpinner.setAdapter(new ItemsAdapter(getActivity(), R.layout.custom, titles, drawables.toArray(new Drawable[drawables.size()])));
 
-        for (String s : titles) {
-            Log.i(TAG, "Title \t" + titles.length + "    " + s);
-        }
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_moyen);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +159,5 @@ public class MoyensSuppFragment extends Fragment {
 
     public void setInterventionID(String interventionID) {
         this.interventionID = interventionID;
-        Toast.makeText(getActivity(), TAG + "\n" + interventionID, Toast.LENGTH_LONG).show();
     }
 }
