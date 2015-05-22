@@ -33,6 +33,7 @@ public interface GeneralConstants {
     public static final String  MEAN_TABLE_4 = "ARRIVE";
     public static final String  MEAN_TABLE_5 = "ENGAGE";
     public static final String  MEAN_TABLE_6 = "LIBERE";
+    public static final String  MEAN_REFUSED = "REFUSE";
 
     // Nom des fichiers svg
     public static final String SVG_COLONNE_INCENDIE = "colonne_incendie";

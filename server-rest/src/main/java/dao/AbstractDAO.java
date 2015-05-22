@@ -31,8 +31,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Connect to BDD and
-     * Bucket to communicate with couchbase
-     * @return void
+     * @return Bucket to communicate with couchbase
      */
     public final void connect() {
         if(mongoClient == null || db==null) {
@@ -83,7 +82,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * GetAll
-     * @return List<T>
+     * @return
      */
     public final List<T> getAll()
     {
@@ -100,22 +99,12 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * GetById
-     * @return T
+     * @return
      */
     public final T getById(long id)
     {
         FindIterable findIterable = collection.find(new BasicDBObject("_id", id));
         return documentToEntity((Document) findIterable.first());
-    }
-
-    /**
-     * flush our bucket
-     * @return boolean
-     */
-    public boolean flush()
-    {
-        db.drop();
-        return true;
     }
 
     /**
