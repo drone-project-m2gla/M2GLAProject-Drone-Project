@@ -29,18 +29,13 @@ public class UserServices {
     public Response logIn(User user) {
         dao = new UserDAO();
         dao.connect();
-        User userData = dao.getByUsername(user.getUsername());
+        User userData = dao.connectUser(user.getUsername(), user.getPassword());
         dao.disconnect();
-
+        LOGGER.info("User " + userData.getUsername());
         int status = 401;
-        if (userData != null) {
-        	LOGGER.info("User " + userData.getUsername());
-
-            String passwd = userData.getPassword();
-            if (passwd != null && passwd.equals(user.getPassword())) {
-            	LOGGER.info("User " + userData.getUsername() + " connect");
-                status = 200;
-            }
+        if (user.equals(userData)) {
+            LOGGER.info("User " + userData.getUsername() + " connect");
+            status = 200;
         } else {
         	userData = new User();
         }

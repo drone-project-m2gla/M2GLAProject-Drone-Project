@@ -108,16 +108,6 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     }
 
     /**
-     * flush our bucket
-     * @return
-     */
-    public boolean flush()
-    {
-        db.drop();
-        return true;
-    }
-
-    /**
      * Transform a jsonDocument to entity
      * @param document document to transform
      * @return entity of Document
