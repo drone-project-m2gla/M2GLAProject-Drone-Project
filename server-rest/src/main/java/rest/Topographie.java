@@ -33,8 +33,7 @@ public class Topographie {
 	/**
 	 * Retourner une liste json de points statiques sur la carte autour de la GeoPosition précisée en paramètre.
 	 * Par défaut, on peut prendra une valeur de 50km autour.
-	 * @param
-	 * @return
+	 * @return List<GeoIcon>
 	 */
 	@GET
 	@Path("{Long}/{Latitude}/{Rayon}")
@@ -50,8 +49,7 @@ public class Topographie {
 
 	/**
 	 * Ajouter des icones dans la topographie
-	 * @param
-	 * @return
+	 * @return Response
 	 */
 	@POST
 	@Path("icontempo")

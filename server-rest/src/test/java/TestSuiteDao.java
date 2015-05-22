@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import rest.UserServicesRestTest;
 import util.Configuration;
 
 import com.mongodb.Block;
@@ -25,12 +26,12 @@ import dao.UserDAOTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        TestFail.class,
         InterventionDAOTest.class,
         UserDAOTest.class,
         MeanDAOTest.class,
         GeoIconDAOTest.class,
-        GeoImageDAOTest.class
+        GeoImageDAOTest.class,
+        UserServicesRestTest.class
 })
 public class TestSuiteDao {
     @BeforeClass
