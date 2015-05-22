@@ -19,7 +19,7 @@ import entity.Position;
  * Created by alban on 16/04/15.
  */
 public class GetDronePositionThread implements Runnable, PositionUnchangedObservable {
-	private static GetDronePositionThread instance;
+	private static GetDronePositionThread INSTANCE;
 
 	private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
 	private Position position;
@@ -32,12 +32,14 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 	}
 
 	public static GetDronePositionThread getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	public static void createNewInstance() {
-		instance.stopThread();
-		instance = new GetDronePositionThread();
+		if (INSTANCE != null) {
+			INSTANCE.stopThread();
+		}
+		INSTANCE = new GetDronePositionThread();
 	}
 
 	public synchronized void stopThread() {
