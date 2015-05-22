@@ -73,4 +73,6 @@
     <string name="moyens_a_valider">Moyens supp. à valider</string>
     <string name="moyens_en_transit">Moyens en transit</string>
     <string name="actions_moyens">Sélectionnez une action sur le moyen</string>
+
+    <string name="withRefusedMeans">Inclus les Moyens refusés</string>
 </resources>

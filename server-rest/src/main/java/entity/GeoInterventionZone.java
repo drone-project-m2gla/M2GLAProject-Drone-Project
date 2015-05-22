@@ -5,10 +5,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.Constant;
-
 /**
- * Created by arno on 09/03/15.
+ * @author arno
+ * @see GeoInterventionZone to manage
  */
 public class GeoInterventionZone extends AbstractEntity implements Serializable {
 

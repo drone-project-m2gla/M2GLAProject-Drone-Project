@@ -81,7 +81,7 @@ public class MapListeners implements
                 mean.setId((String) clipData.getItemAt(0).getText());
                 mean.setCoordinates(position);
 
-                MapActivity.setDraggingMode(false);
+                mapActivity.setDraggingMode(false);
                 RestServiceImpl.getInstance()
                         .post(RestAPI.POST_POSITION_MOVE, mapActivity.restParams, mean, Mean.class,
                                 new Command() {
@@ -174,7 +174,7 @@ public class MapListeners implements
 
         final String markerId = marker.getId();
 
-        MapActivity.setDraggingMode(false);
+        mapActivity.setDraggingMode(false);
         RestServiceImpl.getInstance()
                 .post(RestAPI.POST_POSITION_MOVE, mapActivity.restParams, mean, Mean.class,
                         new Command() {
@@ -252,8 +252,7 @@ public class MapListeners implements
                                     mean.setInPosition(false);
 
                                     RestServiceImpl.getInstance()
-                                            //TODO: utiliser la méthode post correcte
-                                            .post(RestAPI.POST_POSITION_CONFIRMATION, mapActivity.restParams, mean, Mean.class,
+                                            .post(RestAPI.POST_RELEASE, mapActivity.restParams, mean, Mean.class,
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {
@@ -285,7 +284,7 @@ public class MapListeners implements
 
                                     RestServiceImpl.getInstance()
                                             //TODO: utiliser la méthode post correcte
-                                            .post(RestAPI.POST_POSITION_CONFIRMATION, mapActivity.restParams, mean, Mean.class,
+                                            .post(RestAPI.POST_RELEASE, mapActivity.restParams, mean, Mean.class,
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {
@@ -317,7 +316,7 @@ public class MapListeners implements
      */
     @Override
     public void onMarkerDragStart(Marker marker) {
-        MapActivity.setDraggingMode(true);
+        mapActivity.setDraggingMode(true);
         disableRaiseOnDrag(marker);
     }
 

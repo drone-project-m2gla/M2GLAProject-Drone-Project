@@ -47,14 +47,13 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
-import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
 public class MapActivity extends Activity implements
         ObserverTarget {
     private static final String TAG = "MapActivity";
     private static final int ZOOM_INDEX = 18;
-    private static MapFragment mapFragment;
-    private static boolean isDragging;
+    private MapFragment mapFragment;
+    private boolean isDragging;
 
     public GoogleMap map;
     public Map<String, String> restParams;
@@ -304,7 +303,7 @@ public class MapActivity extends Activity implements
         }
     }
 
-    public void updateMeans(final Mean mean) {
+    public void updateMeans() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -405,7 +404,9 @@ public class MapActivity extends Activity implements
                     String meanClass = m.getVehicle().toString();
                     String meanType = Symbol.getImage(meanClass);
                     Symbol symbol = new Symbol(m.getId(),
-                            valueOf(meanType), meanClass, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                            Symbol.SymbolType.valueOf(meanType),
+                            meanClass, Symbol.getCityTrigram(),
+                            Symbol.getMeanColor(m.getVehicle()));
                     symbol.setValidated(m.isInPosition());
                     SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
                             m.getCoordinates().getLatitude(),
@@ -418,7 +419,7 @@ public class MapActivity extends Activity implements
         };
     }
 
-    public static void setDraggingMode(boolean _isDragging){
+    public void setDraggingMode(boolean _isDragging){
         isDragging = _isDragging;
     }
 }

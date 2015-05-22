@@ -72,4 +72,42 @@ public class UserDAOTest {
         dao.delete(userInBase);
         assertNull(dao.getById(userInBase.getId()));
     }
+
+    @Test
+    public void testFindById()
+    {
+        // On vérifie que ça plante pas de connecter deux fois
+        dao.connect();
+        User user = new User();
+        user.setPassword("findByLogin");
+        user.setUsername("identifiant");
+        User userInBase = dao.create(user);
+        assertEquals(user, userInBase);
+        User found = dao.connectUser("identifiant", "findByLogin");
+        assertEquals(userInBase, found);
+    }
+
+    @Test
+    public void testGetByUsername()
+    {
+        // On vérifie que ça plante pas de connecter deux fois
+        dao.connect();
+        User user = new User();
+        user.setPassword("findByLogin");
+        user.setUsername("identifiantFindByUsername");
+        User userInBase = dao.create(user);
+        assertEquals(user, userInBase);
+        User found = dao.getByUsername("identifiantFindByUsername");
+        assertEquals(userInBase, found);
+    }
+
+    @Test
+    public void disconnectConnect()
+    {
+        //check disconnection two times
+        dao.disconnect();
+        dao.disconnect();
+        dao.connect();
+        dao.connect();
+    }
 }

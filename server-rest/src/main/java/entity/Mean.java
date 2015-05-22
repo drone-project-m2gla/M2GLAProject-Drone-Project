@@ -1,13 +1,11 @@
 package entity;
 
 import util.Datetime;
-
 import java.util.Date;
 
 /**
- * Created by arno on 07/04/15.
- *
- * This class is used for handling mean information which are available for an intervention.
+ *@author arno
+ * @see Mean is used for handling mean information which are available for an intervention.
  *
  */
 public class Mean extends AbstractEntity{
@@ -53,6 +51,22 @@ public class Mean extends AbstractEntity{
         if (meanState != mean.meanState) return false;
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Mean{" +
+                "vehicle=" + vehicle +
+                ", coordinates=" + coordinates +
+                ", inPosition=" + inPosition +
+                ", meanState=" + meanState +
+                ", dateRefused=" + dateRefused +
+                ", dateRequested=" + dateRequested +
+                ", dateActivated=" + dateActivated +
+                ", dateArrived=" + dateArrived +
+                ", dateEngaged=" + dateEngaged +
+                ", dateReleased=" + dateReleased +
+                '}';
     }
 
     @Override

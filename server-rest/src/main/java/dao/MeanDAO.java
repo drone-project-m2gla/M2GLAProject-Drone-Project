@@ -6,12 +6,13 @@ import util.Tools;
 import entity.Mean;
 
 /**
- * Created by arno on 08/04/15.
+ * @author arno
+ * @see MeanDAO implements these abstract methods for Mean transformation
  */
 public class MeanDAO extends AbstractDAO<Mean>{
 
     /**
-     * Contructeur MeanDAO
+     * Contructor MeanDAO
      */
     public MeanDAO()
     {

@@ -2,18 +2,18 @@ package rest;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import dao.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import dao.GeoIconDAO;
-import dao.UserDAO;
 import entity.GeoIcon;
 import entity.Position;
 import entity.User;
@@ -26,8 +26,14 @@ public class Bdd {
         @GET
         @Path("/init")
         public Response initBDD() {
+            AbstractDAO[] daos = {new GeoIconDAO(), new GeoImageDAO(), new InterventionDAO(), new MeanDAO(), new UserDAO()};
+            for(AbstractDAO dao : daos)
+            {
+                dao.connect();
+                dao.ensureIndex();
+                dao.disconnect();
+            }
 
-         //   List<Long> idCreated = new ArrayList<Long>();
             // Ajout des users
             JSONParser parser = new JSONParser();
             try {
