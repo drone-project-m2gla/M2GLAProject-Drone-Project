@@ -208,7 +208,7 @@ public class MeanTableActivity extends Activity {
                     tv = new TextView(MeanTableActivity.this);
 
                     // ajout du texte
-                    tv.setText(m.getVehicle().toString());
+                    tv.setText(m.getVehicle().toString() + " " + m.getName());
 
                     // centrage dans la cellule
                     tv.setGravity(Gravity.CENTER);

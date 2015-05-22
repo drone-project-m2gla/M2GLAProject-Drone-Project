@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.m2gla.istic.projet.activity.mapUtils.ImageDroneRenderer;
+import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolRenderer;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -57,14 +59,30 @@ public class MapActivity extends Activity implements
     public Map<String, String> restParams;
 
     private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+    private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
     private MapListeners mapListeners;
 
     private Menu menu;
     private boolean isDroneMode;
     private Circle drone;
     private List<Polyline> polylineList;
-    private List<Circle> circleList;
     private DroneTargetActionFragment droneTargetActionFragment;
+
+    public boolean isDroneMode() {
+        return isDroneMode;
+    }
+
+    public List<Polyline> getPolylineList() {
+        return polylineList;
+    }
+
+    public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
+        return droneClusterManager;
+    }
+
+    public DroneTargetActionFragment getDroneTargetActionFragment() {
+        return droneTargetActionFragment;
+    }
 
     @Override
     protected void onDestroy() {
@@ -80,7 +98,6 @@ public class MapActivity extends Activity implements
         isDroneMode = false;
         isDragging = false;
         polylineList = new ArrayList<Polyline>();
-        circleList = new ArrayList<Circle>();
         restParams = new HashMap<String, String>();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -105,8 +122,16 @@ public class MapActivity extends Activity implements
 
         mClusterManager.setRenderer(symbolRenderer);
 
+        droneClusterManager = new ClusterManager<>(this, map);
+        ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
+
+        droneClusterManager.setRenderer(imageDroneRenderer);
+
         // Set map fragment drag listener to recover dropped symbols
         mapFragment.getView().setOnDragListener(mapListeners);
+
+        // Set map long click listener to draw drone target
+        map.setOnMapLongClickListener(mapListeners);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
@@ -122,8 +147,6 @@ public class MapActivity extends Activity implements
         findViewById(R.id.fragment_moyens_init).setVisibility(View.VISIBLE);
         findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
         findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
-
-        addDroneListener();
 
         // Add activity to strategy
         StrategyMoveDrone.getINSTANCE().setActivity(this);
@@ -227,40 +250,6 @@ public class MapActivity extends Activity implements
                 });
     }
 
-    private void addDroneListener() {
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                if (!isDroneMode) return;
-
-                Position position = new Position();
-                position.setLatitude(latLng.latitude);
-                position.setLongitude(latLng.longitude);
-
-                CircleOptions circleOptions = new CircleOptions()
-                        .center(latLng)
-                        .radius(0.2)
-                        .strokeColor(Color.BLUE);
-
-                circleList.add(map.addCircle(circleOptions));
-
-                if (!droneTargetActionFragment.getTarget().getPositions().isEmpty()) {
-                    Position pos = droneTargetActionFragment.getTarget().getPositions().get(droneTargetActionFragment.getTarget().getPositions().size() - 1);
-
-                    PolylineOptions polylineOptions = new PolylineOptions()
-                            .add(new LatLng(pos.getLatitude(), pos.getLongitude()))
-                            .add(latLng)
-                            .width(5)
-                            .color(Color.CYAN);
-
-                    polylineList.add(map.addPolyline(polylineOptions));
-                }
-
-                droneTargetActionFragment.addPosition(position);
-            }
-        });
-    }
-
     @Override
     public void notifySend() {
         if (drone != null) {
@@ -283,9 +272,8 @@ public class MapActivity extends Activity implements
             polyline.remove();
         }
 
-        for (Circle circle : circleList) {
-            circle.remove();
-        }
+        droneClusterManager.clearItems();
+        droneClusterManager.cluster();
 
         polylineList.clear();
     }
@@ -299,7 +287,7 @@ public class MapActivity extends Activity implements
                 .add(new LatLng(pos1.getLatitude(), pos1.getLongitude()))
                 .add(new LatLng(pos2.getLatitude(), pos2.getLongitude()))
                 .width(5)
-                .color(Color.CYAN);
+                .color(Color.rgb(143, 0, 71));
 
         polylineList.add(map.addPolyline(polylineOptions));
     }

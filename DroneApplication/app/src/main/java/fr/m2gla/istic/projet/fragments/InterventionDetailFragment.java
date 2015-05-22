@@ -268,6 +268,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             public void onClick(DialogInterface dialog, int which) {
                 String meanName = input.getText().toString();
 
+                xtraMean.setName(meanName);
                 map.put("idintervention", idIntervention);
                 RestServiceImpl.getInstance()
                         .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,

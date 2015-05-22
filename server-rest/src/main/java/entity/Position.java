@@ -2,7 +2,8 @@ package entity;
 
 
 /**
- * Created by arno on 09/03/15.
+ * @author arno
+ * @see
  */
 
 public class Position {
