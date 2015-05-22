@@ -27,8 +27,10 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolRenderer;
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
+import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
 import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
@@ -162,6 +164,25 @@ public class MapActivity extends Activity implements
                     findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
                     findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
                 }
+                break;
+            case R.id.disp_mean_table:
+                Intent  intent;
+                String  idIntervention;
+
+                // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
+                intent = new Intent(getApplicationContext(), MeanTableActivity.class);
+
+                // Demander un rafraichissement de la liste des interventions et des details de
+                // l'intervention en cours
+                MoyensInitFragment fragmentInitlMoyens = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
+                idIntervention = fragmentInitlMoyens.getIdIntervention();
+
+                // Ajout de données supplémentaires dans l'intent
+                intent.putExtra(GeneralConstants.REF_ACT_IDINTER, "" + idIntervention);
+
+                // Lancement de l'activité, suivante
+                startActivity(intent);
+
                 break;
         }
         return true;

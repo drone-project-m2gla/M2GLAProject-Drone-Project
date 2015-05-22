@@ -47,15 +47,14 @@ public class MoyensInitFragment extends ListFragment {
     private View view;
     private Symbol[] means;
     List<String> titles;
-    private List<Boolean> isDeclineList = new ArrayList();
-    private List<Boolean> draggable = new ArrayList();
     private Intervention intervention;
-    private List<Mean> meanRefused = new ArrayList();
-    private Symbol[] meansXRefused;
-    private List<Drawable> drawables;
     // Moyens disponibles
     private List<String> moyensDisponiblesTitle = new ArrayList<>();
     private List<Drawable> moyensDisponiblesDrawable = new ArrayList<>();
+
+    // Moyens en transit
+    private List<String> moyensRefusedTitle = new ArrayList<>();
+    private List<Drawable> moyensRefusedDrawable = new ArrayList<>();
 
     // Moyens en transit
     private List<String> moyensTransitTitle = new ArrayList<>();
@@ -65,6 +64,10 @@ public class MoyensInitFragment extends ListFragment {
     // Moyens non validés
     List<String> meansRequestedTitle = new ArrayList<>();
     List<Drawable> meansRequestedDrawable = new ArrayList<>();
+
+    // Moyens en transit
+    private List<String> moyensInTransitTitle = new ArrayList();
+    private List<Drawable> moyensInTransitDrawable = new ArrayList();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,33 +142,6 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     * Formattage des moyens extra pour l'adapterMeans
-     *
-     * @param intervention
-     * @param position
-     * @param listMean
-     */
-    private void initImagesTitles(Intervention intervention, int position, List<Mean> listMean, List<Mean> listXtra) {
-
-
-        int xtraRefusedSize = meanRefused.size(); // taille des moyens supplémentaires non validés
-        meansXRefused = new Symbol[xtraRefusedSize];
-        if (xtraRefusedSize > 0) {
-            position = 0;
-            for (Mean m : meanRefused) {
-                String vehicule = m.getVehicle().toString();
-                String vehiculeName = Symbol.getImage(vehicule);
-                meansXRefused[position] = new Symbol(m.getId(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
-                draggable.add(false);
-                isDeclineList.add(m.refusedMeans());
-
-                position++;
-            }
-        }
-    }
-
-    /**
      * Set intervention id from another fragment or activity
      *
      * @param idIntervention
@@ -177,10 +153,19 @@ public class MoyensInitFragment extends ListFragment {
             Map<String, String> map = new HashMap<>();
             map.put("id", idIntervention);
             RestServiceImpl.getInstance()
-                    .get(RestAPI.GET_INTERVENTION, map, Intervention.class, getCallbackSuccess(), getCallbackError());
+                    .get(RestAPI.GET_INTERVENTION, map, Intervention.class, getCallbackSuccess(), new Command() {
+                        @Override
+                        public void execute(Object response) {
+                            Toast.makeText(getActivity(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG);
+                        }
+                    });
             // Appel du drag and drop.
             listenerDragAndDrop();
         }
+    }
+
+    public String getIdIntervention() {
+        return idIntervention;
     }
 
     /**
@@ -209,67 +194,121 @@ public class MoyensInitFragment extends ListFragment {
                 intervention = (Intervention) response;
                 int i = 0;
 
-                List<Mean> meanList = intervention.meansArrived();
-                List<Mean> requestedList = intervention.meansRequested();
+                if (intervention != null) {
+                    List<Mean> meanList = intervention.meansArrived();
+                    List<Mean> requestedList = intervention.meansRequested();
+                    List<Mean> meanRefused = intervention.meansRefused();
 
-                List<Mean> meanNotValidateList = new ArrayList<>();
-                // Init list des moyens refusés et non validés
-                for (Mean m : requestedList) {
-                    if (!m.refusedMeans()) {
-                        meanNotValidateList.add(m);
-                    } else {
-                        meanRefused.add(m);
-                    }
+                    // Appel de la méthode qui cré la view des moyens demandés.
+                    createRequestedMeansView(requestedList.toArray(new Mean[requestedList.size()]));
+
+                    // Appel de la méthode qui cré la view des moyens disponibles.
+                    createAvailableMeansView(meanList);
+
+                    // Appel de la méthode qui cré la view des moyens refusés
+                    createRefusedMeansView(meanRefused);
+
+                    // Appel de la méthode qui cré la view des moyens en transit
+                    List<Mean> activedList = intervention.meansTransit();
+                    createTransitMeansView(activedList);
                 }
-                createRequestedMeansView(meanNotValidateList.toArray(new Mean[meanNotValidateList.size()])); // Appel de la méthode qui cré la view des moyens demandés.
-                // Done moyens refusés.
-
-                // Initialisation des titres et images.
-                initImagesTitles(intervention, i, meanList, requestedList);
-
-
-                // Appel de la méthode qui cré la view des moyens disponibles.
-                createAvailableMeansView(meanList);
-
-                String textViewStringValue;
-                String valueOfTextView;
-
-                //Listes pour générer tableaux pour adapterMeans
-                drawables = new ArrayList<Drawable>();
-                titles = new ArrayList<String>();
-                Spinner refusedMeansSpinner = (Spinner) view.findViewById(R.id.refused_means_spinner);
-
-                if (meansXRefused.length > 0) {
-                    titles.clear();
-                    drawables.clear();
-                    for (Symbol symbol : meansXRefused) {
-                        drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
-                        titles.add(symbol.getFirstText() + " * " + symbol.getId());
-                    }
-
-                    ListView moyensListView = getListView();
-
-                    // Set drawable to adapterMeans
-                    Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
-
-                    // Set image title to adapterMeans
-                    String[] titlesArray = titles.toArray(new String[titles.size()]);
-
-                    // Refused
-//                    ListView refusedView = (ListView) view.findViewById(R.id.list_refused);
-                    ArrayAdapter adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
-//                    refusedView.setAdapter(adapterXtraRefused);
-
-                    refusedMeansSpinner.setAdapter(adapterXtraRefused);
-                } else {
-                    refusedMeansSpinner.setVisibility(View.GONE);
-                }
-                TextView refusedTextView = (TextView) view.findViewById(R.id.moyens_refuses_textview);
-                textViewStringValue = getResources().getString(R.string.moyens_refuses);
-                valueOfTextView = textViewStringValue + (" (" + meansXRefused.length + ")");
-                refusedTextView.setText(valueOfTextView);
             }
         };
+    }
+
+    private void createTransitMeansView(List<Mean> activedList) {
+
+        moyensInTransitTitle.clear();
+        moyensInTransitDrawable.clear();
+
+        if (activedList.size() > 0) {
+            for (Mean m : activedList) {
+                String vehicule = m.getVehicle().toString();
+                String vehiculeName = Symbol.getImage(vehicule);
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+
+                String title = vehicule + " * " + m.getId();
+
+                moyensInTransitTitle.add(title);
+                moyensInTransitDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+            }
+        }
+
+        //Listes pour générer tableaux pour adapterMeans
+        ListView refusedMeansSpinner = (ListView) view.findViewById(R.id.list_en_transit);
+
+        int sizeOfRefusedMeans = moyensInTransitDrawable.size();
+        if (sizeOfRefusedMeans > 0) {
+
+            // Set drawable to adapterMeans
+            Drawable[] imagesArray = moyensInTransitDrawable.toArray(new Drawable[sizeOfRefusedMeans]);
+
+            // Set image title to adapterMeans
+            String[] titlesArray = moyensInTransitTitle.toArray(new String[sizeOfRefusedMeans]);
+
+
+            ArrayAdapter adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
+
+            refusedMeansSpinner.setAdapter(adapterXtraRefused);
+        } else {
+            refusedMeansSpinner.setVisibility(View.GONE);
+        }
+        TextView refusedTextView = (TextView) view.findViewById(R.id.moyens_transit_textview);
+        String textViewStringValue = getResources().getString(R.string.moyens_en_transit);
+        String valueOfTextView = textViewStringValue + (" (" + sizeOfRefusedMeans + ")");
+        refusedTextView.setText(valueOfTextView);
+    }
+
+    /**
+     * Création de la view des moyens refusés.
+     *
+     * @param meanRefused
+     */
+    private void createRefusedMeansView(List<Mean> meanRefused) {
+
+        moyensRefusedTitle.clear();
+        moyensRefusedDrawable.clear();
+
+        if (meanRefused.size() > 0) {
+            for (Mean m : meanRefused) {
+                String vehicule = m.getVehicle().toString();
+                String vehiculeName = Symbol.getImage(vehicule);
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+
+                String title = vehicule + " * " + m.getId();
+
+                moyensRefusedTitle.add(title);
+                moyensRefusedDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
+            }
+        }
+
+        //Listes pour générer tableaux pour adapterMeans
+        Spinner refusedMeansSpinner = (Spinner) view.findViewById(R.id.refused_means_spinner);
+
+        int sizeOfRefusedMeans = moyensRefusedDrawable.size();
+        if (sizeOfRefusedMeans > 0) {
+
+            ListView moyensListView = getListView();
+
+            // Set drawable to adapterMeans
+            Drawable[] imagesArray = moyensRefusedDrawable.toArray(new Drawable[sizeOfRefusedMeans]);
+
+            // Set image title to adapterMeans
+            String[] titlesArray = moyensRefusedTitle.toArray(new String[sizeOfRefusedMeans]);
+
+
+            ArrayAdapter adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
+
+            refusedMeansSpinner.setAdapter(adapterXtraRefused);
+        } else {
+            refusedMeansSpinner.setVisibility(View.GONE);
+        }
+        TextView refusedTextView = (TextView) view.findViewById(R.id.moyens_refuses_textview);
+        String textViewStringValue = getResources().getString(R.string.moyens_refuses);
+        String valueOfTextView = textViewStringValue + (" (" + sizeOfRefusedMeans + ")");
+        refusedTextView.setText(valueOfTextView);
     }
 
     /**
@@ -283,14 +322,6 @@ public class MoyensInitFragment extends ListFragment {
         moyensDisponiblesTitle.clear();
 
         int pos = 0;
-
-        Log.i(TAG, "Dispo  " + meanList.size());
-//        for (Mean m : meanList) {
-//            boolean isNaN = Double.isNaN(m.getCoordinates().getLatitude());//"NaN".equals();
-//            if (isNaN) {
-//                meanList.add(m);
-//            }
-//        }
 
         int meanSize = meanList.size(); // taille de la liste des moyens non placés sur la map
         means = new Symbol[meanSize];
@@ -310,6 +341,8 @@ public class MoyensInitFragment extends ListFragment {
                 moyensDisponiblesDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
             }
         }
+
+        Log.i(TAG, "Dispo  " + meanSize);
 
 
         // Set drawable to adapterMeans
@@ -333,7 +366,7 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     // Méthode appelé par la strategie.
-    public void addMeanStrategy(final Mean object) {
+    public void demandMeanStrategy(final Mean object) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

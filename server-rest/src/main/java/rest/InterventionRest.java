@@ -287,7 +287,6 @@ public class InterventionRest {
 	}
 
 	@GET
-	@Path("")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Intervention> getAllIntervention() {
 		InterventionDAO iD = new InterventionDAO();
@@ -312,7 +311,6 @@ public class InterventionRest {
 	}
 
 	@POST
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public synchronized Intervention setIntervention(Intervention intervention) {

@@ -47,6 +47,7 @@
 
     <string name="switch_dorne_mode">Passer en mode drone</string>
     <string name="switch_moyen_mode">Passer en mode gestion des moyens</string>
+    <string name="disp_moyen_table">Liste des moyens</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="management_target">Gestion du trajet</string>
