@@ -184,6 +184,47 @@ public class InterventionRest {
         }
     }
 
+    @Path("/{id}/moyen/retourcrm")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public synchronized Response sendMeanBackToCRMForIntervention(@PathParam("id") long id, Mean mean) {
+        InterventionDAO iD = new InterventionDAO();
+        Boolean meanEngaged = false;
+        Mean res = null;
+        iD.connect();
+        Intervention intervention = iD.getById(id);
+        List<Mean> meanList = intervention.getMeansList();
+
+        for (Mean m : meanList) {
+            if (m.getId() == mean.getId()) {
+                if (m.getMeanState() == MeanState.ENGAGED) {
+                    m.setMeanState(MeanState.ARRIVED);
+                    m.setInPosition(false);
+                    res = m;
+                    meanEngaged = true;
+                    break;
+                }
+            }
+        }
+
+        if (meanEngaged) {
+            iD.update(intervention);
+            iD.disconnect();
+            try {
+                PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "moyenAuCRM", res);
+            } catch (IOException e) {
+                LOGGER.error("Error push service intervention", e);
+            }
+            return Response.ok(res).build();
+        }
+        else
+        {
+            iD.disconnect();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Mean is not engaged").build();
+        }
+    }
+
+
     @POST
     @Path("/{id}/moyen/libere")
     @Consumes({MediaType.APPLICATION_JSON})
