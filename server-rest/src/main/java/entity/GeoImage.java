@@ -1,9 +1,8 @@
 package entity;
 
 /**
- * Image with metadata
- * Created by mds on 10/03/15.
- * Coordonnées d'une image et son nom
+ * @author mds
+ * @see GeoImage with coordinates and name
  */
 public class GeoImage extends AbstractEntity {
     private Position position;

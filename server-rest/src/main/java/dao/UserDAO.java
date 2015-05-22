@@ -7,20 +7,20 @@ import util.Constant;
 import entity.User;
 
 /**
- * Created by mds on 07/04/15.
- * Class ${CLASS}
+ * @author mds
+ * @see UserDAO implements these abstract methods for User transformation
  */
 public class UserDAO extends AbstractDAO<User> {
 
     /**
-     * Contructeur UserDAO
+     * Contructor UserDAO
      */
     public UserDAO()
     {
         this.datatype = Constant.DATATYPE_USER;
     }
 
-    public User findByLogin(String username, String password) {
+    public User connectUser(String username, String password) {
         BasicDBObject criterion = new BasicDBObject("username", username);
         criterion.put("password",password);
         FindIterable findIterable = collection.find(criterion);

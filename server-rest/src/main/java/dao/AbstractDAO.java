@@ -1,22 +1,28 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import org.bson.Document;
-import util.Configuration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import entity.AbstractEntity;
+import util.Configuration;
 
 /**
- * Abstract class for DAO
+ * @see
  * AbstractDAO provides methods for DAO
  * Also use for connect and disconnect
+ * This class is used by other DAO classes for the generic methods
  */
 public abstract class AbstractDAO<T extends AbstractEntity> {
 
@@ -30,9 +36,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     protected String datatype;
 
     /**
-     * Connect to BDD and
-     * Bucket to communicate with couchbase
-     * @return void
+     * Connect to BDD and bucket to communicate with couchbase
      */
     public final void connect() {
         if(mongoClient == null || db==null) {
@@ -52,6 +56,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
             mongoClient.close();
             db =null;
             collection = null;
+            mongoClient = null;
         }
     }
 
@@ -66,15 +71,15 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Delete an entity
-     * @param e
+     * @param e entity to delete
      */
     public final void delete(T e) {
-        collection.deleteOne(new BasicDBObject("_id",e.getId()));
+        collection.deleteOne(new BasicDBObject("_id", e.getId()));
     }
 
     /**
      * Update entity
-     * @param e
+     * @param e entity to update
      */
     public final T update(T e) {
         collection.replaceOne(new BasicDBObject("_id", e.getId()), entityToDocument(e));
@@ -109,17 +114,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     }
 
     /**
-     * flush our bucket
-     * @return boolean
-     */
-    public boolean flush()
-    {
-        db.drop();
-        return true;
-    }
-
-    /**
      * Transform a jsonDocument to entity
+     * Abstract method implemented on multiple inheritance
      * @param document document to transform
      * @return entity of Document
      */
@@ -127,9 +123,14 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Transform an entity to Document
+     * Abstract method implemented on multiple inheritance
      * @param entity to transform
      * @return document of entity
      */
     protected abstract Document entityToDocument(T entity);
 
+    public void ensureIndex()
+    {
+
+    }
 }
