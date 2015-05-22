@@ -1,10 +1,8 @@
 package entity;
 
 /**
- * Created by arno on 07/04/15.
- *
+ * @author arno
  * This class list all the available disaster codes.
- *
  */
 
 public enum DisasterCode {

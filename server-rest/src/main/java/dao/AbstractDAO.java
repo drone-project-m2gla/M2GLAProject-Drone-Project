@@ -22,6 +22,7 @@ import util.Configuration;
  * Abstract class for DAO
  * AbstractDAO provides methods for DAO
  * Also use for connect and disconnect
+ * This class is used by other DAO classes for the generic methods
  */
 public abstract class AbstractDAO<T extends AbstractEntity> {
 
@@ -35,9 +36,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     protected String datatype;
 
     /**
-     * Connect to BDD and
-     * Bucket to communicate with couchbase
-     * @return void
+     * Connect to BDD and bucket to communicate with couchbase
      */
     public final void connect() {
         if(mongoClient == null || db==null) {
@@ -115,6 +114,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Transform a jsonDocument to entity
+     * Abstract method implemented on multiple inheritance
      * @param document document to transform
      * @return entity of Document
      */
@@ -122,6 +122,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Transform an entity to Document
+     * Abstract method implemented on multiple inheritance
      * @param entity to transform
      * @return document of entity
      */
