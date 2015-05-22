@@ -1,24 +1,25 @@
 package dao;
 
+import org.bson.Document;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.mongodb.BasicDBList;
-import org.bson.Document;
-import util.Constant;
-import util.Tools;
 import entity.DisasterCode;
 import entity.Intervention;
+import util.Constant;
+import util.Tools;
 
 /**
- * Created by alban on 13/03/15.
+ * @author  alban
+ * @see InterventionDAO implements these abstract methods for Intervention transformation
  */
 public class InterventionDAO extends AbstractDAO<Intervention> {
 
     /**
-     * Contructeur InterventionDAO
+     * Contructor InterventionDAO
      */
     public InterventionDAO()
     {

@@ -1,15 +1,14 @@
 package entity;
 
-import util.Constant;
-
 /**
- * Created by jerem on 08/04/15.
- *
- *  Retourne une coordonnée satellite pour la carte avec son signalement (icone "statique)
+ * @author jerem
+ * @see GeoIcon with all information to place on map. Using for Topographie Rest
  */
 public class GeoIcon extends AbstractEntity {
 
-    //nom du fichier sans l'extension
+    /**
+     * filename without extension
+     */
     private String filename;
 
     private String entitled;

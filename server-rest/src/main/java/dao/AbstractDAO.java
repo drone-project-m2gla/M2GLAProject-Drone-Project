@@ -1,22 +1,28 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import org.bson.Document;
-import util.Configuration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import entity.AbstractEntity;
+import util.Configuration;
 
 /**
- * Abstract class for DAO
+ * @see
  * AbstractDAO provides methods for DAO
  * Also use for connect and disconnect
+ * This class is used by other DAO classes for the generic methods
  */
 public abstract class AbstractDAO<T extends AbstractEntity> {
 
@@ -30,8 +36,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     protected String datatype;
 
     /**
-     * Connect to BDD and
-     * @return Bucket to communicate with couchbase
+     * Connect to BDD and bucket to communicate with couchbase
      */
     public final void connect() {
         if(mongoClient == null || db==null) {
@@ -83,7 +88,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * GetAll
-     * @return
+     * @return List<T>
      */
     public final List<T> getAll()
     {
@@ -100,7 +105,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * GetById
-     * @return
+     * @return T
      */
     public final T getById(long id)
     {
@@ -110,6 +115,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Transform a jsonDocument to entity
+     * Abstract method implemented on multiple inheritance
      * @param document document to transform
      * @return entity of Document
      */
@@ -117,6 +123,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Transform an entity to Document
+     * Abstract method implemented on multiple inheritance
      * @param entity to transform
      * @return document of entity
      */

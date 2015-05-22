@@ -1,15 +1,19 @@
 package fr.m2gla.istic.projet.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -26,6 +30,7 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.RestAPI;
@@ -248,9 +253,53 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     }
 
 
-    public Mean getMeanXtra(int position) {
-        return intervention.meansRequested().get(position);
+    private void meanNameGet(final Mean xtraMean, final int position) {
+        final Map<String, String> map = new HashMap<>();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(GeneralConstants.MEAN_DIALOG_TITLE);
+
+        // Set up the input
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton(GeneralConstants.MEAN_DIALOG_OK_BUTTON, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String meanName = input.getText().toString();
+
+                map.put("idintervention", idIntervention);
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                        Log.i("itemsAdapter", "Moyen validé : " + position);
+                                        refreshList();
+                                    }
+                                }, new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Toast.makeText(getActivity(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+
+
+            }
+        });
+        builder.setNegativeButton(GeneralConstants.MEAN_DIALOG_CANCEL_BUTTON, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
+
+
 
     @Override
     public boolean refreshList() {
@@ -261,6 +310,67 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         fragmentListIntervention.refreshList(idIntervention);
 
         return false;
+    }
+
+    @Override
+    public boolean onValidateClick(final Mean xtraMean, final int position) {
+        final Map<String, String> map = new HashMap<>();
+
+        if (xtraMean == null) return (false);
+
+        meanNameGet(xtraMean, position);
+/*
+        map.put("idintervention", idIntervention);
+        RestServiceImpl.getInstance()
+                .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                Log.i("itemsAdapter", "Moyen validé : " + position);
+                                refreshList();
+                            }
+                        }, new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Toast.makeText(getActivity(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+*/
+        return (true);
+    }
+
+    @Override
+    public boolean onCancelClick(final Mean xtraMean, final int position) {
+        final Map<String, String> map = new HashMap<>();
+
+        if (xtraMean == null) return (false);
+
+        map.put("idintervention", idIntervention);
+        //Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
+
+        RestServiceImpl.getInstance()
+                .post(RestAPI.POST_ANNULLER_MOYEN, map, xtraMean, String.class,
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                //Toast.makeText(getContext(), "Moyen annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                Log.i("itemsAdapter", "Moyen annulé : " + position);
+                                refreshList();
+                            }
+                        }, new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Toast.makeText(getActivity(), "Moyen n'a pas été annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+
+        return (true);
+    }
+
+    public Mean getMeanXtra(int position) {
+        return intervention.meansRequested().get(position);
     }
 
     public String getIdIntervention() {

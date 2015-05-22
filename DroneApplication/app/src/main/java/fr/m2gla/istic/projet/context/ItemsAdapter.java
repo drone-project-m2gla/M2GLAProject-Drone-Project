@@ -177,25 +177,9 @@ public class ItemsAdapter extends ArrayAdapter {
                         ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
                         if (ItemsAdapter.this.xtraMean == null) return;
 
-                        map.put("idintervention", idIntervention);
-                        //Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
-
-                        RestServiceImpl.getInstance()
-                                .post(RestAPI.POST_ANNULLER_MOYEN, map, xtraMean, String.class,
-                                        new Command() {
-                                            @Override
-                                            public void execute(Object response) {
-                                                //Toast.makeText(getContext(), "Moyen annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-                                                Log.i("itemsAdapter", "Moyen annulé : " + position);
-                                                ItemsAdapter.this.remove(position);
-                                            }
-                                        }, new Command() {
-                                            @Override
-                                            public void execute(Object response) {
-                                                Toast.makeText(getContext(), "Moyen n'a pas été annulé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-
+                        if (adapterCommand != null) {
+                            adapterCommand.onCancelClick(ItemsAdapter.this.xtraMean, position);
+                        }
                     }
                 });
 
@@ -206,22 +190,9 @@ public class ItemsAdapter extends ArrayAdapter {
                         ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
                         if (ItemsAdapter.this.xtraMean == null) return;
 
-                        map.put("idintervention", idIntervention);
-                        RestServiceImpl.getInstance()
-                                .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,
-                                        new Command() {
-                                            @Override
-                                            public void execute(Object response) {
-                                                //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-                                                Log.i("itemsAdapter", "Moyen validé : " + position);
-                                                ItemsAdapter.this.remove(position);
-                                            }
-                                        }, new Command() {
-                                            @Override
-                                            public void execute(Object response) {
-                                                Toast.makeText(getContext(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-                                            }
-                                        });
+                        if (adapterCommand != null) {
+                            adapterCommand.onValidateClick(ItemsAdapter.this.xtraMean, position);
+                        }
                     }
                 });
             }

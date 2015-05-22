@@ -1,9 +1,10 @@
 package rest;
 
+import org.apache.log4j.Logger;
+
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,13 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
-
-import util.Constant;
 import dao.GeoIconDAO;
-import dao.UserDAO;
 import entity.GeoIcon;
-import entity.User;
 
 /**
  * Created by jerem on 08/04/15.
