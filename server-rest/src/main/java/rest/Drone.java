@@ -3,6 +3,7 @@ package rest;
 import java.io.IOException;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,7 +22,7 @@ import entity.Target;
 @Path("/drone")
 public class Drone {
 	@GET
-	@Path("move")
+	@Path("position")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
@@ -34,12 +35,19 @@ public class Drone {
 		return GetDronePositionThread.getInstance().getImage();
 	}
 
-    @POST
-    @Path("target")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void doTrajet(Target target) {
-        TransitDroneSender transitDroneSender = new TransitDroneSender(target);
-        GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
-        GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
-    }
+	@POST
+	@Path("target")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void doTrajet(Target target) {
+		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
+	}
+
+	@DELETE
+	@Path("target")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void stopTrajet() {
+		GetDronePositionThread.createNewInstance();
+	}
 }

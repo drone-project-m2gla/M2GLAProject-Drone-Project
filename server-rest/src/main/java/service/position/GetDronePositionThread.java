@@ -17,86 +17,89 @@ import entity.Position;
  * Created by alban on 16/04/15.
  */
 public class GetDronePositionThread implements Runnable, PositionUnchangedObservable {
-    private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
-    private static GetDronePositionThread instance = new GetDronePositionThread();
-    private Position position;
-    private ImageDrone image;
-    private boolean continueThread;
+	private static GetDronePositionThread instance;
 
-    private GetDronePositionThread() {
-        position = new Position(0.0, 0.0, 0.0);
-        continueThread = true;
-    }
+	private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
+	private Position position;
+	private ImageDrone image;
+	private boolean continueThread;
 
-    public static GetDronePositionThread getInstance() {
-        return instance;
-    }
+	private GetDronePositionThread() {
+		position = new Position(0.0, 0.0, 0.0);
+		continueThread = true;
+	}
 
-    public static void createNewInstance() {
-        instance.stopThread();
-        instance = new GetDronePositionThread();
-    }
+	public static GetDronePositionThread getInstance() {
+		return instance;
+	}
 
-    public synchronized void stopThread() {
-        continueThread = false;
-    }
+	public static void createNewInstance() {
+		instance.stopThread();
+		instance = new GetDronePositionThread();
+	}
 
-    public synchronized Position getPosition() {
-        return position;
-    }
+	public synchronized void stopThread() {
+		continueThread = false;
+	}
 
-    public synchronized ImageDrone getImage() {
-        return image;
-    }
+	public synchronized Position getPosition() {
+		return position;
+	}
 
-    @Override
-    public void run() {
-        ObjectMapper mapper = new ObjectMapper();
-        HttpClient client = new HttpClient();
-        while (continueThread) {
-            GetMethod getPosition = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
-            try {
-                client.executeMethod(getPosition);
-                Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
-                if (position != null && !Tools.isSamePositions(this.position, position)) {
-                    this.position = position;
-                    //FIXME Reactive pull service
-                    //PushServiceImpl.getInstance().sendMessage(
-                    //        PushService.TypeClient.SIMPLEUSER, "droneMove", position);
+	public synchronized ImageDrone getImage() {
+		return image;
+	}
 
-                    GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/picture");
-                    client.executeMethod(getImage);
-                    this.image = mapper.readValue(getImage.getResponseBodyAsString(), ImageDrone.class);
-                } else {
-                    notifyObserversForPositionUnchanged();
-                }
-                Thread.sleep(2987);
-            } catch (IOException e) {
-                //LOGGER.error("Get position error", e);
-            } catch (InterruptedException e) {
-                //LOGGER.error("Get position error", e);
-            }
-        }
-    }
+	@Override
+	public void run() {
+		ObjectMapper mapper = new ObjectMapper();
+		HttpClient client = new HttpClient();
+		while (continueThread) {
+			GetMethod getPosition = new GetMethod(Configuration.getSERVER_PYTHON() + "/position");
+			try {
+				client.executeMethod(getPosition);
+				Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
+				if (position != null && !Tools.isSamePositions(this.position, position)) {
+					this.position = position;
+					// FIXME Reactive pull service
+					// PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,
+					//			"droneMove", position);
 
-    @Override
-    public void addObserversPositionsUnhanged(PositionUnchangedObserver observer) {
-        this.positionObservers.add(observer);
-    }
+					GetMethod getImage = new GetMethod(
+							Configuration.getSERVER_PYTHON() + "/picture");
+					client.executeMethod(getImage);
+					this.image = mapper.readValue( getImage.getResponseBodyAsString(), ImageDrone.class);
+				} else {
+					notifyObserversForPositionUnchanged();
+				}
+				Thread.sleep(2987);
+			} catch (IOException e) {
+				// LOGGER.error("Get position error", e);
+			} catch (InterruptedException e) {
+				// LOGGER.error("Get position error", e);
+			}
+		}
+	}
 
-    @Override
-    public void removeObserversPositionsUnhanged(PositionUnchangedObserver observer) {
-        this.positionObservers.remove(observer);
-    }
+	@Override
+	public void addObserversPositionsUnhanged(PositionUnchangedObserver observer) {
+		this.positionObservers.add(observer);
+	}
 
-    @Override
-    public void notifyObserversForPositionUnchanged() {
-        for(PositionUnchangedObserver observer : positionObservers) {
-            observer.notifyPositionUnchanged();
-        }
-    }
+	@Override
+	public void removeObserversPositionsUnhanged(PositionUnchangedObserver observer) {
+		this.positionObservers.remove(observer);
+	}
 
-    public void flushPositionUnchangedObservers() {
-        this.positionObservers = new ArrayList<PositionUnchangedObserver>();
-    }
+	@Override
+	public void notifyObserversForPositionUnchanged() {
+		for (PositionUnchangedObserver observer : positionObservers) {
+			observer.notifyPositionUnchanged();
+		}
+	}
+
+	@Override
+	public void flushPositionUnchangedObservers() {
+		this.positionObservers = new ArrayList<PositionUnchangedObserver>();
+	}
 }

@@ -7,4 +7,5 @@ public interface PositionUnchangedObservable {
     public void addObserversPositionsUnhanged(PositionUnchangedObserver observer);
     public void removeObserversPositionsUnhanged(PositionUnchangedObserver observer);
     public void notifyObserversForPositionUnchanged();
+    public void flushPositionUnchangedObservers();
 }
