@@ -5,10 +5,12 @@
 import java.util.Arrays;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import rest.InterventionRestTest;
 import rest.UserServicesRestTest;
 import util.Configuration;
 
@@ -31,9 +33,11 @@ import dao.UserDAOTest;
         MeanDAOTest.class,
         GeoIconDAOTest.class,
         GeoImageDAOTest.class,
-        UserServicesRestTest.class
+        UserServicesRestTest.class,
+        InterventionRestTest.class
 })
 public class TestSuiteDao {
+
     @BeforeClass
     public static void setUp() {
         MongoClient mongoClient;
