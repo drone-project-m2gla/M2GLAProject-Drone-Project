@@ -10,8 +10,7 @@ import util.Tools;
 
 /**
  * @author :jerem
- * This class implements these abstract methods for GeoIcon transformation
- *
+ * @see GeoIconDAO implements these abstract methods for GeoIcon transformation
  */
 public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
 

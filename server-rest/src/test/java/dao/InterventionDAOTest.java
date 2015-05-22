@@ -1,5 +1,6 @@
 package dao;
 
+
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by alban on 16/03/15.
@@ -62,10 +64,7 @@ public class InterventionDAOTest {
                 }
             }
         });
-        if(mongoClient != null) {
-            mongoClient.close();
-        }
-
+        mongoClient.close();
     }
 
     @After
@@ -112,5 +111,21 @@ public class InterventionDAOTest {
         assertEquals(intervention, created);
         dao.delete(created);
         assertNull(dao.getById(created.getId()));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCreateNull()
+    {
+        dao.create(null);
+    }
+
+    @Test
+    public void getAll()
+    {
+        for(Intervention i : dao.getAll())
+        {
+            dao.delete(i);
+        }
+        assertTrue(dao.getAll().isEmpty());
     }
 }

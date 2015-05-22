@@ -19,7 +19,7 @@ import entity.AbstractEntity;
 import util.Configuration;
 
 /**
- * Abstract class for DAO
+ * @see
  * AbstractDAO provides methods for DAO
  * Also use for connect and disconnect
  * This class is used by other DAO classes for the generic methods
@@ -56,6 +56,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
             mongoClient.close();
             db =null;
             collection = null;
+            mongoClient = null;
         }
     }
 
@@ -70,15 +71,15 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Delete an entity
-     * @param e
+     * @param e entity to delete
      */
     public final void delete(T e) {
-        collection.deleteOne(new BasicDBObject("_id",e.getId()));
+        collection.deleteOne(new BasicDBObject("_id", e.getId()));
     }
 
     /**
      * Update entity
-     * @param e
+     * @param e entity to update
      */
     public final T update(T e) {
         collection.replaceOne(new BasicDBObject("_id", e.getId()), entityToDocument(e));
@@ -128,4 +129,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     protected abstract Document entityToDocument(T entity);
 
+    public void ensureIndex()
+    {
+
+    }
 }

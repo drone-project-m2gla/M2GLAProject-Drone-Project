@@ -2,18 +2,14 @@ package entity;
 
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
-import util.Constant;
 import util.Datetime;
 import util.MeansByDisasterCode;
 
 
 /**
- * Created by arno on 07/04/15.
- *
- * This class is used for handling intervention information.
- *
+ * @author arno
+ * @see Intervention is used for handling intervention information.
  */
 
 public class Intervention extends AbstractEntity {

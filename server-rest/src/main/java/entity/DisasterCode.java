@@ -2,7 +2,7 @@ package entity;
 
 /**
  * @author arno
- * This class list all the available disaster codes.
+ * @see DisasterCode list all the available disaster codes.
  */
 
 public enum DisasterCode {

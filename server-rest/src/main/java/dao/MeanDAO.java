@@ -7,7 +7,7 @@ import entity.Mean;
 
 /**
  * @author arno
- * This class implements these abstract methods for Mean transformation
+ * @see MeanDAO implements these abstract methods for Mean transformation
  */
 public class MeanDAO extends AbstractDAO<Mean>{
 

@@ -56,8 +56,8 @@ public class Topographie {
 		GeoIconDAO dao = new GeoIconDAO();
 
 
-		if ((icon.getColor() != "") &&
-				(icon.getEntitled() != "") && (icon.getFilename() !=  "") &&  (icon.getColor() !=  "")){
+		if (!"".equals(icon.getColor()) &&
+				(!"".equals(icon.getEntitled())) && (!"".equals(icon.getFilename())) &&  (!"".equals(icon.getColor()))){
 
 			dao.connect();
 			dao.create(icon);

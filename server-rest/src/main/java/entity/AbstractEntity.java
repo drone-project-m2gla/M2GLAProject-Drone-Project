@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * @author alban
- * Abstract class for Entity
+ * @see
  * AbstractEntity provides methods for Entity
  * Also use for create random identify
  * This class is used by other Entity classes for the generic methods
