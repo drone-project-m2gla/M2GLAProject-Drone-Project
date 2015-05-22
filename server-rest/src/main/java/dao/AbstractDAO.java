@@ -1,17 +1,22 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import org.bson.Document;
-import util.Configuration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import entity.AbstractEntity;
+import util.Configuration;
 
 /**
  * Abstract class for DAO
@@ -106,16 +111,6 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     {
         FindIterable findIterable = collection.find(new BasicDBObject("_id", id));
         return documentToEntity((Document) findIterable.first());
-    }
-
-    /**
-     * flush our bucket
-     * @return boolean
-     */
-    public boolean flush()
-    {
-        db.drop();
-        return true;
     }
 
     /**
