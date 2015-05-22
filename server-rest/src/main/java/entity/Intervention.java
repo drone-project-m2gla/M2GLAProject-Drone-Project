@@ -121,7 +121,7 @@ public class Intervention extends AbstractEntity {
 	}
 
     @Override
-    public String toString() { // $COVERAGE-IGNORE$
+    public String toString() {
         return "Intervention{" +
                 "id=" + id +
                 ", dateCreate=" + dateCreate +
@@ -137,7 +137,7 @@ public class Intervention extends AbstractEntity {
     }
 
     @Override
-    public boolean equals(Object o) { // $COVERAGE-IGNORE$
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Intervention)) return false;
         Intervention that = (Intervention) o;
