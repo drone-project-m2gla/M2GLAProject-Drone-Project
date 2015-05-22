@@ -90,7 +90,7 @@ public class GeoImageDAOTest {
     {
         GeoImage geoImage1 = new GeoImage();
         geoImage1.setImage("BASE64");
-        geoImage1.setPosition(new Position(0, 1, 0));
+        geoImage1.setPosition(new Position(0, 11, 0));
         geoImage1.setWidth(400);
         geoImage1.setHeight(500);
         GeoImage geoImage1InBase = dao.create(geoImage1);
@@ -98,7 +98,7 @@ public class GeoImageDAOTest {
 
         GeoImage geoImage2 = new GeoImage();
         geoImage2.setImage("BASE64");
-        geoImage2.setPosition(new Position(0.0000000001, 1, 0));
+        geoImage2.setPosition(new Position(0.0000000001, 11, 0));
         geoImage2.setWidth(400);
         geoImage2.setHeight(500);
         GeoImage geoImage2InBase = dao.create(geoImage2);
@@ -113,14 +113,11 @@ public class GeoImageDAOTest {
         assertEquals(geoImage3, geoImage3InBase);
 
         dao.ensureIndex();
-        List<GeoImage> concernedImages = dao.getAllImagesNear(1,0);
-        //LOGGER.info(dao.getAll());
-        LOGGER.info(concernedImages);
+        List<GeoImage> concernedImages = dao.getAllImagesNear(11,0);
         assertEquals(2, concernedImages.size());
         assertTrue(concernedImages.contains(geoImage1));
         assertTrue(concernedImages.contains(geoImage2));
         assertFalse(concernedImages.contains(geoImage3));
-
     }
 
 

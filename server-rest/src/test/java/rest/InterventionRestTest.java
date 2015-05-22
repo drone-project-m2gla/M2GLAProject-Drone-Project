@@ -5,11 +5,9 @@ import entity.*;
 import org.junit.*;
 import service.impl.RetrieveAddressImpl;
 import util.Configuration;
-import util.Datetime;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -134,7 +132,6 @@ public class InterventionRestTest {
 
         assertEquals("Mean is already released or not in a state where it can be released",response2.getEntity());
         intervention = dao.getById(intervention.getId());
-        dao.getById(intervention.getId());
         assertFalse(intervention.getMeansList().contains(mean1));
         assertTrue(intervention.getMeansList().contains(mean2));
         assertEquals(2, intervention.getMeansList().size());

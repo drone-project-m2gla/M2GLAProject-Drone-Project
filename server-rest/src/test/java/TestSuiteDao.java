@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import rest.ImagesRestTest;
 import rest.InterventionRestTest;
 import rest.UserServicesRestTest;
 import util.Configuration;
@@ -33,7 +34,8 @@ import dao.UserDAOTest;
         GeoIconDAOTest.class,
         GeoImageDAOTest.class,
         UserServicesRestTest.class,
-        InterventionRestTest.class
+        InterventionRestTest.class,
+        ImagesRestTest.class
 })
 public class TestSuiteDao {
 
