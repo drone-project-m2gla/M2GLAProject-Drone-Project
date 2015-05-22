@@ -27,17 +27,26 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response logIn(User user) {
-        dao = new UserDAO();
-        dao.connect();
-        User userData = dao.connectUser(user.getUsername(), user.getPassword());
-        dao.disconnect();
-        LOGGER.info("User " + userData.getUsername());
         int status = 401;
-        if (user.equals(userData)) {
-            LOGGER.info("User " + userData.getUsername() + " connect");
-            status = 200;
-        } else {
-        	userData = new User();
+        User userData;
+        if(user != null)
+        {
+            dao = new UserDAO();
+            dao.connect();
+            userData = dao.connectUser(user.getUsername(), user.getPassword());
+            dao.disconnect();
+            LOGGER.info("User " + user.getUsername());
+
+            if (user.equals(userData)) {
+                LOGGER.info("User " + userData.getUsername() + " connect");
+                status = 200;
+            } else {
+                userData = new User();
+            }
+        }
+        else
+        {
+            userData = new User();
         }
         return Response.status(status).entity(userData).build();
     }
