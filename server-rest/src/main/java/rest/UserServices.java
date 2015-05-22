@@ -56,7 +56,6 @@ public class UserServices {
         dao.create(user);
         dao.disconnect();
 
-        String response = "";
         return Response.status(200).entity("Hello " + username).build();
     }
 
