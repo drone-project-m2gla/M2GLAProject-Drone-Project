@@ -1,9 +1,7 @@
 package fr.m2gla.istic.projet.activity.mapUtils;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.util.Log;
@@ -37,12 +35,6 @@ public class MapListeners implements
         GoogleMap.OnMarkerDragListener,
         GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = "MapListeners";
-    private Map<String, String> param;
-
-    private MapActivity mapActivity;
-
-    // Keep track of all the symbols by marker id
-    public Map<String, SymbolMarkerClusterItem>markerSymbolLink = new HashMap<String, SymbolMarkerClusterItem>();
 
     // offsets used to place the icon when it is dropped
     private static final int OFFSET_X = -100;
@@ -50,6 +42,11 @@ public class MapListeners implements
 
     // Shift used by raise on drag for map markers
     private static final int SHIFT_RAISE_ON_DRAG = 90;
+
+    private MapActivity mapActivity;
+
+    // Keep track of all the symbols by marker id
+    public Map<String, SymbolMarkerClusterItem> markerSymbolLink = new HashMap<String, SymbolMarkerClusterItem>();
 
     public void setMapActivity(MapActivity mapActivity) {
         this.mapActivity = mapActivity;
@@ -83,7 +80,7 @@ public class MapListeners implements
 
                 MapActivity.setDraggingMode(false);
                 RestServiceImpl.getInstance()
-                        .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
+                        .post(RestAPI.POST_POSITION_MOVE, mapActivity.restParams, mean, Mean.class,
                                 new Command() {
                                     @Override
                                     public void execute(Object response) {
@@ -151,7 +148,7 @@ public class MapListeners implements
 
         MapActivity.setDraggingMode(false);
         RestServiceImpl.getInstance()
-                .post(RestAPI.POST_POSITION_MOVE, param, mean, Mean.class,
+                .post(RestAPI.POST_POSITION_MOVE, mapActivity.restParams, mean, Mean.class,
                         new Command() {
                             @Override
                             public void execute(Object response) {
@@ -195,7 +192,7 @@ public class MapListeners implements
                                     mean.setInPosition(true);
 
                                     RestServiceImpl.getInstance()
-                                            .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                            .post(RestAPI.POST_POSITION_CONFIRMATION, mapActivity.restParams, mean, Mean.class,
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {
@@ -228,7 +225,7 @@ public class MapListeners implements
 
                                     RestServiceImpl.getInstance()
                                             //TODO: utiliser la méthode post correcte
-                                            .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                            .post(RestAPI.POST_POSITION_CONFIRMATION, mapActivity.restParams, mean, Mean.class,
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {
@@ -260,7 +257,7 @@ public class MapListeners implements
 
                                     RestServiceImpl.getInstance()
                                             //TODO: utiliser la méthode post correcte
-                                            .post(RestAPI.POST_POSITION_CONFIRMATION, param, mean, Mean.class,
+                                            .post(RestAPI.POST_POSITION_CONFIRMATION, mapActivity.restParams, mean, Mean.class,
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {

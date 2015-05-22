@@ -30,7 +30,6 @@ import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
-import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
 import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
@@ -51,20 +50,18 @@ import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 public class MapActivity extends Activity implements
         ObserverTarget {
     private static final String TAG = "MapActivity";
-
     private static final int ZOOM_INDEX = 18;
-
     private static MapFragment mapFragment;
+    private static boolean isDragging;
 
     public GoogleMap map;
-    private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
-    MapListeners mapListeners;
+    public Map<String, String> restParams;
 
-    private Map<String, String> param;
+    private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+    private MapListeners mapListeners;
 
     private Menu menu;
     private boolean isDroneMode;
-    private static boolean isDragging;
     private Circle drone;
     private List<Polyline> polylineList;
     private List<Circle> circleList;
@@ -85,7 +82,7 @@ public class MapActivity extends Activity implements
         isDragging = false;
         polylineList = new ArrayList<Polyline>();
         circleList = new ArrayList<Circle>();
-        param = new HashMap<String, String>();
+        restParams = new HashMap<String, String>();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
@@ -349,10 +346,10 @@ public class MapActivity extends Activity implements
                 mInitFragment.setInterventionID(idIntervention);
             }
 
-            param.put("id", idIntervention);
+            restParams.put("id", idIntervention);
 
             RestServiceImpl.getInstance()
-                    .get(RestAPI.GET_INTERVENTION, param, Intervention.class,
+                    .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
                             new Command() {
                                 @Override
                                 public void execute(Object response) {
@@ -376,7 +373,7 @@ public class MapActivity extends Activity implements
     public void loadMeansInMap() {
         if (!isDragging) {
             RestServiceImpl.getInstance()
-                    .get(RestAPI.GET_INTERVENTION, param, Intervention.class,
+                    .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
                             getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
         }
     }
