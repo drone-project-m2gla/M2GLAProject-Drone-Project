@@ -183,6 +183,10 @@ public class MoyensInitFragment extends ListFragment {
         }
     }
 
+    public String getIdIntervention() {
+        return idIntervention;
+    }
+
     /**
      * Command error
      *
