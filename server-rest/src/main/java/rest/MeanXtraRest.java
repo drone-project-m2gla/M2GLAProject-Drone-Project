@@ -37,6 +37,7 @@ public class MeanXtraRest {
             if (m.getId() == meanXtra.getId() && m.getMeanState() == MeanState.REQUESTED) {
                 m.setDateActivated(Datetime.getCurrentDate());
                 m.setMeanState(MeanState.ACTIVATED);
+                m.setName(meanXtra.getName());
                 res = m;
             }
         }
