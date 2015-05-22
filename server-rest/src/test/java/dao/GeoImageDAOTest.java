@@ -44,8 +44,8 @@ public class GeoImageDAOTest {
     public void testInsert()
     {
         GeoImage geoImage = new GeoImage();
-        geoImage.setImageIn64("BASE64");
-        geoImage.setCoordinates(new Position(7.0, 6.0, 4.0));
+        geoImage.setImage("BASE64");
+        geoImage.setPosition(new Position(7.0, 6.0, 4.0));
         GeoImage geoImageInBase = dao.create(geoImage);
         assertEquals(geoImage, geoImageInBase);
     }
@@ -53,22 +53,24 @@ public class GeoImageDAOTest {
     @Test
     public void testUpdate() {
         GeoImage geoImage = new GeoImage();
-        geoImage.setImageIn64("BASE64");
-        geoImage.setCoordinates(new Position(7.0, 6.0, 4.0));
+        geoImage.setImage("BASE64");
+        geoImage.setPosition(new Position(7.0, 6.0, 4.0));
         GeoImage geoImageInBase = dao.create(geoImage);
         assertEquals(geoImage, geoImageInBase);
 
-        geoImageInBase.setImageIn64("PLAP");
+        geoImageInBase.setImage("PLAP");
         GeoImage updated = dao.update(geoImageInBase);
         assertEquals(updated, geoImageInBase);
-        assertEquals("PLAP", geoImageInBase.getImageIn64());
+        assertEquals("PLAP", geoImageInBase.getImage());
     }
 
     @Test
     public void testDelete() {
         GeoImage geoImage = new GeoImage();
-        geoImage.setImageIn64("BASE64");
-        geoImage.setCoordinates(new Position(7.0, 6.0, 4.0));
+        geoImage.setImage("BASE64");
+        geoImage.setPosition(new Position(7.0, 6.0, 4.0));
+        geoImage.setWidth(400);
+        geoImage.setHeight(500);
         GeoImage geoImageInBase = dao.create(geoImage);
         assertEquals(geoImage, geoImageInBase);
 

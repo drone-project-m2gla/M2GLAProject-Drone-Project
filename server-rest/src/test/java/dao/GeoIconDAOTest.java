@@ -36,8 +36,6 @@ public class GeoIconDAOTest {
 
     @After
     public void tearDown() {
-
-
     }
 
     @Test
