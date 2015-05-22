@@ -38,7 +38,7 @@ public class InterventionRest {
 	@GET
 	@Path("/{id}/moyen/{idmean}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Mean getMeanForIntervention(@PathParam("id") long id,@PathParam("idmean") long idmean) {
+	public Response getMeanForIntervention(@PathParam("id") long id,@PathParam("idmean") long idmean) {
 
 		InterventionDAO iD = new InterventionDAO();
 		Mean res = null;
@@ -51,8 +51,11 @@ public class InterventionRest {
 				res = mean;
 			}
 		}
-
-		return res;
+        if(res!=null)
+        {
+            return Response.ok(res).build();
+        }
+        return Response.noContent().build();
 	}
 
 	@POST
@@ -270,7 +273,7 @@ public class InterventionRest {
 	@Path("/{id}/moyenextra")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public synchronized Mean AddExtraMeanToIntervention(@PathParam("id") long id,Mean meanXtra) {
+	public synchronized Response addExtraMeanToIntervention(@PathParam("id") long id,Mean meanXtra) {
 		InterventionDAO iD = new InterventionDAO();
 		iD.connect();
 		Intervention intervention = iD.getById(id);
@@ -286,31 +289,18 @@ public class InterventionRest {
 			LOGGER.error("Error push service intervention", e);
 		}
 
-		return intervention.getMeansList().get(intervention.getMeansList().size()-1);
+		return Response.ok(intervention.getMeansList().get(intervention.getMeansList().size()-1)).build();
 	}
 
 	@GET
 	@Path("/{id}/moyen")
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Mean> getMeanListForIntervention(@PathParam("id") long id) {
+	public Response getMeanListForIntervention(@PathParam("id") long id) {
 		InterventionDAO iD = new InterventionDAO();
 		iD.connect();
 		List<Mean> res = iD.getById(id).getMeansList();
 		iD.disconnect();
-		return res;
-	}
-
-
-    // Attention cette liste renvoie la liste de tous les moyens !
-	@GET
-	@Path("/{id}/moyenXtra")
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Mean> getMeanXtraListForIntervention(@PathParam("id") long id) {
-		InterventionDAO iD = new InterventionDAO();
-		iD.connect();
-		List<Mean> res = iD.getById(id).getMeansList();
-		iD.disconnect();
-		return res;
+		return Response.ok(res).build();
 	}
 
 

@@ -70,15 +70,6 @@ public class Mean extends AbstractEntity{
                 '}';
     }
 
-    @Override
-    public int hashCode() {
-        int result = vehicle != null ? vehicle.hashCode() : 0;
-        result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
-        result = 31 * result + (inPosition ? 1 : 0);
-
-        return result;
-    }
-
     public Mean() {
         super();
         this.name = "";

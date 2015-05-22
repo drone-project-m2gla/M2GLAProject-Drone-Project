@@ -42,11 +42,4 @@ public class User extends AbstractEntity {
 
         return true;
     }
-
-    @Override
-    public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        return result;
-    }
 }

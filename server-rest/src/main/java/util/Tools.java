@@ -23,7 +23,7 @@ public class Tools {
     public static Position arrayListToPosition(ArrayList arrayList)
     {
         Position p = new Position();
-        if(arrayList !=null || arrayList.size() != 3)
+        if(arrayList !=null && arrayList.size() == 3)
         {
             p.setLatitude((Double) arrayList.get(0));
             p.setLongitude((Double) arrayList.get(1));
@@ -32,42 +32,10 @@ public class Tools {
         return p;
     }
 
-    public static Zone basicDBListToZone(BasicDBList listDocuments) {
-        Zone z = new Zone();
-        for(int i=0; i<listDocuments.size();i++) {
-            z.addPosition(Tools.arrayListToPosition((BasicDBList) listDocuments.get(i)));
-        }
-        return z;
-    }
-
-    public static BasicDBList zoneToBasicDBList(Zone zone) {
-        BasicDBList res = new BasicDBList();
-        for(Position p : zone.getPositions()) {
-            res.add(Tools.positionToBasicDBList(p));
-        }
-        return res;
-    }
-
-    public static List<Zone> arrayListToZoneList(ArrayList arrayList) {
-        List<Zone> z = new ArrayList<Zone>();
-        for(int i=0; i<arrayList.size();i++) {
-            z.add(Tools.basicDBListToZone((BasicDBList)arrayList.get(i)));
-        }
-        return z;
-    }
-
-    public static BasicDBList zoneListToBasicDBList(List<Zone> zones) {
-        BasicDBList res = new BasicDBList();
-        for(Zone zone : zones) {
-            res.add(Tools.zoneToBasicDBList(zone));
-        }
-        return res;
-    }
-
     public static List<Mean> documentListToMeanList(List<Document> documents) {
         List<Mean> z = new ArrayList<Mean>();
-        for(int i=0; i<documents.size();i++) {
-            z.add(documentToMean(documents.get(i)));
+        for(Document d : documents) {
+            z.add(documentToMean(d));
         }
         return z;
     }
