@@ -5,6 +5,6 @@ import static org.junit.Assert.*;
 public class TestFail {
 	@Test
 	public void testFail() {
-		fail();
+		fail("Test fail message");
 	}
 }
