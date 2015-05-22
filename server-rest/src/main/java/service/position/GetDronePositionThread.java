@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.GeoImageDAO;
+import entity.GeoImage;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import util.Configuration;
 import util.Tools;
-import entity.ImageDrone;
 import entity.Position;
 
 /**
@@ -21,7 +22,7 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 
 	private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
 	private Position position;
-	private ImageDrone image;
+	private GeoImage image;
 	private boolean continueThread;
 
 	private GetDronePositionThread() {
@@ -48,7 +49,7 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 		return position;
 	}
 
-	public synchronized ImageDrone getImage() {
+	public synchronized GeoImage getImage() {
 		return image;
 	}
 
@@ -70,7 +71,11 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 					GetMethod getImage = new GetMethod(
 							Configuration.getSERVER_PYTHON() + "/picture");
 					client.executeMethod(getImage);
-					this.image = mapper.readValue( getImage.getResponseBodyAsString(), ImageDrone.class);
+					this.image = mapper.readValue( getImage.getResponseBodyAsString(), GeoImage.class);
+                    GeoImageDAO dao = new GeoImageDAO();
+                    dao.connect();
+                    dao.create(this.image);
+                    dao.disconnect();
 				} else {
 					notifyObserversForPositionUnchanged();
 				}

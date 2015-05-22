@@ -35,7 +35,6 @@ public class MeanXtraRest {
     public synchronized Response validateMeanXtra(@PathParam("idintervention") long idintervention, Mean meanXtra) {
 
         InterventionDAO iD = new InterventionDAO();
-        Mean res = null;
         Boolean meanCanBeChanged = false;
         iD.connect();
         Intervention intervention = iD.getById(idintervention);
