@@ -21,6 +21,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
         import org.junit.runners.Suite;
+import rest.UserServicesRestTest;
 import util.Configuration;
 
 import java.io.IOException;
@@ -35,7 +36,8 @@ import java.util.Set;
         UserDAOTest.class,
         MeanDAOTest.class,
         GeoIconDAOTest.class,
-        GeoImageDAOTest.class
+        GeoImageDAOTest.class,
+        UserServicesRestTest.class
 })
 public class TestSuiteDao {
     @BeforeClass
