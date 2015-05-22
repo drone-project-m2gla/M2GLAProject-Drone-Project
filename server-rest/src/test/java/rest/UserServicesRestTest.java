@@ -23,7 +23,7 @@ public class UserServicesRestTest {
         user.setUsername("login");
         user.setPassword("password");
         Response response = userServices.logIn(user);
-        assertEquals("401", "" + response.getStatus());
+        assertEquals(401, response.getStatus());
     }
 
     @Test
@@ -35,14 +35,14 @@ public class UserServicesRestTest {
         user.setUsername("user_d");
         user.setPassword("user_l");
         Response responseL = userServices.logIn(user);
-        assertEquals("200", "" + responseL.getStatus());
+        assertEquals(200, responseL.getStatus());
     }
 
     @Test
     public void CreateLogin() throws IOException {
         UserServices userServices = new UserServices();
         Response response = userServices.createUser("testlogin", "testpassword");
-        assertEquals("200", "" + response.getStatus());
+        assertEquals(200, response.getStatus());
     }
 }
 

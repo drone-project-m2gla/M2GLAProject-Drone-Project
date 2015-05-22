@@ -40,7 +40,7 @@ public class StrategyMeanMove implements Strategy {
     @Override
     public void call(Object object) {
         if (activity != null) {
-            activity.updateMeans((Mean) object);
+            activity.updateMeans();
         }
     }
 }

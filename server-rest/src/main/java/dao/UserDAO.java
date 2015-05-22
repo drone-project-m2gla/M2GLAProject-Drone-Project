@@ -20,7 +20,7 @@ public class UserDAO extends AbstractDAO<User> {
         this.datatype = Constant.DATATYPE_USER;
     }
 
-    public User findByLogin(String username, String password) {
+    public User connectUser(String username, String password) {
         BasicDBObject criterion = new BasicDBObject("username", username);
         criterion.put("password",password);
         FindIterable findIterable = collection.find(criterion);
