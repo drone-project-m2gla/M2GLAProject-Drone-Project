@@ -15,6 +15,23 @@ public class Mean extends AbstractEntity{
     private Vehicle vehicle;
     private Position coordinates;
     private boolean inPosition;
+
+    @Override
+    public String toString() {
+        return "Mean{" +
+                "vehicle=" + vehicle +
+                ", coordinates=" + coordinates +
+                ", inPosition=" + inPosition +
+                ", meanState=" + meanState +
+                ", dateRefused=" + dateRefused +
+                ", dateRequested=" + dateRequested +
+                ", dateActivated=" + dateActivated +
+                ", dateArrived=" + dateArrived +
+                ", dateEngaged=" + dateEngaged +
+                ", dateReleased=" + dateReleased +
+                '}';
+    }
+
     //private boolean isDeclined;
     private MeanState meanState;
     private Date dateRefused;

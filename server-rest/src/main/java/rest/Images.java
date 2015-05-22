@@ -29,13 +29,12 @@ public class Images {
 
     @GET
     @Path("near/{latitude}/{longitude}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<GeoImage> getPosition(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude) {
+    public Response getPosition(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude) {
         GeoImageDAO gID = new GeoImageDAO();
         gID.connect();
         List<GeoImage> res = gID.getAllImagesNear(latitude, longitude);
         gID.disconnect();
-        return res;
+        return Response.ok(res).build();
     }
 
 }

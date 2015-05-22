@@ -19,6 +19,8 @@ import entity.DisasterCode;
 import entity.Intervention;
 import entity.Position;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -62,10 +64,7 @@ public class InterventionDAOTest {
                 }
             }
         });
-        if(mongoClient != null) {
-            mongoClient.close();
-        }
-
+        mongoClient.close();
     }
 
     @After
