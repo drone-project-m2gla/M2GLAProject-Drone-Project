@@ -113,7 +113,6 @@ def getpicture() :
     	},
     	"width": command.saveImg.width,
     	"height": command.saveImg.height,
-    	"encoding": command.saveImg.encoding,
     	"image": base64.b64encode(image[1])
     })
 
