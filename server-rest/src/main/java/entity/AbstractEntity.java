@@ -2,10 +2,12 @@ package entity;
 
 import java.util.Random;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 /**
- * Created by alban on 10/03/15.
+ * @author alban
+ * Abstract class for Entity
+ * AbstractEntity provides methods for Entity
+ * Also use for create random identify
+ * This class is used by other Entity classes for the generic methods
  */
 public abstract class AbstractEntity {
     /**

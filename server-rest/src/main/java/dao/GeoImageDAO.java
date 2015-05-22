@@ -1,18 +1,21 @@
 package dao;
 
 import org.bson.Document;
-import util.Constant;
-import util.Tools;import entity.GeoImage;
 
 import java.util.ArrayList;
 
+import entity.GeoImage;
+import util.Constant;
+import util.Tools;
+
 /**
- * Created by alban on 16/03/15.
+ * @author alban
+ * This class implements these abstract methods for GeoImage transformation
  */
 public class GeoImageDAO extends AbstractDAO<GeoImage> {
 
     /**
-     * Contructeur UnityDAO
+     * Contructor UnityDAO
      */
     public GeoImageDAO()
     {

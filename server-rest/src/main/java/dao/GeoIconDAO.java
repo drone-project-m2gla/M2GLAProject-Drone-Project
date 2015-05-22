@@ -1,20 +1,22 @@
 package dao;
 
-import com.mongodb.BasicDBList;
 import org.bson.Document;
-import util.Constant;
-import util.Tools;
-import entity.GeoIcon;
 
 import java.util.ArrayList;
 
+import entity.GeoIcon;
+import util.Constant;
+import util.Tools;
+
 /**
- * Created by jerem on 08/04/15.
+ * @author :jerem
+ * This class implements these abstract methods for GeoIcon transformation
+ *
  */
 public class GeoIconDAO extends AbstractDAO<GeoIcon>  {
 
     /**
-     * Contructeur UnityDAO
+     * Contructor UnityDAO
      */
     public GeoIconDAO()
     {

@@ -7,13 +7,13 @@ import util.Constant;
 import entity.User;
 
 /**
- * Created by mds on 07/04/15.
- * Class ${CLASS}
+ * @author mds
+ * This class implements these abstract methods for User transformation
  */
 public class UserDAO extends AbstractDAO<User> {
 
     /**
-     * Contructeur UserDAO
+     * Contructor UserDAO
      */
     public UserDAO()
     {
