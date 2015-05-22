@@ -1,80 +1,80 @@
 package entity;
 
-import util.Constant;
-
 /**
  * Image with metadata
  * Created by mds on 10/03/15.
  * Coordonnées d'une image et son nom
  */
 public class GeoImage extends AbstractEntity {
-    private Position coordinates;
+    private Position position;
+    private int width;
+    private int height;
+    private String image;
 
-    @Override
-    public String toString() {
-        return "GeoImage{" +
-                "coordinates=" + coordinates +
-                ", imageIn64='" + imageIn64 + '\'' +
-                '}';
+    public String getImage() {
+        return image;
     }
 
-    private String imageIn64;
-
-    /**
-     * Image 64 code getter
-     *
-     * @return String
-     */
-    public String getImageIn64() {
-        return imageIn64;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    /**
-     * Image setter
-     *
-     * @param imageIn64 String
-     */
-    public void setImageIn64(String imageIn64) {
-        this.imageIn64 = imageIn64;
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof GeoImage)) return false;
 
         GeoImage geoImage = (GeoImage) o;
 
-        if (coordinates != null ? !coordinates.equals(geoImage.coordinates) : geoImage.coordinates != null)
-            return false;
-        if (imageIn64 != null ? !imageIn64.equals(geoImage.imageIn64) : geoImage.imageIn64 != null) return false;
+        if (height != geoImage.height) return false;
+        if (width != geoImage.width) return false;
+        if (image != null ? !image.equals(geoImage.image) : geoImage.image != null) return false;
+        if (position != null ? !position.equals(geoImage.position) : geoImage.position != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = coordinates != null ? coordinates.hashCode() : 0;
-        result = 31 * result + (imageIn64 != null ? imageIn64.hashCode() : 0);
+        int result = position != null ? position.hashCode() : 0;
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
     }
 
-    /**
-
-     * Image coordinates getter
-     *
-     * @return Position
-     */
-    public Position getCoordinates() {
-        return coordinates;
-    }
-
-    /**
-     * Image coordinatess setter
-     *
-     * @param coordinates Position
-     */
-    public void setCoordinates(Position coordinates) {
-        this.coordinates = coordinates;
+    @Override
+    public String toString() {
+        return "GeoImage{" +
+                "position=" + position +
+                ", width=" + width +
+                ", height=" + height +
+                ", image='" + image + '\'' +
+                '}';
     }
 }
