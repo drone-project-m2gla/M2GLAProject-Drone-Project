@@ -88,11 +88,26 @@ public class UserDAOTest {
     }
 
     @Test
-    public void disconnect()
+    public void testGetByUsername()
+    {
+        // On vérifie que ça plante pas de connecter deux fois
+        dao.connect();
+        User user = new User();
+        user.setPassword("findByLogin");
+        user.setUsername("identifiantFindByUsername");
+        User userInBase = dao.create(user);
+        assertEquals(user, userInBase);
+        User found = dao.getByUsername("identifiantFindByUsername");
+        assertEquals(userInBase, found);
+    }
+
+    @Test
+    public void disconnectConnect()
     {
         //check disconnection two times
         dao.disconnect();
         dao.disconnect();
+        dao.connect();
         dao.connect();
     }
 }

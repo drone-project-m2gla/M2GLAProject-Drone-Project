@@ -51,6 +51,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
             mongoClient.close();
             db =null;
             collection = null;
+            mongoClient = null;
         }
     }
 
@@ -121,4 +122,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     protected abstract Document entityToDocument(T entity);
 
+    public void ensureIndex()
+    {
+
+    }
 }

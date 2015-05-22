@@ -2,10 +2,17 @@ package dao;
 
 import entity.GeoImage;
 import entity.Position;
+import junit.framework.*;
 import org.apache.log4j.Logger;
 import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 import util.Configuration;
 
+import java.util.List;
+
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -77,4 +84,44 @@ public class GeoImageDAOTest {
         dao.delete(geoImageInBase);
         assertNull(dao.getById(geoImageInBase.getId()));
     }
+
+    @Test
+    public void testGetAllImagesNear()
+    {
+        GeoImage geoImage1 = new GeoImage();
+        geoImage1.setImage("BASE64");
+        geoImage1.setPosition(new Position(0, 1, 0));
+        geoImage1.setWidth(400);
+        geoImage1.setHeight(500);
+        GeoImage geoImage1InBase = dao.create(geoImage1);
+        assertEquals(geoImage1, geoImage1InBase);
+
+        GeoImage geoImage2 = new GeoImage();
+        geoImage2.setImage("BASE64");
+        geoImage2.setPosition(new Position(0.0000000001, 1, 0));
+        geoImage2.setWidth(400);
+        geoImage2.setHeight(500);
+        GeoImage geoImage2InBase = dao.create(geoImage2);
+        assertEquals(geoImage2, geoImage2InBase);
+
+        GeoImage geoImage3 = new GeoImage();
+        geoImage3.setImage("BASE64");
+        geoImage3.setPosition(new Position(7.0, 6.0, 4.0));
+        geoImage3.setWidth(400);
+        geoImage3.setHeight(500);
+        GeoImage geoImage3InBase = dao.create(geoImage3);
+        assertEquals(geoImage3, geoImage3InBase);
+
+        dao.ensureIndex();
+        List<GeoImage> concernedImages = dao.getAllImagesNear(1,0);
+        //LOGGER.info(dao.getAll());
+        LOGGER.info(concernedImages);
+        assertEquals(2, concernedImages.size());
+        assertTrue(concernedImages.contains(geoImage1));
+        assertTrue(concernedImages.contains(geoImage2));
+        assertFalse(concernedImages.contains(geoImage3));
+
+    }
+
+
 }

@@ -13,6 +13,7 @@ import entity.DisasterCode;
 import entity.Intervention;
 import entity.Position;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -85,5 +86,21 @@ public class InterventionDAOTest {
         assertEquals(intervention, created);
         dao.delete(created);
         assertNull(dao.getById(created.getId()));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCreateNull()
+    {
+        dao.create(null);
+    }
+
+    @Test
+    public void getAll()
+    {
+        for(Intervention i : dao.getAll())
+        {
+            dao.delete(i);
+        }
+        assertTrue(dao.getAll().isEmpty());
     }
 }
