@@ -279,7 +279,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 */
 
 
-    // @Override
+    @Override
     public boolean refreshList() {
 
         // Demander un rafraichissement de la liste des interventions et des details de
