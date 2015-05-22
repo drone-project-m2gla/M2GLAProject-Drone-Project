@@ -1,11 +1,12 @@
 package entity;
 
-import util.Datetime;
 import java.util.Date;
+
+import util.Datetime;
 
 /**
  *@author arno
- * @see Mean is used for handling mean information which are available for an intervention.
+ *@see Mean is used for handling mean information which are available for an intervention.
  *
  */
 public class Mean extends AbstractEntity{
