@@ -94,7 +94,7 @@ public class MoyensInitFragment extends ListFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View v,
                                            int position, long id) {
-                MapActivity.setDraggingMode();
+                MapActivity.setDraggingMode(true);
                 // Create a new ClipData.
                 // This is done in two steps to provide clarity. The convenience method
                 // ClipData.newPlainText() can create a plain text ClipData in one step.
