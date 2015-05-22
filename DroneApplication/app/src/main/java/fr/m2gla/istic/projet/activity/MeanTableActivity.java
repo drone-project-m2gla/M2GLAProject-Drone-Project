@@ -79,6 +79,7 @@ public class MeanTableActivity extends Activity {
 
         Intent  intent;
         Button  addButton = (Button) findViewById(R.id.addInterButton);
+        CheckBox    withRefusedMeansCheck = (CheckBox) findViewById(R.id.refusedMeanCheckDisp);
 
 
         intent = getIntent();
@@ -102,6 +103,8 @@ public class MeanTableActivity extends Activity {
         // Pas de bouton d'ajout ou d'action. Present juste pour coherence entre écran
         addButton.setEnabled(false);
         addButton.setVisibility(View.INVISIBLE);
+
+        withRefusedMeansCheck.setTextColor(Color.CYAN);
 
         MeanTableViewRefresh();
 
@@ -329,7 +332,7 @@ public class MeanTableActivity extends Activity {
      * @param view : vue courante
      */
     public void MeanTableViewRefresh(View view) {
-        CheckBox    withRefusedMeansCheck = (CheckBox) findViewById(R.id.refusedMeanCheckDisp);
+        CheckBox    withRefusedMeansCheck = (CheckBox) view;
 
         if (withRefusedMeansCheck.isChecked()) {
             this.withRefusedMeans = true;
