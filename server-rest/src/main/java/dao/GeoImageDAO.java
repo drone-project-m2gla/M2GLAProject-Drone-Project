@@ -10,7 +10,7 @@ import util.Tools;
 
 /**
  * @author alban
- * This class implements these abstract methods for GeoImage transformation
+ * @see GeoImageDAO implements these abstract methods for GeoImage transformation
  */
 public class GeoImageDAO extends AbstractDAO<GeoImage> {
 

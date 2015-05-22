@@ -2,7 +2,7 @@ package entity;
 
 /**
  * @author jerem
- * Return an Icon with all information to place on Map. Using for Topographie Rest
+ * @see GeoIcon with all information to place on map. Using for Topographie Rest
  */
 public class GeoIcon extends AbstractEntity {
 

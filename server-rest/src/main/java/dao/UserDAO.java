@@ -8,7 +8,7 @@ import entity.User;
 
 /**
  * @author mds
- * This class implements these abstract methods for User transformation
+ * @see UserDAO implements these abstract methods for User transformation
  */
 public class UserDAO extends AbstractDAO<User> {
 

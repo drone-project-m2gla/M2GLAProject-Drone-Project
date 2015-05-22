@@ -19,7 +19,7 @@ import entity.AbstractEntity;
 import util.Configuration;
 
 /**
- * Abstract class for DAO
+ * @see
  * AbstractDAO provides methods for DAO
  * Also use for connect and disconnect
  * This class is used by other DAO classes for the generic methods

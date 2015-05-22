@@ -13,8 +13,8 @@ import util.Constant;
 import util.Tools;
 
 /**
- * @author : alban
- * This class implements these abstract methods for Intervention transformation
+ * @author  alban
+ * @see InterventionDAO implements these abstract methods for Intervention transformation
  */
 public class InterventionDAO extends AbstractDAO<Intervention> {
 

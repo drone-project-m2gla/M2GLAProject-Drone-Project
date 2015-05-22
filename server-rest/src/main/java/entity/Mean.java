@@ -1,14 +1,12 @@
 package entity;
 
-import util.Constant;
-import util.Datetime;
-
 import java.util.Date;
 
+import util.Datetime;
+
 /**
- * Created by arno on 07/04/15.
- *
- * This class is used for handling mean information which are available for an intervention.
+ *@author arno
+ * @see Mean is used for handling mean information which are available for an intervention.
  *
  */
 
