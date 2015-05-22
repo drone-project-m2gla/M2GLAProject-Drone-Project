@@ -1,6 +1,5 @@
 package entity;
 
-import util.Constant;
 import util.Datetime;
 
 import java.util.Date;
@@ -11,13 +10,11 @@ import java.util.Date;
  * This class is used for handling mean information which are available for an intervention.
  *
  */
-
 public class Mean extends AbstractEntity{
-
+    private String name;
     private Vehicle vehicle;
     private Position coordinates;
     private boolean inPosition;
-    //private boolean isDeclined;
     private MeanState meanState;
     private Date dateRefused;
     private Date dateRequested;
@@ -26,9 +23,10 @@ public class Mean extends AbstractEntity{
     private Date dateEngaged;
     private Date dateReleased;
 
-    public Mean(Vehicle vehicle,Boolean isInitialMean) {
+    public Mean(Vehicle vehicle, Boolean isInitialMean) {
         this();
         this.vehicle = vehicle;
+
         if (isInitialMean) {
             this.dateActivated = this.dateRequested;
             this.meanState = MeanState.ACTIVATED;
@@ -42,8 +40,8 @@ public class Mean extends AbstractEntity{
 
         Mean mean = (Mean) o;
 
+        if (name != null && !name.equals(mean.getName())) return false;
         if (inPosition != mean.inPosition) return false;
-        //if (isDeclined != mean.isDeclined) return false;
         if (coordinates != null ? !coordinates.equals(mean.coordinates) : mean.coordinates != null) return false;
         if (vehicle != mean.vehicle) return false;
         if (dateRequested != null ? !dateRequested.equals(mean.dateRequested) : mean.dateRequested != null) return false;
@@ -62,20 +60,28 @@ public class Mean extends AbstractEntity{
         int result = vehicle != null ? vehicle.hashCode() : 0;
         result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
         result = 31 * result + (inPosition ? 1 : 0);
-        //  result = 31 * result + (isDeclined ? 1 : 0);
+
         return result;
     }
 
     public Mean() {
         super();
+        this.name = "";
         this.inPosition = false;
-        // this.isDeclined = false;
         this.coordinates = new Position();
         this.coordinates.setAltitude(Double.NaN);
         this.coordinates.setLatitude(Double.NaN);
         this.coordinates.setLongitude(Double.NaN);
         this.dateRequested = Datetime.getCurrentDate();
         this.meanState = MeanState.REQUESTED;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Vehicle getVehicle() {
@@ -157,13 +163,4 @@ public class Mean extends AbstractEntity{
     public void setDateRefused(Date dateRefused) {
         this.dateRefused = dateRefused;
     }
-//    public boolean getisDeclined() {
-//        return isDeclined;
-//    }
-//
-//    public void setisDeclined(boolean isDeclined) {
-//        this.isDeclined = isDeclined;
-//    }
-
-
 }

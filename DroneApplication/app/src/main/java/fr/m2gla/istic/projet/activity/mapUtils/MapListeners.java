@@ -3,6 +3,7 @@ package fr.m2gla.istic.projet.activity.mapUtils;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.DragEvent;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +23,7 @@ import fr.m2gla.istic.projet.activity.MapActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Symbol;
@@ -33,7 +36,8 @@ import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 public class MapListeners implements
         AdapterView.OnDragListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMapLongClickListener {
     private static final String TAG = "MapListeners";
 
     // offsets used to place the icon when it is dropped
@@ -51,7 +55,6 @@ public class MapListeners implements
     public void setMapActivity(MapActivity mapActivity) {
         this.mapActivity = mapActivity;
     }
-
 
     /**
      * Map fragment drag listener used to get the dropped symbol
@@ -85,18 +88,6 @@ public class MapListeners implements
                                     @Override
                                     public void execute(Object response) {
                                         Log.e(TAG, "Post new position success");
-                                        // FIXME: Mise à jour de la liste des moyens.
-                                        //Get symbol from ClipData saved onDrag
-                                        /*Symbol symbol = new Symbol(
-                                                (String) clipData.getItemAt(0).getText(),
-                                                Symbol.SymbolType.valueOf((String) clipData.getItemAt(1).getText()),
-                                                (String) clipData.getItemAt(2).getText(),
-                                                (String) clipData.getItemAt(3).getText(),
-                                                (String) clipData.getItemAt(4).getText());
-                                        symbol.setValidated(false);
-                                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(latlng.latitude, latlng.longitude, symbol);
-                                        mClusterManager.addItem(markerItem);
-                                        mClusterManager.cluster();*/
                                         mapActivity.loadMeansInMap();
                                     }
                                 },
@@ -112,6 +103,43 @@ public class MapListeners implements
             }
         }
         return true;
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        if (!mapActivity.isDroneMode()) return;
+
+        DroneTargetActionFragment droneTargetActionFragment = mapActivity.getDroneTargetActionFragment();
+        Position position = new Position();
+        position.setLatitude(latLng.latitude);
+        position.setLongitude(latLng.longitude);
+
+        ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, null);
+        mapActivity.getDroneClusterManager().addItem(marker);
+        mapActivity.getDroneClusterManager().cluster();
+
+        // unclose target if add marker after close target
+        if (droneTargetActionFragment.getTarget().isClose()) {
+            Position pos = droneTargetActionFragment.getTarget().getPositions().get(0);
+
+            droneTargetActionFragment.getTarget().setClose(false);
+            droneTargetActionFragment.getTarget().getPositions().add(pos);
+        }
+
+        if (!droneTargetActionFragment.getTarget().getPositions().isEmpty()) {
+            Position pos = droneTargetActionFragment.getTarget().getPositions()
+                    .get(droneTargetActionFragment.getTarget().getPositions().size() - 1);
+
+            PolylineOptions polylineOptions = new PolylineOptions()
+                    .add(new LatLng(pos.getLatitude(), pos.getLongitude()))
+                    .add(latLng)
+                    .width(5)
+                    .color(Color.rgb(143, 0, 71));
+
+            mapActivity.getPolylineList().add(mapActivity.map.addPolyline(polylineOptions));
+        }
+
+        droneTargetActionFragment.addPosition(position);
     }
 
     /**

@@ -85,26 +85,26 @@ public class Tools {
         {
             return null;
         }
-        Mean Mean = new Mean();
-        Mean.setId(document.getLong("_id"));
-        Mean.setVehicle(Vehicle.valueOf(document.getString("vehicle")));
-        Mean.setInPosition(document.getBoolean("inPosition"));
-        //Mean.setisDeclined(document.getBoolean("isDeclined"));
-        Mean.setMeanState(MeanState.valueOf(document.getString("meanState")));
-        Mean.setDateRequested(document.getDate("dateRequested"));
-        Mean.setDateActivated(document.getDate("dateActivated"));
-        Mean.setDateArrived(document.getDate("dateArrived"));
-        Mean.setDateEngaged(document.getDate("dateEngaged"));
-        Mean.setDateReleased(document.getDate("dateReleased"));
-        Mean.setDateRefused(document.getDate("dateRefused"));
-        Mean.setCoordinates(Tools.arrayListToPosition((ArrayList) document.get("coordinates")));
-        return Mean;
+        Mean mean = new Mean();
+        mean.setId(document.getLong("_id"));
+        mean.setName(document.getString("name"));
+        mean.setVehicle(Vehicle.valueOf(document.getString("vehicle")));
+        mean.setInPosition(document.getBoolean("inPosition"));
+        mean.setMeanState(MeanState.valueOf(document.getString("meanState")));
+        mean.setDateRequested(document.getDate("dateRequested"));
+        mean.setDateActivated(document.getDate("dateActivated"));
+        mean.setDateArrived(document.getDate("dateArrived"));
+        mean.setDateEngaged(document.getDate("dateEngaged"));
+        mean.setDateReleased(document.getDate("dateReleased"));
+        mean.setDateRefused(document.getDate("dateRefused"));
+        mean.setCoordinates(Tools.arrayListToPosition((ArrayList) document.get("coordinates")));
+        return mean;
     }
 
     public static Document meanToDocument(Mean entity) {
         Document jsonMean = new Document();
+        jsonMean.put("name", entity.getName());
         jsonMean.put("inPosition", entity.getInPosition());
-        //jsonMean.put("isDeclined", entity.getisDeclined());
         jsonMean.put("meanState", entity.getMeanState().toString());
         jsonMean.put("vehicle", entity.getVehicle().toString());
         jsonMean.put("dateRequested",entity.getDateRequested());

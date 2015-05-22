@@ -33,16 +33,16 @@ public class SymbolRenderer extends DefaultClusterRenderer<SymbolMarkerClusterIt
         this.mapListeners = mapListeners;
     }
 
-
     public SymbolRenderer(Context context, GoogleMap map, ClusterManager<SymbolMarkerClusterItem> clusterManager) {
         super(context, map, clusterManager);
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(SymbolMarkerClusterItem item,
-                                               MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(SymbolMarkerClusterItem item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
+
         markerOptions.icon(SVGAdapter.convertSymbolToIcon(context, item.getSymbol()));
+
         if (!item.getSymbol().isTopographic()) {
             markerOptions.draggable(true);
             markerOptions.title("Action sur le moyen");
@@ -54,7 +54,6 @@ public class SymbolRenderer extends DefaultClusterRenderer<SymbolMarkerClusterIt
     @Override
     protected void onClusterItemRendered(SymbolMarkerClusterItem clusterItem, Marker marker) {
         mapListeners.markerSymbolLink.put(marker.getId(), clusterItem);
-        //Log.d(TAG, "onClusterItemRendered " + marker.getId());
     }
 }
 
