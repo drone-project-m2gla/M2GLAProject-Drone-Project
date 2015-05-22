@@ -12,7 +12,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import util.Configuration;
 import util.Tools;
-import entity.GeoImage;
 import entity.Position;
 
 /**
@@ -74,7 +73,9 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 					client.executeMethod(getImage);
 					this.image = mapper.readValue( getImage.getResponseBodyAsString(), GeoImage.class);
                     GeoImageDAO dao = new GeoImageDAO();
+                    dao.connect();
                     dao.create(this.image);
+                    dao.disconnect();
 				} else {
 					notifyObserversForPositionUnchanged();
 				}

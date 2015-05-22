@@ -15,24 +15,15 @@ import entity.GeoImage;
  */
 @Path("/images")
 public class Images {
-
     @GET
-    @Path("image")
-    public Response getImages(String images) {
-
-        return Response.status(200).entity("Les images sont : " + images).build();
-
-    }
-
-    @GET
-    public List<GeoImage> getAllImages() {
+    public Response getAllImages() {
 
         GeoImageDAO gID = new GeoImageDAO();
         gID.connect();
         List<GeoImage> res = gID.getAll();
         gID.disconnect();
         // TODO fix that
-        return res;
+        return Response.ok(res).build();
 
     }
 
