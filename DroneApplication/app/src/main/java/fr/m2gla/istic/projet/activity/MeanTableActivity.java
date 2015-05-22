@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -54,6 +55,7 @@ public class MeanTableActivity extends Activity {
     private static final    String TAG = "MeanTableActivity";
     private String          idIntervention = null;
     private Intervention    intervention = null;
+    private boolean         withRefusedMeans = false;
 
     private String          titleMeanTab[] = {
                                 GeneralConstants.MEAN_TABLE_1,
@@ -190,7 +192,9 @@ public class MeanTableActivity extends Activity {
                     // Verifier si le moyen est a afficher
                     str = m.getDateRefused();
                     if ((str != null) && (str.compareTo("") != 0)) {
-                        continue;
+                        if (withRefusedMeans == false) {
+                            continue;
+                        }
                     }
 
 
@@ -214,16 +218,29 @@ public class MeanTableActivity extends Activity {
 
                     // Cellules des dates
                     dateList = new ArrayList<String>();
-                    dateList.add(m.getDateRequested());
-                    dateList.add(m.getDateActivated());
-                    dateList.add(m.getDateArrived());
-                    dateList.add(m.getDateEngaged());
-                    dateList.add(m.getDateReleased());
+                    if ((str != null) && (str.compareTo("") != 0)) {
+                        dateList.add(m.getDateRequested());
+                        dateList.add(GeneralConstants.MEAN_REFUSED);
+                        dateList.add("");
+                        dateList.add("");
+                        dateList.add(str);
+                    }
+                    else {
+                        dateList.add(m.getDateRequested());
+                        dateList.add(m.getDateActivated());
+                        dateList.add(m.getDateArrived());
+                        dateList.add(m.getDateEngaged());
+                        dateList.add(m.getDateReleased());
+                    }
 
                     for (String s:dateList) {
                         tv = new TextView(MeanTableActivity.this);
                         if ((s == null) || (s.compareTo("") == 0)) {
                             dateStr = " - ";
+                        }
+                        else if (s.compareTo(GeneralConstants.MEAN_REFUSED) == 0) {
+                            dateStr = s;
+                            tv.setTextColor(Color.RED);
                         }
                         else {
                             dateLong = Long.valueOf(s);
@@ -312,6 +329,15 @@ public class MeanTableActivity extends Activity {
      * @param view : vue courante
      */
     public void MeanTableViewRefresh(View view) {
+        CheckBox    withRefusedMeansCheck = (CheckBox) findViewById(R.id.refusedMeanCheckDisp);
+
+        if (withRefusedMeansCheck.isChecked()) {
+            this.withRefusedMeans = true;
+        }
+        else {
+            this.withRefusedMeans = false;
+        }
+
         MeanTableViewRefresh();
     }
 

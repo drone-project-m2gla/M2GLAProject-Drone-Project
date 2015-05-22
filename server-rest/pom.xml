@@ -10,61 +10,61 @@
 	<name>server-rest</name>
 	<url>http://maven.apache.org</url>
 
-    <profiles>
-        <profile>
-            <id>int</id>
-            <properties>
-                <war.name>int</war.name>
-                <project.MONGODB_USER>intUser</project.MONGODB_USER>
-                <project.MONGODB_PWD>pwd2intUser</project.MONGODB_PWD>
-                <project.DATABASE_NAME>int</project.DATABASE_NAME>
-                <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
-                <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
-                <project.MONGODB_PORT>27017</project.MONGODB_PORT>
-                <tomcat.url>http://projm2gla1int.istic.univ-rennes1.fr:58089/manager/text</tomcat.url>
-                <tomcat.http.port>8088</tomcat.http.port>
-                <tomcat.path>/sitserver</tomcat.path>
-            </properties>
-        </profile>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <war.name>dev</war.name>
-                <project.MONGODB_USER>devUser</project.MONGODB_USER>
-                <project.MONGODB_PWD>pwd2devUser</project.MONGODB_PWD>
-                <project.DATABASE_NAME>dev</project.DATABASE_NAME>
-                <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
-                <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
-                <project.MONGODB_PORT>27017</project.MONGODB_PORT>
-                <tomcat.url>http://127.0.0.1:8080/manager/text</tomcat.url>
-                <tomcat.http.port>8080</tomcat.http.port>
-                <tomcat.path>/sitserver</tomcat.path>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <war.name>sitserver</war.name>
-                <project.MONGODB_USER>prodUser</project.MONGODB_USER>
-                <project.MONGODB_PWD>pwd2prodUser</project.MONGODB_PWD>
-                <project.DATABASE_NAME>prod</project.DATABASE_NAME>
-                <project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
-                <project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
-                <project.MONGODB_PORT>27017</project.MONGODB_PORT>
-                <tomcat.url>http://projm2gla1backup.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
-                <tomcat.http.port>8080</tomcat.http.port>
-                <tomcat.path>/sitserver</tomcat.path>
-            </properties>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>int</id>
+			<properties>
+				<war.name>int</war.name>
+				<project.MONGODB_USER>intUser</project.MONGODB_USER>
+				<project.MONGODB_PWD>pwd2intUser</project.MONGODB_PWD>
+				<project.DATABASE_NAME>int</project.DATABASE_NAME>
+				<project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
+				<project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
+				<project.MONGODB_PORT>27017</project.MONGODB_PORT>
+				<tomcat.url>http://projm2gla1int.istic.univ-rennes1.fr:58089/manager/text</tomcat.url>
+				<tomcat.http.port>8088</tomcat.http.port>
+				<tomcat.path>/sitserver</tomcat.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<war.name>dev</war.name>
+				<project.MONGODB_USER>devUser</project.MONGODB_USER>
+				<project.MONGODB_PWD>pwd2devUser</project.MONGODB_PWD>
+				<project.DATABASE_NAME>dev</project.DATABASE_NAME>
+				<project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
+				<project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
+				<project.MONGODB_PORT>27017</project.MONGODB_PORT>
+				<tomcat.url>http://127.0.0.1:8080/manager/text</tomcat.url>
+				<tomcat.http.port>8080</tomcat.http.port>
+				<tomcat.path>/sitserver</tomcat.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<war.name>sitserver</war.name>
+				<project.MONGODB_USER>prodUser</project.MONGODB_USER>
+				<project.MONGODB_PWD>pwd2prodUser</project.MONGODB_PWD>
+				<project.DATABASE_NAME>prod</project.DATABASE_NAME>
+				<project.MONGODB_HOSTNAME>projm2gla1backup.istic.univ-rennes1.fr</project.MONGODB_HOSTNAME>
+				<project.SERVER_PYTHON>http://projm2gla2.istic.univ-rennes1.fr:5000/robot</project.SERVER_PYTHON>
+				<project.MONGODB_PORT>27017</project.MONGODB_PORT>
+				<tomcat.url>http://projm2gla1backup.istic.univ-rennes1.fr:8080/manager/text</tomcat.url>
+				<tomcat.http.port>8080</tomcat.http.port>
+				<tomcat.path>/sitserver</tomcat.path>
+			</properties>
+		</profile>
+	</profiles>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <runSuite>**/TestSuiteDao.class</runSuite>
+		<runSuite>**/TestSuiteDao.class</runSuite>
 	</properties>
 
 	<dependencies>
@@ -73,12 +73,12 @@
 			<artifactId>google-maps-services</artifactId>
 			<version>0.1.6</version>
 		</dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
@@ -156,32 +156,37 @@
 			<artifactId>rest-assured</artifactId>
 			<version>2.4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<version>2.10.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<finalName>sitserver</finalName>
 		<plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.2.201409121644</version>
-                <executions>
-                    <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.2.201409121644</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
@@ -190,34 +195,34 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <port>${tomcat.http.port}</port>
-                    <url>${tomcat.url}</url>
-                    <path>${tomcat.path}</path>
-                    <server>TomcatServer</server>
-                    <contextFile>src/main/webapp/META-INF/context.xml</contextFile>
-                    <!--<staticContextPath>${webappDirectory}</staticContextPath> -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<port>${tomcat.http.port}</port>
+					<url>${tomcat.url}</url>
+					<path>${tomcat.path}</path>
+					<server>TomcatServer</server>
+					<contextFile>src/main/webapp/META-INF/context.xml</contextFile>
+					<!--<staticContextPath>${webappDirectory}</staticContextPath> -->
 
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <includes>
-                        <include>${runSuite}</include>
-                    </includes>
-                    <systemPropertyVariables>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<includes>
+						<include>${runSuite}</include>
+					</includes>
+					<systemPropertyVariables>
 
-                        <buildDirectory>${project.build.directory}</buildDirectory>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
+						<buildDirectory>${project.build.directory}</buildDirectory>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -229,7 +234,7 @@
 						<resource>
 							<directory>src/main/resources</directory>
 							<filtering>true</filtering>
-                            <!--<targetPath>/</targetPath>-->
+							<!--<targetPath>/</targetPath> -->
 							<includes>
 								<include>**/*</include>
 							</includes>
@@ -238,14 +243,14 @@
 				</configuration>
 			</plugin>
 		</plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 </project>
