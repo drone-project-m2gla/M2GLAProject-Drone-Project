@@ -184,6 +184,7 @@ public class InterventionRest {
         }
     }
 
+    /*
     @Path("/{id}/moyen/retourcrm")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -223,7 +224,7 @@ public class InterventionRest {
             return Response.status(Response.Status.BAD_REQUEST).entity("Mean is not engaged").build();
         }
     }
-
+*/
 
     @POST
     @Path("/{id}/moyen/libere")
