@@ -12,6 +12,7 @@ public class Mean extends Entity {
     private boolean inPosition;
     //    private boolean refusedMeans;
     private MeanState meanState;
+    private String name;
     private String dateRefused;
     private String dateRequested;
     private String dateActivated;
@@ -52,6 +53,14 @@ public class Mean extends Entity {
 
     public void setMeanState(MeanState meanState) {
         this.meanState = meanState;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDateRefused() {
