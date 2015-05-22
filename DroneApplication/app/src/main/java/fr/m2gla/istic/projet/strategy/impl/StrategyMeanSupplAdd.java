@@ -37,7 +37,7 @@ public class StrategyMeanSupplAdd implements Strategy {
     @Override
     public void call(Object object) {
         if (map != null) {
-            map.addMeanStrategy((Mean) object);
+            map.demandMeanStrategy((Mean) object);
         }
     }
 

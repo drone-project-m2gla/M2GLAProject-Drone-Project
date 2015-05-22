@@ -143,6 +143,7 @@ public class Intervention extends Entity {
         }
         return means;
     }
+
     /**
      * Moyens en transit
      *
@@ -153,7 +154,6 @@ public class Intervention extends Entity {
         Iterator<Mean> it = this.getMeansList().iterator();
         while (it.hasNext()) {
             Mean m = it.next();
-            Log.i(TAG, "Mean " + m.getMeanState());
             if (m.getMeanState() == MeanState.REFUSED) {
                 means.add(m);
             }
@@ -161,12 +161,21 @@ public class Intervention extends Entity {
         return means;
     }
 
-//    public List<Mean> meansRequested() {
-//        return meansXtra;
-//    }
-//
-//    public void setMeansXtra(List<Mean> meansXtra) {
-//        this.meansXtra = meansXtra;
-//    }
+    /**
+     * Moyens dispo.
+     *
+     * @return
+     */
+    public List<Mean> meansActivated() {
+        List<Mean> means = new ArrayList();
+        Iterator<Mean> it = this.getMeansList().iterator();
+        while (it.hasNext()) {
+            Mean m = it.next();
+            if (m.getMeanState() == MeanState.ACTIVATED) {
+                means.add(m);
+            }
+        }
+        return means;
+    }
 
 }
