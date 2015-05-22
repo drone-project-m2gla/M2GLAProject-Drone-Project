@@ -39,8 +39,7 @@ public class UserServices {
         } else {
         	userData = new User();
         }
-        
-        return Response.status(status).entity(user).build();
+        return Response.status(status).entity(userData).build();
     }
 
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
