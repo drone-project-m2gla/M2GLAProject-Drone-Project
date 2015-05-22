@@ -33,7 +33,14 @@ public interface GeneralConstants {
     public static final String  MEAN_TABLE_4 = "ARRIVE";
     public static final String  MEAN_TABLE_5 = "ENGAGE";
     public static final String  MEAN_TABLE_6 = "LIBERE";
+
+    // Affichage en cas de moyen refusé
     public static final String  MEAN_REFUSED = "REFUSE";
+
+    // Pour la boite de saisie du nom du moyen
+    public static final String  MEAN_DIALOG_TITLE = "Nom ou désignation du moyen";
+    public static final String  MEAN_DIALOG_OK_BUTTON = "Valider";
+    public static final String  MEAN_DIALOG_CANCEL_BUTTON = "Abandonner";
 
     // Nom des fichiers svg
     public static final String SVG_COLONNE_INCENDIE = "colonne_incendie";

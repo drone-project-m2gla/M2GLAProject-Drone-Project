@@ -30,6 +30,7 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.RestAPI;
@@ -251,23 +252,44 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         titleNoMoyen.setVisibility(View.GONE);
     }
 
-/*
-    private void meanNameGet() {
+
+    private void meanNameGet(final Mean xtraMean, final int position) {
+        final Map<String, String> map = new HashMap<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Title");
+        builder.setTitle(GeneralConstants.MEAN_DIALOG_TITLE);
 
         // Set up the input
         final EditText input = new EditText(getActivity());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(GeneralConstants.MEAN_DIALOG_OK_BUTTON, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                m_Text = input.getText().toString();
+                String meanName = input.getText().toString();
+
+                map.put("idintervention", idIntervention);
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                        Log.i("itemsAdapter", "Moyen validé : " + position);
+                                        refreshList();
+                                    }
+                                }, new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Toast.makeText(getActivity(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+
+
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(GeneralConstants.MEAN_DIALOG_CANCEL_BUTTON, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -276,7 +298,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
         builder.show();
     }
-*/
+
 
 
     @Override
@@ -296,6 +318,8 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
         if (xtraMean == null) return (false);
 
+        meanNameGet(xtraMean, position);
+/*
         map.put("idintervention", idIntervention);
         RestServiceImpl.getInstance()
                 .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,
@@ -312,6 +336,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                                 Toast.makeText(getActivity(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
                             }
                         });
+*/
         return (true);
     }
 
