@@ -1,8 +1,11 @@
 package dao;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import com.mongodb.BasicDBList;
 import org.bson.Document;
 import util.Constant;
 import util.Tools;
@@ -40,7 +43,7 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
             intervention.setDisasterCode(DisasterCode.valueOf(document.getString("disasterCode")));
             intervention.setMeansList(Tools.documentListToMeanList(((List<Document>) document.get("meansList"))));
           //  intervention.setMeansXtra(Tools.documentListToMeanList(((List<Document>) document.get("meansXtra"))));
-            intervention.setCoordinates(Tools.documentToPosition((Document) document.get("coordinates")));
+            intervention.setCoordinates(Tools.arrayListToPosition((ArrayList) document.get("coordinates")));
         }
         catch(Throwable t)
         {
@@ -66,7 +69,7 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
         document.put("meansList",Tools.meanListToBasicDBList(entity.getMeansList()));
         //document.put("meansXtra",Tools.meanListToBasicDBList(entity.getMeansXtra()));
         document.put("type", "Point");
-        document.put("coordinates", Tools.positionToDocument(entity.getCoordinates()));
+        document.put("coordinates", Tools.positionToBasicDBList(entity.getCoordinates()));
         document.put("_id", entity.getId());
         return document;
     }

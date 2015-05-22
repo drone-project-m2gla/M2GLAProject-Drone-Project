@@ -81,12 +81,7 @@ public class InterventionDAOTest {
         intervention.setCoordinates(coordinatesIntervention);
         LOGGER.info(intervention.getId());
         Intervention created = dao.create(intervention);
-        if (created.equals(intervention)) {
-            System.out.println("IDENTIQUE");
-        }
-        else{
-            System.out.println("DIFF");
-        }
+
         assertEquals(intervention, created);
         dao.delete(created);
         assertNull(dao.getById(created.getId()));

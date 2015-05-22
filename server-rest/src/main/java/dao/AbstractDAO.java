@@ -31,7 +31,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * Connect to BDD and
-     * @return Bucket to communicate with couchbase
+     * Bucket to communicate with couchbase
+     * @return void
      */
     public final void connect() {
         if(mongoClient == null || db==null) {
@@ -82,7 +83,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * GetAll
-     * @return
+     * @return List<T>
      */
     public final List<T> getAll()
     {
@@ -99,7 +100,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * GetById
-     * @return
+     * @return T
      */
     public final T getById(long id)
     {
@@ -109,7 +110,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
 
     /**
      * flush our bucket
-     * @return
+     * @return boolean
      */
     public boolean flush()
     {

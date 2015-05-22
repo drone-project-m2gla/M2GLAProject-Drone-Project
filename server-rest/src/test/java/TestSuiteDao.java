@@ -2,40 +2,36 @@
  * Created by arno on 14/04/15.
  */
 
+import java.util.Arrays;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
+import rest.UserServicesRestTest;
+import util.Configuration;
+
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
+import dao.GeoIconDAOTest;
+import dao.GeoImageDAOTest;
 import dao.InterventionDAOTest;
 import dao.MeanDAOTest;
 import dao.UserDAOTest;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.DeleteMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.bson.Document;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-        import org.junit.runners.Suite;
-import util.Configuration;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         InterventionDAOTest.class,
         UserDAOTest.class,
-        MeanDAOTest.class
+        MeanDAOTest.class,
+        GeoIconDAOTest.class,
+        GeoImageDAOTest.class,
+        UserServicesRestTest.class
 })
 public class TestSuiteDao {
     @BeforeClass

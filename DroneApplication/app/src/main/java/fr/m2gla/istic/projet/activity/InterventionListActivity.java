@@ -20,7 +20,7 @@ import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 
 /**
- * Created by david on 09/02/15.
+ * Created by david on 19/04/15.
  */
 
 public class InterventionListActivity extends Activity {

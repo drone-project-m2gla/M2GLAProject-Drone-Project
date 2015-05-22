@@ -3,4 +3,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MapActivity">
     <item android:id="@+id/switch_map_mode" android:title="" android:orderInCategory="100" />
+    <item android:id="@+id/disp_mean_table" android:title="@string/disp_moyen_table" android:orderInCategory="200" />
 </menu>

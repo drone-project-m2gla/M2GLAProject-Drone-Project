@@ -190,6 +190,7 @@ public class InterventionListFragment extends Fragment {
                         intervention = (Intervention[]) response;
 
                         // Toast.makeText(view.getContext(), " Taille liste - " + intervention.length + " - ", Toast.LENGTH_SHORT).show();
+                        listItem.clear();
                         if (intervention.length == 0) {
                             return;
                         }
@@ -346,7 +347,7 @@ public class InterventionListFragment extends Fragment {
 
 
         // Ajouter l'id dans l'intent
-        intent.putExtra(GeneralConstants.ID_INTERVENTION, idIntervention);
+        intent.putExtra(GeneralConstants.REF_ACT_IDINTER, idIntervention);
 
         // lancement de l'activité d'affichage de la carte
         startActivity(intent);

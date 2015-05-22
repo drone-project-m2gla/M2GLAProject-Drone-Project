@@ -70,23 +70,12 @@ class Command:
 command = Command()
 app = Flask(__name__)
 
-@app.route('/robot/rotate', methods=['POST'])
-def rotate() :
-    if not request.json or not 'd' in request.json:
-        print(400)
-        return 400
-    
-    d = request.json['d']
-    
-    return jsonify({"d": d}), 201
-
 @app.route('/robot/position', methods=['POST'])
 def setPosition():
-    global command
     if not request.json or not 'latitude' in request.json or not 'longitude' in request.json or not 'altitude' in request.json:
         print(400)
-        return 400
-
+        return jsonify({}), 400
+    
     x = request.json['longitude']
     y = request.json['latitude']
     z = request.json['altitude']
@@ -124,7 +113,6 @@ def getpicture() :
     	},
     	"width": command.saveImg.width,
     	"height": command.saveImg.height,
-    	"encoding": command.saveImg.encoding,
     	"image": base64.b64encode(image[1])
     })
 
