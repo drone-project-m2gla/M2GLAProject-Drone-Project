@@ -39,7 +39,7 @@ import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Symbol;
-import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
+import fr.m2gla.istic.projet.activity.mapUtils.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;

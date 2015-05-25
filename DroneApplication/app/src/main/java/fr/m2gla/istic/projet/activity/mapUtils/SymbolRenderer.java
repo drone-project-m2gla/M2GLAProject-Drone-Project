@@ -12,8 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-import fr.m2gla.istic.projet.model.SVGAdapter;
-import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
+import fr.m2gla.istic.projet.context.SVGAdapter;
 
 /**
 * Cluster rendered used to draw firemen symbols

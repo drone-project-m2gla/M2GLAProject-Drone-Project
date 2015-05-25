@@ -1,7 +1,9 @@
-package fr.m2gla.istic.projet.model;
+package fr.m2gla.istic.projet.activity.mapUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
+
+import fr.m2gla.istic.projet.model.Symbol;
 
 /**
  * Created by fernando on 4/14/15.

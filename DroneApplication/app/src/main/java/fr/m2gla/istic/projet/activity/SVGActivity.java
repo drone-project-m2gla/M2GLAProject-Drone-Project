@@ -12,7 +12,7 @@ import com.caverock.androidsvg.SVGParseException;
 
 import java.io.InputStream;
 
-import fr.m2gla.istic.projet.model.SVGAdapter;
+import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 
 

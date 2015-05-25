@@ -32,7 +32,7 @@ import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.ViewHolder;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
-import fr.m2gla.istic.projet.model.SVGAdapter;
+import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMovingMap;
