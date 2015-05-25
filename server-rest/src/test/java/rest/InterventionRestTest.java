@@ -233,4 +233,63 @@ public class InterventionRestTest {
         assertEquals(3,intervention.getMeansList().size());
         dao.delete(intervention);
     }
+
+    @Test
+    public void testValidateMeanPositionForIntervention()
+    {
+        List<Mean> means = new ArrayList<Mean>();
+        Mean mean1 = new Mean();
+        mean1.setVehicle(Vehicle.VSAV);
+        mean1.setMeanState(MeanState.ENGAGED);
+        mean1.setInPosition(true);
+        Mean mean2 = new Mean();
+        mean2.setMeanState(MeanState.REFUSED);
+        mean2.setVehicle(Vehicle.VSAV);
+        mean1.setInPosition(false);
+        means.add(mean1);
+        means.add(mean2);
+        intervention.setMeansList(means);
+
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+
+        Response response1 = interventionRest.validateMeanPositionForIntervention(intervention.getId(), mean1);
+        Response response2 = interventionRest.validateMeanPositionForIntervention(intervention.getId(), mean2);
+        assertEquals(200,response1.getStatus());
+        assertAreEqualsWitoutInPosition(mean1, (Mean) response1.getEntity());
+
+        assertEquals(400,response2.getStatus());
+        assertEquals("Already in position or mean unavailable", response2.getEntity());
+        intervention = dao.getById(intervention.getId());
+        assertFalse(intervention.getMeansList().contains(mean1));
+        assertTrue(intervention.getMeansList().contains(mean2));
+        assertEquals(2,intervention.getMeansList().size());
+        for(Mean m : intervention.getMeansList())
+        {
+            if(m.getId()==mean2.getId())
+            {
+                assertEquals(mean2,m);
+            }
+            else if(m.getId()==mean1.getId())
+            {
+                assertTrue(m.getInPosition());
+                assertAreEqualsWitoutInPosition(mean1,m);
+            }
+        }
+        dao.delete(intervention);
+    }
+
+    public void assertAreEqualsWitoutInPosition(Mean expected, Mean real)
+    {
+        assertEquals(expected.getDateArrived(),real.getDateArrived());
+        assertEquals(expected.getCoordinates(),real.getCoordinates());
+        assertEquals(expected.getDateActivated(),real.getDateActivated());
+        assertEquals(expected.getDateEngaged(),real.getDateEngaged());
+        assertEquals(expected.getDateRefused(),real.getDateRefused());
+        assertEquals(expected.getDateReleased(),real.getDateReleased());
+        assertEquals(expected.getDateRequested(),real.getDateRequested());
+        assertEquals(expected.getMeanState(),real.getMeanState());
+        assertEquals(expected.getName(),real.getName());
+        assertEquals(expected.getVehicle(),real.getVehicle());
+    }
 }
