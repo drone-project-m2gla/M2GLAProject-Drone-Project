@@ -12,13 +12,19 @@ import com.caverock.androidsvg.SVGParseException;
 
 import java.io.InputStream;
 
-import fr.m2gla.istic.projet.model.SVGAdapter;
+import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 
 
 public class SVGActivity extends Activity {
     private ImageView imageView1;
 
+
+    /**
+     * Methode Principale de l'activité
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

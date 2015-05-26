@@ -1,23 +1,28 @@
 package rest;
 
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
 import entity.MeanState;
-import org.apache.log4j.Logger;
 import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
 import util.Datetime;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-
 /**
- * Created by arno on 12/02/15.
- *
- * Service rest du type intervention
+ * @author arno on 12/02/15.
+ * @see MeanXtraRest is service rest of type intervention
  */
 @Path("/moyen")
 public class MeanXtraRest {

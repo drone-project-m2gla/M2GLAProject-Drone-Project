@@ -16,7 +16,7 @@ import entity.Position;
 import entity.Zone;
 
 /**
- * Created by arno on 12/02/15.
+ * @author arno on 12/02/15.
  */
 @Path("/geoposition")
 public class GeoPosition {

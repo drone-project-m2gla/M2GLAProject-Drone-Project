@@ -2,7 +2,9 @@ package entity;
 
 
 /**
- * Created by arno on 09/03/15.
+ * @author arno
+ * @see Position contains 3 coordinates
+ * "Altitude" attribut is fixed and is not taken
  */
 
 public class Position {
@@ -23,10 +25,6 @@ public class Position {
         this.longitude = longitude;
         this.latitude = latitude;
         this.altitude = altitude;
-    }
-
-    public boolean hasAltitude() {
-        return !Double.isNaN(altitude);
     }
 
     public double getLongitude() {
@@ -64,17 +62,6 @@ public class Position {
         Position lngLatAlt = (Position) o;
         return Double.compare(lngLatAlt.latitude, latitude) == 0 && Double.compare(lngLatAlt.longitude, longitude) == 0
                 && Double.compare(lngLatAlt.altitude, altitude) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        long temp = Double.doubleToLongBits(longitude);
-        int result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(latitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(altitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
     }
 
     @Override

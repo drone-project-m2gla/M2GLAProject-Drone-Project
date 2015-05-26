@@ -1,5 +1,7 @@
 package rest;
 
+import org.apache.log4j.Logger;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -8,13 +10,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
 import dao.UserDAO;
 import entity.User;
 
 /**
- * Created by mds on 07/04/15.
- * Class ${CLASS}
+ * @author mds on 07/04/15.
+ * @see UserServices is using for connection
  */
 @Path("/user")
 public class UserServices {
