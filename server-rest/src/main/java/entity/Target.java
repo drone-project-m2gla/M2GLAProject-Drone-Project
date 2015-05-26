@@ -3,7 +3,8 @@ package entity;
 import java.util.List;
 
 /**
- * Created by alban on 16/04/15.
+ * @author alban on 16/04/15
+ * @see Target contains List of Postion
  */
 public class Target {
     private List<Position> positions;

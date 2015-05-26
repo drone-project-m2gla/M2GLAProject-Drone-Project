@@ -26,6 +26,10 @@
         <item>	Retour CRM	</item>
     </string-array>
 
+    <string-array name="transitMeansOptions">
+        <item>	Valider l\'arrivée</item>
+        <item>	Libérer	</item>
+    </string-array>
     <string-array name="optionsMoyenEngageEnPosition">
         <item>	Libérer	</item>
         <item>	Retour CRM	</item>

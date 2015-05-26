@@ -1,13 +1,14 @@
 package fr.m2gla.istic.projet.fragments;
 
 
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +34,7 @@ import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
+import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMovingMap;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
@@ -160,6 +161,7 @@ public class MoyensInitFragment extends ListFragment {
                             Toast.makeText(getActivity(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG);
                         }
                     });
+
             // Appel du drag and drop.
             listenerDragAndDrop();
         }
@@ -217,13 +219,18 @@ public class MoyensInitFragment extends ListFragment {
         };
     }
 
-    private void createTransitMeansView(List<Mean> activedList) {
+    /**
+     * Création de la view des moyens en transit
+     *
+     * @param transitList
+     */
+    private void createTransitMeansView(final List<Mean> transitList) {
 
         moyensInTransitTitle.clear();
         moyensInTransitDrawable.clear();
 
-        if (activedList.size() > 0) {
-            for (Mean m : activedList) {
+        if (transitList.size() > 0) {
+            for (Mean m : transitList) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
                 Symbol symbol = new Symbol(m.getId(),
@@ -237,7 +244,7 @@ public class MoyensInitFragment extends ListFragment {
         }
 
         //Listes pour générer tableaux pour adapterMeans
-        ListView refusedMeansSpinner = (ListView) view.findViewById(R.id.list_en_transit);
+        ListView transitMeansListView = (ListView) view.findViewById(R.id.list_en_transit);
 
         int sizeOfRefusedMeans = moyensInTransitDrawable.size();
         if (sizeOfRefusedMeans > 0) {
@@ -251,14 +258,59 @@ public class MoyensInitFragment extends ListFragment {
 
             ArrayAdapter adapterXtraRefused = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
 
-            refusedMeansSpinner.setAdapter(adapterXtraRefused);
+            transitMeansListView.setAdapter(adapterXtraRefused);
+
         } else {
-            refusedMeansSpinner.setVisibility(View.GONE);
+            transitMeansListView.setVisibility(View.GONE);
         }
         TextView refusedTextView = (TextView) view.findViewById(R.id.moyens_transit_textview);
         String textViewStringValue = getResources().getString(R.string.moyens_en_transit);
         String valueOfTextView = textViewStringValue + (" (" + sizeOfRefusedMeans + ")");
         refusedTextView.setText(valueOfTextView);
+
+        transitMeansListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Sélection une action sur le moyen")
+                        .setItems(R.array.transitMeansOptions, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Map<String, String> param = new HashMap<String, String>();
+                                param.put("id", idIntervention);
+                                Vehicle v = null;
+                                String restService = null;
+                                String toastValue = null;
+                                switch (which) {
+                                    // Validation de l'arrivée du moyen.
+                                    case 0: {
+                                        restService = RestAPI.POST_VALIDER_ARRIVEE_MOYEN;
+                                        toastValue = "!!ARRIVEE DU MOYEN!!";
+                                        break;
+                                    }
+                                    case 1: {
+                                        restService = RestAPI.POST_VALIDER_LIBERATION_MOYEN;
+                                        toastValue = "!!LIBERATION DU MOYEN!!";
+                                        break;
+                                    }
+                                }
+                                if (restService != null) {
+                                    final String finalToastValue = toastValue;
+                                    RestServiceImpl.getInstance().post(restService, param, transitList.get(position), Mean.class, new Command() {
+                                        @Override
+                                        public void execute(Object response) {
+                                            Mean m = (Mean) response;
+                                            Toast.makeText(getActivity(), finalToastValue + "\n" + m.getId(), Toast.LENGTH_SHORT).show();
+
+                                            // Mise à jour de la liste des moyens disponibles
+                                            movingMapMeanStrategy(m);
+                                        }
+                                    }, getCallbackError());
+                                }
+                            }
+                        }).show();
+            }
+        });
     }
 
     /**
@@ -343,9 +395,6 @@ public class MoyensInitFragment extends ListFragment {
             }
         }
 
-        Log.i(TAG, "Dispo  " + meanSize);
-
-
         // Set drawable to adapterMeans
         Drawable[] imagesArray = moyensDisponiblesDrawable.toArray(new Drawable[moyensDisponiblesDrawable.size()]);//drawables.toArray(new Drawable[drawables.size()]);
 
@@ -366,7 +415,11 @@ public class MoyensInitFragment extends ListFragment {
         dispoTextView.setText(valueOfTextView);
     }
 
-    // Méthode appelé par la strategie.
+    /**
+     * Méthode appelé par la strategie pour la demande de moyens supplémentaires
+     *
+     * @param object
+     */
     public void demandMeanStrategy(final Mean object) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -387,7 +440,11 @@ public class MoyensInitFragment extends ListFragment {
         });
     }
 
-    // Méthode appelé par la strategie.
+    /**
+     * Méthode appelé par la strategie lorsqu'un moyen est déplacé sur la carte
+     *
+     * @param object
+     */
     public void movingMapMeanStrategy(final Mean object) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -400,7 +457,55 @@ public class MoyensInitFragment extends ListFragment {
                             @Override
                             public void execute(Object response) {
                                 Mean[] means = (Mean[]) response;
-                                createAvailableMeansView(Arrays.asList(means)); // Appel de la méthode qui cré la view des moyens demandés.
+                                List<Mean> meanList = new ArrayList<Mean>();
+                                List<Mean> transitList = new ArrayList<Mean>();
+                                if (means.length > 0) {
+                                    for (Mean m : means) {
+                                        if (m.arrivedMean()) {
+                                            meanList.add(m);
+                                        }
+                                        if (m.onTransitMean()) {
+                                            transitList.add(m);
+                                        }
+                                    }
+                                }
+                                // Appel de la méthode qui cré la view des moyens demandés.
+                                createAvailableMeansView(meanList);
+                                // Appel de la méthode qui cré la view des moyens en transit.
+                                createTransitMeansView(transitList);
+                            }
+                        }, getCallbackError());
+            }
+        });
+    }
+
+    /**
+     * Méthode appelé par la strategie lorsqu'un moyen est arrivé au CRM
+     *
+     * @param object
+     */
+    public void arrivedMeanStrategy(final Mean object) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // GET_MOYENS_DISPO
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", idIntervention);
+                RestServiceImpl.getInstance()
+                        .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Mean[] means = (Mean[]) response;
+                                List<Mean> meanList = new ArrayList<Mean>();
+                                if (means.length > 0) {
+                                    for (Mean m : means) {
+                                        if (m.arrivedMean()) {
+                                            meanList.add(m);
+                                        }
+                                    }
+                                }
+                                // Appel de la méthode qui cré la view des moyens demandés.
+                                createAvailableMeansView(meanList);
                             }
                         }, getCallbackError());
             }
