@@ -16,6 +16,9 @@ import entity.GeoImage;
  */
 @Path("/images")
 public class ImageRest {
+    /**
+     * @return the list of All Images
+     */
     @GET
     public Response getAllImages() {
         GeoImageDAO gID = new GeoImageDAO();
@@ -24,7 +27,9 @@ public class ImageRest {
         gID.disconnect();
         return Response.ok(res).build();
     }
-
+    /**
+     * @return the list of Images near of coordinates
+     */
     @GET
     @Path("near/{latitude}/{longitude}")
     public Response getAllImagesNear(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude) {

@@ -3,7 +3,6 @@ package fr.m2gla.istic.projet.fragments;
 import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +23,9 @@ import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
-import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.RestService;
@@ -54,6 +53,7 @@ public class MoyensSuppFragment extends Fragment {
 
     /**
      * Methode principale du fragment de gestion des demandes de moyens supplémentaires
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -132,7 +132,7 @@ public class MoyensSuppFragment extends Fragment {
      * @param mean
      * @return : -
      */
-    private void sendRequestMeanAsync(Mean mean) {
+    private void sendRequestMeanAsync(final Mean mean) {
         RestService requestSnd = RestServiceImpl.getInstance();
 
         Map<String, String> map = new HashMap<>();
@@ -147,7 +147,7 @@ public class MoyensSuppFragment extends Fragment {
             public void execute(Object response) {
                 // Demander la prise en compte de la validation de l'identification
                 Mean moyen = (Mean) response;
-                Log.i(TAG, "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
+                Toast.makeText(getActivity(), "Moyen demandé avec succès\n" + moyen.getId(), Toast.LENGTH_SHORT).show();
             }
         }, new Command() {
             /**
@@ -165,6 +165,7 @@ public class MoyensSuppFragment extends Fragment {
 
     /**
      * Positionnement de l'intervention courante via son identifiant
+     *
      * @param interventionID
      */
     public void setInterventionID(String interventionID) {
