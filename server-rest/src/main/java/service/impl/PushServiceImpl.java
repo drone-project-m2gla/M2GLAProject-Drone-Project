@@ -1,19 +1,23 @@
 package service.impl;
 
+import com.google.android.gcm.server.Message.Builder;
+import com.google.android.gcm.server.MulticastResult;
+import com.google.android.gcm.server.Sender;
+
+import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import service.PushService;
 
-import com.google.android.gcm.server.Message.Builder;
-import com.google.android.gcm.server.MulticastResult;
-import com.google.android.gcm.server.Sender;
-
+/**
+ * PushServiceImpl permits to use gcm
+ * @author baptiste
+ */
 public class PushServiceImpl implements PushService {
 	private static final Logger LOGGER = Logger.getLogger(PushServiceImpl.class);
 	
