@@ -2,10 +2,8 @@ package dao;
 
 import entity.GeoImage;
 import entity.Position;
-import junit.framework.*;
 import org.apache.log4j.Logger;
 import org.junit.*;
-import org.junit.Assert;
 import org.junit.Test;
 import util.Configuration;
 
@@ -29,6 +27,7 @@ public class GeoImageDAOTest {
     public static void beforeAllTests() {
         Configuration.loadConfigurations();
         dao.connect();
+        dao.ensureIndex();
     }
 
     @AfterClass
