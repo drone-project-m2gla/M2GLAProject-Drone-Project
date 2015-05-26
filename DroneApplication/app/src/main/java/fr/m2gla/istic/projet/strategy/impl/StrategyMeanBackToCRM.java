@@ -35,7 +35,7 @@ public class StrategyMeanBackToCRM implements Strategy {
     @Override
     public void call(Object object) {
         if (map != null) {
-            map.movingMapMeanStrategy((Mean) object);
+            map.arrivedMeanStrategy((Mean) object);
         }
     }
 
