@@ -23,6 +23,7 @@ public class MeanDAOTest {
     public static void beforeAllTests() {
         Configuration.loadConfigurations();
         dao.connect();
+        dao.ensureIndex();
     }
 
     @AfterClass

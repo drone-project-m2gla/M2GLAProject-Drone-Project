@@ -129,6 +129,9 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     protected abstract Document entityToDocument(T entity);
 
+    /**
+     * Create different indexes
+     */
     public void ensureIndex()
     {
 

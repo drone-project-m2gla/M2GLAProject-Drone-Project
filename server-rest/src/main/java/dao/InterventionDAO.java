@@ -43,7 +43,6 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
             intervention.setCity(document.getString("city"));
             intervention.setDisasterCode(DisasterCode.valueOf(document.getString("disasterCode")));
             intervention.setMeansList(Tools.documentListToMeanList(((List<Document>) document.get("meansList"))));
-          //  intervention.setMeansXtra(Tools.documentListToMeanList(((List<Document>) document.get("meansXtra"))));
             intervention.setCoordinates(Tools.arrayListToPosition((ArrayList) document.get("coordinates")));
         }
         catch(Throwable t)
@@ -68,7 +67,6 @@ public class InterventionDAO extends AbstractDAO<Intervention> {
         document.put("postcode", entity.getPostcode());
         document.put("disasterCode", entity.getDisasterCode().toString());
         document.put("meansList",Tools.meanListToBasicDBList(entity.getMeansList()));
-        //document.put("meansXtra",Tools.meanListToBasicDBList(entity.getMeansXtra()));
         document.put("type", "Point");
         document.put("coordinates", Tools.positionToBasicDBList(entity.getCoordinates()));
         document.put("_id", entity.getId());

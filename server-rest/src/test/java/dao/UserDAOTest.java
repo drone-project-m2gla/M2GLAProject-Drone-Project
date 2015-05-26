@@ -21,6 +21,7 @@ public class UserDAOTest {
     public static void beforeAllTests() {
         Configuration.loadConfigurations();
         dao.connect();
+        dao.ensureIndex();
     }
 
     @AfterClass
