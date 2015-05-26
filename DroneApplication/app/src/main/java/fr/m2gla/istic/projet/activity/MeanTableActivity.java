@@ -44,6 +44,7 @@ import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
+import fr.m2gla.istic.projet.model.MeanState;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.Strategy;
 
@@ -155,6 +156,7 @@ public class MeanTableActivity extends Activity {
                 List<Mean>      meanList;
                 String          dateStr;
                 List<String>    dateList;
+                boolean         refusedMean;
 
 
                 intervention = (Intervention) response;
@@ -191,6 +193,34 @@ public class MeanTableActivity extends Activity {
                 // pour chaque ligne
                 for (Mean m:meanList) {
                     String  str;
+                    refusedMean = false;
+                    int color = Color.WHITE, idx = 6, i;
+
+                    MeanState meanState = m.getMeanState();
+                    if (meanState.compareTo(MeanState.REFUSED) == 0) {
+                        color = Color.RED;
+                        idx = 4;
+                    }
+                    else if (meanState.compareTo(MeanState.REQUESTED) == 0) {
+                        color = Color.BLUE;
+                        idx = 0;
+                    }
+                    else if (meanState.compareTo(MeanState.ACTIVATED) == 0) {
+                        color = Color.CYAN;
+                        idx = 1;
+                    }
+                    else if (meanState.compareTo(MeanState.ARRIVED) == 0) {
+                        color = Color.GREEN;
+                        idx = 2;
+                    }
+                    else if (meanState.compareTo(MeanState.ENGAGED) == 0) {
+                        color = Color.YELLOW;
+                        idx = 3;
+                    }
+                    else if (meanState.compareTo(MeanState.RELEASED) == 0) {
+                        color = Color.rgb(0xff, 0x8C, 0x00);
+                        idx = 4;
+                    }
 
                     // Verifier si le moyen est a afficher
                     str = m.getDateRefused();
@@ -198,6 +228,7 @@ public class MeanTableActivity extends Activity {
                         if (withRefusedMeans == false) {
                             continue;
                         }
+                        refusedMean = true;
                     }
 
 
@@ -208,7 +239,15 @@ public class MeanTableActivity extends Activity {
                     tv = new TextView(MeanTableActivity.this);
 
                     // ajout du texte
-                    tv.setText(m.getVehicle().toString() + " " + m.getName());
+                    if ("".compareTo(m.getName()) == 0) {
+                        tv.setText(m.getVehicle().toString());
+                    }
+                    else {
+                        tv.setText(m.getVehicle().toString() + " - " + m.getName());
+                    }
+
+                    // Specification de la couleur
+                    tv.setTextColor(color);
 
                     // centrage dans la cellule
                     tv.setGravity(Gravity.CENTER);
@@ -221,7 +260,7 @@ public class MeanTableActivity extends Activity {
 
                     // Cellules des dates
                     dateList = new ArrayList<String>();
-                    if ((str != null) && (str.compareTo("") != 0)) {
+                    if (refusedMean == true) {
                         dateList.add(m.getDateRequested());
                         dateList.add(GeneralConstants.MEAN_REFUSED);
                         dateList.add("");
@@ -236,8 +275,17 @@ public class MeanTableActivity extends Activity {
                         dateList.add(m.getDateReleased());
                     }
 
+                    i = 0;
                     for (String s:dateList) {
                         tv = new TextView(MeanTableActivity.this);
+                        if (i == idx) {
+                            tv.setTextColor(color);
+                        }
+                        else {
+                            tv.setTextColor(Color.LTGRAY);
+                        }
+                        i++;
+
                         if ((s == null) || (s.compareTo("") == 0)) {
                             dateStr = " - ";
                         }
