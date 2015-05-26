@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,11 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
-import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
-import fr.m2gla.istic.projet.model.SVGAdapter;
-import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
 // Creating an Adapter Class
