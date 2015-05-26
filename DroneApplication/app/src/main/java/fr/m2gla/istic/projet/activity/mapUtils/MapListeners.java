@@ -49,7 +49,7 @@ public class MapListeners implements
     private MapActivity mapActivity;
 
     // Keep track of all the symbols by marker id
-    public Map<String, SymbolMarkerClusterItem> markerSymbolLink = new HashMap<String, SymbolMarkerClusterItem>();
+    public Map<String, SymbolMarkerClusterItem> markerSymbolLinkMap = new HashMap<String, SymbolMarkerClusterItem>();
 
     public void setMapActivity(MapActivity mapActivity) {
         this.mapActivity = mapActivity;
@@ -168,7 +168,7 @@ public class MapListeners implements
         position.setLatitude(marker.getPosition().latitude);
         position.setLongitude(marker.getPosition().longitude);
         Mean mean = new Mean();
-        mean.setId(markerSymbolLink.get(marker.getId()).getSymbol().getId());
+        mean.setId(markerSymbolLinkMap.get(marker.getId()).getSymbol().getId());
         mean.setCoordinates(position);
 
         final String markerId = marker.getId();
@@ -181,7 +181,7 @@ public class MapListeners implements
                             public void execute(Object response) {
                                 Log.e(TAG, "Post new position success");
                                 //Change symbol image to dashed one
-                                if (markerSymbolLink.containsKey(markerId)) {
+                                if (markerSymbolLinkMap.containsKey(markerId)) {
                                     mapActivity.loadMeansInMap();
                                 }
                             }
@@ -198,7 +198,7 @@ public class MapListeners implements
     @Override
     public void onInfoWindowClick(Marker marker) {
         //Log.d(TAG, "main onClusterItemInfoWindowClick");
-        final Symbol meanSymbol = markerSymbolLink.get(marker.getId()).getSymbol();
+        final Symbol meanSymbol = markerSymbolLinkMap.get(marker.getId()).getSymbol();
         final String meanSymbolId = meanSymbol.getId();
         final Marker _marker = marker;
         if (!meanSymbol.isTopographic()) {

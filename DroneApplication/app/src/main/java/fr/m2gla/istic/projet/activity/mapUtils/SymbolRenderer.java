@@ -52,7 +52,7 @@ public class SymbolRenderer extends DefaultClusterRenderer<SymbolMarkerClusterIt
 
     @Override
     protected void onClusterItemRendered(SymbolMarkerClusterItem clusterItem, Marker marker) {
-        mapListeners.markerSymbolLink.put(marker.getId(), clusterItem);
+        mapListeners.markerSymbolLinkMap.put(marker.getId(), clusterItem);
     }
 }
 
