@@ -198,14 +198,13 @@ public class InterventionRest {
         List<Mean> meanList = intervention.getMeansList();
 
         for (Mean m : meanList) {
-            if (m.getId() == mean.getId()) {
-                if (m.getMeanState() == MeanState.ENGAGED) {
-                    m.setMeanState(MeanState.ARRIVED);
-                    m.setInPosition(false);
-                    res = m;
-                    meanEngaged = true;
-                    break;
-                }
+            if (m.getId() == mean.getId() && (m.getMeanState() == MeanState.ENGAGED)) {
+                m.setCoordinates(mean.getCoordinates());
+                m.setMeanState(MeanState.ARRIVED);
+                m.setInPosition(false);
+                res = m;
+                meanEngaged = true;
+                break;
             }
         }
 
@@ -239,15 +238,17 @@ public class InterventionRest {
         List<Mean> meanList = intervention.getMeansList();
 
         for (Mean m : meanList) {
-            if (m.getId() == mean.getId()) {
-                if (m.getMeanState() == MeanState.ACTIVATED || m.getMeanState() == MeanState.ENGAGED || m.getMeanState() == MeanState.ARRIVED) {
-                    m.setDateArrived(Datetime.getCurrentDate());
-                    m.setMeanState(MeanState.RELEASED);
-                    m.setInPosition(false);
-                    res = m;
-                    meanReleased = true;
-                    break;
-                }
+            if (m.getId() == mean.getId() &&
+                       (m.getMeanState() == MeanState.ACTIVATED
+                     || m.getMeanState() == MeanState.ENGAGED
+                     || m.getMeanState() == MeanState.ARRIVED)) {
+                m.setCoordinates(mean.getCoordinates());
+                m.setDateArrived(Datetime.getCurrentDate());
+                m.setMeanState(MeanState.RELEASED);
+                m.setInPosition(false);
+                res = m;
+                meanReleased = true;
+                break;
             }
         }
 
