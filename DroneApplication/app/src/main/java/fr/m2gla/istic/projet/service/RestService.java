@@ -5,6 +5,9 @@ import java.util.Map;
 import fr.m2gla.istic.projet.command.Command;
 
 
+/**
+ * Interface les services REST
+ */
 public interface RestService {
     /**
      * Send get http method

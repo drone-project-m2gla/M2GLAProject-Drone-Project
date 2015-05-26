@@ -8,6 +8,10 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import fr.m2gla.istic.projet.intent.GcmIntentService;
 
+/**
+ * Récupère les messages reçus depuis Google et les transfert à l'intent
+ * @see GcmIntentService
+ */
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {

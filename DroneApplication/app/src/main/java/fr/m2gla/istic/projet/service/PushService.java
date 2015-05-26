@@ -6,6 +6,7 @@ import fr.m2gla.istic.projet.context.UserQualification;
 
 /**
  * Created by baptiste on 08/04/15.
+ * Interface pour le service de notification
  */
 public interface PushService {
     /**

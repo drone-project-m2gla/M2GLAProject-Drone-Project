@@ -14,6 +14,9 @@ import java.util.Map;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.service.RestService;
 
+/**
+ * Définition des services REST
+ */
 public class RestServiceImpl implements RestService {
     private static final String TAG = "RestServiceImpl";
     private static final RestService INSTANCE = new RestServiceImpl();
@@ -23,13 +26,29 @@ public class RestServiceImpl implements RestService {
 //    private static final String URL = "http://projm2gla1int.istic.univ-rennes1.fr:58089/sitserver/rest";
 
 
+    /**
+     * Constructeur
+     */
     protected RestServiceImpl() {
     }
 
+    /**
+     * Builder
+     * @return : Instance de la classe
+     */
     public static RestService getInstance() {
         return INSTANCE;
     }
 
+    /**
+     * Service GET
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param type Type of result
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
+     * @param <T>
+     */
     @Override
     public <T> void get(final String service, final Map<String, String> param, final Class<T> type, final Command callbackSuccess, final Command callbackError) {
         (new AsyncTask() {
@@ -78,6 +97,16 @@ public class RestServiceImpl implements RestService {
         }).execute();
     }
 
+    /**
+     * Service POST
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param content Content of request
+     * @param type Type of result
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
+     * @param <T>
+     */
     @Override
     public <T> void post(final String service, final Map<String, String> param, final Object content, final Class<T> type, final Command callbackSuccess, final Command callbackError) {
         (new AsyncTask() {
@@ -123,6 +152,16 @@ public class RestServiceImpl implements RestService {
         }).execute();
     }
 
+    /**
+     * Service PUT
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param content Content of request
+     * @param type Type of result
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
+     * @param <T>
+     */
     @Override
     public <T> void put(final String service, final Map<String, String> param, final Object content, final Class<T> type, final Command callbackSuccess, final Command callbackError) {
         (new AsyncTask() {
@@ -145,6 +184,14 @@ public class RestServiceImpl implements RestService {
         }).execute();
     }
 
+    /**
+     * Service DELETE
+     * @param service Service REST call (available in RestAPI)
+     * @param param (Optional) Param of query, or null
+     * @param callbackSuccess Callback after response success
+     * @param callbackError Callback after response error
+     * @param <T>
+     */
     @Override
     public <T> void delete(final String service, final Map<String, String> param, final Command callbackSuccess, final Command callbackError) {
         (new AsyncTask() {
