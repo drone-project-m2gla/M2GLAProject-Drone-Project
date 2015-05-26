@@ -4,6 +4,7 @@ import fr.m2gla.istic.projet.activity.R;
 
 /**
  * Created by david on 08/04/15.
+ * Classe contenant la définition des constantes de l'application androïd
  */
 public interface GeneralConstants {
     // Codes retours des services REST

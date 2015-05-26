@@ -52,6 +52,13 @@ public class MoyensSuppFragment extends Fragment {
     private String interventionID = "";
     private Symbol[] means;
 
+    /**
+     * Methode principale du fragment de gestion des demandes de moyens supplémentaires
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -123,7 +130,7 @@ public class MoyensSuppFragment extends Fragment {
      * Méthode d'envoi d'une demande d'un moyen supplémentaire.
      *
      * @param mean
-     * @return
+     * @return : -
      */
     private void sendRequestMeanAsync(Mean mean) {
         RestService requestSnd = RestServiceImpl.getInstance();
@@ -139,7 +146,6 @@ public class MoyensSuppFragment extends Fragment {
             @Override
             public void execute(Object response) {
                 // Demander la prise en compte de la validation de l'identification
-                Toast.makeText(getActivity(), "Moyen suppl.\n" + interventionID, Toast.LENGTH_SHORT).show();
                 Mean moyen = (Mean) response;
                 Log.i(TAG, "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
             }
@@ -157,6 +163,10 @@ public class MoyensSuppFragment extends Fragment {
         });
     }
 
+    /**
+     * Positionnement de l'intervention courante via son identifiant
+     * @param interventionID
+     */
     public void setInterventionID(String interventionID) {
         this.interventionID = interventionID;
     }
