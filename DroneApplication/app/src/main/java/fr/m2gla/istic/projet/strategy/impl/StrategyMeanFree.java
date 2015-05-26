@@ -10,8 +10,8 @@ import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 /**
  * Created by mds on 19/05/15.
  */
-public class StrategyMeanMovingMap implements Strategy {
-    private static StrategyMeanMovingMap INSTANCE;
+public class StrategyMeanFree implements Strategy {
+    private static StrategyMeanFree INSTANCE;
 
     public void setFragment(MoyensInitFragment mapActivity) {
         this.map = mapActivity;
@@ -19,12 +19,12 @@ public class StrategyMeanMovingMap implements Strategy {
 
     private MoyensInitFragment map;
 
-    public StrategyMeanMovingMap() {
+    public StrategyMeanFree() {
     }
 
     @Override
     public String getScopeName() {
-        return "moyenMove";
+        return "moyenLibere";
     }
 
     @Override
@@ -39,9 +39,9 @@ public class StrategyMeanMovingMap implements Strategy {
         }
     }
 
-    public static StrategyMeanMovingMap getINSTANCE() {
+    public static StrategyMeanFree getINSTANCE() {
         if (INSTANCE == null) {
-            INSTANCE = new StrategyMeanMovingMap();
+            INSTANCE = new StrategyMeanFree();
             // On s'abonne à la strategy
             StrategyRegistery.getInstance().addStrategy(INSTANCE);
         }

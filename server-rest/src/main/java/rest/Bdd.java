@@ -1,25 +1,29 @@
 package rest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import dao.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
+import dao.AbstractDAO;
+import dao.GeoIconDAO;
+import dao.GeoImageDAO;
+import dao.InterventionDAO;
+import dao.MeanDAO;
+import dao.UserDAO;
 import entity.GeoIcon;
 import entity.Position;
 import entity.User;
 
 /**
- * Created by alban on 08/04/15.
+ * @author alban on 08/04/15.
  */
 @Path("/bdd")
 public class Bdd {

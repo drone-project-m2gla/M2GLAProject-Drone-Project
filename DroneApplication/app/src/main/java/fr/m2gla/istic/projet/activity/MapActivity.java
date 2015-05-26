@@ -43,13 +43,13 @@ import fr.m2gla.istic.projet.activity.mapUtils.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyImageDrone;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 
-public class MapActivity extends Activity implements
-        ObserverTarget {
+public class MapActivity extends Activity implements ObserverTarget {
     private static final String TAG = "MapActivity";
     private static final int ZOOM_INDEX = 18;
     private MapFragment mapFragment;
@@ -58,7 +58,7 @@ public class MapActivity extends Activity implements
     public GoogleMap map;
     public Map<String, String> restParams;
 
-    private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+    private ClusterManager<SymbolMarkerClusterItem> meansTopoClusterManager;
     private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
     private MapListeners mapListeners;
 
@@ -68,13 +68,24 @@ public class MapActivity extends Activity implements
     private List<Polyline> polylineList;
     private DroneTargetActionFragment droneTargetActionFragment;
 
+
+    /**
+     * Methode renvoyant si le mode de fonctionnement de la carte est le mode drone
+     * @return true si mode drone, false sinon
+     */
     public boolean isDroneMode() {
         return isDroneMode;
     }
 
+
+    /**
+     * Methode renvoyant la liste des trajets successifs du drone
+     * @return liste demandée
+     */
     public List<Polyline> getPolylineList() {
         return polylineList;
     }
+
 
     public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
         return droneClusterManager;
@@ -90,6 +101,12 @@ public class MapActivity extends Activity implements
         super.onDestroy();
     }
 
+
+    /**
+     * Methode Principale de l'activité de gestion de la carte
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,12 +132,12 @@ public class MapActivity extends Activity implements
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<>(this, map);
-        SymbolRenderer symbolRenderer = new SymbolRenderer(this, map, mClusterManager);
+        meansTopoClusterManager = new ClusterManager<>(this, map);
+        SymbolRenderer symbolRenderer = new SymbolRenderer(this, map, meansTopoClusterManager);
         symbolRenderer.setContext(getApplicationContext());
         symbolRenderer.setMapListeners(mapListeners);
 
-        mClusterManager.setRenderer(symbolRenderer);
+        meansTopoClusterManager.setRenderer(symbolRenderer);
 
         droneClusterManager = new ClusterManager<>(this, map);
         ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
@@ -135,8 +152,8 @@ public class MapActivity extends Activity implements
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
-        map.setOnCameraChangeListener(mClusterManager);
-        map.setOnMarkerClickListener(mClusterManager);
+        map.setOnCameraChangeListener(meansTopoClusterManager);
+        map.setOnMarkerClickListener(meansTopoClusterManager);
 
         // Enable info window click on each cluster element
         map.setOnInfoWindowClickListener(mapListeners);
@@ -148,14 +165,59 @@ public class MapActivity extends Activity implements
         findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
         findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
 
-        // Add activity to strategy
-        StrategyMoveDrone.getINSTANCE().setActivity(this);
-        StrategyMeanMove.getINSTANCE().setActivity(this);
-        StrategyMeanValidatePosition.getINSTANCE().setActivity(this);
-
         loadTopographicSymbols();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        linkActivity();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        linkActivity();
+    }
+
+    /**
+     * Add activity to strategy
+     */
+    private void linkActivity() {
+        StrategyMoveDrone.getINSTANCE().setActivity(this);
+        StrategyImageDrone.getINSTANCE().setActivity(this);
+        StrategyMeanMove.getINSTANCE().setActivity(this);
+        StrategyMeanValidatePosition.getINSTANCE().setActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unlinkActivity();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unlinkActivity();
+    }
+
+    /**
+     * Remove activity to strategy
+     */
+    private void unlinkActivity() {
+        StrategyMoveDrone.getINSTANCE().setActivity(null);
+        StrategyImageDrone.getINSTANCE().setActivity(null);
+        StrategyMeanMove.getINSTANCE().setActivity(null);
+        StrategyMeanValidatePosition.getINSTANCE().setActivity(null);
+    }
+
+
+    /**
+     * Methode de creation du menu de l'activité
+     *
+     * @param menu : Objet de definition du menu principal
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
@@ -167,6 +229,12 @@ public class MapActivity extends Activity implements
         return true;
     }
 
+
+    /**
+     * Methode de gestion de l'usage du menu de l'activité
+     *
+     * @param item : Objet de sélection dans le menu principal
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -220,6 +288,7 @@ public class MapActivity extends Activity implements
                      */
                     @Override
                     public void execute(Object response) {
+                        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
                         Topographie[] topographies = (Topographie[]) response;
 
                         for (Topographie topographie : topographies) {
@@ -231,10 +300,11 @@ public class MapActivity extends Activity implements
                                     topographie.getColor(),
                                     true);
                             SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                            mClusterManager.addItem(markerItem);
+                            meansTopoClusterManager.addItem(markerItem);
                         }
 
-                        mClusterManager.cluster();
+                        meansTopoClusterManager.cluster();
+                        findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                     }
                 }, new Command() {
                     /**
@@ -287,6 +357,7 @@ public class MapActivity extends Activity implements
                 .add(new LatLng(pos1.getLatitude(), pos1.getLongitude()))
                 .add(new LatLng(pos2.getLatitude(), pos2.getLongitude()))
                 .width(5)
+                .geodesic(true)
                 .color(Color.rgb(143, 0, 71));
 
         polylineList.add(map.addPolyline(polylineOptions));
@@ -298,6 +369,17 @@ public class MapActivity extends Activity implements
                 @Override
                 public void run() {
                     drone.setCenter(new LatLng(position.getLatitude(), position.getLongitude()));
+                }
+            });
+        }
+    }
+
+    public void imageDrone(final Position position) {
+        if (drone != null) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    
                 }
             });
         }
@@ -388,6 +470,7 @@ public class MapActivity extends Activity implements
         return new Command() {
             @Override
             public void execute(Object response) {
+                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
                 Intervention intervention = (Intervention) response;
                 List<Mean> meanList = intervention.getMeansList();
 
@@ -398,8 +481,8 @@ public class MapActivity extends Activity implements
                     }
                 }
 
-                mClusterManager.clearItems();
-                mapListeners.markerSymbolLink.clear();
+                meansTopoClusterManager.clearItems();
+                mapListeners.markerSymbolLinkMap.clear();
                 for (Mean m : meansWithCoordinates) {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Symbol.getImage(meanClass);
@@ -412,14 +495,15 @@ public class MapActivity extends Activity implements
                             m.getCoordinates().getLatitude(),
                             m.getCoordinates().getLongitude(), symbol);
 
-                    mClusterManager.addItem(markerItem);
+                    meansTopoClusterManager.addItem(markerItem);
                 }
-                mClusterManager.cluster();
+                meansTopoClusterManager.cluster();
+                findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
             }
         };
     }
 
-    public void setDraggingMode(boolean _isDragging){
-        isDragging = _isDragging;
+    public void setDraggingMode(boolean isDragging){
+        this.isDragging = isDragging;
     }
 }

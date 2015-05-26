@@ -17,9 +17,8 @@ import dao.GeoIconDAO;
 import entity.GeoIcon;
 
 /**
- * Created by jerem on 08/04/15.
- *
- * Envoie  l'ensemble des icons
+ * @author jerem on 08/04/15.
+ * @see Topographie service interacts for sending or creating topographic icons
  */
 @Path("/topographie")
 public class Topographie {

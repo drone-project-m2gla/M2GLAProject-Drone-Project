@@ -1,11 +1,17 @@
 package fr.istic.m2gla.projet.initializer;
 
+import org.apache.log4j.PropertyConfigurator;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.PropertyConfigurator;
 import service.position.GetDronePositionThread;
 
+
+/**
+ * @author baptiste
+ * @see ProjetServletContextListener launch log4j
+ */
 public class ProjetServletContextListener implements ServletContextListener {
 	private static final String LOG_DEV = "./webapps/ROOT/log/log4j.properties";
 	private static final String LOG_PROD = "./webapps/sitserver/log/log4j.properties";

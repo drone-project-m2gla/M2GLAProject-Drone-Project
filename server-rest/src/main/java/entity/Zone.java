@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by mds on 11/03/15.
- * Class ${CLASS}
+ * @author mds on 11/03/15.
+ * @see Zone contains List of Position which could be iterated
  */
 public class Zone {
 

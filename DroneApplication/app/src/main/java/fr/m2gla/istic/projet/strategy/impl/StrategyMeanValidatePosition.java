@@ -1,6 +1,8 @@
 package fr.m2gla.istic.projet.strategy.impl;
 
 import fr.m2gla.istic.projet.activity.MapActivity;
+import fr.m2gla.istic.projet.activity.R;
+import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.strategy.Strategy;
 import fr.m2gla.istic.projet.strategy.StrategyRegistery;
@@ -41,6 +43,7 @@ public class StrategyMeanValidatePosition implements Strategy {
     public void call(Object object) {
         if (activity != null) {
             activity.updateMeans();
+            ((MoyensInitFragment) activity.getFragmentManager().findFragmentById(R.id.fragment_moyens_init)).movingMapMeanStrategy((Mean) object);
         }
     }
 }

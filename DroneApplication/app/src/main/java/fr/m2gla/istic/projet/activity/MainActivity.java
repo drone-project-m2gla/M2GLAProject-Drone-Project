@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
      * Methode de creation du menu de l'application
      *
      * @param menu : Objet de definition du menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
      * Methode de gestion de l'usage du menu principal
      *
      * @param item : Objet de sélection dans le menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -88,6 +90,7 @@ public class MainActivity extends Activity {
      *
      * @param keyCode : Code de la touche
      * @param event : Evènement
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -185,6 +188,7 @@ public class MainActivity extends Activity {
      * Methode de gestion de l'envoi des elements de login au serveur
      *
      * @param -
+     * @return true si reussite de l'operation, false sinon
      */
     private boolean sendLoginAsync() {
 

@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
 import rest.ImagesRestTest;
 import rest.InterventionRestTest;
 import rest.UserServicesRestTest;
+import service.impl.PushServiceImpl;
 import util.Configuration;
 
 import com.mongodb.Block;
@@ -56,6 +57,7 @@ public class TestSuiteDao {
                 }
             });
         mongoClient.close();
+        PushServiceImpl.getInstance().setIsTestMode(true);
     }
 
     @AfterClass

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
+import fr.m2gla.istic.projet.command.ListAdapterCommand;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 

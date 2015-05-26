@@ -32,7 +32,7 @@ public class InterventionListActivity extends Activity {
 
 
     /**
-     * Methode Principale
+     * Methode Principale de l'activité liste d'intervention
      *
      * @param savedInstanceState
      */
@@ -96,9 +96,10 @@ public class InterventionListActivity extends Activity {
     }
 
     /**
-     * Methode de creation du menu de l'entity
+     * Methode de creation du menu de l'activité
      *
      * @param menu : Objet de definition du menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,9 +109,10 @@ public class InterventionListActivity extends Activity {
     }
 
     /**
-     * Methode de gestion de l'usage du menu de l'entity
+     * Methode de gestion de l'usage du menu de l'activité
      *
      * @param item : Objet de sélection dans le menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
