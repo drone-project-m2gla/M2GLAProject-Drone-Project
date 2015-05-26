@@ -125,7 +125,7 @@ public class MoyensSuppFragment extends Fragment {
      * @param mean
      * @return
      */
-    private void sendRequestMeanAsync(Mean mean) {
+    private void sendRequestMeanAsync(final Mean mean) {
         RestService requestSnd = RestServiceImpl.getInstance();
 
         Map<String, String> map = new HashMap<>();
