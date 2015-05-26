@@ -94,7 +94,7 @@ public class MapListeners implements
                                     @Override
                                     public void execute(Object response) {
                                         Log.e(TAG, "Post new position error");
-                                        Toast.makeText(mapActivity, "Impossible de positionner le moyen", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mapActivity, "Impossible de positionner le moyen : " + response.toString(), Toast.LENGTH_LONG).show();
                                     }
                                 });
 
@@ -282,8 +282,7 @@ public class MapListeners implements
                                     mean.setInPosition(false);
 
                                     RestServiceImpl.getInstance()
-                                            //TODO: utiliser la méthode post correcte
-                                            .post(RestAPI.POST_RELEASE, mapActivity.restParams, mean, Mean.class,
+                                            .post(RestAPI.POST_RETOURCRM, mapActivity.restParams, mean, Mean.class,
                                                     new Command() {
                                                         @Override
                                                         public void execute(Object response) {
