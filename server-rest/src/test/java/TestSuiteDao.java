@@ -57,7 +57,7 @@ public class TestSuiteDao {
                 }
             });
         mongoClient.close();
-        PushServiceImpl.getInstance().setIsDevMode(true);
+        PushServiceImpl.getInstance().setIsTestMode(true);
     }
 
     @AfterClass
