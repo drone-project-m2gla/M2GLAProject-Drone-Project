@@ -28,6 +28,9 @@ import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
+/**
+ * Fragment de gestion de la liste des interventions
+ */
 public class InterventionListFragment extends Fragment {
     private static final String TAG = "InterListFragment";
 
@@ -219,6 +222,10 @@ public class InterventionListFragment extends Fragment {
 
     }
 
+    /**
+     * Methode de rafraichissement de la liste
+     * @param idIntervention : identifiant de l'intervention en cours s'il y en a une
+     */
     public void refreshList(String idIntervention) {
 
         // Recuperer l'id de l'intervention selectionnee
@@ -246,11 +253,6 @@ public class InterventionListFragment extends Fragment {
 
         idStr = intervention.getId();
         dcStr = intervention.getDisasterCode().toString();
-//        for (Mean m: intervention.meansRequested()) {
-//            if (m.refusedMeans() == false) {
-//                nbMeanExtra++;
-//            }
-//        }
 
 
         nbMeanExtra = intervention.meansRequested().size();

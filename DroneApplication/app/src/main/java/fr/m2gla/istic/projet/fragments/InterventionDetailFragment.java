@@ -40,6 +40,9 @@ import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
+/**
+ * Fragment dde gestion de l'affichage des détails d'une intervention
+ */
 public class InterventionDetailFragment extends Fragment implements ListAdapterCommand {
     private static final String TAG = "Inter";
     private Intervention intervention;
@@ -53,6 +56,13 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
 
+    /**
+     * Methode principale
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_intervention_detail, container, false);
@@ -60,12 +70,12 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         return view;
     }
 
+
     /**
-     * Set intervention id from another fragment or activity
+     * Methode permettant de specifier l'intervention en cours
      *
      * @param idIntervention
      */
-
     public void setIdIntervention(String idIntervention) {
         this.idIntervention = idIntervention;
 
@@ -77,10 +87,11 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         }
     }
 
+
     /**
-     * Command error
+     * Methode de gestion des retours en erreur d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion d'erreur attentue par le service REST
      */
     private Command getCallbackError() {
         return new Command() {
@@ -92,9 +103,9 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     }
 
     /**
-     * Command success
+     * Methode de gestion des retours en succes d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion de succes attentue par le service REST
      */
     private Command getCallbackSuccess() {
         return new Command() {
@@ -142,7 +153,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
 
     /**
-     * Formattage des moyens extra pour l'adapterMeans
+     * Formattage des moyens extra pour l'adapter de la liste des moyens en attente de validation
      *
      * @param intervention
      * @param listXtra
@@ -252,6 +263,11 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     }
 
 
+    /**
+     * Methode de récupération pas saisie écran du nom attribué au moyen validé
+     * @param xtraMean
+     * @param position
+     */
     private void meanNameGet(final Mean xtraMean, final int position) {
         final Map<String, String> map = new HashMap<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -306,6 +322,11 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     }
 
 
+    /**
+     * Demande de rafraichissement de la list des intervention et des détails de l'intervention
+     * sélectionnée
+     * @return true
+     */
     @Override
     public boolean refreshList() {
 
@@ -314,9 +335,15 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         InterventionListFragment fragmentListIntervention = (InterventionListFragment) getFragmentManager().findFragmentById(R.id.fragment_intervention_list);
         fragmentListIntervention.refreshList(idIntervention);
 
-        return false;
+        return true;
     }
 
+    /**
+     * Methode d'action sur validation d'un moyen en attente
+     * @param xtraMean : Moyen validé
+     * @param position : Position dans la liste
+     * @return true si validation effectuée, false sinon
+     */
     @Override
     public boolean onValidateClick(final Mean xtraMean, final int position) {
         final Map<String, String> map = new HashMap<>();
@@ -324,27 +351,15 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         if (xtraMean == null) return (false);
 
         meanNameGet(xtraMean, position);
-/*
-        map.put("idintervention", idIntervention);
-        RestServiceImpl.getInstance()
-                .post(RestAPI.POST_VALIDER_MOYEN, map, xtraMean, String.class,
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-                                Log.i("itemsAdapter", "Moyen validé : " + position);
-                                refreshList();
-                            }
-                        }, new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Toast.makeText(getActivity(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-*/
         return (true);
     }
 
+    /**
+     * Methode d'action sur invalidation d'un moyen en attente
+     * @param xtraMean : Moyen non validé
+     * @param position : Position dans la liste
+     * @return true si invalidation effectuée, false sinon
+     */
     @Override
     public boolean onCancelClick(final Mean xtraMean, final int position) {
         final Map<String, String> map = new HashMap<>();
@@ -374,10 +389,19 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         return (true);
     }
 
+    /**
+     * Recupération d'un moyen en fonction de sa position
+     * @param position : position du moyen dans la liste
+     * @return : Moyen trouvé
+     */
     public Mean getMeanXtra(int position) {
         return intervention.meansRequested().get(position);
     }
 
+    /**
+     * Récupération de l'identifiant de l'intervention en cours
+     * @return : identifiant de l'intervention
+     */
     public String getIdIntervention() {
         return idIntervention;
     }

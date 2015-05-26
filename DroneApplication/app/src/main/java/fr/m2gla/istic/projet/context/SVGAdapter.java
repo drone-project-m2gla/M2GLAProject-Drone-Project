@@ -181,6 +181,12 @@ public class SVGAdapter {
         return mutableBitmap;
     }
 
+    /**
+     * Convertion d'un symbole en icône
+     * @param context
+     * @param symbol
+     * @return : Icone
+     */
     public static BitmapDescriptor convertSymbolToIcon(Context context, Symbol symbol){
         Drawable drawable = convertSymbolToDrawable(context, symbol);
         Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
@@ -188,6 +194,12 @@ public class SVGAdapter {
         return icon;
     }
 
+    /**
+     * Convertion d'un symbole en image Drawable
+     * @param context
+     * @param symbol
+     * @return : Drawable
+     */
     public static Drawable convertSymbolToDrawable(Context context, Symbol symbol){
         Drawable drawable;
         try {

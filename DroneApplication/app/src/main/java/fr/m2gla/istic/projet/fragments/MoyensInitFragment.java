@@ -41,6 +41,9 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
+/**
+ * Fragment d'initialisation des moyens
+ */
 public class MoyensInitFragment extends ListFragment {
     private static final String TAG = "MoyensInitFragment";
 
@@ -70,6 +73,13 @@ public class MoyensInitFragment extends ListFragment {
     private List<String> moyensInTransitTitle = new ArrayList();
     private List<Drawable> moyensInTransitDrawable = new ArrayList();
 
+    /**
+     * Methode principale
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
@@ -80,11 +90,26 @@ public class MoyensInitFragment extends ListFragment {
         return view;
     }
 
+    /**
+     *
+     /**
+     * Methode de creation du menu du fragment
+     *
+     * @param l
+     * @param v
+     * @param position
+     * @param id
+     */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         getListView().setSelector(android.R.color.holo_blue_dark);
     }
 
+    /**
+     *Methode de gestion de l'usage du menu du fragment
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -144,7 +169,7 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     * Set intervention id from another fragment or activity
+     * Methode permettant de specifier l'intervention en cours
      *
      * @param idIntervention
      */
@@ -167,14 +192,18 @@ public class MoyensInitFragment extends ListFragment {
         }
     }
 
+    /**
+     * Récupération de l'identifiant de l'intervention en cours
+     * @return : l'identifiant de l'intervention en cours
+     */
     public String getIdIntervention() {
         return idIntervention;
     }
 
     /**
-     * Command error
+     * Methode de gestion des retours en erreur d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion de succes attentue par le service REST
      */
     private Command getCallbackError() {
         return new Command() {
@@ -186,9 +215,9 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     * Command success
+     * Methode de gestion des retours en succes d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion de succes attentue par le service REST
      */
     private Command getCallbackSuccess() {
         return new Command() {
@@ -222,7 +251,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * Création de la view des moyens en transit
      *
-     * @param transitList
+     * @param transitList : liste des moyensen transit
      */
     private void createTransitMeansView(final List<Mean> transitList) {
 
@@ -316,7 +345,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * Création de la view des moyens refusés.
      *
-     * @param meanRefused
+     * @param meanRefused : liste des moyens refusés
      */
     private void createRefusedMeansView(List<Mean> meanRefused) {
 
@@ -367,7 +396,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * méthode qui cré la view des moyens disponibles.
      *
-     * @param meanList
+     * @param meanList : liste des moyens disponibles
      */
     private void createAvailableMeansView(List<Mean> meanList) {
 
@@ -515,7 +544,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * méthode qui cré la view des moyens demandés.
      *
-     * @param means
+     * @param means : Tableau des moyens demandés
      */
     private void createRequestedMeansView(Mean[] means) {
         meansRequestedTitle.clear();
