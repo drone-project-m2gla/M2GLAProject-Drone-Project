@@ -1,7 +1,5 @@
 package fr.m2gla.istic.projet.strategy.impl;
 
-import android.util.Log;
-
 import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.strategy.Strategy;
@@ -36,6 +34,7 @@ public class StrategyMeanFree implements Strategy {
     public void call(Object object) {
         if (map != null) {
             map.movingMapMeanStrategy((Mean) object);
+            map.transitMeanStrategy((Mean) object);
         }
     }
 

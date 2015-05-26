@@ -21,6 +21,10 @@ import entity.Zone;
 @Path("/geoposition")
 public class GeoPosition {
 
+
+    /**Utility of this service ?
+     * @return the coordonates
+     */
     @GET
     @Path("{latitude}/{longitude}")
     public Response getPosition(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude) {
