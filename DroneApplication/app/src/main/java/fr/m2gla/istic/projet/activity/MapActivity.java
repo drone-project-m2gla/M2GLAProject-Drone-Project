@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.datatype.Duration;
-
 import fr.m2gla.istic.projet.activity.mapUtils.ImageDroneRenderer;
 import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolRenderer;
@@ -70,7 +68,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     private ClusterManager<SymbolMarkerClusterItem> topoClusterManager;
     private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
 
-    //
+    // Définition des écouteurs sur la carte et les marqueurs
     private MapListeners mapListeners;
 
     private Menu menu;
@@ -138,11 +136,10 @@ public class MapActivity extends Activity implements ObserverTarget {
         mapListeners = new MapListeners();
 
         mapListeners.setMapActivity(this);
-        // Set marker's drag listener to control marker drag & drop behaviour
+        // Définit l'écouteur sur l'événement drag des marqueurs
         map.setOnMarkerDragListener(mapListeners);
 
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
+        // Initialise le cluster manager avec la carte et le contexte
         meansClusterManager = new ClusterManager<>(this, map);
         topoClusterManager = new ClusterManager<>(this, map);
         SymbolRenderer meanSymbolRenderer = new SymbolRenderer(this, map, meansClusterManager);
@@ -160,17 +157,17 @@ public class MapActivity extends Activity implements ObserverTarget {
 
         droneClusterManager.setRenderer(imageDroneRenderer);
 
-        // Set map fragment drag listener to recover dropped symbols
+        // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
         mapFragment.getView().setOnDragListener(mapListeners);
 
-        // Set map long click listener to draw drone target
+        // Définit l'action d'un clic long sur la carte pour dessiner la cible du drone
         map.setOnMapLongClickListener(mapListeners);
 
-        // Point the map's listeners at the listeners implemented by the cluster manager.
+        // Lie les écouteurs de la carte à ceux implémentés par le cluster manager des moyens.
         map.setOnCameraChangeListener(meansClusterManager);
         map.setOnMarkerClickListener(meansClusterManager);
 
-        // Enable info window click on each cluster element
+        // Active l'info window dans chaque marqueur de la carte
         map.setOnInfoWindowClickListener(mapListeners);
 
         droneTargetActionFragment = (DroneTargetActionFragment) getFragmentManager().findFragmentById(R.id.drone_targer_action);
@@ -291,7 +288,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     }
 
     /**
-     * Load symbols using topographic REST service
+     * Charge les symboles topographique à l'aide du service REST
      */
     private void loadTopographicSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
