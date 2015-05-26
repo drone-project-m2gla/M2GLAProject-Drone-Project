@@ -68,7 +68,7 @@ public class MeanTableActivity extends Activity {
 
 
     /**
-     * Methode Principale
+     * Methode Principale de l'activité gerant l'affichage de la table des moyens d'une intervention
      *
      * @param savedInstanceState
      */
@@ -112,7 +112,7 @@ public class MeanTableActivity extends Activity {
 
 
     /**
-     * Set intervention id from another fragment or activity
+     * Methode permettant de specifier l'intervention en cours
      *
      * @param idIntervention
      */
@@ -123,9 +123,9 @@ public class MeanTableActivity extends Activity {
     }
 
     /**
-     * Command error
+     * Methode de gestion des retours en erreur d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion d'erreur attentue par le service REST
      */
     private Command getCallbackError() {
         return new Command() {
@@ -137,9 +137,9 @@ public class MeanTableActivity extends Activity {
     }
 
     /**
-     * Command success
+     * Methode de gestion des retours en succes d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion de succes attentue par le service REST
      */
     private Command getCallbackSuccess() {
         return new Command() {
@@ -268,11 +268,11 @@ public class MeanTableActivity extends Activity {
     }
 
 
-
     /**
-     * Methode de creation du menu de l'entity
+     * Methode de creation du menu de l'activité
      *
      * @param menu : Objet de definition du menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -281,10 +281,12 @@ public class MeanTableActivity extends Activity {
         return true;
     }
 
+
     /**
-     * Methode de gestion de l'usage du menu de l'entity
+     * Methode de gestion de l'usage du menu de l'activité
      *
      * @param item : Objet de sélection dans le menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -310,7 +312,7 @@ public class MeanTableActivity extends Activity {
 
 
     /**
-     * Methode de rafraichissement de l'activity
+     * Methode de rafraichissement de l'activité
      *
      * @param -
      */
@@ -327,7 +329,7 @@ public class MeanTableActivity extends Activity {
 
 
     /**
-     * Methode de rafraichissement de l'activity appelee par button
+     * Methode de rafraichissement de l'activité appelee par button
      *
      * @param view : vue courante
      */
@@ -346,7 +348,7 @@ public class MeanTableActivity extends Activity {
 
 
     /**
-     * Methode de fin de l'activity appelee par button
+     * Methode de fin de l'activite appelee par button
      *
      * @param view : vue courante
      */

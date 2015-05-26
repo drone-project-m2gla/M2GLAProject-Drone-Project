@@ -37,7 +37,7 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode Principale
+     * Methode Principale de l'activité de création d'une intervention
      *
      * @param savedInstanceState
      */
@@ -51,9 +51,10 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode de creation du menu de l'entity
+     * Methode de creation du menu de l'activité
      *
      * @param menu : Objet de definition du menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,10 +63,12 @@ public class NewInterventionActivity extends Activity {
         return true;
     }
 
+
     /**
-     * Methode de gestion de l'usage du menu de l'entity
+     * Methode de gestion de l'usage du menu de l'activité
      *
      * @param item : Objet de sélection dans le menu principal
+     * @return true si reussite de l'operation, false sinon
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -89,7 +92,7 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode d'initialisation des elements
+     * Methode d'initialisation des elements 'affichage de l'activité
      * @param -
      */
     private void initializeElement() {
@@ -117,7 +120,7 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode de gestion de la fin d'activity
+     * Methode de gestion de la fin d'activité
      */
     public void endAddIntervention() {
 
@@ -132,7 +135,7 @@ public class NewInterventionActivity extends Activity {
     }
 
     /**
-     * Methode de gestion de la fin d'activity appelee via bouton
+     * Methode de gestion de la fin d'activité appelee via bouton
      * @param view : vue courante
      */
     public void endAddIntervention(View view) {
@@ -300,7 +303,7 @@ public class NewInterventionActivity extends Activity {
 
 
     /**
-     * Methode d'action post envoi intervention reussi
+     * Methode d'action post envoi intervention
      *
      * @param -
      */

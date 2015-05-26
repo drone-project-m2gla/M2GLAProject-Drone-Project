@@ -1,5 +1,7 @@
 package rest;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,12 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import entity.MeanState;
-import org.apache.log4j.Logger;
-
 import dao.InterventionDAO;
 import entity.Intervention;
 import entity.Mean;
+import entity.MeanState;
 import entity.Position;
 import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
@@ -27,7 +27,7 @@ import service.impl.RetrieveAddressImpl;
 import util.Datetime;
 
 /**
- * Created by arno on 12/02/15.
+ * @author arno on 12/02/15.
  *
  * Service rest du type intervention
  */

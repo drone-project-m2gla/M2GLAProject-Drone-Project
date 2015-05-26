@@ -17,7 +17,7 @@ import entity.Position;
 import entity.Target;
 
 /**
- * Created by arno on 12/02/15.
+ * @author arno on 12/02/15
  */
 @Path("/drone")
 public class Drone {
