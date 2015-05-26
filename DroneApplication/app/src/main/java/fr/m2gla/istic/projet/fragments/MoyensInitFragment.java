@@ -62,8 +62,7 @@ public class MoyensInitFragment extends ListFragment {
     // Moyens en transit
     private List<String> moyensTransitTitle = new ArrayList<>();
     private List<Drawable> moyensTransitDrawable = new ArrayList<>();
-
-
+    
     // Moyens non validés
     List<String> meansRequestedTitle = new ArrayList<>();
     List<Drawable> meansRequestedDrawable = new ArrayList<>();
@@ -120,15 +119,6 @@ public class MoyensInitFragment extends ListFragment {
                 ClipData dragData = new ClipData(holder.toString(),
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         item0);
-
-                /*ClipData.Item item1 = new ClipData.Item(symbol.getSymbolType().name());
-                dragData.addItem(item1);
-                ClipData.Item item2 = new ClipData.Item(symbol.getFirstText());
-                dragData.addItem(item2);
-                ClipData.Item item3 = new ClipData.Item(symbol.getSecondText());
-                dragData.addItem(item3);
-                ClipData.Item item4 = new ClipData.Item(symbol.getColor());
-                dragData.addItem(item4);*/
 
                 // Instantiates the drag shadow builder.
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
