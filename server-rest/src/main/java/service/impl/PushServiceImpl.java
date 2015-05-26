@@ -24,15 +24,21 @@ public class PushServiceImpl implements PushService {
 	private List<String> registersClient;
 	private List<String> registersClientCodis;
 	private List<String> registersClientSimpleuser;
+	private boolean isTestMode;
 	
 	protected PushServiceImpl() {
 		registersClient = new ArrayList<String>();
 		registersClientCodis = new ArrayList<String>();
 		registersClientSimpleuser = new ArrayList<String>();
+		isTestMode = false;
 	}
 	
 	public static PushService getInstance() {
 		return INSTANCE;
+	}
+	
+	public void setIsTestMode(boolean isTestMode) {
+		this.isTestMode = isTestMode;
 	}
 
 	public void registerClient(TypeClient typeClient, String idClient) {
@@ -56,11 +62,15 @@ public class PushServiceImpl implements PushService {
 	}
 	
 	public MulticastResult sendMessage(TypeClient typeClient, String scope, Object object) throws IOException {
+		if (isTestMode) {
+			return null;
+		}
+
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ObjectMapper mapper = new ObjectMapper();
 		Builder messageBuilder = new Builder();
 		Sender sender = new Sender(SERVER_KEY);
-		
+
 		mapper.writeValue(output, object);
 
 		LOGGER.debug(output.toString());

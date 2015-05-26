@@ -10,6 +10,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import service.PushService;
+import service.impl.PushServiceImpl;
 import util.Configuration;
 import util.Tools;
 import entity.Position;
@@ -64,9 +66,8 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 				Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
 				if (position != null && !Tools.isSamePositions(this.position, position)) {
 					this.position = position;
-					// FIXME Reactive pull service
-					// PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,
-					//			"droneMove", position);
+					PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,
+								"droneMove", position);
 
 					GetMethod getImage = new GetMethod(
 							Configuration.getSERVER_PYTHON() + "/picture");
@@ -76,10 +77,11 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
                     dao.connect();
                     dao.create(this.image);
                     dao.disconnect();
+                    PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,"imageDrone",image);
 				} else {
 					notifyObserversForPositionUnchanged();
 				}
-				Thread.sleep(2987);
+				Thread.sleep(29870/10);
 			} catch (IOException e) {
 				// LOGGER.error("Get position error", e);
 			} catch (InterruptedException e) {

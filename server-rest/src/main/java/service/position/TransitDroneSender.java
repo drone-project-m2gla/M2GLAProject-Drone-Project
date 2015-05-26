@@ -21,7 +21,7 @@ import java.util.List;
 public class TransitDroneSender implements PositionUnchangedObserver {
     private static final Logger LOGGER = Logger.getLogger(TransitDroneSender.class);
     private Target target;
-    private int nextIndex = 0;
+    private int index = 0;
     private boolean isIncrement;
 
     public TransitDroneSender(Target target) {
@@ -36,26 +36,37 @@ public class TransitDroneSender implements PositionUnchangedObserver {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             ObjectMapper mapper = new ObjectMapper();
             PostMethod postMethod = new PostMethod(Configuration.getSERVER_PYTHON() + "/position");
-
             try {
-                mapper.writeValue(output, target.getPositions().get(nextIndex));
-
+                mapper.writeValue(output, target.getPositions().get(index));
                 RequestEntity requestEntity = new StringRequestEntity(
                         output.toString(), MediaType.APPLICATION_JSON, "UTF-8");
                 postMethod.setRequestEntity(requestEntity);
-
                 client.executeMethod(postMethod);
+                LOGGER.trace("send position " + index + " : " + target.getPositions().get(index));
             } catch (IOException e) {
                 LOGGER.error("Error target", e);
             }
             if (target.getPositions().size() > 1) {
-                if (target.isClose() && nextIndex >= target.getPositions().size()) {
-                    nextIndex = 0;
-                } else if (!target.isClose() && ((isIncrement && nextIndex >= target.getPositions().size() - 1) || (!isIncrement && nextIndex <= 0))) {
-                    isIncrement = !isIncrement;
+                if (target.isClose())
+                {
+                    index = (index >= target.getPositions().size()-1)? 0 : index +1;
                 }
-
-                nextIndex = nextIndex + ((isIncrement) ? 1 : -1);
+                else{
+                   if(isIncrement)
+                   {
+                       if(index >= target.getPositions().size()-1){
+                           isIncrement=false;
+                       }
+                   }
+                    else
+                   {
+                       if(index==0)
+                       {
+                           isIncrement = true;
+                       }
+                   }
+                    index = index + ((isIncrement) ? 1 : -1);
+                }
             }
         }
     }
