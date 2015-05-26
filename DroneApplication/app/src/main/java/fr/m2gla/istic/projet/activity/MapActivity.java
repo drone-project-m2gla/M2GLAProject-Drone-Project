@@ -220,6 +220,7 @@ public class MapActivity extends Activity implements
                      */
                     @Override
                     public void execute(Object response) {
+                        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
                         Topographie[] topographies = (Topographie[]) response;
 
                         for (Topographie topographie : topographies) {
@@ -235,6 +236,7 @@ public class MapActivity extends Activity implements
                         }
 
                         meansTopoClusterManager.cluster();
+                        findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                     }
                 }, new Command() {
                     /**
@@ -388,6 +390,7 @@ public class MapActivity extends Activity implements
         return new Command() {
             @Override
             public void execute(Object response) {
+                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
                 Intervention intervention = (Intervention) response;
                 List<Mean> meanList = intervention.getMeansList();
 
@@ -415,6 +418,7 @@ public class MapActivity extends Activity implements
                     meansTopoClusterManager.addItem(markerItem);
                 }
                 meansTopoClusterManager.cluster();
+                findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
             }
         };
     }
