@@ -28,29 +28,55 @@ public class DroneTargetActionFragment extends Fragment implements Observable {
     private Target target;
     private List<ObserverTarget> observers;
 
+    /**
+     * Constructeur
+     */
     public DroneTargetActionFragment() {
         target = new Target();
         observers = new ArrayList<>();
     }
 
+    /**
+     * Ajout d'une position au drone
+     * @param position : Nouvelle position pour le drone
+     */
     public void addPosition(Position position) {
         target.addPosition(position);
     }
 
+    /**
+     * Recuperation des cibles du drone
+     * @return : cibles du drone
+     */
     public Target getTarget() {
         return target;
     }
 
+    /**
+     * Ajoute un observateur
+     * @param observer : observateur à ajouter
+     */
     @Override
     public void addObserver(ObserverTarget observer) {
         observers.add(observer);
     }
 
+    /**
+     * Suppression d'un observateur
+     * @param observer : : observateur à supprimer
+     */
     @Override
     public void removeObserver(ObserverTarget observer) {
         observers.remove(observer);
     }
 
+    /**
+     * Methode principale
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
