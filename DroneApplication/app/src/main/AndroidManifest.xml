@@ -73,6 +73,10 @@
         </activity>
 
         <activity
+            android:name=".CarouselActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
             android:name=".NewInterventionActivity"
             android:screenOrientation="landscape" />
 
