@@ -332,6 +332,9 @@ public class MoyensInitFragment extends ListFragment {
 
                                         // Mise à jour de la liste des moyens disponibles
                                         movingMapMeanStrategy(m);
+
+                                        // Mise à jour de la liste des moyens en transit.
+                                        transitMeanStrategy(m);
                                     }
                                 }, getCallbackError());
 
