@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanBackToCRM;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanFree;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMovingMap;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
@@ -63,8 +66,7 @@ public class MoyensInitFragment extends ListFragment {
     // Moyens en transit
     private List<String> moyensTransitTitle = new ArrayList<>();
     private List<Drawable> moyensTransitDrawable = new ArrayList<>();
-
-
+    
     // Moyens non validés
     List<String> meansRequestedTitle = new ArrayList<>();
     List<Drawable> meansRequestedDrawable = new ArrayList<>();
@@ -86,6 +88,8 @@ public class MoyensInitFragment extends ListFragment {
 
         StrategyMeanSupplAdd.getINSTANCE().setFragment(this);
         StrategyMeanMovingMap.getINSTANCE().setFragment(this);
+        StrategyMeanFree.getINSTANCE().setFragment(this);
+        StrategyMeanBackToCRM.getINSTANCE().setFragment(this);
 
         return view;
     }
@@ -141,15 +145,6 @@ public class MoyensInitFragment extends ListFragment {
                 ClipData dragData = new ClipData(holder.toString(),
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         item0);
-
-                /*ClipData.Item item1 = new ClipData.Item(symbol.getSymbolType().name());
-                dragData.addItem(item1);
-                ClipData.Item item2 = new ClipData.Item(symbol.getFirstText());
-                dragData.addItem(item2);
-                ClipData.Item item3 = new ClipData.Item(symbol.getSecondText());
-                dragData.addItem(item3);
-                ClipData.Item item4 = new ClipData.Item(symbol.getColor());
-                dragData.addItem(item4);*/
 
                 // Instantiates the drag shadow builder.
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
@@ -301,7 +296,7 @@ public class MoyensInitFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 new AlertDialog.Builder(getActivity())
-                        .setTitle("Sélection une action sur le moyen")
+                        .setTitle("Sélectionnez une action sur le moyen")
                         .setItems(R.array.transitMeansOptions, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -314,12 +309,12 @@ public class MoyensInitFragment extends ListFragment {
                                     // Validation de l'arrivée du moyen.
                                     case 0: {
                                         restService = RestAPI.POST_VALIDER_ARRIVEE_MOYEN;
-                                        toastValue = "!!ARRIVEE DU MOYEN!!";
+                                        toastValue = "ARRIVEE DU MOYEN";
                                         break;
                                     }
                                     case 1: {
                                         restService = RestAPI.POST_VALIDER_LIBERATION_MOYEN;
-                                        toastValue = "!!LIBERATION DU MOYEN!!";
+                                        toastValue = "LIBERATION DU MOYEN";
                                         break;
                                     }
                                 }
@@ -564,6 +559,8 @@ public class MoyensInitFragment extends ListFragment {
             }
         }
 
+        Log.i(TAG, "I'm here!!!!");
+
         // Set drawable to adapterMeans
         Drawable[] imagesArray = meansRequestedDrawable.toArray(new Drawable[meansRequestedDrawable.size()]);
 
@@ -579,5 +576,9 @@ public class MoyensInitFragment extends ListFragment {
         ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
         ArrayAdapter adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
         notValidatedView.setAdapter(adapterXtraNotValidate);
+    }
+
+    public void updateMeanValidation(Mean mean) {
+        Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
     }
 }

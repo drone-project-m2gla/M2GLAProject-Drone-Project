@@ -132,6 +132,7 @@ public class MapListeners implements
             PolylineOptions polylineOptions = new PolylineOptions()
                     .add(new LatLng(pos.getLatitude(), pos.getLongitude()))
                     .add(latLng)
+                    .geodesic(true)
                     .width(5)
                     .color(Color.rgb(143, 0, 71));
 
