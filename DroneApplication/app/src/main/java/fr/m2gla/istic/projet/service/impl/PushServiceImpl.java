@@ -26,6 +26,9 @@ import fr.m2gla.istic.projet.model.Entity;
 import fr.m2gla.istic.projet.model.PushEntity;
 import fr.m2gla.istic.projet.service.PushService;
 
+/**
+ * Définition du service de notification
+ */
 public class PushServiceImpl implements PushService {
     private static final PushService INSTANCE = new PushServiceImpl();
     private static final String TAG = "PushService";
@@ -34,14 +37,25 @@ public class PushServiceImpl implements PushService {
     private Context context;
     private String registeredId;
 
+    /**
+     * Constructeur
+     */
     protected PushServiceImpl() {
         context = DroneApplication.getAppContext();
     }
 
+    /**
+     * Builder
+     * @return : instance de la classe
+     */
     public static PushService getInstance() {
         return INSTANCE;
     }
 
+    /**
+     * Abonnement au service de notification
+     * @param typeClient : Nom et Type du client
+     */
     @Override
     public void register(final UserQualification typeClient) {
         final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
@@ -89,6 +103,9 @@ public class PushServiceImpl implements PushService {
         }
     }
 
+    /**
+     * Désabonnement au service de notification
+     */
     @Override
     public void unregister() {
         final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
