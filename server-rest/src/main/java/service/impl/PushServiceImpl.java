@@ -24,12 +24,13 @@ public class PushServiceImpl implements PushService {
 	private List<String> registersClient;
 	private List<String> registersClientCodis;
 	private List<String> registersClientSimpleuser;
-	private boolean isTestMode = false;
+	private boolean isTestMode;
 	
 	protected PushServiceImpl() {
 		registersClient = new ArrayList<String>();
 		registersClientCodis = new ArrayList<String>();
 		registersClientSimpleuser = new ArrayList<String>();
+		isTestMode = false;
 	}
 	
 	public static PushService getInstance() {

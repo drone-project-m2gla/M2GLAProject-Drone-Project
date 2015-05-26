@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 
 import fr.m2gla.istic.projet.activity.R;
 
-
+/**
+ * Fragment de présentation générique
+ */
 public class PresentationFragment extends Fragment {
 
     private View                                view;
