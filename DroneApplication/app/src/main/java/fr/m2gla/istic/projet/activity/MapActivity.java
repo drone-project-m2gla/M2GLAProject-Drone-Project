@@ -61,7 +61,8 @@ public class MapActivity extends Activity implements ObserverTarget {
     public GoogleMap map;
     public Map<String, String> restParams;
 
-    private ClusterManager<SymbolMarkerClusterItem> meansTopoClusterManager;
+    private ClusterManager<SymbolMarkerClusterItem> meansClusterManager;
+    private ClusterManager<SymbolMarkerClusterItem> topoClusterManager;
     private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
     private MapListeners mapListeners;
 
@@ -135,12 +136,17 @@ public class MapActivity extends Activity implements ObserverTarget {
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        meansTopoClusterManager = new ClusterManager<>(this, map);
-        SymbolRenderer symbolRenderer = new SymbolRenderer(this, map, meansTopoClusterManager);
-        symbolRenderer.setContext(getApplicationContext());
-        symbolRenderer.setMapListeners(mapListeners);
+        meansClusterManager = new ClusterManager<>(this, map);
+        topoClusterManager = new ClusterManager<>(this, map);
+        SymbolRenderer meanSymbolRenderer = new SymbolRenderer(this, map, meansClusterManager);
+        meanSymbolRenderer.setContext(getApplicationContext());
+        meanSymbolRenderer.setMapListeners(mapListeners);
 
-        meansTopoClusterManager.setRenderer(symbolRenderer);
+        meansClusterManager.setRenderer(meanSymbolRenderer);
+
+        SymbolRenderer topoSymbolRenderer = new SymbolRenderer(this, map, topoClusterManager);
+        topoSymbolRenderer.setContext(getApplicationContext());
+        topoClusterManager.setRenderer(topoSymbolRenderer);
 
         droneClusterManager = new ClusterManager<>(this, map);
         ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
@@ -153,10 +159,9 @@ public class MapActivity extends Activity implements ObserverTarget {
         // Set map long click listener to draw drone target
         map.setOnMapLongClickListener(mapListeners);
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        map.setOnCameraChangeListener(meansTopoClusterManager);
-        map.setOnMarkerClickListener(meansTopoClusterManager);
+        // Point the map's listeners at the listeners implemented by the cluster manager.
+        map.setOnCameraChangeListener(meansClusterManager);
+        map.setOnMarkerClickListener(meansClusterManager);
 
         // Enable info window click on each cluster element
         map.setOnInfoWindowClickListener(mapListeners);
@@ -303,10 +308,10 @@ public class MapActivity extends Activity implements ObserverTarget {
                                     topographie.getColor(),
                                     true);
                             SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                            meansTopoClusterManager.addItem(markerItem);
+                            topoClusterManager.addItem(markerItem);
                         }
 
-                        meansTopoClusterManager.cluster();
+                        topoClusterManager.cluster();
                         findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                     }
                 }, new Command() {
@@ -464,16 +469,18 @@ public class MapActivity extends Activity implements ObserverTarget {
         }
     }
 
+    /**
+     * Charger les moyens sur la carte
+     */
     public void loadMeansInMap() {
-        if (!isDragging) {
-            RestServiceImpl.getInstance()
-                    .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
-                            getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
-        }
+        RestServiceImpl.getInstance()
+                .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
+                        getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
+
     }
 
     /**
-     * Command error
+     * Command  a exécuter en cas d'erreur
      *
      * @return
      */
@@ -495,39 +502,48 @@ public class MapActivity extends Activity implements ObserverTarget {
         return new Command() {
             @Override
             public void execute(Object response) {
-                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
-                Intervention intervention = (Intervention) response;
-                List<Mean> meanList = intervention.getMeansList();
+                if (!isDragging) {
+                    findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                    Intervention intervention = (Intervention) response;
+                    List<Mean> meanList = intervention.getMeansList();
 
-                List<Mean> meansWithCoordinates = new ArrayList<Mean>();
-                for (Mean m : meanList) {
-                    if (!Double.isNaN(m.getCoordinates().getLatitude()) && !Double.isNaN(m.getCoordinates().getLongitude())) {
-                        meansWithCoordinates.add(m);
+                    List<Mean> meansWithCoordinates = new ArrayList<Mean>();
+                    for (Mean m : meanList) {
+                        if (!Double.isNaN(m.getCoordinates().getLatitude()) && !Double.isNaN(m.getCoordinates().getLongitude())) {
+                            meansWithCoordinates.add(m);
+                        }
                     }
-                }
 
-                meansTopoClusterManager.clearItems();
-                mapListeners.markerSymbolLinkMap.clear();
-                for (Mean m : meansWithCoordinates) {
-                    String meanClass = m.getVehicle().toString();
-                    String meanType = Symbol.getImage(meanClass);
-                    Symbol symbol = new Symbol(m.getId(),
-                            Symbol.SymbolType.valueOf(meanType),
-                            meanClass, Symbol.getCityTrigram(),
-                            Symbol.getMeanColor(m.getVehicle()));
-                    symbol.setValidated(m.isInPosition());
-                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
-                            m.getCoordinates().getLatitude(),
-                            m.getCoordinates().getLongitude(), symbol);
+                    meansClusterManager.clearItems();
+                    mapListeners.markerSymbolLinkMap.clear();
+                    for (Mean m : meansWithCoordinates) {
+                        String meanClass = m.getVehicle().toString();
+                        String meanType = Symbol.getImage(meanClass);
+                        Symbol symbol = new Symbol(m.getId(),
+                                Symbol.SymbolType.valueOf(meanType),
+                                meanClass, Symbol.getCityTrigram(),
+                                Symbol.getMeanColor(m.getVehicle()));
 
-                    meansTopoClusterManager.addItem(markerItem);
+                        symbol.setValidated(m.isInPosition());
+
+                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
+                                m.getCoordinates().getLatitude(),
+                                m.getCoordinates().getLongitude(), symbol);
+
+                        meansClusterManager.addItem(markerItem);
+                    }
+                    meansClusterManager.cluster();
                 }
-                meansTopoClusterManager.cluster();
                 findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
             }
         };
     }
 
+    /**
+     * Permet de définir un booléen qui empêche la mise à jour des marquers
+     * lors de l'action glisser-déposer
+     * @param isDragging
+     */
     public void setDraggingMode(boolean isDragging){
         this.isDragging = isDragging;
     }
