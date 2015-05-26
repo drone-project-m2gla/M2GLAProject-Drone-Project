@@ -1,11 +1,12 @@
 package entity;
 
-import util.Datetime;
 import java.util.Date;
+
+import util.Datetime;
 
 /**
  *@author arno
- * @see Mean is used for handling mean information which are available for an intervention.
+ *@see Mean is used for handling mean information which are available for an intervention.
  *
  */
 public class Mean extends AbstractEntity{
@@ -67,15 +68,6 @@ public class Mean extends AbstractEntity{
                 ", dateEngaged=" + dateEngaged +
                 ", dateReleased=" + dateReleased +
                 '}';
-    }
-
-    @Override
-    public int hashCode() {
-        int result = vehicle != null ? vehicle.hashCode() : 0;
-        result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
-        result = 31 * result + (inPosition ? 1 : 0);
-
-        return result;
     }
 
     public Mean() {

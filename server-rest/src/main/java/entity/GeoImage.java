@@ -59,15 +59,6 @@ public class GeoImage extends AbstractEntity {
     }
 
     @Override
-    public int hashCode() {
-        int result = position != null ? position.hashCode() : 0;
-        result = 31 * result + width;
-        result = 31 * result + height;
-        result = 31 * result + (image != null ? image.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "GeoImage{" +
                 "position=" + position +

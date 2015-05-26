@@ -17,7 +17,7 @@ import entity.GeoImage;
  * Created by arno on 12/02/15.
  */
 @Path("/images")
-public class Images {
+public class ImageRest {
     @GET
     public Response getAllImages() {
         GeoImageDAO gID = new GeoImageDAO();
@@ -29,7 +29,7 @@ public class Images {
 
     @GET
     @Path("near/{latitude}/{longitude}")
-    public Response getPosition(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude) {
+    public Response getAllImagesNear(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude) {
         GeoImageDAO gID = new GeoImageDAO();
         gID.connect();
         List<GeoImage> res = gID.getAllImagesNear(latitude, longitude);

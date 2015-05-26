@@ -1,10 +1,8 @@
 package entity;
 
 /**
- * Created by arno on 07/04/15.
- *
- * This class list all the available disaster codes.
- *
+ * @author arno
+ * @see MeanState list all the states of means.
  */
 
 public enum MeanState {

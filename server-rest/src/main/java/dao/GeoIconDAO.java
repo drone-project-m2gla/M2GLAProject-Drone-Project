@@ -9,7 +9,7 @@ import util.Constant;
 import util.Tools;
 
 /**
- * @author :jerem
+ * @author jerem
  * @see GeoIconDAO implements these abstract methods for GeoIcon transformation
  */
 public class GeoIconDAO extends AbstractDAO<GeoIcon>  {

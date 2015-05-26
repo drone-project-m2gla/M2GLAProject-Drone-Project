@@ -17,6 +17,7 @@ public interface RestAPI {
     public static final String POST_POSITION_CONFIRMATION = "/intervention/{id}/moyen/emplace";
     public static final String POST_POSITION_MOVE = "/intervention/{id}/moyen/positionner";
     public static final String POST_RELEASE = "/intervention/{id}/moyen/libere";
+    public static final String POST_RETOURCRM = "/intervention/{id}/moyen/retourcrm";
 
     // topographie block
     public static final String GET_ALL_TOPOGRAPHIE = "/topographie/1/1/1";

@@ -70,18 +70,6 @@ public class GeoIcon extends AbstractEntity {
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        int result = filename != null ? filename.hashCode() : 0;
-        result = 31 * result + (entitled != null ? entitled.hashCode() : 0);
-        result = 31 * result + (position != null ? position.hashCode() : 0);
-        result = 31 * result + (firstContent != null ? firstContent.hashCode() : 0);
-        result = 31 * result + (secondContent != null ? secondContent.hashCode() : 0);
-        result = 31 * result + (color != null ? color.hashCode() : 0);
-        result = 31 * result + (tiret != null ? tiret.hashCode() : 0);
-        return result;
-    }
-
     public String getColor() {
         return color;
     }

@@ -7,6 +7,7 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import org.apache.log4j.Logger;
+import org.bson.Document;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by alban on 16/03/15.
  */
-public class InterventionDAOTest {
+public class InterventionDAOTest extends InterventionDAO {
 
     private static InterventionDAO dao = new InterventionDAO();
 
@@ -38,6 +39,7 @@ public class InterventionDAOTest {
     public static void beforeAllTests() {
         Configuration.loadConfigurations();
         dao.connect();
+        dao.ensureIndex();
     }
 
     @AfterClass
@@ -120,12 +122,24 @@ public class InterventionDAOTest {
     }
 
     @Test
-    public void getAll()
+    public void testGetAll()
     {
         for(Intervention i : dao.getAll())
         {
             dao.delete(i);
         }
         assertTrue(dao.getAll().isEmpty());
+    }
+
+    @Test
+    public void documentCreateIllegalDate()
+    {
+        Intervention intervention = new Intervention( "Intervention 1", "263 Avenue Général Leclerc","35000","Rennes", DisasterCode.FHA);
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
+        Position coordinatesIntervention = adresseIntervention.getCoordinates();
+        intervention.setCoordinates(coordinatesIntervention);
+        Document doc = entityToDocument(intervention);
+        doc.remove("dateCreate");
+        assertNull(documentToEntity(doc));
     }
 }
