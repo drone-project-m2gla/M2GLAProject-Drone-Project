@@ -32,6 +32,16 @@ public class Mean extends AbstractEntity{
         }
     }
 
+    public Mean(Vehicle vehicle, String name , Boolean isInitialMean) {
+        this();
+        this.vehicle = vehicle;
+        this.name = name;
+        if (isInitialMean) {
+            this.dateActivated = this.dateRequested;
+            this.meanState = MeanState.ACTIVATED;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
