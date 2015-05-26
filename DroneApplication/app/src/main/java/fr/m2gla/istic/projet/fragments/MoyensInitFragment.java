@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -535,6 +536,8 @@ public class MoyensInitFragment extends ListFragment {
             }
         }
 
+        Log.i(TAG, "I'm here!!!!");
+
         // Set drawable to adapterMeans
         Drawable[] imagesArray = meansRequestedDrawable.toArray(new Drawable[meansRequestedDrawable.size()]);
 
@@ -550,5 +553,9 @@ public class MoyensInitFragment extends ListFragment {
         ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
         ArrayAdapter adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
         notValidatedView.setAdapter(adapterXtraNotValidate);
+    }
+
+    public void updateMeanValidation(Mean mean) {
+        Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
     }
 }

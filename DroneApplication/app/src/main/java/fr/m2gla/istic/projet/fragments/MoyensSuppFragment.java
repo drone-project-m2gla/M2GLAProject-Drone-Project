@@ -139,7 +139,6 @@ public class MoyensSuppFragment extends Fragment {
             @Override
             public void execute(Object response) {
                 // Demander la prise en compte de la validation de l'identification
-                Toast.makeText(getActivity(), "Moyen suppl.\n" + interventionID, Toast.LENGTH_SHORT).show();
                 Mean moyen = (Mean) response;
                 Log.i(TAG, "On  Post execute\t" + moyen.getId() + "\tVehicule\t" + moyen.getVehicle());
             }

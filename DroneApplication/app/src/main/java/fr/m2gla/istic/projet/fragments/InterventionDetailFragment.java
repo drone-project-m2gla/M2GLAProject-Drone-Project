@@ -38,6 +38,7 @@ import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyCodisValidateMean;
 
 
 public class InterventionDetailFragment extends Fragment implements ListAdapterCommand {
@@ -56,6 +57,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_intervention_detail, container, false);
+        StrategyCodisValidateMean.getINSTANCE().setFragment(this);
 
         return view;
     }
@@ -279,6 +281,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                                         refreshList();
 
                                         // Mise en place de la stratégie.
+                                        updateFragmentOnMap(null);
                                         MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
 //                                        Activity initFragment = fragment.getActivity();
                                         if (fragment != null) {
@@ -382,4 +385,10 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         return idIntervention;
     }
 
+    public void updateFragmentOnMap(Mean mean) {
+        MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
+        if (fragment != null) {
+            fragment.updateMeanValidation(mean);
+        }
+    }
 }
