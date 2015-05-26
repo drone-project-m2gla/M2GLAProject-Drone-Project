@@ -27,14 +27,17 @@ import service.impl.RetrieveAddressImpl;
 import util.Datetime;
 
 /**
- * @author arno on 12/02/15.
- *
  * Service rest du type intervention
+ * @author arno on 12/02/15
  */
 @Path("/intervention")
 public class InterventionRest {
 	private static final Logger LOGGER = Logger.getLogger(InterventionRest.class);
-
+    /**
+     * @param id for the intervention
+     * @param idmean for the id of the mean
+     * @return Mean for a specific intervention
+     */
 	@GET
 	@Path("/{id}/moyen/{idmean}")
 	@Produces({MediaType.APPLICATION_JSON})
@@ -58,6 +61,9 @@ public class InterventionRest {
         return Response.noContent().build();
 	}
 
+    /**
+     * Add mean to intervention
+     */
 	@POST
 	@Path("/{id}/moyen/emplace")
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -97,7 +103,9 @@ public class InterventionRest {
             return Response.status(Response.Status.BAD_REQUEST).entity("Already in position or mean unavailable").build();
         }
 	}
-
+    /**
+     * Update the position of this Intervention's mean
+     */
 	@POST
 	@Path("/{id}/moyen/positionner")
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -143,7 +151,9 @@ public class InterventionRest {
         }
 
 	}
-
+    /**
+     * Confirmation that Intervention's mean is arrived
+     */
     @POST
     @Path("/{id}/moyen/arrive")
     @Consumes({MediaType.APPLICATION_JSON})
