@@ -26,8 +26,7 @@ public class Topographie {
 	private static final Logger LOGGER = Logger.getLogger(Topographie.class);
 
 	/**
-	 * Retourner une liste json de points statiques sur la carte autour de la GeoPosition précisée en paramètre.
-	 * Par défaut, on peut prendra une valeur de 50km autour.
+	 * Return a json list of static points on the map near specific GeoPosition
 	 * @return List<GeoIcon>
 	 */
 	@GET
@@ -43,7 +42,7 @@ public class Topographie {
 	}
 
 	/**
-	 * Ajouter des icones dans la topographie
+	 * add icons for topographie
 	 * @return Response
 	 */
 	@POST

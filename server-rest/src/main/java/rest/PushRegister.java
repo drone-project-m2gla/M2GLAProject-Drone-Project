@@ -26,6 +26,10 @@ import service.impl.PushServiceImpl;
 public class PushRegister {
 	private static final Logger LOGGER = Logger.getLogger(PushRegister.class);
 
+	/**
+	 * record entity into gcm
+	 * @param entity
+	 */
     @Path("/register")
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -34,6 +38,10 @@ public class PushRegister {
 		LOGGER.info("User connect to push service " + entity.getId() + " " + entity.getTypeClient());
 	}
 
+    /**
+     * delete entity into gcm
+     * @param id
+     */
 	@DELETE
 	@Path("unregister/{id}")
 	public void unregisterClient(@PathParam("id") String id) {
@@ -41,6 +49,12 @@ public class PushRegister {
 		LOGGER.info("User disconect to push service " + id);
 	}
 
+    /**
+     * testPush is using for UnitTest
+     * @param scope
+     * @param object
+     * @return
+     */
 	@POST
 	@Path("register/add/{scope}")
 	@Consumes(MediaType.APPLICATION_JSON)
