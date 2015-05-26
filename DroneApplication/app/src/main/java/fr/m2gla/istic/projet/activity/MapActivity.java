@@ -48,8 +48,7 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 
-public class MapActivity extends Activity implements
-        ObserverTarget {
+public class MapActivity extends Activity implements ObserverTarget {
     private static final String TAG = "MapActivity";
     private static final int ZOOM_INDEX = 18;
     private MapFragment mapFragment;
@@ -68,13 +67,24 @@ public class MapActivity extends Activity implements
     private List<Polyline> polylineList;
     private DroneTargetActionFragment droneTargetActionFragment;
 
+
+    /**
+     * Methode renvoyant si le mode de fonctionnement de la carte est le mode drone
+     * @return true si mode drone, false sinon
+     */
     public boolean isDroneMode() {
         return isDroneMode;
     }
 
+
+    /**
+     * Methode renvoyant la liste des trajets successifs du drone
+     * @return liste demandée
+     */
     public List<Polyline> getPolylineList() {
         return polylineList;
     }
+
 
     public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
         return droneClusterManager;
@@ -90,6 +100,12 @@ public class MapActivity extends Activity implements
         super.onDestroy();
     }
 
+
+    /**
+     * Methode Principale de l'activité de gestion de la carte
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +172,12 @@ public class MapActivity extends Activity implements
         loadTopographicSymbols();
     }
 
+
+    /**
+     * Methode de creation du menu de l'activité
+     *
+     * @param menu : Objet de definition du menu principal
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
@@ -167,6 +189,12 @@ public class MapActivity extends Activity implements
         return true;
     }
 
+
+    /**
+     * Methode de gestion de l'usage du menu de l'activité
+     *
+     * @param item : Objet de sélection dans le menu principal
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
