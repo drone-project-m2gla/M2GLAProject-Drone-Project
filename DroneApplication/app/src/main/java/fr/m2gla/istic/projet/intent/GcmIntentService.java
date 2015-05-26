@@ -22,10 +22,17 @@ import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 public class GcmIntentService extends IntentService {
     private static final String TAG = "GcmIntentService";
 
+    /**
+     * Constructeur
+     */
     public GcmIntentService() {
         super(TAG);
     }
 
+    /**
+     * Gestion de la stratégie de notification
+     * @param intent
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
