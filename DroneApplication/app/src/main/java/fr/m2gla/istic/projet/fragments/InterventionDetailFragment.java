@@ -47,7 +47,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     private String idIntervention = "";
     private String[] titles;
     private String[] images;
-    private ArrayList<String>   titlesList;
+    private ArrayList<String> titlesList;
     private View view = null;
 
 
@@ -109,7 +109,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
                 if (images.length > 0) {
                     for (String imageId : images) {
-                        Log.wtf(TAG,"iamge id " +(imageId !=null));
+                        Log.wtf(TAG, "iamge id " + (imageId != null));
                         if (!imageId.equals("")) {
                             SVG svg = null;
                             try {
@@ -151,7 +151,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         int listXtraNotDeclinedSize = 0;
 
         for (Mean m : listXtra) {
-            if (!m.refusedMeans()){
+            if (!m.refusedMeans()) {
                 listXtraNotDeclinedSize++;
             }
         }
@@ -224,8 +224,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
     /**
      * Effacement de l'affichage
-     *
-    */
+     */
     public void dispNoDetails() {
         // Verifier si une vue est a effacer
         if (this.view == null) {
@@ -278,6 +277,13 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                                         //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
                                         Log.i("itemsAdapter", "Moyen validé : " + position);
                                         refreshList();
+
+                                        // Mise en place de la stratégie.
+                                        MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
+//                                        Activity initFragment = fragment.getActivity();
+                                        if (fragment != null) {
+                                            Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }, new Command() {
                                     @Override
@@ -285,7 +291,6 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                                         Toast.makeText(getActivity(), "Moyen n'a pas été validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
                                     }
                                 });
-
 
 
             }
@@ -299,7 +304,6 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
         builder.show();
     }
-
 
 
     @Override

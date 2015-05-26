@@ -58,7 +58,7 @@ public class MapActivity extends Activity implements
     public GoogleMap map;
     public Map<String, String> restParams;
 
-    private ClusterManager<SymbolMarkerClusterItem> mClusterManager;
+    private ClusterManager<SymbolMarkerClusterItem> meansTopoClusterManager;
     private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
     private MapListeners mapListeners;
 
@@ -115,12 +115,12 @@ public class MapActivity extends Activity implements
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<>(this, map);
-        SymbolRenderer symbolRenderer = new SymbolRenderer(this, map, mClusterManager);
+        meansTopoClusterManager = new ClusterManager<>(this, map);
+        SymbolRenderer symbolRenderer = new SymbolRenderer(this, map, meansTopoClusterManager);
         symbolRenderer.setContext(getApplicationContext());
         symbolRenderer.setMapListeners(mapListeners);
 
-        mClusterManager.setRenderer(symbolRenderer);
+        meansTopoClusterManager.setRenderer(symbolRenderer);
 
         droneClusterManager = new ClusterManager<>(this, map);
         ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
@@ -135,8 +135,8 @@ public class MapActivity extends Activity implements
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
-        map.setOnCameraChangeListener(mClusterManager);
-        map.setOnMarkerClickListener(mClusterManager);
+        map.setOnCameraChangeListener(meansTopoClusterManager);
+        map.setOnMarkerClickListener(meansTopoClusterManager);
 
         // Enable info window click on each cluster element
         map.setOnInfoWindowClickListener(mapListeners);
@@ -231,10 +231,10 @@ public class MapActivity extends Activity implements
                                     topographie.getColor(),
                                     true);
                             SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                            mClusterManager.addItem(markerItem);
+                            meansTopoClusterManager.addItem(markerItem);
                         }
 
-                        mClusterManager.cluster();
+                        meansTopoClusterManager.cluster();
                     }
                 }, new Command() {
                     /**
@@ -398,8 +398,8 @@ public class MapActivity extends Activity implements
                     }
                 }
 
-                mClusterManager.clearItems();
-                mapListeners.markerSymbolLink.clear();
+                meansTopoClusterManager.clearItems();
+                mapListeners.markerSymbolLinkMap.clear();
                 for (Mean m : meansWithCoordinates) {
                     String meanClass = m.getVehicle().toString();
                     String meanType = Symbol.getImage(meanClass);
@@ -412,14 +412,14 @@ public class MapActivity extends Activity implements
                             m.getCoordinates().getLatitude(),
                             m.getCoordinates().getLongitude(), symbol);
 
-                    mClusterManager.addItem(markerItem);
+                    meansTopoClusterManager.addItem(markerItem);
                 }
-                mClusterManager.cluster();
+                meansTopoClusterManager.cluster();
             }
         };
     }
 
-    public void setDraggingMode(boolean _isDragging){
-        isDragging = _isDragging;
+    public void setDraggingMode(boolean isDragging){
+        this.isDragging = isDragging;
     }
 }
