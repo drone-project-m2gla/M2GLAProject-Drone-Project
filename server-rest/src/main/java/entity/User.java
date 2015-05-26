@@ -1,8 +1,8 @@
 package entity;
 
 /**
- * Created by mds on 07/04/15.
- * Class ${CLASS}
+ * @author mds on 07/04/15.
+ * @see User contains identification
  */
 
 public class User extends AbstractEntity {

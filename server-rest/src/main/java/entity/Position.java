@@ -3,7 +3,8 @@ package entity;
 
 /**
  * @author arno
- * @see
+ * @see Position contains 3 coordinates
+ * "Altitude" attribut is fixed and is not taken
  */
 
 public class Position {

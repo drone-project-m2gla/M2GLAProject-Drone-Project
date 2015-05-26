@@ -1,9 +1,8 @@
 package entity;
 
 /**
- * Created by arno on 07/04/15.
- *
- * This class stored the list of vehicles available.
+ * @author arno on 07/04/15.
+ * @see Vehicle enumeration stored the list of vehicles available.
  *
  */
 
