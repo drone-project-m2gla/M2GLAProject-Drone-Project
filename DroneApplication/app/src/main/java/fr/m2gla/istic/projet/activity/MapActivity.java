@@ -43,6 +43,7 @@ import fr.m2gla.istic.projet.model.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyImageDrone;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
@@ -148,12 +149,51 @@ public class MapActivity extends Activity implements
         findViewById(R.id.fragment_moyens_supp).setVisibility(View.VISIBLE);
         findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
 
-        // Add activity to strategy
+        loadTopographicSymbols();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        linkActivity();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        linkActivity();
+    }
+
+    /**
+     * Add activity to strategy
+     */
+    private void linkActivity() {
         StrategyMoveDrone.getINSTANCE().setActivity(this);
+        StrategyImageDrone.getINSTANCE().setActivity(this);
         StrategyMeanMove.getINSTANCE().setActivity(this);
         StrategyMeanValidatePosition.getINSTANCE().setActivity(this);
+    }
 
-        loadTopographicSymbols();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unlinkActivity();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unlinkActivity();
+    }
+
+    /**
+     * Remove activity to strategy
+     */
+    private void unlinkActivity() {
+        StrategyMoveDrone.getINSTANCE().setActivity(null);
+        StrategyImageDrone.getINSTANCE().setActivity(null);
+        StrategyMeanMove.getINSTANCE().setActivity(null);
+        StrategyMeanValidatePosition.getINSTANCE().setActivity(null);
     }
 
     @Override
@@ -287,6 +327,7 @@ public class MapActivity extends Activity implements
                 .add(new LatLng(pos1.getLatitude(), pos1.getLongitude()))
                 .add(new LatLng(pos2.getLatitude(), pos2.getLongitude()))
                 .width(5)
+                .geodesic(true)
                 .color(Color.rgb(143, 0, 71));
 
         polylineList.add(map.addPolyline(polylineOptions));
@@ -298,6 +339,17 @@ public class MapActivity extends Activity implements
                 @Override
                 public void run() {
                     drone.setCenter(new LatLng(position.getLatitude(), position.getLongitude()));
+                }
+            });
+        }
+    }
+
+    public void imageDrone(final Position position) {
+        if (drone != null) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    
                 }
             });
         }
