@@ -79,6 +79,7 @@ public class MoyensInitFragment extends ListFragment {
 
     /**
      * Methode principale
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -98,8 +99,7 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     *
-     /**
+     * /**
      * Methode de creation du menu du fragment
      *
      * @param l
@@ -113,7 +113,7 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     *Methode de gestion de l'usage du menu du fragment
+     * Methode de gestion de l'usage du menu du fragment
      *
      * @param savedInstanceState
      */
@@ -192,6 +192,7 @@ public class MoyensInitFragment extends ListFragment {
 
     /**
      * Récupération de l'identifiant de l'intervention en cours
+     *
      * @return : l'identifiant de l'intervention en cours
      */
     public String getIdIntervention() {
@@ -448,23 +449,26 @@ public class MoyensInitFragment extends ListFragment {
      * @param object
      */
     public void demandMeanStrategy(final Mean object) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // GET_MOYENS_DISPO
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("id", idIntervention);
-                RestServiceImpl.getInstance()
-                        .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Mean[] means = (Mean[]) response;
-
-                                createRequestedMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
-                            }
-                        }, getCallbackError());
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // GET_MOYENS_DISPO
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("id", idIntervention);
+                    RestServiceImpl.getInstance()
+                            .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Mean[] means = (Mean[]) response;
+                                    Log.i(TAG, "Size de mon tableau DEMAND " + means.length);
+                                    createRequestedMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
+                                }
+                            }, getCallbackError());
+                }
+            });
+        }
     }
 
     /**
@@ -591,6 +595,7 @@ public class MoyensInitFragment extends ListFragment {
                 meansRequestedDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
             }
         }
+        Log.i(TAG, "Size de mon tableau CREATE" + meansRequestedDrawable.size());
 
         // Set drawable to adapterMeans
         Drawable[] imagesArray = meansRequestedDrawable.toArray(new Drawable[meansRequestedDrawable.size()]);

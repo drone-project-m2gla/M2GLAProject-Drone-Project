@@ -11,12 +11,12 @@ import fr.m2gla.istic.projet.strategy.StrategyRegistery;
  * Created by mds on 19/05/15.
  */
 public class StrategyMeanSupplAdd implements Strategy {
-    private static final String TAG = "Strategy moy. suppl";
+    private static final String TAG = "StrategyMeanSupplAdd";
     private static StrategyMeanSupplAdd INSTANCE;
 
     public void setFragment(MoyensInitFragment mapActivity) {
         this.map = mapActivity;
-        Log.i(TAG, "Setter");
+        Log.i(TAG, "setter");
     }
 
     private MoyensInitFragment map;
@@ -38,6 +38,7 @@ public class StrategyMeanSupplAdd implements Strategy {
     public void call(Object object) {
         if (map != null) {
             map.demandMeanStrategy((Mean) object);
+            Log.i(TAG, "Call");
         }
     }
 
