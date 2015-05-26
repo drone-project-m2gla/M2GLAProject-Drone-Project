@@ -22,7 +22,7 @@ import fr.m2gla.istic.projet.context.SVGAdapter;
 */
 public class SymbolRenderer extends DefaultClusterRenderer<SymbolMarkerClusterItem> {
     private Context context;
-    private MapListeners mapListeners;
+    private MapListeners mapListeners = null;
 
     public void setContext(Context context) {
         this.context = context;
@@ -52,7 +52,9 @@ public class SymbolRenderer extends DefaultClusterRenderer<SymbolMarkerClusterIt
 
     @Override
     protected void onClusterItemRendered(SymbolMarkerClusterItem clusterItem, Marker marker) {
-        mapListeners.markerSymbolLinkMap.put(marker.getId(), clusterItem);
+        if (mapListeners != null) {
+            mapListeners.markerSymbolLinkMap.put(marker.getId(), clusterItem);
+        }
     }
 }
 

@@ -16,11 +16,13 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
 import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
 import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
+import fr.m2gla.istic.projet.model.GeoImage;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
@@ -58,7 +61,8 @@ public class MapActivity extends Activity implements ObserverTarget {
     public GoogleMap map;
     public Map<String, String> restParams;
 
-    private ClusterManager<SymbolMarkerClusterItem> meansTopoClusterManager;
+    private ClusterManager<SymbolMarkerClusterItem> meansClusterManager;
+    private ClusterManager<SymbolMarkerClusterItem> topoClusterManager;
     private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
     private MapListeners mapListeners;
 
@@ -132,12 +136,17 @@ public class MapActivity extends Activity implements ObserverTarget {
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        meansTopoClusterManager = new ClusterManager<>(this, map);
-        SymbolRenderer symbolRenderer = new SymbolRenderer(this, map, meansTopoClusterManager);
-        symbolRenderer.setContext(getApplicationContext());
-        symbolRenderer.setMapListeners(mapListeners);
+        meansClusterManager = new ClusterManager<>(this, map);
+        topoClusterManager = new ClusterManager<>(this, map);
+        SymbolRenderer meanSymbolRenderer = new SymbolRenderer(this, map, meansClusterManager);
+        meanSymbolRenderer.setContext(getApplicationContext());
+        meanSymbolRenderer.setMapListeners(mapListeners);
 
-        meansTopoClusterManager.setRenderer(symbolRenderer);
+        meansClusterManager.setRenderer(meanSymbolRenderer);
+
+        SymbolRenderer topoSymbolRenderer = new SymbolRenderer(this, map, topoClusterManager);
+        topoSymbolRenderer.setContext(getApplicationContext());
+        topoClusterManager.setRenderer(topoSymbolRenderer);
 
         droneClusterManager = new ClusterManager<>(this, map);
         ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
@@ -150,10 +159,9 @@ public class MapActivity extends Activity implements ObserverTarget {
         // Set map long click listener to draw drone target
         map.setOnMapLongClickListener(mapListeners);
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        map.setOnCameraChangeListener(meansTopoClusterManager);
-        map.setOnMarkerClickListener(meansTopoClusterManager);
+        // Point the map's listeners at the listeners implemented by the cluster manager.
+        map.setOnCameraChangeListener(meansClusterManager);
+        map.setOnMarkerClickListener(meansClusterManager);
 
         // Enable info window click on each cluster element
         map.setOnInfoWindowClickListener(mapListeners);
@@ -300,10 +308,10 @@ public class MapActivity extends Activity implements ObserverTarget {
                                     topographie.getColor(),
                                     true);
                             SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                            meansTopoClusterManager.addItem(markerItem);
+                            topoClusterManager.addItem(markerItem);
                         }
 
-                        meansTopoClusterManager.cluster();
+                        topoClusterManager.cluster();
                         findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                     }
                 }, new Command() {
@@ -374,12 +382,23 @@ public class MapActivity extends Activity implements ObserverTarget {
         }
     }
 
-    public void imageDrone(final Position position) {
+    public void imageDrone(final GeoImage image) {
         if (drone != null) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    
+                    Collection<Marker> imageMarker = droneClusterManager.getMarkerCollection().getMarkers();
+                    for (Marker m : imageMarker) {
+                        if (positionEqual(m.getPosition(), image.getPosition())) {
+                            // Remove marker
+                            LatLng latLng = m.getPosition();
+                            m.remove();
+                            // Replace marker to image marker
+                            ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, image.getImage());
+                            droneClusterManager.addItem(marker);
+                            droneClusterManager.cluster();
+                        }
+                    }
                 }
             });
         }
@@ -392,6 +411,17 @@ public class MapActivity extends Activity implements ObserverTarget {
                 loadMeansInMap();
             }
         });
+    }
+
+    private boolean positionEqual(LatLng pos1, Position pos2) {
+        final double GPS_DELTA = 0.0005;
+
+        boolean latitude1 = Double.compare(pos1.latitude + GPS_DELTA, pos2.getLatitude()) < 1;
+        boolean latitude2 = Double.compare(pos1.latitude - GPS_DELTA, pos2.getLatitude()) < 1;
+        boolean longitude1 = Double.compare(pos1.longitude + GPS_DELTA, pos2.getLongitude()) < 1;
+        boolean longitude2 = Double.compare(pos1.longitude - GPS_DELTA, pos2.getLongitude()) < 1;
+
+        return latitude1 || latitude2 || longitude1 || longitude2;
     }
 
     /**
@@ -439,16 +469,18 @@ public class MapActivity extends Activity implements ObserverTarget {
         }
     }
 
+    /**
+     * Charger les moyens sur la carte
+     */
     public void loadMeansInMap() {
-        if (!isDragging) {
-            RestServiceImpl.getInstance()
-                    .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
-                            getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
-        }
+        RestServiceImpl.getInstance()
+                .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
+                        getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
+
     }
 
     /**
-     * Command error
+     * Command  a exécuter en cas d'erreur
      *
      * @return
      */
@@ -470,39 +502,48 @@ public class MapActivity extends Activity implements ObserverTarget {
         return new Command() {
             @Override
             public void execute(Object response) {
-                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
-                Intervention intervention = (Intervention) response;
-                List<Mean> meanList = intervention.getMeansList();
+                if (!isDragging) {
+                    findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                    Intervention intervention = (Intervention) response;
+                    List<Mean> meanList = intervention.getMeansList();
 
-                List<Mean> meansWithCoordinates = new ArrayList<Mean>();
-                for (Mean m : meanList) {
-                    if (!Double.isNaN(m.getCoordinates().getLatitude()) && !Double.isNaN(m.getCoordinates().getLongitude())) {
-                        meansWithCoordinates.add(m);
+                    List<Mean> meansWithCoordinates = new ArrayList<Mean>();
+                    for (Mean m : meanList) {
+                        if (!Double.isNaN(m.getCoordinates().getLatitude()) && !Double.isNaN(m.getCoordinates().getLongitude())) {
+                            meansWithCoordinates.add(m);
+                        }
                     }
-                }
 
-                meansTopoClusterManager.clearItems();
-                mapListeners.markerSymbolLinkMap.clear();
-                for (Mean m : meansWithCoordinates) {
-                    String meanClass = m.getVehicle().toString();
-                    String meanType = Symbol.getImage(meanClass);
-                    Symbol symbol = new Symbol(m.getId(),
-                            Symbol.SymbolType.valueOf(meanType),
-                            meanClass, Symbol.getCityTrigram(),
-                            Symbol.getMeanColor(m.getVehicle()));
-                    symbol.setValidated(m.isInPosition());
-                    SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
-                            m.getCoordinates().getLatitude(),
-                            m.getCoordinates().getLongitude(), symbol);
+                    meansClusterManager.clearItems();
+                    mapListeners.markerSymbolLinkMap.clear();
+                    for (Mean m : meansWithCoordinates) {
+                        String meanClass = m.getVehicle().toString();
+                        String meanType = Symbol.getImage(meanClass);
+                        Symbol symbol = new Symbol(m.getId(),
+                                Symbol.SymbolType.valueOf(meanType),
+                                meanClass, Symbol.getCityTrigram(),
+                                Symbol.getMeanColor(m.getVehicle()));
 
-                    meansTopoClusterManager.addItem(markerItem);
+                        symbol.setValidated(m.isInPosition());
+
+                        SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
+                                m.getCoordinates().getLatitude(),
+                                m.getCoordinates().getLongitude(), symbol);
+
+                        meansClusterManager.addItem(markerItem);
+                    }
+                    meansClusterManager.cluster();
                 }
-                meansTopoClusterManager.cluster();
                 findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
             }
         };
     }
 
+    /**
+     * Permet de définir un booléen qui empêche la mise à jour des marquers
+     * lors de l'action glisser-déposer
+     * @param isDragging
+     */
     public void setDraggingMode(boolean isDragging){
         this.isDragging = isDragging;
     }
