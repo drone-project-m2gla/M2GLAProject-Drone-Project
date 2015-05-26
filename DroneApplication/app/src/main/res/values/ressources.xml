@@ -26,4 +26,9 @@
         <item>	Retour CRM	</item>
     </string-array>
 
+    <string-array name="optionsMoyenEngageEnPosition">
+        <item>	Libérer	</item>
+        <item>	Retour CRM	</item>
+    </string-array>
+
 </resources>

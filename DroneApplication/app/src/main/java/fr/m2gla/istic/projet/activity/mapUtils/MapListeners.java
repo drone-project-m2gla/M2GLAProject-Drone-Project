@@ -199,111 +199,142 @@ public class MapListeners implements
     public void onInfoWindowClick(Marker marker) {
         //Log.d(TAG, "main onClusterItemInfoWindowClick");
         final Symbol meanSymbol = markerSymbolLink.get(marker.getId()).getSymbol();
+        final String meanSymbolId = meanSymbol.getId();
         final Marker _marker = marker;
         if (!meanSymbol.isTopographic()) {
-            new AlertDialog.Builder(mapActivity)
-                    .setTitle(R.string.actions_moyens)
-                    .setItems(R.array.optionsMoyenEngage, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // The 'which' argument contains the index position of the selected item
-                            switch (which) {
-                                case 0: {
-                                    // Valider la position du moyen
-                                    Mean mean = new Mean();
-                                    mean.setId(meanSymbol.getId());
-                                    Position position = new Position();
-                                    LatLng markerPosition = _marker.getPosition();
-                                    position.setLatitude(markerPosition.latitude);
-                                    position.setLongitude(markerPosition.longitude);
-                                    mean.setCoordinates(position);
-                                    mean.setInPosition(true);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mapActivity).setTitle(R.string.actions_moyens);
 
-                                    RestServiceImpl.getInstance()
-                                            .post(RestAPI.POST_POSITION_CONFIRMATION, mapActivity.restParams, mean, Mean.class,
-                                                    new Command() {
-                                                        @Override
-                                                        public void execute(Object response) {
-                                                            Log.i(TAG, "Confirm position success");
-                                                            mapActivity.loadMeansInMap();
-                                                        }
-                                                    },
-                                                    new Command() {
-                                                        @Override
-                                                        public void execute(Object response) {
-                                                            Log.e(TAG, "Confirm position error");
-                                                            Toast.makeText(mapActivity, "Impossible de confirmer la position de ce moyen", Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                            );
-                                    break;
-                                }
-                                case 1: {
-                                    // TODO: Libérer le moyen
-                                    // Supprimer ses coordonnées
-                                    // Supprimer le marker
-                                    // TODO : Le supprimer de la liste de moyens validés
-                                    Mean mean = new Mean();
-                                    mean.setId(meanSymbol.getId());
-                                    Position position = new Position();
-                                    position.setLatitude(Double.NaN);
-                                    position.setLongitude(Double.NaN);
-                                    mean.setCoordinates(position);
-                                    mean.setInPosition(false);
-
-                                    RestServiceImpl.getInstance()
-                                            .post(RestAPI.POST_RELEASE, mapActivity.restParams, mean, Mean.class,
-                                                    new Command() {
-                                                        @Override
-                                                        public void execute(Object response) {
-                                                            Log.i(TAG, "Libérer moyen success");
-                                                            mapActivity.loadMeansInMap();
-                                                        }
-                                                    },
-                                                    new Command() {
-                                                        @Override
-                                                        public void execute(Object response) {
-                                                            Log.e(TAG, "Libérer moyen error");
-                                                            Toast.makeText(mapActivity, "Impossible de libérer ce moyen", Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                            );
-                                    break;
-                                }
-                                case 2: {
-                                    //TODO: Retour CRM, disponible pour mettre sur la carte
-                                    // Supprimer ses coordonnées
-                                    // Ajouter dans la liste de moyens validés (automatique car la liste se rafraîchit)
-                                    Mean mean = new Mean();
-                                    mean.setId(meanSymbol.getId());
-                                    Position position = new Position();
-                                    position.setLatitude(Double.NaN);
-                                    position.setLongitude(Double.NaN);
-                                    mean.setCoordinates(position);
-                                    mean.setInPosition(false);
-
-                                    RestServiceImpl.getInstance()
-                                            .post(RestAPI.POST_RETOURCRM, mapActivity.restParams, mean, Mean.class,
-                                                    new Command() {
-                                                        @Override
-                                                        public void execute(Object response) {
-                                                            Log.e(TAG, "Retour CRM success");
-                                                            mapActivity.loadMeansInMap();
-                                                        }
-                                                    },
-                                                    new Command() {
-                                                        @Override
-                                                        public void execute(Object response) {
-                                                            Log.e(TAG, "Retour CRM error");
-                                                            Toast.makeText(mapActivity, "Impossible de retourner ce moyen au CRM", Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                            );
-                                    break;
-                                }
+            if (!meanSymbol.isValidated()) {
+                alertDialogBuilder.setItems(R.array.optionsMoyenEngage, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position of the selected item
+                        switch (which) {
+                            case 0: {
+                                validateMeanPosition(_marker.getPosition(), meanSymbolId);
+                                break;
                             }
-                        }})
-                    .show();
+                            case 1: {
+                                freeMean(meanSymbolId);
+                                break;
+                            }
+                            case 2: {
+                                sendMeanBackToCRM(meanSymbolId);
+                                break;
+                            }
+                        }
+                    }
+                });
+            } else {
+                alertDialogBuilder.setItems(R.array.optionsMoyenEngageEnPosition, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position of the selected item
+                        switch (which) {
+                            case 0: {
+                                freeMean(meanSymbolId);
+                                break;
+                            }
+                            case 1: {
+                                sendMeanBackToCRM(meanSymbolId);
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+            alertDialogBuilder.show();
         }
+    }
+
+    private void validateMeanPosition(LatLng markerPosition, String meanSymbolId) {
+        // Valider la position du moyen
+        Mean mean = new Mean();
+        mean.setId(meanSymbolId);
+        Position position = new Position();
+        position.setLatitude(markerPosition.latitude);
+        position.setLongitude(markerPosition.longitude);
+        mean.setCoordinates(position);
+        mean.setInPosition(true);
+
+        RestServiceImpl.getInstance()
+                .post(RestAPI.POST_POSITION_CONFIRMATION, mapActivity.restParams, mean, Mean.class,
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.i(TAG, "Confirm position success");
+                                mapActivity.loadMeansInMap();
+                            }
+                        },
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.e(TAG, "Confirm position error");
+                                Toast.makeText(mapActivity, "Impossible de confirmer la position de ce moyen", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                );
+    }
+
+    private void freeMean(String meanSymbolId){
+        // Libérer le moyen
+        // Supprimer ses coordonnées
+        // Supprimer le marker
+        // TODO : Le supprimer de la liste de moyens validés
+        Mean mean = new Mean();
+        mean.setId(meanSymbolId);
+        Position position = new Position();
+        position.setLatitude(Double.NaN);
+        position.setLongitude(Double.NaN);
+        mean.setCoordinates(position);
+        mean.setInPosition(false);
+
+        RestServiceImpl.getInstance()
+                .post(RestAPI.POST_RELEASE, mapActivity.restParams, mean, Mean.class,
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.i(TAG, "Libérer moyen success");
+                                mapActivity.loadMeansInMap();
+                            }
+                        },
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.e(TAG, "Libérer moyen error");
+                                Toast.makeText(mapActivity, "Impossible de libérer ce moyen", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                );
+    }
+
+    private void sendMeanBackToCRM(String meanSymbolId){
+        // Retour CRM, disponible pour mettre sur la carte
+        // Supprimer ses coordonnées
+        // Ajouter dans la liste de moyens validés (automatique car la liste se rafraîchit)
+        Mean mean = new Mean();
+        mean.setId(meanSymbolId);
+        Position position = new Position();
+        position.setLatitude(Double.NaN);
+        position.setLongitude(Double.NaN);
+        mean.setCoordinates(position);
+        mean.setInPosition(false);
+
+        RestServiceImpl.getInstance()
+                .post(RestAPI.POST_RETOURCRM, mapActivity.restParams, mean, Mean.class,
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.e(TAG, "Retour CRM success");
+                                mapActivity.loadMeansInMap();
+                            }
+                        },
+                        new Command() {
+                            @Override
+                            public void execute(Object response) {
+                                Log.e(TAG, "Retour CRM error");
+                                Toast.makeText(mapActivity, "Impossible de retourner ce moyen au CRM", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                );
     }
 
     /**
