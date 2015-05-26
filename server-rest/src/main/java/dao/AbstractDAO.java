@@ -39,7 +39,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      * Connect to BDD and bucket to communicate with couchbase
      */
     public final void connect() {
-        if(mongoClient == null || db==null) {
+        if(mongoClient == null) {
             MongoCredential credential = MongoCredential.createCredential(Configuration.getMONGODB_USER(), Configuration.getDATABASE_NAME(), Configuration.getMONGODB_PWD().toCharArray());
             mongoClient = new MongoClient( new ServerAddress(Configuration.getMONGODB_HOSTNAME(), Integer.parseInt(Configuration.getMONGODB_PORT())), Arrays.asList(credential));
             db = mongoClient.getDatabase(Configuration.getDATABASE_NAME());
@@ -129,6 +129,9 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
      */
     protected abstract Document entityToDocument(T entity);
 
+    /**
+     * Create different indexes
+     */
     public void ensureIndex()
     {
 

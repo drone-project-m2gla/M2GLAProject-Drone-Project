@@ -120,12 +120,10 @@ public class Mean extends Entity {
     public boolean requestedMean() {
         return this.meanState == MeanState.REQUESTED;
     }
-
-//    public boolean refusedMeans() {
-//        return refusedMeans;
-//    }
-//
-//    public void setIsDeclined(boolean refusedMeans) {
-//        this.refusedMeans = refusedMeans;
-//    }
+    public boolean arrivedMean() {
+        return this.meanState == MeanState.ARRIVED;
+    }
+    public boolean onTransitMean() {
+        return this.meanState == MeanState.ACTIVATED;
+    }
 }

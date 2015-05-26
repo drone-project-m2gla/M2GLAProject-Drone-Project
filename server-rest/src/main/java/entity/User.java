@@ -1,8 +1,8 @@
 package entity;
 
 /**
- * Created by mds on 07/04/15.
- * Class ${CLASS}
+ * @author mds on 07/04/15.
+ * @see User contains identification
  */
 
 public class User extends AbstractEntity {
@@ -41,12 +41,5 @@ public class User extends AbstractEntity {
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        return result;
     }
 }
