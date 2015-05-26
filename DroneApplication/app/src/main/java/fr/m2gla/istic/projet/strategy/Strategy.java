@@ -7,6 +7,4 @@ public interface Strategy {
     public String getScopeName();
     public Class<?> getType();
     public void call(Object object);
-
-
 }

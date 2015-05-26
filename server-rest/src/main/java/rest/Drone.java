@@ -59,5 +59,6 @@ public class Drone {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopTrajet() {
 		GetDronePositionThread.createNewInstance();
+		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 	}
 }

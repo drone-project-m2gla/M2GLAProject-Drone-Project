@@ -32,7 +32,7 @@ public class CarouselActivity extends Activity {
             }, new Command() {
                 @Override
                 public void execute(Object response) {
-                    Toast.makeText(_this, R.string.no_image, Toast.LENGTH_LONG).show();
+                    Toast.makeText(_this, R .string.no_image, Toast.LENGTH_LONG).show();
                 }
             });
     }
