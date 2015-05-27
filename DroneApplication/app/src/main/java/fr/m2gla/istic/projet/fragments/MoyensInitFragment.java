@@ -38,6 +38,7 @@ import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyCodisValidateMean;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanArrived;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanBackToCRM;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanFree;
@@ -94,6 +95,7 @@ public class MoyensInitFragment extends ListFragment {
         StrategyMeanFree.getINSTANCE().setFragment(this);
         StrategyMeanBackToCRM.getINSTANCE().setFragment(this);
         StrategyMeanArrived.getINSTANCE().setFragment(this);// Strategie des moyens arrivés.
+        StrategyCodisValidateMean.getINSTANCE().setFragment(this);
 
         return view;
     }
@@ -261,10 +263,10 @@ public class MoyensInitFragment extends ListFragment {
             for (Mean m : transitList) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
-                Symbol symbol = new Symbol(m.getId(),
+                Symbol symbol = new Symbol(m.getName(),
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
 
-                String title = vehicule + " * " + m.getId();
+                String title = vehicule + " * " + m.getName();
 
                 moyensInTransitTitle.add(title);
                 moyensInTransitDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
@@ -328,7 +330,7 @@ public class MoyensInitFragment extends ListFragment {
                                     @Override
                                     public void execute(Object response) {
                                         Mean m = (Mean) response;
-                                        Toast.makeText(getActivity(), finalToastValue + "\n" + m.getId(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), finalToastValue + "\n" + m.getName(), Toast.LENGTH_SHORT).show();
 
                                         // Mise à jour de la liste des moyens disponibles
                                         movingMapMeanStrategy(m);
@@ -358,10 +360,10 @@ public class MoyensInitFragment extends ListFragment {
             for (Mean m : meanRefused) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
-                Symbol symbol = new Symbol(m.getId(),
+                Symbol symbol = new Symbol(m.getName(),
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
 
-                String title = vehicule + " * " + m.getId();
+                String title = vehicule + " * " + m.getName();
 
                 moyensRefusedTitle.add(title);
                 moyensRefusedDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
@@ -414,12 +416,12 @@ public class MoyensInitFragment extends ListFragment {
             for (Mean m : meanList) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
-                Symbol symbol = new Symbol(m.getId(),
+                Symbol symbol = new Symbol(m.getName(),
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
 
                 means[pos++] = symbol;
 
-                String title = vehicule + " * " + m.getId();
+                String title = vehicule + " * " + m.getName();
 
                 moyensDisponiblesTitle.add(title);
                 moyensDisponiblesDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
@@ -549,31 +551,34 @@ public class MoyensInitFragment extends ListFragment {
      * @param object
      */
     public void arrivedMeanStrategy(final Mean object) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // GET_MOYENS_DISPO
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("id", idIntervention);
-                RestServiceImpl.getInstance()
-                        .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Mean[] means = (Mean[]) response;
-                                List<Mean> meanList = new ArrayList<Mean>();
-                                if (means.length > 0) {
-                                    for (Mean m : means) {
-                                        if (m.arrivedMean()) {
-                                            meanList.add(m);
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // GET_MOYENS_DISPO
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("id", idIntervention);
+                    RestServiceImpl.getInstance()
+                            .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Mean[] means = (Mean[]) response;
+                                    List<Mean> meanList = new ArrayList<Mean>();
+                                    if (means.length > 0) {
+                                        for (Mean m : means) {
+                                            if (m.arrivedMean()) {
+                                                meanList.add(m);
+                                            }
                                         }
                                     }
+                                    // Appel de la méthode qui cré la view des moyens demandés.
+                                    createAvailableMeansView(meanList);
                                 }
-                                // Appel de la méthode qui cré la view des moyens demandés.
-                                createAvailableMeansView(meanList);
-                            }
-                        }, getCallbackError());
-            }
-        });
+                            }, getCallbackError());
+                }
+            });
+        }
     }
 
     /**
@@ -590,10 +595,10 @@ public class MoyensInitFragment extends ListFragment {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
 
-                Symbol symbol = new Symbol(m.getId(),
+                Symbol symbol = new Symbol(m.getName(),
                         valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
 
-                String title = vehicule + " * " + m.getId();
+                String title = vehicule + " * " + m.getName();
                 meansRequestedTitle.add(title);
                 meansRequestedDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
             }
@@ -617,7 +622,54 @@ public class MoyensInitFragment extends ListFragment {
         notValidatedView.setAdapter(adapterXtraNotValidate);
     }
 
-    public void updateMeanValidation(Mean mean) {
-        Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
+    /**
+     * Méthode appelée par la strategie lorqu'un moyen est validé par le CODIS
+     *
+     * @param mean
+     */
+    public void updateMeanRequestView(Mean mean) {
+        Log.i(TAG, "Means request view.......");
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // GET_MOYENS_DISPO
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("id", idIntervention);
+                    RestServiceImpl.getInstance()
+                            .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Mean[] means = (Mean[]) response;
+                                    List<Mean> transitList = new ArrayList<Mean>();
+                                    List<Mean> refusedList = new ArrayList<Mean>();
+                                    List<Mean> requestList = new ArrayList<Mean>();
+                                    if (means.length > 0) {
+                                        for (Mean m : means) {
+                                            if (m.arrivedMean()) {
+                                                transitList.add(m);
+                                            }
+                                            if (m.refusedMeans()) {
+                                                refusedList.add(m);
+                                            }
+                                            if (m.requestedMean()) {
+                                                requestList.add(m);
+                                            }
+                                        }
+                                    }
+                                    // Appel de la méthode qui cré la view des moyens en transit.
+                                    createTransitMeansView(transitList);
+
+                                    // Appel de la méthode qui cré la view des moyens refusés.
+                                    createRefusedMeansView(transitList);
+
+                                    // Appel de la méthode qui cré la view des moyens demandés.
+                                    createRequestedMeansView(transitList.toArray(new Mean[transitList.size()]));
+                                }
+                            }, getCallbackError());
+                }
+            });
+        }
     }
 }
