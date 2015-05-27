@@ -38,6 +38,7 @@ public class InterventionListActivity extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getActionBar().setTitle(R.string.presentation_text);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intervention_list);
 
