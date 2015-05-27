@@ -63,21 +63,6 @@ public interface GeneralConstants {
     public static final String VALUE_VEHICULE_EPA = "EPA";
     public static final String VALUE_VEHICULE_FPT = "FPT";
 
-
-    // Text
-    public static final int DRAWABLE_VEHICULE_VSAV = R.mipmap.ic_vehicule_vsav;
-    public static final int DRAWABLE_VEHICULE_VSR = R.mipmap.ic_vehicule_vsr;
-    public static final int DRAWABLE_VEHICULE_VLCG = R.mipmap.ic_vehicule_vlcg;
-    public static final int DRAWABLE_VEHICULE_EPA = R.mipmap.ic_vehicule_epa;
-    public static final int DRAWABLE_VEHICULE_FPT = R.mipmap.ic_vehicule_fpt;
-
-    // Image
-    public static final int DRAWABLE_IMG_VEHICULE_VSAV = R.mipmap.ic_vehicule_img_vsav;
-    public static final int DRAWABLE_IMG_VEHICULE_VSR = R.mipmap.ic_vehicule_img_vsr;
-    public static final int DRAWABLE_IMG_VEHICULE_VLCG = R.mipmap.ic_vehicule_img_vlcg;
-    public static final int DRAWABLE_IMG_VEHICULE_EPA = R.mipmap.ic_vehicule_img_epa;
-    public static final int DRAWABLE_IMG_VEHICULE_FPT = R.mipmap.ic_vehicule_img_fpt;
-
     // image type svg variable
     public static final String TYPE_IMG = "type";
 }
