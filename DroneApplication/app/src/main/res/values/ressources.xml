@@ -34,5 +34,8 @@
         <item>	Libérer	</item>
         <item>	Retour CRM	</item>
     </string-array>
+    <string-array name="dispoMeansOptions">
+        <item>  Libérer </item>
+    </string-array>
 
 </resources>

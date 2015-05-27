@@ -263,7 +263,7 @@ public class ItemsAdapter extends ArrayAdapter {
             // Setting the color of the text
             holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
             // Setting the size of the text
-            holder.itemLabelTxtView.setTextSize(20f);
+            holder.itemLabelTxtView.setTextSize(12f);
 
             Drawable drawable = images[position];
             Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
@@ -280,7 +280,7 @@ public class ItemsAdapter extends ArrayAdapter {
             // Setting the color of the text
             holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
             // Setting the size of the text
-            holder.itemLabelTxtView.setTextSize(20f);
+            holder.itemLabelTxtView.setTextSize(12f);
 
             Drawable drawable = images[position];
             Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);

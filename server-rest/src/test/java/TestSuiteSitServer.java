@@ -35,8 +35,8 @@ import dao.UserDAOTest;
         UserServicesRestTest.class,
         InterventionRestTest.class,
         ImagesRestTest.class,
-        MeanRestTest.class
-
+        MeanRestTest.class,
+        TopographyRestTest.class
 })
 public class TestSuiteSitServer {
 

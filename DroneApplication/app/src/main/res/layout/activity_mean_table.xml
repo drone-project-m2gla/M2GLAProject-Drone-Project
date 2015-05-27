@@ -27,8 +27,16 @@
                 android:id="@+id/meanTableIdDisp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="9"
+                android:layout_weight="8"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <CheckBox
+                android:id="@+id/timeColorCheckDisp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="MeanTableViewRefresh"
+                android:text="@string/timeColorDisp" />
 
             <CheckBox
                 android:id="@+id/refusedMeanCheckDisp"

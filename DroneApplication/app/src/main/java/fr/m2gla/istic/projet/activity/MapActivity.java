@@ -1,6 +1,7 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,6 +34,7 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.mapUtils.ImageDroneRenderer;
 import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
+import fr.m2gla.istic.projet.activity.mapUtils.RefreshAlarmManager;
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolRenderer;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -81,6 +83,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     private List<Polyline> polylineList;
     private DroneTargetActionFragment droneTargetActionFragment;
     private List<Marker> droneMarkers;
+    private RefreshAlarmManager refreshAlarmManager;
 
     /**
      * Methode renvoyant si le mode de fonctionnement de la carte est le mode drone
@@ -115,6 +118,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     @Override
     protected void onDestroy() {
         StrategyMoveDrone.getINSTANCE().setActivity(null);
+        refreshAlarmManager.UnregisterAlarmBroadcast();
         super.onDestroy();
     }
 
@@ -187,6 +191,22 @@ public class MapActivity extends Activity implements ObserverTarget {
         findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
 
         loadTopographicSymbols();
+
+        // Utiliser un timer pour rafraîchir les moyens de manière périodique
+        refreshAlarmManager = new RefreshAlarmManager(this, new Command() {
+            @Override
+            public void execute(Object response) {
+                Log.d(TAG, "Mise à jour périodique des moyens");
+                //mettre à jour la carte
+                updateMeans();
+                MoyensInitFragment moyensInitFragment = ((MoyensInitFragment)getFragmentManager().findFragmentById(R.id.fragment_moyens_init));
+                // mettre à jour les listes de moyens
+                moyensInitFragment.demandMeanStrategy(null);
+                moyensInitFragment.arrivedMeanStrategy(null);
+                moyensInitFragment.transitMeanStrategy(null);
+            }
+        }, 30000L);
+        refreshAlarmManager.RegisterAlarmBroadcast();
     }
 
     @Override
@@ -465,7 +485,7 @@ public class MapActivity extends Activity implements ObserverTarget {
      * Charge l'intervention et les moyens sur la carte
      */
     private void loadIntervention() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         if (intent != null) {
             String idIntervention = intent.getStringExtra(fr.m2gla.istic.projet.context.GeneralConstants.REF_ACT_IDINTER);
@@ -493,10 +513,16 @@ public class MapActivity extends Activity implements ObserverTarget {
                                 @Override
                                 public void execute(Object response) {
                                     Intervention intervention = (Intervention) response;
+                                    // Montrer l'id de l'intervention et l'adresse dans le titre
+                                    getActionBar().setTitle(intervention.getLabel() + " : " +
+                                            intervention.getAddress() + " " +
+                                            intervention.getPostcode() + " " +
+                                            intervention.getCity());
+
                                     Position pos = intervention.getCoordinates();
 
                                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), ZOOM_INDEX));
-                                    updateMeans();
+                                    loadMeansInMap();
                                 }
                             },
                             new Command() {
