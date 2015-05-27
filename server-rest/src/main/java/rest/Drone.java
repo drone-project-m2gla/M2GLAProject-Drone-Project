@@ -49,7 +49,7 @@ public class Drone {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void doTrajet(Target target) {
 		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
-		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+		GetDronePositionThread.createNewInstance();
 		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
 	}
 
@@ -60,7 +60,7 @@ public class Drone {
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopTrajet() {
-		GetDronePositionThread.createNewInstance();
+		GetDronePositionThread.getInstance().stopThread();
 		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 	}
 }
