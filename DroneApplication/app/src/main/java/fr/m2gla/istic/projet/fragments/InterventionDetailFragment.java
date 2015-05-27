@@ -351,7 +351,10 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     public boolean onValidateClick(final Mean xtraMean, final int position) {
         final Map<String, String> map = new HashMap<>();
 
-        if (xtraMean == null) return (false);
+        if (xtraMean == null) {
+            Log.d(TAG, "Validation, Moyen NULL !");
+            return (false);
+        }
 
         meanNameGet(xtraMean, position);
         return (true);
@@ -367,7 +370,10 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     public boolean onCancelClick(final Mean xtraMean, final int position) {
         final Map<String, String> map = new HashMap<>();
 
-        if (xtraMean == null) return (false);
+        if (xtraMean == null) {
+            Log.d(TAG, "Refus, Moyen NULL !");
+            return (false);
+        }
 
         map.put("idintervention", idIntervention);
         //Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
