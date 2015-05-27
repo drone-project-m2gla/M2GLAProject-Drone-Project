@@ -34,7 +34,7 @@ public class StrategyCodisValidateMean implements Strategy {
 
     @Override
     public String getScopeName() {
-        return "moyenMove";
+        return "ok";
     }
 
     @Override
