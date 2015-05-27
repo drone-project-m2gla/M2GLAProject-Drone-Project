@@ -20,7 +20,7 @@ import entity.Target;
  * @author arno on 12/02/15
  */
 @Path("/drone")
-public class Drone {
+public class DroneRest {
     /**
      * @return the position of the drone
      */

@@ -15,7 +15,7 @@ import entity.GeoImage;
  * @author arno on 12/02/15.
  */
 @Path("/images")
-public class ImageRest {
+public class GeoImageRest {
     /**
      * @return the list of All Images
      */

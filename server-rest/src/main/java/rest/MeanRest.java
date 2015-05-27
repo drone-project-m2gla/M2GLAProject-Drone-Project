@@ -22,11 +22,11 @@ import util.Datetime;
 
 /**
  * @author arno on 12/02/15.
- * @see MeanXtraRest is service rest of type intervention
+ * @see MeanRest is service rest of type intervention
  */
 @Path("/moyen")
-public class MeanXtraRest {
-    private static final Logger LOGGER = Logger.getLogger(MeanXtraRest.class);
+public class MeanRest {
+    private static final Logger LOGGER = Logger.getLogger(MeanRest.class);
 
     /**
      * Add Mean to Intervention

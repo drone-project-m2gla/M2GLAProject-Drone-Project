@@ -1,7 +1,6 @@
 package rest;
 
 import entity.User;
-import org.apache.http.client.ClientProtocolException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,7 +17,7 @@ public class UserServicesRestTest {
 
     @Test
     public void LoginFailed() throws IOException {
-        UserServices userServices = new UserServices();
+        UserServicesRest userServices = new UserServicesRest();
         User user = new User();
         user.setUsername("login");
         user.setPassword("password");
@@ -28,7 +27,7 @@ public class UserServicesRestTest {
 
     @Test
     public void LoginOk() throws IOException {
-        UserServices userServices = new UserServices();
+        UserServicesRest userServices = new UserServicesRest();
         Response responseC = userServices.createUser("user_d","user_l");
         assertEquals("200", "" + responseC.getStatus());
         User user = new User();
@@ -40,7 +39,7 @@ public class UserServicesRestTest {
 
     @Test
     public void CreateLogin() throws IOException {
-        UserServices userServices = new UserServices();
+        UserServicesRest userServices = new UserServicesRest();
         Response response = userServices.createUser("testlogin", "testpassword");
         assertEquals(200, response.getStatus());
     }
