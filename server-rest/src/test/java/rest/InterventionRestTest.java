@@ -269,37 +269,37 @@ public class InterventionRestTest {
         dao.delete(intervention);
     }
 
-    @Test
-    public void testValidateMeanPositionForIntervention()
-    {
-        dao.create(intervention);
-        InterventionRest interventionRest= new InterventionRest();
-        Mean mean1 = intervention.getMeansList().get(0);
-
-        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
-        assertEquals(200,response1.getStatus());
-        intervention = dao.getById(intervention.getId());
-        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
-        dao.delete(intervention);
-    }
-
-    @Test
-    public void testValidateMeanPositionForInterventionCannotBeExecutedTwice()
-    {
-        dao.create(intervention);
-        InterventionRest interventionRest= new InterventionRest();
-        Mean mean1 = intervention.getMeansList().get(0);
-
-        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
-        assertEquals(200,response1.getStatus());
-
-        Response response2 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
-        assertEquals(400,response2.getStatus());
-
-        intervention = dao.getById(intervention.getId());
-        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
-        dao.delete(intervention);
-    }
+//    @Test
+//    public void testValidateMeanPositionForIntervention()
+//    {
+//        dao.create(intervention);
+//        InterventionRest interventionRest= new InterventionRest();
+//        Mean mean1 = intervention.getMeansList().get(0);
+//
+//        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+//        assertEquals(200,response1.getStatus());
+//        intervention = dao.getById(intervention.getId());
+//        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
+//        dao.delete(intervention);
+//    }
+//
+//    @Test
+//    public void testValidateMeanPositionForInterventionCannotBeExecutedTwice()
+//    {
+//        dao.create(intervention);
+//        InterventionRest interventionRest= new InterventionRest();
+//        Mean mean1 = intervention.getMeansList().get(0);
+//
+//        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+//        assertEquals(200,response1.getStatus());
+//
+//        Response response2 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+//        assertEquals(400,response2.getStatus());
+//
+//        intervention = dao.getById(intervention.getId());
+//        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
+//        dao.delete(intervention);
+//    }
 
 
     public void assertAreEqualsWitoutInPosition(Mean expected, Mean real)
