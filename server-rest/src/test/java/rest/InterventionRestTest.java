@@ -1,6 +1,6 @@
 package rest;
 
-import com.google.gson.Gson;
+
 import dao.InterventionDAO;
 import entity.*;
 import org.junit.*;
@@ -10,6 +10,7 @@ import util.Configuration;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import static java.lang.Double.*;
 
 import static org.junit.Assert.*;
 
@@ -107,6 +108,53 @@ public class InterventionRestTest {
         assertEquals(MeanState.ENGAGED,intervention.getMeansList().get(0).getMeanState());
         assertEquals(meanPosition,intervention.getMeansList().get(0).getCoordinates());
         assertEquals(false,intervention.getMeansList().get(0).getInPosition());
+    }
+
+
+    @Test
+    public void testSendMeanBackToCRMForIntervention()
+    {
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        Mean mean1 = intervention.getMeansList().get(0);
+        Position meanPosition = new Position(12.00,10.00);
+        mean1.setCoordinates(meanPosition);
+
+        interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        interventionRest.updateMeanPositionForIntervention(intervention.getId(), mean1);
+        Response response1 = interventionRest.sendMeanBackToCRMForIntervention(intervention.getId(), mean1);
+
+        assertEquals(200,response1.getStatus());
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
+        assertTrue(isNaN(intervention.getMeansList().get(0).getCoordinates().getAltitude()));
+        assertTrue(isNaN(intervention.getMeansList().get(0).getCoordinates().getLatitude()));
+        assertTrue(isNaN(intervention.getMeansList().get(0).getCoordinates().getLongitude()));
+        assertEquals(false,intervention.getMeansList().get(0).getInPosition());
+    }
+
+    @Test
+    public void testSendMeanBackToCRMForInterventionWhenMeanNotEngaged()
+    {
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        Mean mean1 = intervention.getMeansList().get(0);
+        Position meanPosition = new Position(12.00,10.00);
+        mean1.setCoordinates(meanPosition);
+
+        // Test where mean is Accepted
+        Response response1 = interventionRest.sendMeanBackToCRMForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response1.getStatus());
+
+        // Test where mean is Arrived
+        interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        Response response2 = interventionRest.sendMeanBackToCRMForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response2.getStatus());
+
+        // Test where mean is Released
+        interventionRest.releaseMeanForIntervention(intervention.getId(), mean1);
+        Response response3 = interventionRest.sendMeanBackToCRMForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response3.getStatus());
     }
 
     @Test
