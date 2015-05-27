@@ -99,7 +99,7 @@ public class MeanXtraRest {
             iD.disconnect();
 
             try {
-                PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "nok", res);
+                PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "ok", res);
             } catch (IOException e) {
                 LOGGER.error("", e);
             }
