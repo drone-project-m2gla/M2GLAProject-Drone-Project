@@ -100,7 +100,7 @@ public class InterventionRest {
         else
         {
             iD.disconnect();
-            return Response.status(Response.Status.BAD_REQUEST).entity("Already in position or mean unavailable").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Mean is not Engaged or unavailable").build();
         }
 	}
     /**
@@ -215,7 +215,7 @@ public class InterventionRest {
 
         for (Mean m : meanList) {
             if (m.getId() == mean.getId() && (m.getMeanState() == MeanState.ENGAGED)) {
-                m.setCoordinates(mean.getCoordinates());
+                m.setCoordinates(new Position(Double.NaN,Double.NaN,Double.NaN));
                 m.setMeanState(MeanState.ARRIVED);
                 m.setInPosition(false);
                 res = m;
@@ -265,7 +265,7 @@ public class InterventionRest {
                      || m.getMeanState() == MeanState.ENGAGED
                      || m.getMeanState() == MeanState.ARRIVED)) {
                 m.setCoordinates(mean.getCoordinates());
-                m.setDateArrived(Datetime.getCurrentDate());
+                m.setDateReleased(Datetime.getCurrentDate());
                 m.setMeanState(MeanState.RELEASED);
                 m.setInPosition(false);
                 res = m;

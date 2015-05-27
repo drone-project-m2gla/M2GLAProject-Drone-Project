@@ -461,6 +461,9 @@ public class MapActivity extends Activity implements ObserverTarget {
             if (mInitFragment != null && idIntervention != null) {
                 mInitFragment.setInterventionID(idIntervention);
             }
+            if (droneTargetActionFragment != null && idIntervention != null) {
+                droneTargetActionFragment.setInterventionID(idIntervention);
+            }
 
             restParams.put("id", idIntervention);
 
@@ -537,7 +540,7 @@ public class MapActivity extends Activity implements ObserverTarget {
                     String meanType = Symbol.getImage(meanClass);
                     Symbol symbol = new Symbol(m.getId(),
                             Symbol.SymbolType.valueOf(meanType),
-                            meanClass, Symbol.getCityTrigram(),
+                            meanClass, m.getName(),
                             Symbol.getMeanColor(m.getVehicle()));
 
                     symbol.setValidated(m.isInPosition());

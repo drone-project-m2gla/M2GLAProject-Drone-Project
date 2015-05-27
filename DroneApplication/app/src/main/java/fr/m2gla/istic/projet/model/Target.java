@@ -8,6 +8,7 @@ import java.util.List;
  * Chemin du drone
  */
 public class Target {
+    private String interventionsId;
     private List<Position> positions;
     private boolean isClose;
 
@@ -56,5 +57,21 @@ public class Target {
      */
     public void setClose(boolean isClose) {
         this.isClose = isClose;
+    }
+
+    /**
+     * Id de l'intervention courante
+     * @return Id de l'intervention
+     */
+    public String getInterventionsId() {
+        return interventionsId;
+    }
+
+    /**
+     * Id de l'intervention courante
+     * @param Id de l'intervention
+     */
+    public void setInterventionsId(String interventionsId) {
+        this.interventionsId = interventionsId;
     }
 }

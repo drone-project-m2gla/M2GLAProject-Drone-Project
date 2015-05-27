@@ -7,6 +7,8 @@ import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 
 /**
  * Created by mds on 19/05/15.
+ * <p/>
+ * Classe qui met en place la stratégie lorsqu'un moyen est arrivée sur le CRM
  */
 public class StrategyMeanArrived implements Strategy {
     private static StrategyMeanArrived INSTANCE;

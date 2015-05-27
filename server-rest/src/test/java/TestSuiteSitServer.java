@@ -9,9 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import rest.ImagesRestTest;
-import rest.InterventionRestTest;
-import rest.UserServicesRestTest;
+import rest.*;
 import service.impl.PushServiceImpl;
 import util.Configuration;
 
@@ -36,7 +34,9 @@ import dao.UserDAOTest;
         GeoImageDAOTest.class,
         UserServicesRestTest.class,
         InterventionRestTest.class,
-        ImagesRestTest.class
+        ImagesRestTest.class,
+        MeanRestTest.class
+
 })
 public class TestSuiteSitServer {
 

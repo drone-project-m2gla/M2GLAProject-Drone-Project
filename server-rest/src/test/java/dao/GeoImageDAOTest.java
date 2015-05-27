@@ -52,6 +52,7 @@ public class GeoImageDAOTest {
         GeoImage geoImage = new GeoImage();
         geoImage.setImage("BASE64");
         geoImage.setPosition(new Position(7.0, 6.0, 4.0));
+        geoImage.setInterventionId(0);
         GeoImage geoImageInBase = dao.create(geoImage);
         assertEquals(geoImage, geoImageInBase);
     }
@@ -61,6 +62,7 @@ public class GeoImageDAOTest {
         GeoImage geoImage = new GeoImage();
         geoImage.setImage("BASE64");
         geoImage.setPosition(new Position(7.0, 6.0, 4.0));
+        geoImage.setInterventionId(0);
         GeoImage geoImageInBase = dao.create(geoImage);
         assertEquals(geoImage, geoImageInBase);
 
@@ -77,6 +79,7 @@ public class GeoImageDAOTest {
         geoImage.setPosition(new Position(7.0, 6.0, 4.0));
         geoImage.setWidth(400);
         geoImage.setHeight(500);
+        geoImage.setInterventionId(0);
         GeoImage geoImageInBase = dao.create(geoImage);
         assertEquals(geoImage, geoImageInBase);
 
@@ -92,6 +95,7 @@ public class GeoImageDAOTest {
         geoImage1.setPosition(new Position(0, 11, 0));
         geoImage1.setWidth(400);
         geoImage1.setHeight(500);
+        geoImage1.setInterventionId(0);
         GeoImage geoImage1InBase = dao.create(geoImage1);
         assertEquals(geoImage1, geoImage1InBase);
 
@@ -100,6 +104,7 @@ public class GeoImageDAOTest {
         geoImage2.setPosition(new Position(0.0000000001, 11, 0));
         geoImage2.setWidth(400);
         geoImage2.setHeight(500);
+        geoImage2.setInterventionId(0);
         GeoImage geoImage2InBase = dao.create(geoImage2);
         assertEquals(geoImage2, geoImage2InBase);
 
@@ -108,11 +113,12 @@ public class GeoImageDAOTest {
         geoImage3.setPosition(new Position(7.0, 6.0, 4.0));
         geoImage3.setWidth(400);
         geoImage3.setHeight(500);
+        geoImage3.setInterventionId(0);
         GeoImage geoImage3InBase = dao.create(geoImage3);
         assertEquals(geoImage3, geoImage3InBase);
 
         dao.ensureIndex();
-        List<GeoImage> concernedImages = dao.getAllImagesNear(11,0);
+        List<GeoImage> concernedImages = dao.getAllImagesNear(11,0,3);
         assertEquals(2, concernedImages.size());
         assertTrue(concernedImages.contains(geoImage1));
         assertTrue(concernedImages.contains(geoImage2));

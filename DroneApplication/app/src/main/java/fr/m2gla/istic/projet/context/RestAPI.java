@@ -37,6 +37,7 @@ public interface RestAPI {
     // drone block
     public static final String POST_POSITION_DRONE = "/drone/move";
     public static final String POST_PARCOURS_DRONE = "/drone/target";
+    public static final String DELETE_PARCOURS_DRONE = "/drone/target";
 
     // get des moyens extra d'une intervention
     public static final String GET_MOYENS_EXTRA = "/intervention/{id}/moyenextra";

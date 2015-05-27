@@ -20,9 +20,8 @@ public class ProjetServletContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		PropertyConfigurator.configure(LOG_PROD);
 
-        // Démarrage du Thread de position.
-        GetDronePositionThread.createNewInstance();
-        new Thread(GetDronePositionThread.getInstance()).start();
+		GetDronePositionThread.createNewInstance(-1);
+		new Thread(GetDronePositionThread.getInstance()).start();
 	}
 
 	@Override

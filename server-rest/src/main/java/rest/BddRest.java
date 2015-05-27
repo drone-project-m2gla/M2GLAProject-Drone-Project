@@ -26,7 +26,7 @@ import entity.User;
  * @author alban on 08/04/15.
  */
 @Path("/bdd")
-public class Bdd {
+public class BddRest {
 
 
     /**
