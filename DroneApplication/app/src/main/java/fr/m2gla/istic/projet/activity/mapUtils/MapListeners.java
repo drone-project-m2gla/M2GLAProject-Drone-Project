@@ -123,9 +123,6 @@ public class MapListeners implements
         Marker marker = mapActivity.map.addMarker(markerOpt);
         mapActivity.getDroneMarkers().add(marker);
 
-//        mapActivity.getDroneClusterManager().addItem(marker);
-//        mapActivity.getDroneClusterManager().cluster();
-
         // unclose target if add marker after close target
         if (droneTargetActionFragment.getTarget().isClose()) {
             Position pos = droneTargetActionFragment.getTarget().getPositions().get(0);

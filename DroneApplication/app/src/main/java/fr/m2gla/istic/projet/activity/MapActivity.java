@@ -1,7 +1,6 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,13 +26,10 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.m2gla.istic.projet.activity.mapUtils.ImageDroneRenderer;
-import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
 import fr.m2gla.istic.projet.activity.mapUtils.RefreshAlarmManager;
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolRenderer;
 import fr.m2gla.istic.projet.command.Command;
@@ -72,7 +68,6 @@ public class MapActivity extends Activity implements ObserverTarget {
     // Cluster managers pour gérer les trois types de marqueurs
     private ClusterManager<SymbolMarkerClusterItem> meansClusterManager;
     private ClusterManager<SymbolMarkerClusterItem> topoClusterManager;
-    private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
 
     // Définition des écouteurs sur la carte et les marqueurs
     private MapListeners mapListeners;
@@ -101,11 +96,6 @@ public class MapActivity extends Activity implements ObserverTarget {
     public List<Polyline> getPolylineList() {
         return polylineList;
     }
-
-
-//    public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
-//        return droneClusterManager;
-//    }
 
     public DroneTargetActionFragment getDroneTargetActionFragment() {
         return droneTargetActionFragment;
@@ -164,11 +154,6 @@ public class MapActivity extends Activity implements ObserverTarget {
         SymbolRenderer topoSymbolRenderer = new SymbolRenderer(this, map, topoClusterManager);
         topoSymbolRenderer.setContext(getApplicationContext());
         topoClusterManager.setRenderer(topoSymbolRenderer);
-
-//        droneClusterManager = new ClusterManager<>(this, map);
-//        ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
-//
-//        droneClusterManager.setRenderer(imageDroneRenderer);
 
         // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
         mapFragment.getView().setOnDragListener(mapListeners);
@@ -431,18 +416,6 @@ public class MapActivity extends Activity implements ObserverTarget {
                             m.setIcon(BitmapDescriptorFactory.fromBitmap(imageMin));
                         }
                     }
-//                    Collection<Marker> imageMarker = droneClusterManager.getMarkerCollection().getMarkers();
-//                    for (Marker m : imageMarker) {
-//                        if (positionEqual(m.getPosition(), image.getPosition())) {
-//                            // Remove marker
-//                            LatLng latLng = m.getPosition();
-//                            m.remove();
-//                            // Replace marker to image marker
-//                            ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, image.getImage());
-//                            droneClusterManager.addItem(marker);
-//                            droneClusterManager.cluster();
-//                        }
-//                    }
                 }
             });
         }
