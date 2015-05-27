@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
 
 import rest.ImagesRestTest;
 import rest.InterventionRestTest;
+import rest.MeanRest;
 import rest.UserServicesRestTest;
 import service.impl.PushServiceImpl;
 import util.Configuration;
@@ -36,7 +37,9 @@ import dao.UserDAOTest;
         GeoImageDAOTest.class,
         UserServicesRestTest.class,
         InterventionRestTest.class,
-        ImagesRestTest.class
+        ImagesRestTest.class,
+        MeanRest.class
+
 })
 public class TestSuiteSitServer {
 
