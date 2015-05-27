@@ -30,7 +30,8 @@ public class Drone {
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
 	}
-    /**
+
+	/**
      * @return the picture of the drone
      */
 	@GET
@@ -51,7 +52,8 @@ public class Drone {
 		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
 	}
-    /**
+
+	/**
      * delete the ride of the drone
      */
 	@DELETE
