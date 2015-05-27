@@ -167,36 +167,44 @@ public class MapListeners implements
         //Disable raiseOnDrag
         disableRaiseOnDrag(marker);
 
-        //Use REST to update position on confirmation
-        Position position = new Position();
-        position.setLatitude(marker.getPosition().latitude);
-        position.setLongitude(marker.getPosition().longitude);
-        Mean mean = new Mean();
-        mean.setId(markerSymbolLinkMap.get(marker.getId()).getSymbol().getId());
-        mean.setCoordinates(position);
+        // éviter null pointer exception lors du clic long
+        SymbolMarkerClusterItem symbolMarkerClusterItem = markerSymbolLinkMap.get(marker.getId());
+        if (symbolMarkerClusterItem != null) {
+            Symbol symbol = symbolMarkerClusterItem.getSymbol();
+            if (symbol != null) {
+                //Use REST to update position on confirmation
+                Position position = new Position();
+                position.setLatitude(marker.getPosition().latitude);
+                position.setLongitude(marker.getPosition().longitude);
+                Mean mean = new Mean();
 
-        final String markerId = marker.getId();
+                mean.setId(symbol.getId());
+                mean.setCoordinates(position);
 
-        mapActivity.setDraggingMode(false);
-        RestServiceImpl.getInstance()
-                .post(RestAPI.POST_POSITION_MOVE, mapActivity.restParams, mean, Mean.class,
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.e(TAG, "Post new position success");
-                                //Change symbol image to dashed one
-                                if (markerSymbolLinkMap.containsKey(markerId)) {
-                                    mapActivity.updateMeans();
-                                }
-                            }
-                        },
-                        new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Log.e(TAG, "Post new position error");
-                                Toast.makeText(mapActivity, "Impossible de positionner le moyen", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                final String markerId = marker.getId();
+
+                mapActivity.setDraggingMode(false);
+                RestServiceImpl.getInstance()
+                        .post(RestAPI.POST_POSITION_MOVE, mapActivity.restParams, mean, Mean.class,
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Post new position success");
+                                        //Change symbol image to dashed one
+                                        if (markerSymbolLinkMap.containsKey(markerId)) {
+                                            mapActivity.updateMeans();
+                                        }
+                                    }
+                                },
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.e(TAG, "Post new position error");
+                                        Toast.makeText(mapActivity, "Impossible de positionner le moyen", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+            }
+        }
     }
 
     /**
