@@ -175,10 +175,15 @@ public class MeanTableActivity extends Activity {
                 table.removeAllViews();
 
                 // Ajout du nom de l'intervention
-                tv = (TextView) findViewById(R.id.meanTableIdDisp);
+                /*tv = (TextView) findViewById(R.id.meanTableIdDisp);
                 tv.setText(intervention.getLabel());
                 tv.setGravity(Gravity.CENTER);
-                tv.setTextColor(Color.GREEN);
+                tv.setTextColor(Color.GREEN);*/
+                // Montrer l'id de l'intervention et l'adresse dans le titre
+                getActionBar().setTitle(intervention.getLabel() + " : " +
+                        intervention.getAddress() + " " +
+                        intervention.getPostcode() + " " +
+                        intervention.getCity());
 
                 // Mise en place de la ligne de titres
                 row = new TableRow(MeanTableActivity.this);
