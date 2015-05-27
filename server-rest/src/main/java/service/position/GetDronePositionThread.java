@@ -6,11 +6,13 @@ import java.util.List;
 
 import dao.GeoImageDAO;
 import entity.GeoImage;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import service.PushService;
+import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
 import util.Configuration;
 import util.Tools;
@@ -68,19 +70,21 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 				Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
 				if (position != null && !Tools.isSamePositions(this.position, position)) {
 					this.position = position;
-					PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,
-								"droneMove", position);
-
-					GetMethod getImage = new GetMethod(
-							Configuration.getSERVER_PYTHON() + "/picture");
+					PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "droneMove", position);
+				} else {
+					GetMethod getImage = new GetMethod(Configuration.getSERVER_PYTHON() + "/picture");
 					client.executeMethod(getImage);
-					this.image = mapper.readValue( getImage.getResponseBodyAsString(), GeoImage.class);
+
+					this.image = mapper.readValue(getImage.getResponseBodyAsString(), GeoImage.class);
+					this.image.setInterventionId(this.interventionId);
+
                     GeoImageDAO dao = new GeoImageDAO();
                     dao.connect();
                     dao.create(this.image);
                     dao.disconnect();
-                    PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,"imageDrone",image);
-				} else {
+
+                    PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "imageDrone", image);
+
 					notifyObserversForPositionUnchanged();
 				}
 				Thread.sleep(29870/10);

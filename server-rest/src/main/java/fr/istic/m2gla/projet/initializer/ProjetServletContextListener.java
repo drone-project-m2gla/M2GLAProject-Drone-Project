@@ -5,9 +5,6 @@ import org.apache.log4j.PropertyConfigurator;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import service.position.GetDronePositionThread;
-
-
 /**
  * ProjetServletContextListener launch application and log4j
  * @author baptiste
