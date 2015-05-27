@@ -36,9 +36,6 @@ public class RetrieveAddressImpl implements RetrieveAddress {
 		this.codepostal = codepostal;
 		
 		setCoordinates(retrieveGps());
-		System.out.println(coordinates.getLongitude());
-		System.out.println(coordinates.getLatitude());
-
 	}
 
 	/**
@@ -54,8 +51,9 @@ public class RetrieveAddressImpl implements RetrieveAddress {
 	 */
 	@Override
 	public Position retrieveGps(){
-		Double lng = null;
-		Double lat = null;
+        Double lat;
+		Double lng;
+
 		GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDlSqghzy1zZTnKMG0Wwc0h8neFnDs5pog");
 		GeocodingResult[] results = null;
 

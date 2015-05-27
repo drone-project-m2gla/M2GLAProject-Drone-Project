@@ -18,16 +18,20 @@ public class CarouselActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_carousel);
+
         final Activity _this = this;
         final CarouselAdapter carouselAdapter = new CarouselAdapter(this);
 
-        FeatureCoverFlow carousel = (FeatureCoverFlow) findViewById(R.id.carousel);
-        carousel.setAdapter(carouselAdapter);
 
         RestServiceImpl.getInstance().get(RestAPI.GET_IMAGES, null, GeoImage[].class, new Command() {
                 @Override
                 public void execute(Object response) {
+                    FeatureCoverFlow carousel = (FeatureCoverFlow) findViewById(R.id.carousel);
+
                     carouselAdapter.addItems((GeoImage[]) response);
+
+                    carousel.setAdapter(carouselAdapter);
                 }
             }, new Command() {
                 @Override

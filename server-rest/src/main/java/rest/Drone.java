@@ -30,7 +30,8 @@ public class Drone {
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
 	}
-    /**
+
+	/**
      * @return the picture of the drone
      */
 	@GET
@@ -47,18 +48,24 @@ public class Drone {
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void doTrajet(Target target) {
-		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+        TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+        GetDronePositionThread.createNewInstance(target.getInterventionId());
+        new Thread(GetDronePositionThread.getInstance()).start();
+
 		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
 	}
-    /**
+
+	/**
      * delete the ride of the drone
      */
 	@DELETE
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopTrajet() {
-		GetDronePositionThread.createNewInstance();
-		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+        if (GetDronePositionThread.getInstance() != null) {
+            GetDronePositionThread.getInstance().stopThread();
+            GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+        }
 	}
 }

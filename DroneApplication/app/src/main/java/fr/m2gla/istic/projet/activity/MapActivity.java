@@ -461,6 +461,9 @@ public class MapActivity extends Activity implements ObserverTarget {
             if (mInitFragment != null && idIntervention != null) {
                 mInitFragment.setInterventionID(idIntervention);
             }
+            if (droneTargetActionFragment != null && idIntervention != null) {
+                droneTargetActionFragment.setInterventionID(idIntervention);
+            }
 
             restParams.put("id", idIntervention);
 
