@@ -9,11 +9,16 @@ import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 
 /**
  * Created by mds on 19/05/15.
+ * Stratégie de notification de la validation des moyens par le Codis
  */
 public class StrategyCodisValidateMean implements Strategy {
-    private static final String TAG = "StrategyCodisValidateMean";
+    private static final String TAG = "StrategyCodisValidMean";
     private static StrategyCodisValidateMean INSTANCE;
 
+    /**
+     *
+     * @param interventionDetailFragment
+     */
     public void setFragment(InterventionDetailFragment interventionDetailFragment) {
         this.detailFragment = interventionDetailFragment;
         Log.i(TAG, "Setter");
@@ -21,6 +26,9 @@ public class StrategyCodisValidateMean implements Strategy {
 
     private InterventionDetailFragment detailFragment;
 
+    /**
+     * Constructeur
+     */
     public StrategyCodisValidateMean() {
     }
 

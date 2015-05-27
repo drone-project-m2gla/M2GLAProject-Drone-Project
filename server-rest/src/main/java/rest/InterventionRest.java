@@ -195,6 +195,12 @@ public class InterventionRest {
         }
     }
 
+    /**
+     * Send Mean back to CRM
+     * @param id
+     * @param mean
+     * @return Response
+     */
     @POST
     @Path("/{id}/moyen/retourcrm")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -235,6 +241,12 @@ public class InterventionRest {
         }
     }
 
+    /**
+     * Release a Mean for Intervention
+     * @param id
+     * @param mean
+     * @return Response
+     */
     @POST
     @Path("/{id}/moyen/libere")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -253,7 +265,7 @@ public class InterventionRest {
                      || m.getMeanState() == MeanState.ENGAGED
                      || m.getMeanState() == MeanState.ARRIVED)) {
                 m.setCoordinates(mean.getCoordinates());
-                m.setDateArrived(Datetime.getCurrentDate());
+                m.setDateReleased(Datetime.getCurrentDate());
                 m.setMeanState(MeanState.RELEASED);
                 m.setInPosition(false);
                 res = m;
@@ -279,7 +291,12 @@ public class InterventionRest {
         }
     }
 
-
+    /**
+     * Add a Mean for an Intervention
+     * @param id
+     * @param meanXtra
+     * @return Response
+     */
 	@POST
 	@Path("/{id}/moyenextra")
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -303,6 +320,10 @@ public class InterventionRest {
 		return Response.ok(intervention.getMeansList().get(intervention.getMeansList().size()-1)).build();
 	}
 
+    /**
+     * @param id
+     * @return List of Mean for one Intervention
+     */
 	@GET
 	@Path("/{id}/moyen")
 	@Produces({MediaType.APPLICATION_JSON})
@@ -314,7 +335,11 @@ public class InterventionRest {
 		return Response.ok(res).build();
 	}
 
-
+    /**
+     *
+     * @param id
+     * @return one Intervention with his id
+     */
 	@GET
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
@@ -326,6 +351,9 @@ public class InterventionRest {
 		return res;
 	}
 
+    /**
+     * @return List of Intervention
+     */
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Intervention> getAllIntervention() {
@@ -350,6 +378,11 @@ public class InterventionRest {
 		return res;
 	}
 
+    /**
+     * setIntervention is called when Codix created one intervention
+     * @param intervention
+     * @return intervention
+     */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

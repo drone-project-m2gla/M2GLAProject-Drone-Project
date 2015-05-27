@@ -53,4 +53,6 @@ public interface RestAPI {
 //    // get des moyens dispo d'une intervention
 //    public static final String GET_MOYENS_DISPO1 = "/intervention/{id}/moyen";
 
+    // get images
+    public static final String GET_IMAGES = "/images";
 }

@@ -23,6 +23,11 @@ public class UserServices {
 
     private UserDAO dao;
 
+    /**
+     * logIn verify if users exists or not
+     * @param user
+     * @return Response
+     */
     @POST
     @Path("login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,6 +57,12 @@ public class UserServices {
         return Response.status(status).entity(userData).build();
     }
 
+    /**
+     * create a user
+     * @param username
+     * @param password
+     * @return Response
+     */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @POST
     @Path("create")

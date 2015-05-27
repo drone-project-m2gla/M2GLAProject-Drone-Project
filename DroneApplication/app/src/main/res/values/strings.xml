@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Drone Application</string>
 
+    <string name="no_image">Pas dimage</string>
+
     <string name="action_settings">Reglages</string>
     <string name="action_deconnection">Deconnexion</string>
     <string name="action_quit">Quitter</string>
@@ -23,7 +25,6 @@
     <string name="button_return">Retour</string>
     <string name="button_endmain">Fin</string>
     <string name="title_activity_moyens_suppl">Moyens suppl.</string>
-    <string name="hello_world">Hello world!</string>
     <string name="valider_moyens_supp">Envoyer les moyens</string>
 
     <string name="address_text">Adresse   :</string>
@@ -55,7 +56,6 @@
     <string name="close_target">Clore</string>
     <string name="clean_target">Effacer</string>
     <string name="select_text_view">Ajouter un moyen supplémentaire</string>
-
 
     <string name="moyens_a_placer">Moyens dispo à placer</string>
 

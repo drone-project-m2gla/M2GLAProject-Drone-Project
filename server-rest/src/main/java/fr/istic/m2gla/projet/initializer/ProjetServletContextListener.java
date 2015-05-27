@@ -9,8 +9,8 @@ import service.position.GetDronePositionThread;
 
 
 /**
+ * ProjetServletContextListener launch application and log4j
  * @author baptiste
- * @see ProjetServletContextListener launch log4j
  */
 public class ProjetServletContextListener implements ServletContextListener {
 	private static final String LOG_DEV = "./webapps/ROOT/log/log4j.properties";

@@ -2,6 +2,7 @@ package fr.m2gla.istic.projet.model;
 
 /**
  * Created by chaabi on 10/04/15.
+ * Définition d'un élément topographique
  */
 public class Topographie {
 
@@ -14,18 +15,25 @@ public class Topographie {
     private boolean tiret;
     private Position position;
 
-    public Position getPosition() {
-        return position;
-    }
 
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public Topographie(){
+    /**
+     * Constructeur
+     */
+    public Topographie() {
 
     }
 
+    /**
+     * Constructeur
+     * @param id : Identifiant de l'élément topographique
+     * @param filename : Nom du fichier associé
+     * @param entitled
+     * @param firstContent
+     * @param secondContent
+     * @param color : Couleur associée
+     * @param tiret
+     * @param position : Position de l'élément topographique
+     */
     public Topographie(String id, String filename, String entitled, String firstContent, String secondContent, String color, boolean tiret, Position position) {
         this.id = id;
         this.filename = filename;
@@ -37,18 +45,34 @@ public class Topographie {
         this.position = position;
     }
 
+    /**
+     * Récupération de l'identifiant de l'élément topographique
+     * @return : identifiant de l'élément topographique
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Renseignement de l'identifiant de l'élément topographique
+     * @param id : identifiant de l'élément topographique
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Récupération du nom du fichier associé
+     * @return : nom du fichier associé
+     */
     public String getFilename() {
         return filename;
     }
 
+    /**
+     * Renseignement du nom du fichier associé
+     * @param filename : nom du fichier associé
+     */
     public void setFilename(String filename) {
         this.filename = filename;
     }
@@ -77,10 +101,18 @@ public class Topographie {
         this.secondContent = secondContent;
     }
 
+    /**
+     * Récupération de la couleur associée
+     * @return : couleur associée
+     */
     public String getColor() {
         return color;
     }
 
+    /**
+     * Renseignement de la couleur associée
+     * @param color : couleur associée
+     */
     public void setColor(String color) {
         this.color = color;
     }
@@ -91,5 +123,21 @@ public class Topographie {
 
     public void setTiret(boolean tiret) {
         this.tiret = tiret;
+    }
+
+    /**
+     * Récupération de la position de l'élément
+     * @return : position de l'élément
+     */
+    public Position getPosition() {
+        return position;
+    }
+
+    /**
+     * Renseignement de la position de l'élément
+     * @param position : position de l'élément
+     */
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

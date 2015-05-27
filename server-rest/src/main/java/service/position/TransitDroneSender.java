@@ -1,6 +1,5 @@
 package service.position;
 
-import entity.Position;
 import entity.Target;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -13,7 +12,6 @@ import util.Configuration;
 import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by alban on 16/04/15.
