@@ -27,6 +27,12 @@ import entity.User;
  */
 @Path("/bdd")
 public class Bdd {
+
+
+    /**
+     * Initialisation of database
+     * @return 200 if bdd initialisation is correctly done
+     */
         @GET
         @Path("/init")
         public Response initBDD() {

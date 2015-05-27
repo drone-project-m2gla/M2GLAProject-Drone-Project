@@ -39,16 +39,17 @@ public class MapListeners implements
         GoogleMap.OnMapLongClickListener {
     private static final String TAG = "MapListeners";
 
-    // offsets used to place the icon when it is dropped
+    // Ecarts utilisés plus placer l'icône d'un marqueur lorsque celui-ci est déposé
     private static final int OFFSET_X = -100;
     private static final int OFFSET_Y = 30;
 
-    // Shift used by raise on drag for map markers
+    // Ecart utilisé pour éviter le soulèvement des marqueurs lors de l'action glisser
     private static final int SHIFT_RAISE_ON_DRAG = 90;
 
+    // Activité android qui contient la carte
     private MapActivity mapActivity;
 
-    // Keep track of all the symbols by marker id
+    // Map pour garder une trace des symboles utilisés par les moyens par id de marqueur
     public Map<String, SymbolMarkerClusterItem> markerSymbolLinkMap = new HashMap<String, SymbolMarkerClusterItem>();
 
     public void setMapActivity(MapActivity mapActivity) {
@@ -56,8 +57,8 @@ public class MapListeners implements
     }
 
     /**
-     * Map fragment drag listener used to get the dropped symbol
-     * A new symbol is created and added to the map
+     * Ecouteur sur l'événement drag de la carte pour détecter le positionnement d'un marqueur
+     * La position est envoyée au serveur et les marqueurs sont mis à jour
      *
      * @param v     current view
      * @param event drag element
@@ -87,7 +88,7 @@ public class MapListeners implements
                                     @Override
                                     public void execute(Object response) {
                                         Log.e(TAG, "Post new position success");
-                                        mapActivity.loadMeansInMap();
+                                        mapActivity.updateMeans();
                                     }
                                 },
                                 new Command() {
@@ -103,6 +104,7 @@ public class MapListeners implements
         }
         return true;
     }
+
 
     @Override
     public void onMapLongClick(LatLng latLng) {
@@ -143,10 +145,10 @@ public class MapListeners implements
     }
 
     /**
-     * Marker drag listener method used when marker is dragged
-     * Used to disable raiseOnDrag
+     * Ecouteur sur l'événement drag (glissement) de chaque marqueur
+     * Utilisé pour éviter le déplacement du marqueur (soulèvement) lors de son glissement
      *
-     * @param marker dragged marker element
+     * @param marker marqueur déplacé
      */
     @Override
     public void onMarkerDrag(Marker marker) {
@@ -154,10 +156,11 @@ public class MapListeners implements
     }
 
     /**
-     * Marker drag listener method used when marker is dropped
-     * Changes symbol to use dashed lines whenever its position is changed
+     * Ecouteur sur l'événement dragend (fin de glissement) de chaque marqueur
+     * Permet d'envoyer la nouvelle position au serveur et de lui indiquer que la nouvelle position n'a pas été validée
+     * Met à jour les marqueurs sur la carte
      *
-     * @param marker dragged marker element
+     * @param marker  marqueur déposé
      */
     @Override
     public void onMarkerDragEnd(Marker marker) {
@@ -183,7 +186,7 @@ public class MapListeners implements
                                 Log.e(TAG, "Post new position success");
                                 //Change symbol image to dashed one
                                 if (markerSymbolLinkMap.containsKey(markerId)) {
-                                    mapActivity.loadMeansInMap();
+                                    mapActivity.updateMeans();
                                 }
                             }
                         },
@@ -196,6 +199,13 @@ public class MapListeners implements
                         });
     }
 
+    /**
+     * Affiche un menu lors d'un clic sur le marqueur d'un moyen, ce qui permet d'effectuer les actions de :
+     * Confirmation de position
+     * Libération
+     * Renvoi au CRM
+     * @param marker marqueur sélectionné
+     */
     @Override
     public void onInfoWindowClick(Marker marker) {
         //Log.d(TAG, "main onClusterItemInfoWindowClick");
@@ -246,8 +256,12 @@ public class MapListeners implements
         }
     }
 
+    /**
+     * Valider la position du moyen
+     * @param markerPosition position du moyen
+     * @param meanSymbolId id du moyen
+     */
     private void validateMeanPosition(LatLng markerPosition, String meanSymbolId) {
-        // Valider la position du moyen
         Mean mean = new Mean();
         mean.setId(meanSymbolId);
         Position position = new Position();
@@ -262,7 +276,7 @@ public class MapListeners implements
                             @Override
                             public void execute(Object response) {
                                 Log.i(TAG, "Confirm position success");
-                                mapActivity.loadMeansInMap();
+                                mapActivity.updateMeans();
                             }
                         },
                         new Command() {
@@ -275,11 +289,13 @@ public class MapListeners implements
                 );
     }
 
+    /**
+     * Libérer le moyen
+     * Supprimer ses coordonnées
+     * Mettre à jour la carte
+     * @param meanSymbolId id du moyen
+     */
     private void freeMean(String meanSymbolId){
-        // Libérer le moyen
-        // Supprimer ses coordonnées
-        // Supprimer le marker
-        // TODO : Le supprimer de la liste de moyens validés
         Mean mean = new Mean();
         mean.setId(meanSymbolId);
         Position position = new Position();
@@ -294,7 +310,7 @@ public class MapListeners implements
                             @Override
                             public void execute(Object response) {
                                 Log.i(TAG, "Libérer moyen success");
-                                mapActivity.loadMeansInMap();
+                                mapActivity.updateMeans();
                             }
                         },
                         new Command() {
@@ -307,10 +323,13 @@ public class MapListeners implements
                 );
     }
 
+    /**
+     * Retour CRM, disponible pour mettre sur la carte
+     * Supprimer ses coordonnées
+     * Ajouter dans la liste de moyens validés (automatique car la liste se rafraîchit)
+     * @param meanSymbolId id du moyen
+     */
     private void sendMeanBackToCRM(String meanSymbolId){
-        // Retour CRM, disponible pour mettre sur la carte
-        // Supprimer ses coordonnées
-        // Ajouter dans la liste de moyens validés (automatique car la liste se rafraîchit)
         Mean mean = new Mean();
         mean.setId(meanSymbolId);
         Position position = new Position();
@@ -325,7 +344,7 @@ public class MapListeners implements
                             @Override
                             public void execute(Object response) {
                                 Log.e(TAG, "Retour CRM success");
-                                mapActivity.loadMeansInMap();
+                                mapActivity.updateMeans();
                             }
                         },
                         new Command() {
@@ -339,10 +358,8 @@ public class MapListeners implements
     }
 
     /**
-     * Marker drag listener method used when drag starts after a long click
-     * Used to disable raiseOnDrag
-     *
-     * @param marker dragged marker element
+     * Ecouteur sur le début du glissement d'un marqueur pour éviter son soulèvement
+     * @param marker marqueur glissé
      */
     @Override
     public void onMarkerDragStart(Marker marker) {
@@ -351,10 +368,11 @@ public class MapListeners implements
     }
 
     /**
-     * Whenever a marker starts to be dragged it is raised,
-     * this method allows to undo this shift to simulate raiseOnDrag = false behaviour
+     * Dès qu'un marqueur est glissé il est soulévé
+     * cette méthode permet d'éviter ce comportement
+     * Comportement similaire à l'option raiseOnDrag = false de l'API Google Maps V3
      *
-     * @param marker dragged marker
+     * @param marker marqueur glissé
      */
     private void disableRaiseOnDrag(Marker marker) {
         LatLng latLng = marker.getPosition();

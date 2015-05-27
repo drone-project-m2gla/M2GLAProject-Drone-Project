@@ -18,6 +18,7 @@ import fr.m2gla.istic.projet.activity.R;
 
 /**
  * Created by david on 15/04/15.
+ * Personnalisation de la classe SimpleAdapter
  */
 public class InterventionListAdapter extends SimpleAdapter {
     private static final String TAG = "InterListAdapter";
@@ -51,6 +52,13 @@ public class InterventionListAdapter extends SimpleAdapter {
         this.localListIntervention = data;
     }
 
+    /**
+     * Réécriture de la méthode getView afin de personnaliser l'affichage des lignes de la liste
+     * @param position : Position dans la liste
+     * @param convertView : vue affectée à la ligne de la liste
+     * @param parent : groupe de vues parents
+     * @return : Vue courante
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View            curentView;

@@ -28,6 +28,12 @@ import util.Datetime;
 public class MeanXtraRest {
     private static final Logger LOGGER = Logger.getLogger(MeanXtraRest.class);
 
+    /**
+     * Add Mean to Intervention
+     * @param idintervention
+     * @param meanXtra
+     * @return Response
+     */
     @POST
     @Path("{idintervention}/ok")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -52,7 +58,7 @@ public class MeanXtraRest {
             iD.disconnect();
 
             try {
-                PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "ok", res);
+                PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "ok", res);
             } catch (IOException e) {
                 LOGGER.error("", e);
             }
@@ -64,7 +70,12 @@ public class MeanXtraRest {
         }
     }
 
-
+    /**
+     * refuse add Mean to Intervention
+     * @param idintervention
+     * @param meanXtra
+     * @return Response
+     */
     @POST
     @Path("{idintervention}/nok")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -88,7 +99,7 @@ public class MeanXtraRest {
             iD.disconnect();
 
             try {
-                PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "nok", res);
+                PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "ok", res);
             } catch (IOException e) {
                 LOGGER.error("", e);
             }

@@ -39,6 +39,9 @@ public interface RestAPI {
     public static final String POST_PARCOURS_DRONE = "/drone/target";
 
     // get des moyens extra d'une intervention
+    public static final String GET_MOYENS_EXTRA = "/intervention/{id}/moyenextra";
+
+    // get des moyens extra d'une intervention
     public static final String GET_MOYENS_DISPO = "/intervention/{id}/moyen";
 
     // Valider l'arrivée d'un moyen au CRM
@@ -50,4 +53,6 @@ public interface RestAPI {
 //    // get des moyens dispo d'une intervention
 //    public static final String GET_MOYENS_DISPO1 = "/intervention/{id}/moyen";
 
+    // get images
+    public static final String GET_IMAGES = "/images";
 }

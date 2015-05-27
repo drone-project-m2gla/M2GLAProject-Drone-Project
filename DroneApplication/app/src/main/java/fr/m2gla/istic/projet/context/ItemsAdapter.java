@@ -25,7 +25,9 @@ import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 
 
-// Creating an Adapter Class
+/**
+ * Personnalisation de la classe ArrayAdapter
+ */
 public class ItemsAdapter extends ArrayAdapter {
 
     private final Activity activity;
@@ -42,8 +44,15 @@ public class ItemsAdapter extends ArrayAdapter {
     private Mean xtraMean;
     private ListAdapterCommand adapterCommand = null;
 
-    public ItemsAdapter(Context context, int textViewResourceId,
-                        String[] objects, Drawable[] images) {
+
+    /**
+     * Constructeur de la classe
+     * @param context :
+     * @param textViewResourceId
+     * @param objects
+     * @param images
+     */
+    public ItemsAdapter(Context context, int textViewResourceId, String[] objects, Drawable[] images) {
         super(context, textViewResourceId, objects);
         activity = (Activity) context;
         this.titles = objects;
@@ -53,12 +62,29 @@ public class ItemsAdapter extends ArrayAdapter {
         customLayout = textViewResourceId;
     }
 
+    /**
+     * Variante du constructeur de la classe
+     * @param context
+     * @param textViewResourceId
+     * @param objects
+     * @param images
+     * @param cmd
+     */
     public ItemsAdapter(Context context, int textViewResourceId,
                         String[] objects, Drawable[] images, ListAdapterCommand cmd) {
         this(context, textViewResourceId, objects, images);
         this.adapterCommand = cmd;
     }
 
+    /**
+     * Variante du constructeur de la classe
+     * @param context
+     * @param textViewResourceId
+     * @param objects
+     * @param images
+     * @param idInter
+     * @param xtMeanList
+     */
     public ItemsAdapter(Context context, int textViewResourceId, ArrayList<String> objects,
                         Drawable[] images, String idInter, List<Mean> xtMeanList) {
         super(context, textViewResourceId, objects);
@@ -71,6 +97,16 @@ public class ItemsAdapter extends ArrayAdapter {
         customLayout = textViewResourceId;
     }
 
+    /**
+     * Variante du constructeur de la classe
+     * @param context
+     * @param textViewResourceId
+     * @param objects
+     * @param images
+     * @param idInter
+     * @param xtMeanList
+     * @param cmd
+     */
     public ItemsAdapter(Context context, int textViewResourceId, ArrayList<String> objects,
                         Drawable[] images, String idInter, List<Mean> xtMeanList, ListAdapterCommand cmd) {
         this(context, textViewResourceId, objects, images, idInter, xtMeanList);
@@ -78,6 +114,11 @@ public class ItemsAdapter extends ArrayAdapter {
     }
 
 
+    /**
+     * Methode de rafraichissement de la liste
+     * @deprecated
+     * @param position
+     */
     public void remove(int position) {
         String[] newTitles;
         Drawable[] newImage;
@@ -95,6 +136,11 @@ public class ItemsAdapter extends ArrayAdapter {
         // Pas de fonction de suppression par defaut
     }
 
+    /**
+     * Recupère le moyen correspondant à la position fournie dans la liste affichée
+     * @param position : position dans le liste
+     * @return : Moyen trouvé
+     */
     private Mean getMeanInList(int position) {
         if (this.meanList == null) {
             return (null);
@@ -116,6 +162,12 @@ public class ItemsAdapter extends ArrayAdapter {
         return (null);
     }
 
+    /**
+     * Récupère l'index du moyen dans liste des moyens en fonction de la position dans liste
+     * affichée
+     * @param position
+     * @return
+     */
     private int getMeanPositionInList(int position) {
         if (this.meanList == null) {
             return (-1);
@@ -138,16 +190,28 @@ public class ItemsAdapter extends ArrayAdapter {
         return (-1);
     }
 
-    // It gets a View that displays the data at the specified position
+    /**
+     * Réécriture de la méthode getView afin de personnaliser l'affichage des lignes de la liste
+     * @param position : Position dans la liste
+     * @param convertView : vue affectée à la ligne de la liste
+     * @param parent : groupe de vues parents
+     * @return : Vue courante
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
 
+    /**
+     * Réécriture effective de la methode getView()
+     * @param position : Position dans la liste
+     * @param convertView : vue affectée à la ligne de la liste
+     * @param parent : groupe de vues parents
+     * @return : Vue courante
+     */
     public View getCustomView(final int position, View convertView, ViewGroup parent) {
 
         final ViewHolder holder;
-        Mean mean;
         final Map<String, String> map = new HashMap<>();
 
         if (convertView == null) {
@@ -193,9 +257,6 @@ public class ItemsAdapter extends ArrayAdapter {
                     }
                 });
             }
-            // Setting Special attributes for 1st element
-
-            // Log.i(TAG, "Position not 0");
 
             // Setting the text using the array
             holder.itemLabelTxtView.setText(titles[position]);
@@ -233,14 +294,24 @@ public class ItemsAdapter extends ArrayAdapter {
 
     }
 
+    /**
+     * Réécriture de la methode
+     * @param position : Position dans la liste
+     * @param convertView : vue affectée à la ligne de la liste
+     * @param parent : groupe de vues parents
+     * @return : Vue courante
+     */
     // It gets a View that displays in the drop down popup the data at the specified position
     @Override
-    public View getDropDownView(int position, View convertView,
-                                ViewGroup parent) {
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
 
-    // Permettre de preciser la commande apres creation
+    /**
+     * Methode permettant de specifier la commande apres creation
+     * @param adapterCommand : Classe permettant de specifier les actions a effectuer en
+     *                       fonction des boutons sélectionnes dans la liste
+     */
     public void setAdapterCommand(ListAdapterCommand adapterCommand) {
         this.adapterCommand = adapterCommand;
     }

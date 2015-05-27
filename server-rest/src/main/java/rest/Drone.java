@@ -21,13 +21,18 @@ import entity.Target;
  */
 @Path("/drone")
 public class Drone {
+    /**
+     * @return the position of the drone
+     */
 	@GET
 	@Path("position")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
 	}
-
+    /**
+     * @return the picture of the drone
+     */
 	@GET
 	@Path("image")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -35,6 +40,9 @@ public class Drone {
 		return GetDronePositionThread.getInstance().getImage();
 	}
 
+    /**
+     * add the ride of the drone
+     */
 	@POST
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -43,11 +51,14 @@ public class Drone {
 		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
 	}
-
+    /**
+     * delete the ride of the drone
+     */
 	@DELETE
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopTrajet() {
 		GetDronePositionThread.createNewInstance();
+		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 	}
 }

@@ -1,12 +1,17 @@
 package service.impl;
 
-import service.RetrieveAddress;
-
-import com.google.maps.*;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
 
 import entity.Position;
+import service.RetrieveAddress;
 
+/**
+ * RetrieveAddressImpl permits to use GeocodingApi
+ * Api can retrieve coordinates with postal address
+ * @author jeremie
+ */
 public class RetrieveAddressImpl implements RetrieveAddress {
 
 	private String address;

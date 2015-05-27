@@ -1,6 +1,7 @@
 package fr.m2gla.istic.projet.fragments;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.ClipData;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +31,14 @@ import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.context.ViewHolder;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
-import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyMeanArrived;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanBackToCRM;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanFree;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMovingMap;
@@ -43,6 +46,9 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyMeanSupplAdd;
 
 import static fr.m2gla.istic.projet.model.Symbol.SymbolType.valueOf;
 
+/**
+ * Fragment d'initialisation des moyens
+ */
 public class MoyensInitFragment extends ListFragment {
     private static final String TAG = "MoyensInitFragment";
 
@@ -62,7 +68,7 @@ public class MoyensInitFragment extends ListFragment {
     // Moyens en transit
     private List<String> moyensTransitTitle = new ArrayList<>();
     private List<Drawable> moyensTransitDrawable = new ArrayList<>();
-    
+
     // Moyens non validés
     List<String> meansRequestedTitle = new ArrayList<>();
     List<Drawable> meansRequestedDrawable = new ArrayList<>();
@@ -71,6 +77,14 @@ public class MoyensInitFragment extends ListFragment {
     private List<String> moyensInTransitTitle = new ArrayList();
     private List<Drawable> moyensInTransitDrawable = new ArrayList();
 
+    /**
+     * Methode principale
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.moyens_init_fragment, container, false);
@@ -79,15 +93,30 @@ public class MoyensInitFragment extends ListFragment {
         StrategyMeanMovingMap.getINSTANCE().setFragment(this);
         StrategyMeanFree.getINSTANCE().setFragment(this);
         StrategyMeanBackToCRM.getINSTANCE().setFragment(this);
+        StrategyMeanArrived.getINSTANCE().setFragment(this);// Strategie des moyens arrivés.
 
         return view;
     }
 
+    /**
+     * /**
+     * Methode de creation du menu du fragment
+     *
+     * @param l
+     * @param v
+     * @param position
+     * @param id
+     */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         getListView().setSelector(android.R.color.holo_blue_dark);
     }
 
+    /**
+     * Methode de gestion de l'usage du menu du fragment
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -138,7 +167,7 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     * Set intervention id from another fragment or activity
+     * Methode permettant de specifier l'intervention en cours
      *
      * @param idIntervention
      */
@@ -161,14 +190,19 @@ public class MoyensInitFragment extends ListFragment {
         }
     }
 
+    /**
+     * Récupération de l'identifiant de l'intervention en cours
+     *
+     * @return : l'identifiant de l'intervention en cours
+     */
     public String getIdIntervention() {
         return idIntervention;
     }
 
     /**
-     * Command error
+     * Methode de gestion des retours en erreur d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion de succes attentue par le service REST
      */
     private Command getCallbackError() {
         return new Command() {
@@ -180,9 +214,9 @@ public class MoyensInitFragment extends ListFragment {
     }
 
     /**
-     * Command success
+     * Methode de gestion des retours en succes d'un appel à un service REST
      *
-     * @return
+     * @return la classe "command" de gestion de succes attentue par le service REST
      */
     private Command getCallbackSuccess() {
         return new Command() {
@@ -216,7 +250,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * Création de la view des moyens en transit
      *
-     * @param transitList
+     * @param transitList : liste des moyensen transit
      */
     private void createTransitMeansView(final List<Mean> transitList) {
 
@@ -273,7 +307,7 @@ public class MoyensInitFragment extends ListFragment {
                                 Map<String, String> param = new HashMap<String, String>();
                                 param.put("id", idIntervention);
                                 Vehicle v = null;
-                                String restService = null;
+                                String restService = "";
                                 String toastValue = null;
                                 switch (which) {
                                     // Validation de l'arrivée du moyen.
@@ -288,19 +322,22 @@ public class MoyensInitFragment extends ListFragment {
                                         break;
                                     }
                                 }
-                                if (restService != null) {
-                                    final String finalToastValue = toastValue;
-                                    RestServiceImpl.getInstance().post(restService, param, transitList.get(position), Mean.class, new Command() {
-                                        @Override
-                                        public void execute(Object response) {
-                                            Mean m = (Mean) response;
-                                            Toast.makeText(getActivity(), finalToastValue + "\n" + m.getId(), Toast.LENGTH_SHORT).show();
+                                Log.i(TAG, "REST VALUE\t" + restService);
+                                final String finalToastValue = toastValue;
+                                RestServiceImpl.getInstance().post(restService, param, transitList.get(position), Mean.class, new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Mean m = (Mean) response;
+                                        Toast.makeText(getActivity(), finalToastValue + "\n" + m.getId(), Toast.LENGTH_SHORT).show();
 
-                                            // Mise à jour de la liste des moyens disponibles
-                                            movingMapMeanStrategy(m);
-                                        }
-                                    }, getCallbackError());
-                                }
+                                        // Mise à jour de la liste des moyens disponibles
+                                        movingMapMeanStrategy(m);
+
+                                        // Mise à jour de la liste des moyens en transit.
+                                        transitMeanStrategy(m);
+                                    }
+                                }, getCallbackError());
+
                             }
                         }).show();
             }
@@ -310,7 +347,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * Création de la view des moyens refusés.
      *
-     * @param meanRefused
+     * @param meanRefused : liste des moyens refusés
      */
     private void createRefusedMeansView(List<Mean> meanRefused) {
 
@@ -361,7 +398,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * méthode qui cré la view des moyens disponibles.
      *
-     * @param meanList
+     * @param meanList : liste des moyens disponibles
      */
     private void createAvailableMeansView(List<Mean> meanList) {
 
@@ -415,23 +452,26 @@ public class MoyensInitFragment extends ListFragment {
      * @param object
      */
     public void demandMeanStrategy(final Mean object) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // GET_MOYENS_DISPO
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("id", idIntervention);
-                RestServiceImpl.getInstance()
-                        .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
-                            @Override
-                            public void execute(Object response) {
-                                Mean[] means = (Mean[]) response;
-
-                                createRequestedMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
-                            }
-                        }, getCallbackError());
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // GET_MOYENS_DISPO
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("id", idIntervention);
+                    RestServiceImpl.getInstance()
+                            .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Mean[] means = (Mean[]) response;
+                                    Log.i(TAG, "Size de mon tableau DEMAND " + means.length);
+                                    createRequestedMeansView(means); // Appel de la méthode qui cré la view des moyens demandés.
+                                }
+                            }, getCallbackError());
+                }
+            });
+        }
     }
 
     /**
@@ -440,6 +480,42 @@ public class MoyensInitFragment extends ListFragment {
      * @param object
      */
     public void movingMapMeanStrategy(final Mean object) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // GET_MOYENS_DISPO
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("id", idIntervention);
+                    RestServiceImpl.getInstance()
+                            .get(RestAPI.GET_MOYENS_DISPO, map, Mean[].class, new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Mean[] means = (Mean[]) response;
+                                    List<Mean> meanList = new ArrayList<Mean>();
+                                    if (means.length > 0) {
+                                        for (Mean m : means) {
+                                            if (m.arrivedMean()) {
+                                                meanList.add(m);
+                                            }
+                                        }
+                                    }
+                                    // Appel de la méthode qui cré la view des moyens demandés.
+                                    createAvailableMeansView(meanList);
+                                }
+                            }, getCallbackError());
+                }
+            });
+        }
+    }
+
+    /**
+     * Méthode appelé par la strategie lorsqu'un moyen est déplacé vers les moyens arrivés.
+     *
+     * @param object
+     */
+    public void transitMeanStrategy(final Mean object) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -451,21 +527,15 @@ public class MoyensInitFragment extends ListFragment {
                             @Override
                             public void execute(Object response) {
                                 Mean[] means = (Mean[]) response;
-                                List<Mean> meanList = new ArrayList<Mean>();
                                 List<Mean> transitList = new ArrayList<Mean>();
                                 if (means.length > 0) {
                                     for (Mean m : means) {
-                                        if (m.arrivedMean()) {
-                                            meanList.add(m);
-                                        }
                                         if (m.onTransitMean()) {
                                             transitList.add(m);
                                         }
                                     }
                                 }
                                 // Appel de la méthode qui cré la view des moyens demandés.
-                                createAvailableMeansView(meanList);
-                                // Appel de la méthode qui cré la view des moyens en transit.
                                 createTransitMeansView(transitList);
                             }
                         }, getCallbackError());
@@ -509,7 +579,7 @@ public class MoyensInitFragment extends ListFragment {
     /**
      * méthode qui cré la view des moyens demandés.
      *
-     * @param means
+     * @param means : Tableau des moyens demandés
      */
     private void createRequestedMeansView(Mean[] means) {
         meansRequestedTitle.clear();
@@ -528,6 +598,7 @@ public class MoyensInitFragment extends ListFragment {
                 meansRequestedDrawable.add(SVGAdapter.convertSymbolToDrawable(getActivity().getApplicationContext(), symbol));
             }
         }
+        Log.i(TAG, "Size de mon tableau CREATE" + meansRequestedDrawable.size());
 
         // Set drawable to adapterMeans
         Drawable[] imagesArray = meansRequestedDrawable.toArray(new Drawable[meansRequestedDrawable.size()]);
@@ -544,5 +615,9 @@ public class MoyensInitFragment extends ListFragment {
         ListView notValidatedView = (ListView) view.findViewById(R.id.list_not_validated);
         ArrayAdapter adapterXtraNotValidate = new ItemsAdapter(getActivity(), R.layout.custom, titlesArray, imagesArray);
         notValidatedView.setAdapter(adapterXtraNotValidate);
+    }
+
+    public void updateMeanValidation(Mean mean) {
+        Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
     }
 }
