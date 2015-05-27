@@ -8,41 +8,41 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
-    <TextView
-        android:text="@string/presentation_text"
-        android:textSize="32dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/mainTextPresentation" />
-<!--
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textPresentation"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/urlGetLayout">
-
-        <TextView
+    <!--    <TextView
+            android:text="@string/presentation_text"
+            android:textSize="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/url_text"
-            android:id="@+id/urlDisp" />
+            android:id="@+id/mainTresentation" />
 
-        <EditText
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:hint="@string/url_hint"
-            android:ems="10"
-            android:id="@+id/urlGet"
-            android:layout_weight="1" />
+            android:layout_below="@+id/textPresentation"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/urlGetLayout">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/url_text"
+                android:id="@+id/urlDisp" />
 
--->
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/url_hint"
+                android:ems="10"
+                android:id="@+id/urlGet"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    -->
 
     <LinearLayout
         android:orientation="horizontal"

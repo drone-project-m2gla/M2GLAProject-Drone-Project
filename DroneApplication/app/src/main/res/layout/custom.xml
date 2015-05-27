@@ -7,14 +7,14 @@
     <ImageView
         android:id="@+id/imgLanguage"
         android:layout_width="0dp"
-        android:layout_weight=".15"
+        android:layout_weight=".12"
         android:layout_height="match_parent"
         android:src="@drawable/ic_launcher"></ImageView>
 
     <TextView
         android:id="@+id/tvLanguage"
         android:layout_width="0dp"
-        android:layout_weight=".55"
+        android:layout_weight=".50"
         android:layout_height="match_parent"
         android:text="Text Here"
         android:gravity="center"></TextView>

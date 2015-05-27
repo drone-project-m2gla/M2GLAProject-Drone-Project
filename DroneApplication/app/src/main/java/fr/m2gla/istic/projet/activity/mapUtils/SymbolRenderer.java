@@ -46,7 +46,7 @@ public class SymbolRenderer extends DefaultClusterRenderer<SymbolMarkerClusterIt
             markerOptions.draggable(true);
             markerOptions.title("Action sur le moyen");
         } else {
-            markerOptions.title(item.getSymbol().getFirstText());
+            markerOptions.title(item.getSymbol().getSymbolType().toString());
         }
     }
 

@@ -5,9 +5,6 @@ import org.apache.log4j.PropertyConfigurator;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import service.position.GetDronePositionThread;
-
-
 /**
  * ProjetServletContextListener launch application and log4j
  * @author baptiste
@@ -19,9 +16,6 @@ public class ProjetServletContextListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		PropertyConfigurator.configure(LOG_PROD);
-
-		GetDronePositionThread.createNewInstance(-1);
-		new Thread(GetDronePositionThread.getInstance()).start();
 	}
 
 	@Override
