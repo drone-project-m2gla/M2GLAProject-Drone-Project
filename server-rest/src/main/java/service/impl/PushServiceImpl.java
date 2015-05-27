@@ -79,6 +79,7 @@ public class PushServiceImpl implements PushService {
 
 		LOGGER.debug(output.toString());
 		messageBuilder.addData(scope, output.toString());
+		messageBuilder.timeToLive(60); // Store message 1min in GCM
 
 		MulticastResult result = null;
 		switch (typeClient) {

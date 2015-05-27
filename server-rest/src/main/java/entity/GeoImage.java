@@ -9,6 +9,7 @@ public class GeoImage extends AbstractEntity {
     private int width;
     private int height;
     private String image;
+    private long interventionId;
 
     public String getImage() {
         return image;
@@ -30,9 +31,16 @@ public class GeoImage extends AbstractEntity {
         return width;
     }
 
-
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public long getInterventionId() {
+        return interventionId;
+    }
+
+    public void setInterventionId(long interventionID) {
+        this.interventionId = interventionID;
     }
 
     public int getHeight() {
@@ -54,7 +62,7 @@ public class GeoImage extends AbstractEntity {
         if (width != geoImage.width) return false;
         if (image != null ? !image.equals(geoImage.image) : geoImage.image != null) return false;
         if (position != null ? !position.equals(geoImage.position) : geoImage.position != null) return false;
-
+        if (interventionId != geoImage.interventionId) return false;
         return true;
     }
 
@@ -65,6 +73,7 @@ public class GeoImage extends AbstractEntity {
                 ", width=" + width +
                 ", height=" + height +
                 ", image='" + image + '\'' +
+                ", interventionId=" + interventionId + '\'' +
                 '}';
     }
 }

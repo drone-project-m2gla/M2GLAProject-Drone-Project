@@ -42,6 +42,7 @@ public class ImagesRestTest {
         geoImage1.setPosition(new Position(0, 1, 0));
         geoImage1.setWidth(400);
         geoImage1.setHeight(500);
+        geoImage1.setInterventionId(0);
         GeoImage geoImage1InBase = dao.create(geoImage1);
         assertEquals(geoImage1, geoImage1InBase);
 
@@ -50,6 +51,7 @@ public class ImagesRestTest {
         geoImage2.setPosition(new Position(0.0000000001, 1, 0));
         geoImage2.setWidth(400);
         geoImage2.setHeight(500);
+        geoImage2.setInterventionId(0);
         GeoImage geoImage2InBase = dao.create(geoImage2);
         assertEquals(geoImage2, geoImage2InBase);
 
@@ -58,6 +60,7 @@ public class ImagesRestTest {
         geoImage3.setPosition(new Position(7.0, 6.0, 4.0));
         geoImage3.setWidth(400);
         geoImage3.setHeight(500);
+        geoImage3.setInterventionId(0);
         GeoImage geoImage3InBase = dao.create(geoImage3);
         assertEquals(geoImage3, geoImage3InBase);
 
@@ -85,6 +88,7 @@ public class ImagesRestTest {
         geoImage1.setPosition(new Position(0, 1, 0));
         geoImage1.setWidth(400);
         geoImage1.setHeight(500);
+        geoImage1.setInterventionId(0);
         GeoImage geoImage1InBase = dao.create(geoImage1);
         assertEquals(geoImage1, geoImage1InBase);
 
@@ -93,6 +97,7 @@ public class ImagesRestTest {
         geoImage2.setPosition(new Position(0.0000000001, 1, 0));
         geoImage2.setWidth(400);
         geoImage2.setHeight(500);
+        geoImage2.setInterventionId(0);
         GeoImage geoImage2InBase = dao.create(geoImage2);
         assertEquals(geoImage2, geoImage2InBase);
 
@@ -101,12 +106,13 @@ public class ImagesRestTest {
         geoImage3.setPosition(new Position(7.0, 6.0, 4.0));
         geoImage3.setWidth(400);
         geoImage3.setHeight(500);
+        geoImage3.setInterventionId(0);
         GeoImage geoImage3InBase = dao.create(geoImage3);
         assertEquals(geoImage3, geoImage3InBase);
 
         dao.ensureIndex();
         GeoImageRest imageRest = new GeoImageRest();
-        Response response = imageRest.getAllImagesNear(1, 0);
+        Response response = imageRest.getAllImagesNear(1, 0,5);
         List<GeoImage> concernedImages = (List<GeoImage>) response.getEntity();
         assertEquals(200, response.getStatus());
         assertEquals(2, concernedImages.size());
