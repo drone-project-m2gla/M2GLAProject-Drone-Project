@@ -7,5 +7,5 @@ package entity;
  */
 
 public enum Vehicle {
-    VSAV,VSR,VLCG,EPA,FPT
+    VSAV,VSR,VLCG,EPA,FPT,CCGC
 }
