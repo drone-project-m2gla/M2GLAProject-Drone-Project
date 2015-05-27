@@ -5,11 +5,12 @@ package fr.m2gla.istic.projet.model;
  *
  * This class stored the list of vehicles available.
  *
- * VSAV -- Véhicule de secours et d'assistance aux victimes
- * VSR -- Véhicule secours routier
- * VLCG -- Véhicule de liaison chef de groupe
- * EPA -- Echelle pivotante automatique
- * FTP -- Fourgon pompe-tonne
+ * VSAV -- Véhicule de Secours et d'Assistance aux Victimes
+ * VSR -- Véhicule Secours Routier
+ * VLCG -- Véhicule de Liaison Chef de Groupe
+ * EPA -- Echelle Pivotante Automatique
+ * FTP -- Fourgon Tonne Pompe
+ * CCGC -- Camion Citerne Grande Capacité
  */
 public enum Vehicle {
 

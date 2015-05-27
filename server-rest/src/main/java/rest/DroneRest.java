@@ -50,7 +50,6 @@ public class DroneRest {
 	public void doTrajet(Target target) {
         TransitDroneSender transitDroneSender = new TransitDroneSender(target);
         GetDronePositionThread.createNewInstance(target.getInterventionId());
-        new Thread(GetDronePositionThread.getInstance()).start();
 
 		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
