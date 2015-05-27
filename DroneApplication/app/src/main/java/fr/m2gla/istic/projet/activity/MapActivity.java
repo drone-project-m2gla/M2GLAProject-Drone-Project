@@ -537,7 +537,7 @@ public class MapActivity extends Activity implements ObserverTarget {
                     String meanType = Symbol.getImage(meanClass);
                     Symbol symbol = new Symbol(m.getId(),
                             Symbol.SymbolType.valueOf(meanType),
-                            meanClass, Symbol.getCityTrigram(),
+                            meanClass, m.getName(),
                             Symbol.getMeanColor(m.getVehicle()));
 
                     symbol.setValidated(m.isInPosition());

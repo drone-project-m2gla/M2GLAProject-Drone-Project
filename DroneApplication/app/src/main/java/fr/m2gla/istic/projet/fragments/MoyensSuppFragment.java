@@ -74,7 +74,8 @@ public class MoyensSuppFragment extends Fragment {
             String vehicule = v.toString();
             String vehiculeName = Symbol.getImage(vehicule);
 
-            Symbol symbol = new Symbol(valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(v));
+            //FIXME : FIX
+            Symbol symbol = new Symbol(valueOf(vehiculeName), vehicule, "FIX", Symbol.getMeanColor(v));
 
             String title = vehicule;
 
@@ -116,7 +117,8 @@ public class MoyensSuppFragment extends Fragment {
                 means[position] = new Symbol(m.getId(),
                         Symbol.SymbolType.valueOf(meanType),
                         meanClass,
-                        Symbol.getCityTrigram(),
+                        //Symbol.getCityTrigram(),
+                        m.getName(),
                         Symbol.getMeanColor(m.getVehicle()));
                 position++;
             }
@@ -148,6 +150,8 @@ public class MoyensSuppFragment extends Fragment {
                 // Demander la prise en compte de la validation de l'identification
                 Mean moyen = (Mean) response;
                 Toast.makeText(getActivity(), "Moyen demandé avec succès\n" + moyen.getId(), Toast.LENGTH_SHORT).show();
+                // mettre à jour la liste des moyens demandés
+                ((MoyensInitFragment)getFragmentManager().findFragmentById(R.id.fragment_moyens_init)).demandMeanStrategy(null);
             }
         }, new Command() {
             /**

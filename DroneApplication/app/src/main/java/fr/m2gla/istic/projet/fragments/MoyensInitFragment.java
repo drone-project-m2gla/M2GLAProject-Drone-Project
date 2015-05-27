@@ -262,7 +262,7 @@ public class MoyensInitFragment extends ListFragment {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
                 Symbol symbol = new Symbol(m.getId(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
 
                 String title = vehicule + " * " + m.getId();
 
@@ -359,7 +359,7 @@ public class MoyensInitFragment extends ListFragment {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
                 Symbol symbol = new Symbol(m.getId(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
 
                 String title = vehicule + " * " + m.getId();
 
@@ -415,7 +415,7 @@ public class MoyensInitFragment extends ListFragment {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
                 Symbol symbol = new Symbol(m.getId(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
 
                 means[pos++] = symbol;
 
@@ -591,7 +591,7 @@ public class MoyensInitFragment extends ListFragment {
                 String vehiculeName = Symbol.getImage(vehicule);
 
                 Symbol symbol = new Symbol(m.getId(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
 
                 String title = vehicule + " * " + m.getId();
                 meansRequestedTitle.add(title);
