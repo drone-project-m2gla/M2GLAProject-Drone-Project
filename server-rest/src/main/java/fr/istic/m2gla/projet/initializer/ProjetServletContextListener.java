@@ -21,7 +21,7 @@ public class ProjetServletContextListener implements ServletContextListener {
 		PropertyConfigurator.configure(LOG_PROD);
 
         // Démarrage du Thread de position.
-        GetDronePositionThread.createNewInstance();
+        GetDronePositionThread.createNewInstance(-1);
         new Thread(GetDronePositionThread.getInstance()).start();
 	}
 

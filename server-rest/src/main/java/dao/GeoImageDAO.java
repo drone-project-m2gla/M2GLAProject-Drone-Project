@@ -38,6 +38,11 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         geoImage.setImage(document.getString("image"));
         geoImage.setWidth(document.getInteger("width"));
         geoImage.setHeight(document.getInteger("height"));
+        if(document.getLong("interventionId")!=null)
+        {
+            geoImage.setInterventionId(document.getLong("interventionId"));
+        }
+
         return geoImage;
     }
 
@@ -48,11 +53,12 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         document.put("height", entity.getHeight());
         document.put("width",entity.getWidth());
         document.put("position", Tools.positionToBasicDBList(entity.getPosition()));
+        document.put("interventionId", entity.getInterventionId());
         document.put("_id",entity.getId());
         return document;
     }
 
-    public List<GeoImage> getAllImagesNear(float latitude, float longitude)
+    public List<GeoImage> getAllImagesNear(float latitude, float longitude, int limit)
     {
         final List<GeoImage> res = new ArrayList<GeoImage>();
         BasicDBObject geometry = new BasicDBObject("type", "Point");
@@ -62,7 +68,7 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         near.put("$maxDistance",Constant.NEAR_REQUEST_MAXDISTANCE);
         BasicDBObject position = new BasicDBObject("$near", near);
         BasicDBObject criteria = new BasicDBObject("position", position);
-        FindIterable findIterable = collection.find(criteria);
+        FindIterable findIterable = collection.find(criteria).limit(limit);
         findIterable.forEach(new Block<Document>() {
             @Override
             public void apply(final Document document) {

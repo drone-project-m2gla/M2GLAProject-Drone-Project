@@ -9,7 +9,7 @@ import java.util.List;
 public class Target {
     private List<Position> positions;
     private boolean isClose;
-
+    private int interventionId;
     public List<Position> getPositions() {
         return positions;
     }
@@ -24,5 +24,14 @@ public class Target {
 
     public void setClose(boolean isClose) {
         this.isClose = isClose;
+    }
+
+    public void setInterventionId(int interventionId)
+    {
+        this.interventionId=interventionId;
+    }
+
+    public int getInterventionId(){
+        return this.interventionId;
     }
 }
