@@ -27,16 +27,8 @@ public interface GeneralConstants {
     public static final String  REF_ACT_ROLE = "role";
     public static final String  REF_ACT_IDINTER = "idIntervention";
 
-    // Designation des colonnes de la table des moyens
-    public static final String  MEAN_TABLE_1 = "VEHICULES";
-    public static final String  MEAN_TABLE_2 = "DEMANDE";
-    public static final String  MEAN_TABLE_3 = "DECLENCHE";
-    public static final String  MEAN_TABLE_4 = "ARRIVE";
-    public static final String  MEAN_TABLE_5 = "ENGAGE";
-    public static final String  MEAN_TABLE_6 = "LIBERE";
-
     // Affichage en cas de moyen refusé
-    public static final String  MEAN_REFUSED = "REFUSE";
+    public static final String  MEAN_REFUSED = "REFUSÉ";
 
     // Pour la boite de saisie du nom du moyen
     public static final String  MEAN_DIALOG_TITLE = "Nom ou désignation du moyen";
@@ -44,25 +36,5 @@ public interface GeneralConstants {
     public static final String  MEAN_DIALOG_CANCEL_BUTTON = "Abandonner";
 
     // Nom des fichiers svg
-    public static final String SVG_COLONNE_INCENDIE = "colonne_incendie";
-    public static final String SVG_GROUPE_INCENDIE = "groupe_incendie";
-    public static final String SVG_SECOURS_A_PERSONNE = "secours_a_personnes";
     public static final String SVG_VEHICULE_A_INCENDIE_SEUL = "vehicule_incendie_seul";
-    public static final String SVG_VEHICULE_POST_COMMAND = "poste_commandement_prevu";
-
-    // Nom des moyens correspondants aux fichiers svg
-    public static final String VALUE_COLONNE_INCENDIE = "Colonne incendie";
-    public static final String VALUE_GROUPE_INCENDIE = "Groupe incendie";
-    public static final String VALUE_MOYEN_INTERVENTION_AERIEN = "Moyen aérien";
-    public static final String VALUE_SECOURS_A_PERSONNE = "Secours à personne";
-    public static final String VALUE_VEHICULE_A_INCENDIE = "Véhicule incendie";
-
-    public static final String VALUE_VEHICULE_VSAV = "VSAV";
-    public static final String VALUE_VEHICULE_VSR = "VSR";
-    public static final String VALUE_VEHICULE_VLCG = "VLCG";
-    public static final String VALUE_VEHICULE_EPA = "EPA";
-    public static final String VALUE_VEHICULE_FPT = "FPT";
-
-    // image type svg variable
-    public static final String TYPE_IMG = "type";
 }

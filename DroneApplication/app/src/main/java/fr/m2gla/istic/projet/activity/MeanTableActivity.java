@@ -60,14 +60,14 @@ public class MeanTableActivity extends Activity {
     private boolean         withRefusedMeans = false;
     private boolean         withTimeColor = false;
 
-    private String          titleMeanTab[] = {
+    private String          titleMeanTab[];/*{
                                 GeneralConstants.MEAN_TABLE_1,
                                 GeneralConstants.MEAN_TABLE_2,
                                 GeneralConstants.MEAN_TABLE_3,
                                 GeneralConstants.MEAN_TABLE_4,
                                 GeneralConstants.MEAN_TABLE_5,
                                 GeneralConstants.MEAN_TABLE_6
-                            };
+                            };*/
 
 
     /**
@@ -111,6 +111,9 @@ public class MeanTableActivity extends Activity {
         withRefusedMeansCheck.setTextColor(Color.CYAN);
         timeColorMeanCheck.setTextColor(Color.MAGENTA);
 
+        //Désignation des colonnes de la table des moyens depuis ressources.xml
+        titleMeanTab = getResources().getStringArray(R.array.meansTableColumns);
+
         MeanTableViewRefresh();
 
     }
@@ -136,7 +139,7 @@ public class MeanTableActivity extends Activity {
         return new Command() {
             @Override
             public void execute(Object response) {
-                Toast.makeText(getApplicationContext(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG).show();
             }
         };
     }
