@@ -100,7 +100,7 @@ public class InterventionRest {
         else
         {
             iD.disconnect();
-            return Response.status(Response.Status.BAD_REQUEST).entity("Already in position or mean unavailable").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Mean is not Engaged or unavailable").build();
         }
 	}
     /**
