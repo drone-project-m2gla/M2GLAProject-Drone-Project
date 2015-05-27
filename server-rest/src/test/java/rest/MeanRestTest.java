@@ -6,12 +6,7 @@ import entity.*;
 import org.junit.*;
 import service.impl.RetrieveAddressImpl;
 import util.Configuration;
-
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.lang.Double.isNaN;
 import static org.junit.Assert.*;
 
 /**
