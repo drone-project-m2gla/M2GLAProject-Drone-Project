@@ -1,5 +1,6 @@
 package rest;
 
+import com.google.gson.Gson;
 import dao.InterventionDAO;
 import entity.*;
 import org.junit.*;
@@ -19,14 +20,18 @@ public class InterventionRestTest {
 
     private static InterventionDAO dao = new InterventionDAO();
     private static Intervention intervention;
+    private static Position coordinatesIntervention;
+    private final static String interventionName = "Test Intervention";
+    private final static String address = "36 rue des chataigners";
+    private final static String postCode = "35830";
+    private final static String city = "Betton";
+    private final static DisasterCode disasterCode = DisasterCode.AVP;
+
     @BeforeClass
     public static void beforeAllTests() {
         Configuration.loadConfigurations();
-        dao.connect();
-        intervention = new Intervention("Test Intervention","36 rue des chataigners","35830","Betton", DisasterCode.AVP);
-        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(intervention.getAddress(), intervention.getPostcode(), intervention.getCity());
-        Position coordinatesIntervention = adresseIntervention.getCoordinates();
-        intervention.setCoordinates(coordinatesIntervention);
+        RetrieveAddressImpl adresseIntervention = new RetrieveAddressImpl(address, postCode, city);
+        coordinatesIntervention = adresseIntervention.getCoordinates();
     }
 
     @AfterClass
@@ -39,13 +44,14 @@ public class InterventionRestTest {
 
     @Before
     public void setUp() throws Exception {
-     //   RestAssured.basePath = "http://localhost:8088";
+        dao.connect();
+        intervention = new Intervention(interventionName,address,postCode,city,disasterCode);
+        intervention.setCoordinates(coordinatesIntervention);
     }
 
     @After
     public void tearDown() {
-
-
+        dao.delete(intervention);
     }
 
     @Test
@@ -63,7 +69,6 @@ public class InterventionRestTest {
         InterventionRest interventionRest= new InterventionRest();
         List<Intervention> interventionList = interventionRest.getAllIntervention();
         assertEquals(1, interventionList.size());
-        dao.delete(intervention);
     }
 
 
@@ -83,7 +88,6 @@ public class InterventionRestTest {
         InterventionRest interventionRest= new InterventionRest();
         Intervention interverionWithRest = interventionRest.getIntervention(intervention.getId());
         assertEquals(interverionWithRest, intervention);
-        dao.delete(intervention);
     }
 
     @Test
@@ -125,7 +129,6 @@ public class InterventionRestTest {
         assertEquals(MeanState.RELEASED, newMean1.getMeanState());
         assertFalse(newMean1.getInPosition());
         assertEquals(newMean1,response1.getEntity());
-        dao.delete(intervention);
     }
 
     @Test
@@ -163,7 +166,6 @@ public class InterventionRestTest {
         assertEquals(means, intervention.getMeansList());
         assertEquals(0, intervention2.getMeansList().size());
 
-        dao.delete(intervention);
         dao.delete(intervention2);
     }
 
@@ -196,8 +198,6 @@ public class InterventionRestTest {
         assertEquals(204,response2.getStatus());
 
         assertEquals(mean1, response1.getEntity());
-
-        dao.delete(intervention);
     }
 
     @Test
@@ -231,7 +231,6 @@ public class InterventionRestTest {
         assertTrue(intervention.getMeansList().contains(mean2));
         assertTrue(intervention.getMeansList().contains(mean3));
         assertEquals(3,intervention.getMeansList().size());
-        dao.delete(intervention);
     }
 
 
@@ -266,40 +265,38 @@ public class InterventionRestTest {
         assertTrue(intervention.getMeansList().contains(mean2));
         assertTrue(intervention.getMeansList().contains(mean3));
         assertEquals(3,intervention.getMeansList().size());
-        dao.delete(intervention);
     }
 
-//    @Test
-//    public void testValidateMeanPositionForIntervention()
-//    {
-//        dao.create(intervention);
-//        InterventionRest interventionRest= new InterventionRest();
-//        Mean mean1 = intervention.getMeansList().get(0);
-//
-//        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
-//        assertEquals(200,response1.getStatus());
-//        intervention = dao.getById(intervention.getId());
-//        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
-//        dao.delete(intervention);
-//    }
-//
-//    @Test
-//    public void testValidateMeanPositionForInterventionCannotBeExecutedTwice()
-//    {
-//        dao.create(intervention);
-//        InterventionRest interventionRest= new InterventionRest();
-//        Mean mean1 = intervention.getMeansList().get(0);
-//
-//        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
-//        assertEquals(200,response1.getStatus());
-//
-//        Response response2 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
-//        assertEquals(400,response2.getStatus());
-//
-//        intervention = dao.getById(intervention.getId());
-//        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
-//        dao.delete(intervention);
-//    }
+    @Test
+    public void testValidateMeanPositionForIntervention()
+    {
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        Mean mean1 = intervention.getMeansList().get(0);
+        System.out.println(mean1.getMeanState());
+
+        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        assertEquals(200,response1.getStatus());
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
+    }
+
+    @Test
+    public void testValidateMeanPositionForInterventionCannotBeExecutedTwice()
+    {
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        Mean mean1 = intervention.getMeansList().get(0);
+
+        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        assertEquals(200,response1.getStatus());
+
+        Response response2 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response2.getStatus());
+
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
+    }
 
 
     public void assertAreEqualsWitoutInPosition(Mean expected, Mean real)
