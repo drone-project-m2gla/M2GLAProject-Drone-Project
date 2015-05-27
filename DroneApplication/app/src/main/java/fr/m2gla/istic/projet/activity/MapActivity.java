@@ -2,8 +2,11 @@ package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -76,7 +80,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     private Circle drone;
     private List<Polyline> polylineList;
     private DroneTargetActionFragment droneTargetActionFragment;
-
+    private List<Marker> droneMarkers;
 
     /**
      * Methode renvoyant si le mode de fonctionnement de la carte est le mode drone
@@ -96,12 +100,16 @@ public class MapActivity extends Activity implements ObserverTarget {
     }
 
 
-    public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
-        return droneClusterManager;
-    }
+//    public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
+//        return droneClusterManager;
+//    }
 
     public DroneTargetActionFragment getDroneTargetActionFragment() {
         return droneTargetActionFragment;
+    }
+
+    public List<Marker> getDroneMarkers()  {
+        return droneMarkers;
     }
 
     @Override
@@ -125,6 +133,7 @@ public class MapActivity extends Activity implements ObserverTarget {
         isDragging = false;
         polylineList = new ArrayList<Polyline>();
         restParams = new HashMap<String, String>();
+        droneMarkers = new ArrayList<Marker>();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
@@ -152,10 +161,10 @@ public class MapActivity extends Activity implements ObserverTarget {
         topoSymbolRenderer.setContext(getApplicationContext());
         topoClusterManager.setRenderer(topoSymbolRenderer);
 
-        droneClusterManager = new ClusterManager<>(this, map);
-        ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
-
-        droneClusterManager.setRenderer(imageDroneRenderer);
+//        droneClusterManager = new ClusterManager<>(this, map);
+//        ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
+//
+//        droneClusterManager.setRenderer(imageDroneRenderer);
 
         // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
         mapFragment.getView().setOnDragListener(mapListeners);
@@ -354,8 +363,10 @@ public class MapActivity extends Activity implements ObserverTarget {
             polyline.remove();
         }
 
-        droneClusterManager.clearItems();
-        droneClusterManager.cluster();
+        for (int i = 0; i < droneMarkers.size(); i++) {
+            Marker m = droneMarkers.get(i);
+            m.remove();
+        }
 
         polylineList.clear();
     }
@@ -391,18 +402,27 @@ public class MapActivity extends Activity implements ObserverTarget {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Collection<Marker> imageMarker = droneClusterManager.getMarkerCollection().getMarkers();
-                    for (Marker m : imageMarker) {
+                    for (Marker m : droneMarkers) {
                         if (positionEqual(m.getPosition(), image.getPosition())) {
-                            // Remove marker
-                            LatLng latLng = m.getPosition();
-                            m.remove();
-                            // Replace marker to image marker
-                            ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, image.getImage());
-                            droneClusterManager.addItem(marker);
-                            droneClusterManager.cluster();
+                            byte[] byteImage = Base64.decode(image.getImage(), Base64.DEFAULT);
+                            Bitmap image = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
+                            Bitmap imageMin = Bitmap.createScaledBitmap(image, 50, 50, false);
+
+                            m.setIcon(BitmapDescriptorFactory.fromBitmap(imageMin));
                         }
                     }
+//                    Collection<Marker> imageMarker = droneClusterManager.getMarkerCollection().getMarkers();
+//                    for (Marker m : imageMarker) {
+//                        if (positionEqual(m.getPosition(), image.getPosition())) {
+//                            // Remove marker
+//                            LatLng latLng = m.getPosition();
+//                            m.remove();
+//                            // Replace marker to image marker
+//                            ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, image.getImage());
+//                            droneClusterManager.addItem(marker);
+//                            droneClusterManager.cluster();
+//                        }
+//                    }
                 }
             });
         }
