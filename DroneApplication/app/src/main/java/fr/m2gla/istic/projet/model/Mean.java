@@ -109,8 +109,6 @@ public class Mean extends Entity {
      * @return : nom / désignation unique du moyen
      */
     public String getName() {
-        if (name == null || name.isEmpty())
-            name = getId();
         return name;
     }
 
