@@ -47,7 +47,10 @@ public class Drone {
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void doTrajet(Target target) {
-		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+        TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+        GetDronePositionThread.createNewInstance(target.getInterventionId());
+        new Thread(GetDronePositionThread.getInstance()).start();
+
 		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
 	}
@@ -58,7 +61,9 @@ public class Drone {
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopTrajet() {
-		GetDronePositionThread.createNewInstance();
-		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+        if (GetDronePositionThread.getInstance() != null) {
+            GetDronePositionThread.getInstance().stopThread();
+            GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+        }
 	}
 }
