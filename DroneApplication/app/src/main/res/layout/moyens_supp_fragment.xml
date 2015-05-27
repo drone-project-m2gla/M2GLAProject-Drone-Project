@@ -10,6 +10,7 @@
         android:layout_height="0dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/select_text_view"
+        android:textSize="14dp"
         android:id="@+id/selectTextView"
         android:layout_gravity="center_horizontal"
         android:layout_weight=".5" />
