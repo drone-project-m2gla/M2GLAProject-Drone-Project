@@ -38,7 +38,7 @@ import dao.UserDAOTest;
         InterventionRestTest.class,
         ImagesRestTest.class
 })
-public class TestSuiteDao {
+public class TestSuiteSitServer {
 
     @BeforeClass
     public static void setUp() {
