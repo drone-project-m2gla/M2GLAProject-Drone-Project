@@ -191,7 +191,7 @@ public class Symbol {
      * Récupération du trigram lié à une ville
      * @return : RNS !
      */
-    public static String getCityTrigram(){
+    /*public static String getCityTrigram(){
         return "RNS";
-    }
+    }*/
 }

@@ -263,8 +263,10 @@ public class MoyensInitFragment extends ListFragment {
             for (Mean m : transitList) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
-                Symbol symbol = new Symbol(m.getName(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
+
 
                 String title = vehicule + " * " + m.getName();
 
@@ -360,8 +362,10 @@ public class MoyensInitFragment extends ListFragment {
             for (Mean m : meanRefused) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
-                Symbol symbol = new Symbol(m.getName(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
+
 
                 String title = vehicule + " * " + m.getName();
 
@@ -416,8 +420,9 @@ public class MoyensInitFragment extends ListFragment {
             for (Mean m : meanList) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
-                Symbol symbol = new Symbol(m.getName(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
 
                 means[pos++] = symbol;
 
@@ -594,9 +599,9 @@ public class MoyensInitFragment extends ListFragment {
             if (m.requestedMean()) {
                 String vehicule = m.getVehicle().toString();
                 String vehiculeName = Symbol.getImage(vehicule);
-
-                Symbol symbol = new Symbol(m.getName(),
-                        valueOf(vehiculeName), vehicule, Symbol.getCityTrigram(), Symbol.getMeanColor(m.getVehicle()));
+                
+                Symbol symbol = new Symbol(m.getId(),
+                        valueOf(vehiculeName), vehicule, m.getName(), Symbol.getMeanColor(m.getVehicle()));
 
                 String title = vehicule + " * " + m.getName();
                 meansRequestedTitle.add(title);
