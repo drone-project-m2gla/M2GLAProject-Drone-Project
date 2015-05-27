@@ -445,7 +445,7 @@ public class MapActivity extends Activity implements ObserverTarget {
      * Charge l'intervention et les moyens sur la carte
      */
     private void loadIntervention() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         if (intent != null) {
             String idIntervention = intent.getStringExtra(fr.m2gla.istic.projet.context.GeneralConstants.REF_ACT_IDINTER);
@@ -473,10 +473,17 @@ public class MapActivity extends Activity implements ObserverTarget {
                                 @Override
                                 public void execute(Object response) {
                                     Intervention intervention = (Intervention) response;
+                                    // Montrer l'id de l'intervention et l'adresse dans le titre
+                                    getActionBar().setTitle(intervention.getLabel() + " : " +
+                                            intervention.getAddress() + " " +
+                                            intervention.getPostcode() + " " +
+                                            intervention.getCity());
+
                                     Position pos = intervention.getCoordinates();
 
                                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), ZOOM_INDEX));
-                                    updateMeans();
+                                    //updateMeans();
+                                    loadMeansInMap();
                                 }
                             },
                             new Command() {
