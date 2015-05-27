@@ -20,11 +20,11 @@ import service.impl.PushServiceImpl;
 
 /**
  * @author baptiste on 08/04/15.
- * @see PushRegister is service rest for push information in the Google Cloud Messaging
+ * @see PushRegisterRest is service rest for push information in the Google Cloud Messaging
  */
 @Path("/gcm")
-public class PushRegister {
-	private static final Logger LOGGER = Logger.getLogger(PushRegister.class);
+public class PushRegisterRest {
+	private static final Logger LOGGER = Logger.getLogger(PushRegisterRest.class);
 
 	/**
 	 * record entity into gcm

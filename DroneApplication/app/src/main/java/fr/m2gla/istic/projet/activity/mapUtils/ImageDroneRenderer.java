@@ -28,6 +28,8 @@ public class ImageDroneRenderer extends DefaultClusterRenderer<ImageMarkerCluste
         } else {
             byte[] byteImage = Base64.decode(item.getImage(), Base64.DEFAULT);
             Bitmap image = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
+            image.setWidth(50);
+            image.setHeight(50);
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
         }

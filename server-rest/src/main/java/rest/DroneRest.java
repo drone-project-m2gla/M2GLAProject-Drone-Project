@@ -20,7 +20,7 @@ import entity.Target;
  * @author arno on 12/02/15
  */
 @Path("/drone")
-public class Drone {
+public class DroneRest {
     /**
      * @return the position of the drone
      */
@@ -30,7 +30,8 @@ public class Drone {
 	public Position getPosition() {
 		return GetDronePositionThread.getInstance().getPosition();
 	}
-    /**
+
+	/**
      * @return the picture of the drone
      */
 	@GET
@@ -54,7 +55,8 @@ public class Drone {
 		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
 		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
 	}
-    /**
+
+	/**
      * delete the ride of the drone
      */
 	@DELETE

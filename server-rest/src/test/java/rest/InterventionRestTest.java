@@ -416,6 +416,29 @@ public class InterventionRestTest {
         assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
     }
 
+    @Test
+    public void testValidateMeanPositionForInterventionWhenMeanNotEngaged()
+    {
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        Mean mean1 = intervention.getMeansList().get(0);
+
+        // Test where mean is Accepted
+        Response response1 = interventionRest.validateMeanPositionForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response1.getStatus());
+
+        // Test where mean is Arrived
+        interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        Response response2 = interventionRest.validateMeanPositionForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response2.getStatus());
+
+        // Test where mean is Released
+        interventionRest.releaseMeanForIntervention(intervention.getId(), mean1);
+        Response response3 = interventionRest.validateMeanPositionForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response3.getStatus());
+
+    }
+
     public void assertAreEqualsWitoutInPosition(Mean expected, Mean real)
     {
         assertEquals(expected.getDateArrived(),real.getDateArrived());

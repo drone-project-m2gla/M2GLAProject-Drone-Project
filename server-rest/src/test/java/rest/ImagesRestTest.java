@@ -65,7 +65,7 @@ public class ImagesRestTest {
         assertEquals(geoImage3, geoImage3InBase);
 
         dao.ensureIndex();
-        ImageRest imageRest = new ImageRest();
+        GeoImageRest imageRest = new GeoImageRest();
         Response response = imageRest.getAllImages();
         List<GeoImage> concernedImages = (List<GeoImage>) response.getEntity();
         assertEquals(200, response.getStatus());
@@ -111,7 +111,7 @@ public class ImagesRestTest {
         assertEquals(geoImage3, geoImage3InBase);
 
         dao.ensureIndex();
-        ImageRest imageRest = new ImageRest();
+        GeoImageRest imageRest = new GeoImageRest();
         Response response = imageRest.getAllImagesNear(1, 0,5);
         List<GeoImage> concernedImages = (List<GeoImage>) response.getEntity();
         assertEquals(200, response.getStatus());

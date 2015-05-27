@@ -18,12 +18,12 @@ import entity.GeoIcon;
 
 /**
  * @author jerem on 08/04/15.
- * @see Topographie service interacts for sending or creating topographic icons
+ * @see TopographyRest service interacts for sending or creating topographic icons
  */
 @Path("/topographie")
-public class Topographie {
+public class TopographyRest {
 
-	private static final Logger LOGGER = Logger.getLogger(Topographie.class);
+	private static final Logger LOGGER = Logger.getLogger(TopographyRest.class);
 
 	/**
 	 * Return a json list of static points on the map near specific GeoPosition

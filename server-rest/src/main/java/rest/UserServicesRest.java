@@ -15,11 +15,11 @@ import entity.User;
 
 /**
  * @author mds on 07/04/15.
- * @see UserServices is using for connection
+ * @see UserServicesRest is using for connection
  */
 @Path("/user")
-public class UserServices {
-	private static final Logger LOGGER = Logger.getLogger(UserServices.class);
+public class UserServicesRest {
+	private static final Logger LOGGER = Logger.getLogger(UserServicesRest.class);
 
     private UserDAO dao;
 
