@@ -25,22 +25,24 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 	private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
 	private Position position;
 	private GeoImage image;
+    private int interventionId;
 	private boolean continueThread;
 
-	private GetDronePositionThread() {
-		position = new Position(0.0, 0.0, 0.0);
-		continueThread = true;
+	private GetDronePositionThread(int interventionId) {
+        this.interventionId = interventionId;
+        this.position = new Position(0.0, 0.0, 0.0);
+        this.continueThread = true;
 	}
 
 	public static GetDronePositionThread getInstance() {
 		return INSTANCE;
 	}
 
-	public static void createNewInstance() {
+	public static void createNewInstance(int interventionId) {
 		if (INSTANCE != null) {
 			INSTANCE.stopThread();
 		}
-		INSTANCE = new GetDronePositionThread();
+		INSTANCE = new GetDronePositionThread(interventionId);
 	}
 
 	public synchronized void stopThread() {

@@ -35,12 +35,11 @@ public class ImageRest {
      * @return the list of Images near of coordinates
      */
     @GET
-    @Path("near/{latitude}/{longitude}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllImagesNear(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude) {
+    @Path("near/{latitude}/{longitude}/{limit}")
+    public Response getAllImagesNear(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude, @PathParam("limit") int limit) {
         GeoImageDAO gID = new GeoImageDAO();
         gID.connect();
-        List<GeoImage> res = gID.getAllImagesNear(latitude, longitude);
+        List<GeoImage> res = gID.getAllImagesNear(latitude, longitude, limit);
         gID.disconnect();
         return Response.ok(res).build();
     }
