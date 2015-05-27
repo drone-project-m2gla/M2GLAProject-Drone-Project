@@ -52,7 +52,7 @@ public class MeanXtraRest {
             iD.disconnect();
 
             try {
-                PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "ok", res);
+                PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "ok", res);
             } catch (IOException e) {
                 LOGGER.error("", e);
             }
@@ -88,7 +88,7 @@ public class MeanXtraRest {
             iD.disconnect();
 
             try {
-                PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "nok", res);
+                PushServiceImpl.getInstance().sendMessage(TypeClient.ALL, "nok", res);
             } catch (IOException e) {
                 LOGGER.error("", e);
             }
