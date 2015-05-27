@@ -19,7 +19,8 @@ import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.User;
 import fr.m2gla.istic.projet.service.RestService;
-import fr.m2gla.istic.projet.service.impl.*;
+import fr.m2gla.istic.projet.service.impl.PushServiceImpl;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
 public class MainActivity extends Activity {
@@ -124,6 +125,7 @@ public class MainActivity extends Activity {
         this.loginPassword = "";
         this.userQualification = UserQualification.SIMPLEUSER;
 
+        findViewById(R.id.mainLayout).requestFocus();
     }
 
     /**
