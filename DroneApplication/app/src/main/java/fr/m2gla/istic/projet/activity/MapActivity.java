@@ -1,7 +1,6 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,7 +29,9 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.mapUtils.ImageDroneRenderer;
 import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
+import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
 import fr.m2gla.istic.projet.activity.mapUtils.RefreshAlarmManager;
+import fr.m2gla.istic.projet.activity.mapUtils.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolRenderer;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -38,13 +39,11 @@ import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
 import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
-import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
 import fr.m2gla.istic.projet.model.GeoImage;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Symbol;
-import fr.m2gla.istic.projet.activity.mapUtils.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
@@ -83,6 +82,7 @@ public class MapActivity extends Activity implements ObserverTarget {
 
     /**
      * Methode renvoyant si le mode de fonctionnement de la carte est le mode drone
+     *
      * @return true si mode drone, false sinon
      */
     public boolean isDroneMode() {
@@ -92,6 +92,7 @@ public class MapActivity extends Activity implements ObserverTarget {
 
     /**
      * Methode renvoyant la liste des trajets successifs du drone
+     *
      * @return liste demandée
      */
     public List<Polyline> getPolylineList() {
@@ -190,11 +191,12 @@ public class MapActivity extends Activity implements ObserverTarget {
                 Log.d(TAG, "Mise à jour périodique des moyens");
                 //mettre à jour la carte
                 updateMeans();
-                MoyensInitFragment moyensInitFragment = ((MoyensInitFragment)getFragmentManager().findFragmentById(R.id.fragment_moyens_init));
+                MoyensInitFragment moyensInitFragment = ((MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init));
                 // mettre à jour les listes de moyens
                 moyensInitFragment.demandMeanStrategy(null);
                 moyensInitFragment.arrivedMeanStrategy(null);
                 moyensInitFragment.transitMeanStrategy(null);
+                moyensInitFragment.refusedMeanStrategy(null);
             }
         }, 30000L);
         refreshAlarmManager.RegisterAlarmBroadcast();
@@ -285,8 +287,8 @@ public class MapActivity extends Activity implements ObserverTarget {
                 }
                 break;
             case R.id.disp_mean_table:
-                Intent  intent;
-                String  idIntervention;
+                Intent intent;
+                String idIntervention;
 
                 // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
                 intent = new Intent(getApplicationContext(), MeanTableActivity.class);
@@ -446,6 +448,7 @@ public class MapActivity extends Activity implements ObserverTarget {
 
     /**
      * Permet de comparer deux positions données dans les formats LatLnt et Position
+     *
      * @param pos1 position 1 en format LatLng
      * @param pos2 position 1 en format Position
      * @return True si on doit considérer les positions comme équivalentes
@@ -587,9 +590,10 @@ public class MapActivity extends Activity implements ObserverTarget {
     /**
      * Permet de définir un booléen qui empêche la mise à jour des marquers,
      * lors de l'action glisser-déposer, suite aux actions des autres utilisateurs
+     *
      * @param isDragging
      */
-    public void setDraggingMode(boolean isDragging){
+    public void setDraggingMode(boolean isDragging) {
         this.isDragging = isDragging;
     }
 }
