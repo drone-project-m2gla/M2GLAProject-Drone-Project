@@ -34,7 +34,7 @@
 			</activation>
 			<properties>
 				<war.name>dev</war.name>
-				<project.PATH_LOG>./webapps/ROOT/log/log4j.properties</project.PATH_LOG>
+				<project.PATH_LOG>./webapps/sitserver/log/log4j_dev.properties</project.PATH_LOG>
 				<project.MONGODB_USER>devUser</project.MONGODB_USER>
 				<project.MONGODB_PWD>pwd2devUser</project.MONGODB_PWD>
 				<project.DATABASE_NAME>dev</project.DATABASE_NAME>
