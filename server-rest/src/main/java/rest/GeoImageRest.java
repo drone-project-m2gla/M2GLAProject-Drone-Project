@@ -36,6 +36,7 @@ public class GeoImageRest {
      */
     @GET
     @Path("near/{latitude}/{longitude}/{limit}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllImagesNear(@PathParam("latitude") float latitude, @PathParam("longitude") float longitude, @PathParam("limit") int limit) {
         GeoImageDAO gID = new GeoImageDAO();
         gID.connect();
