@@ -9,10 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import rest.ImagesRestTest;
-import rest.InterventionRestTest;
-import rest.MeanRest;
-import rest.UserServicesRestTest;
+import rest.*;
 import service.impl.PushServiceImpl;
 import util.Configuration;
 
@@ -38,7 +35,7 @@ import dao.UserDAOTest;
         UserServicesRestTest.class,
         InterventionRestTest.class,
         ImagesRestTest.class,
-        MeanRest.class
+        MeanRestTest.class
 
 })
 public class TestSuiteSitServer {
