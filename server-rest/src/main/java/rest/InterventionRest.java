@@ -215,7 +215,7 @@ public class InterventionRest {
 
         for (Mean m : meanList) {
             if (m.getId() == mean.getId() && (m.getMeanState() == MeanState.ENGAGED)) {
-                m.setCoordinates(mean.getCoordinates());
+                m.setCoordinates(new Position(Double.NaN,Double.NaN,Double.NaN));
                 m.setMeanState(MeanState.ARRIVED);
                 m.setInPosition(false);
                 res = m;
