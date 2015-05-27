@@ -234,13 +234,14 @@ public class InterventionRestTest {
         dao.delete(intervention);
     }
 
+
     @Test
-    public void testValidateMeanPositionForIntervention()
+    public void testConfirmMeanArrivalForIntervention()
     {
         List<Mean> means = new ArrayList<Mean>();
         Mean mean1 = new Mean();
         mean1.setVehicle(Vehicle.VSAV);
-        mean1.setMeanState(MeanState.ENGAGED);
+        mean1.setMeanState(MeanState.ACTIVATED);
         mean1.setInPosition(true);
         Mean mean2 = new Mean();
         mean2.setMeanState(MeanState.REFUSED);
@@ -250,34 +251,56 @@ public class InterventionRestTest {
         means.add(mean2);
         intervention.setMeansList(means);
 
+        Mean mean3 = new Mean();
+        mean3.setMeanState(MeanState.REFUSED);
+        mean3.setVehicle(Vehicle.VSAV);
+
         dao.create(intervention);
         InterventionRest interventionRest= new InterventionRest();
 
-        Response response1 = interventionRest.validateMeanPositionForIntervention(intervention.getId(), mean1);
-        Response response2 = interventionRest.validateMeanPositionForIntervention(intervention.getId(), mean2);
+        Response response1 = interventionRest.addExtraMeanToIntervention(intervention.getId(), mean3);
         assertEquals(200,response1.getStatus());
-        assertAreEqualsWitoutInPosition(mean1, (Mean) response1.getEntity());
-
-        assertEquals(400,response2.getStatus());
-        assertEquals("Already in position or mean unavailable", response2.getEntity());
+        assertEquals(mean3, response1.getEntity());
         intervention = dao.getById(intervention.getId());
-        assertFalse(intervention.getMeansList().contains(mean1));
+        assertTrue(intervention.getMeansList().contains(mean1));
         assertTrue(intervention.getMeansList().contains(mean2));
-        assertEquals(2,intervention.getMeansList().size());
-        for(Mean m : intervention.getMeansList())
-        {
-            if(m.getId()==mean2.getId())
-            {
-                assertEquals(mean2,m);
-            }
-            else if(m.getId()==mean1.getId())
-            {
-                assertTrue(m.getInPosition());
-                assertAreEqualsWitoutInPosition(mean1,m);
-            }
-        }
+        assertTrue(intervention.getMeansList().contains(mean3));
+        assertEquals(3,intervention.getMeansList().size());
         dao.delete(intervention);
     }
+
+    @Test
+    public void testValidateMeanPositionForIntervention()
+    {
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        Mean mean1 = intervention.getMeansList().get(0);
+
+        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        assertEquals(200,response1.getStatus());
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
+        dao.delete(intervention);
+    }
+
+    @Test
+    public void testValidateMeanPositionForInterventionCannotBeExecutedTwice()
+    {
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        Mean mean1 = intervention.getMeansList().get(0);
+
+        Response response1 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        assertEquals(200,response1.getStatus());
+
+        Response response2 = interventionRest.confirmMeanArrivalForIntervention(intervention.getId(), mean1);
+        assertEquals(400,response2.getStatus());
+
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.ARRIVED,intervention.getMeansList().get(0).getMeanState());
+        dao.delete(intervention);
+    }
+
 
     public void assertAreEqualsWitoutInPosition(Mean expected, Mean real)
     {
