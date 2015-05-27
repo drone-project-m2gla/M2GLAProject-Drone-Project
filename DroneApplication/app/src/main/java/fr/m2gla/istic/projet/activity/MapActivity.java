@@ -58,11 +58,17 @@ public class MapActivity extends Activity implements ObserverTarget {
     private MapFragment mapFragment;
     private boolean isDragging;
 
+    // Carte Google Maps
     public GoogleMap map;
+    // Paramètres d'appel de la requête Rest
     public Map<String, String> restParams;
 
-    private ClusterManager<SymbolMarkerClusterItem> meansTopoClusterManager;
+    // Cluster managers pour gérer les trois types de marqueurs
+    private ClusterManager<SymbolMarkerClusterItem> meansClusterManager;
+    private ClusterManager<SymbolMarkerClusterItem> topoClusterManager;
     private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
+
+    // Définition des écouteurs sur la carte et les marqueurs
     private MapListeners mapListeners;
 
     private Menu menu;
@@ -130,35 +136,38 @@ public class MapActivity extends Activity implements ObserverTarget {
         mapListeners = new MapListeners();
 
         mapListeners.setMapActivity(this);
-        // Set marker's drag listener to control marker drag & drop behaviour
+        // Définit l'écouteur sur l'événement drag des marqueurs
         map.setOnMarkerDragListener(mapListeners);
 
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        meansTopoClusterManager = new ClusterManager<>(this, map);
-        SymbolRenderer symbolRenderer = new SymbolRenderer(this, map, meansTopoClusterManager);
-        symbolRenderer.setContext(getApplicationContext());
-        symbolRenderer.setMapListeners(mapListeners);
+        // Initialise le cluster manager avec la carte et le contexte
+        meansClusterManager = new ClusterManager<>(this, map);
+        topoClusterManager = new ClusterManager<>(this, map);
+        SymbolRenderer meanSymbolRenderer = new SymbolRenderer(this, map, meansClusterManager);
+        meanSymbolRenderer.setContext(getApplicationContext());
+        meanSymbolRenderer.setMapListeners(mapListeners);
 
-        meansTopoClusterManager.setRenderer(symbolRenderer);
+        meansClusterManager.setRenderer(meanSymbolRenderer);
+
+        SymbolRenderer topoSymbolRenderer = new SymbolRenderer(this, map, topoClusterManager);
+        topoSymbolRenderer.setContext(getApplicationContext());
+        topoClusterManager.setRenderer(topoSymbolRenderer);
 
         droneClusterManager = new ClusterManager<>(this, map);
         ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
 
         droneClusterManager.setRenderer(imageDroneRenderer);
 
-        // Set map fragment drag listener to recover dropped symbols
+        // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
         mapFragment.getView().setOnDragListener(mapListeners);
 
-        // Set map long click listener to draw drone target
+        // Définit l'action d'un clic long sur la carte pour dessiner la cible du drone
         map.setOnMapLongClickListener(mapListeners);
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        map.setOnCameraChangeListener(meansTopoClusterManager);
-        map.setOnMarkerClickListener(meansTopoClusterManager);
+        // Lie les écouteurs de la carte à ceux implémentés par le cluster manager des moyens.
+        map.setOnCameraChangeListener(meansClusterManager);
+        map.setOnMarkerClickListener(meansClusterManager);
 
-        // Enable info window click on each cluster element
+        // Active l'info window dans chaque marqueur de la carte
         map.setOnInfoWindowClickListener(mapListeners);
 
         droneTargetActionFragment = (DroneTargetActionFragment) getFragmentManager().findFragmentById(R.id.drone_targer_action);
@@ -279,7 +288,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     }
 
     /**
-     * Load symbols using topographic REST service
+     * Charge les symboles topographique à l'aide du service REST
      */
     private void loadTopographicSymbols() {
         RestServiceImpl.getInstance().get(RestAPI.GET_ALL_TOPOGRAPHIE, null, Topographie[].class,
@@ -303,10 +312,10 @@ public class MapActivity extends Activity implements ObserverTarget {
                                     topographie.getColor(),
                                     true);
                             SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(pos.getLatitude(), pos.getLongitude(), symbol);
-                            meansTopoClusterManager.addItem(markerItem);
+                            topoClusterManager.addItem(markerItem);
                         }
 
-                        meansTopoClusterManager.cluster();
+                        topoClusterManager.cluster();
                         findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                     }
                 }, new Command() {
@@ -399,15 +408,28 @@ public class MapActivity extends Activity implements ObserverTarget {
         }
     }
 
+    /**
+     * Appelle dans un autre thread la méthode pour mettre à jour les marqueurs, mais uniquement si une action de type glisser-déposer n'est pas en cours
+     */
     public void updateMeans() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                loadMeansInMap();
+                if (!isDragging) {
+                    loadMeansInMap();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Un autre utilisateur a effectué des modifications sur les moyens", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
 
+    /**
+     * Permet de comparer deux positions données dans les formats LatLnt et Position
+     * @param pos1 position 1 en format LatLng
+     * @param pos2 position 1 en format Position
+     * @return True si on doit considérer les positions comme équivalentes
+     */
     private boolean positionEqual(LatLng pos1, Position pos2) {
         final double GPS_DELTA = 0.0005;
 
@@ -420,7 +442,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     }
 
     /**
-     * Loads current intervention symbols
+     * Charge l'intervention et les moyens sur la carte
      */
     private void loadIntervention() {
         Intent intent = getIntent();
@@ -454,7 +476,7 @@ public class MapActivity extends Activity implements ObserverTarget {
                                     Position pos = intervention.getCoordinates();
 
                                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), ZOOM_INDEX));
-                                    loadMeansInMap();
+                                    updateMeans();
                                 }
                             },
                             new Command() {
@@ -467,16 +489,18 @@ public class MapActivity extends Activity implements ObserverTarget {
         }
     }
 
-    public void loadMeansInMap() {
-        if (!isDragging) {
-            RestServiceImpl.getInstance()
-                    .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
-                            getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
-        }
+    /**
+     * Charger les moyens sur la carte
+     */
+    private void loadMeansInMap() {
+        RestServiceImpl.getInstance()
+                .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
+                        getCallbackMeanUpdateSuccess(), getCallbackMeanUpdateError());
+
     }
 
     /**
-     * Command error
+     * Commande à exécuter en cas d'erreur sur une requête REST
      *
      * @return
      */
@@ -490,7 +514,7 @@ public class MapActivity extends Activity implements ObserverTarget {
     }
 
     /**
-     * Command success
+     * Commande à exécuter lors de la récupération des moyens depuis le serveur rest
      *
      * @return
      */
@@ -509,7 +533,7 @@ public class MapActivity extends Activity implements ObserverTarget {
                     }
                 }
 
-                meansTopoClusterManager.clearItems();
+                meansClusterManager.clearItems();
                 mapListeners.markerSymbolLinkMap.clear();
                 for (Mean m : meansWithCoordinates) {
                     String meanClass = m.getVehicle().toString();
@@ -518,19 +542,27 @@ public class MapActivity extends Activity implements ObserverTarget {
                             Symbol.SymbolType.valueOf(meanType),
                             meanClass, Symbol.getCityTrigram(),
                             Symbol.getMeanColor(m.getVehicle()));
+
                     symbol.setValidated(m.isInPosition());
+
                     SymbolMarkerClusterItem markerItem = new SymbolMarkerClusterItem(
                             m.getCoordinates().getLatitude(),
                             m.getCoordinates().getLongitude(), symbol);
 
-                    meansTopoClusterManager.addItem(markerItem);
+                    meansClusterManager.addItem(markerItem);
                 }
-                meansTopoClusterManager.cluster();
+                meansClusterManager.cluster();
+
                 findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
             }
         };
     }
 
+    /**
+     * Permet de définir un booléen qui empêche la mise à jour des marquers,
+     * lors de l'action glisser-déposer, suite aux actions des autres utilisateurs
+     * @param isDragging
+     */
     public void setDraggingMode(boolean isDragging){
         this.isDragging = isDragging;
     }

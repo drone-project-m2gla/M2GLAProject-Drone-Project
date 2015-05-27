@@ -53,7 +53,7 @@ public class PushRegister {
      * testPush is using for UnitTest
      * @param scope
      * @param object
-     * @return
+     * @return Response
      */
 	@POST
 	@Path("register/add/{scope}")

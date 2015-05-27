@@ -265,7 +265,7 @@ public class InterventionRest {
                      || m.getMeanState() == MeanState.ENGAGED
                      || m.getMeanState() == MeanState.ARRIVED)) {
                 m.setCoordinates(mean.getCoordinates());
-                m.setDateArrived(Datetime.getCurrentDate());
+                m.setDateReleased(Datetime.getCurrentDate());
                 m.setMeanState(MeanState.RELEASED);
                 m.setInPosition(false);
                 res = m;
