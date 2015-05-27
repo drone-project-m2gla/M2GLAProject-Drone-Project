@@ -406,7 +406,7 @@ public class MoyensInitFragment extends ListFragment {
      *
      * @param meanList : liste des moyens disponibles
      */
-    private void createAvailableMeansView(List<Mean> meanList) {
+    private void createAvailableMeansView(final List<Mean> meanList) {
 
         moyensDisponiblesDrawable.clear();
         moyensDisponiblesTitle.clear();
@@ -446,11 +446,52 @@ public class MoyensInitFragment extends ListFragment {
         ListView moyensListView = getListView();
         moyensListView.setAdapter(adapterMeans);
 
-
         TextView dispoTextView = (TextView) view.findViewById(R.id.moyens_dispo_textview);
         String textViewStringValue = getResources().getString(R.string.moyens_a_placer);
         String valueOfTextView = textViewStringValue + (" (" + moyensDisponiblesDrawable.size() + ")");
         dispoTextView.setText(valueOfTextView);
+
+        moyensListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Sélectionnez une action sur le moyen")
+                        .setItems(R.array.dispoMeansOptions, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Map<String, String> param = new HashMap<String, String>();
+                                param.put("id", idIntervention);
+                                Vehicle v = null;
+                                String restService = "";
+                                String toastValue = null;
+                                switch (which) {
+                                   case 0: {
+                                        restService = RestAPI.POST_VALIDER_LIBERATION_MOYEN;
+                                        toastValue = "LIBERATION DU MOYEN";
+                                        break;
+                                    }
+                                }
+                                Log.i(TAG, "REST VALUE\t" + restService);
+                                final String finalToastValue = toastValue;
+                                RestServiceImpl.getInstance().post(restService, param, meanList.get(position), Mean.class, new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Mean m = (Mean) response;
+                                        Toast.makeText(getActivity(), finalToastValue + "\n" + m.getName(), Toast.LENGTH_SHORT).show();
+
+                                        // Mise à jour de la liste des moyens disponibles
+                                        movingMapMeanStrategy(m);
+
+                                        // Mise à jour de la liste des moyens en transit.
+                                        transitMeanStrategy(m);
+                                    }
+                                }, getCallbackError());
+
+                            }
+                        }).show();
+            }
+        });
+
     }
 
     /**

@@ -27,6 +27,7 @@ public class TopographyRest {
 
 	/**
 	 * Return a json list of static points on the map near specific GeoPosition
+     * Note :  Implementation near (longitude, near latitude are not implemented and therefore missing..
 	 * @return List<GeoIcon>
 	 */
 	@GET
@@ -54,8 +55,8 @@ public class TopographyRest {
 		GeoIconDAO dao = new GeoIconDAO();
 
 
-		if (!"".equals(icon.getColor()) &&
-				(!"".equals(icon.getEntitled())) && (!"".equals(icon.getFilename())) &&  (!"".equals(icon.getColor()))){
+		if (!"".equals(icon.getColor()) && icon.getColor() != null &&
+				(!"".equals(icon.getEntitled())) && icon.getEntitled() != null && (!"".equals(icon.getFilename())) && icon.getFilename()!= null){
 
 			dao.connect();
 			dao.create(icon);
