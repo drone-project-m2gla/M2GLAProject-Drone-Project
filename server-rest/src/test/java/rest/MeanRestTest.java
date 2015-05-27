@@ -57,8 +57,59 @@ public class MeanRestTest {
 
     @Test
     public void testValidateMeanXtra(){
-//        Mean mean = new Mean(Vehicle.VSAV,false);
-//        InterventionRest interventionRest= new InterventionRest();
-//        interventionRest.addExtraMeanToIntervention(intervention.getId(),mean);
+        Mean mean = new Mean(Vehicle.VSAV,false);
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        interventionRest.addExtraMeanToIntervention(intervention.getId(),mean);
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.REQUESTED,intervention.getMeansList().get(intervention.getMeansList().size()-1).getMeanState());
+        MeanRest meanRest = new MeanRest();
+        meanRest.validateMeanXtra(intervention.getId(),mean);
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.ACTIVATED,intervention.getMeansList().get(intervention.getMeansList().size()-1).getMeanState());
     }
+
+    @Test
+    public void testValidateMeanXtraWhenNotInStateRequested(){
+        Mean mean = new Mean(Vehicle.VSAV,false);
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        interventionRest.addExtraMeanToIntervention(intervention.getId(),mean);
+        intervention = dao.getById(intervention.getId());
+        MeanRest meanRest = new MeanRest();
+        Response response1 = meanRest.validateMeanXtra(intervention.getId(),mean);
+        assertEquals(200,response1.getStatus());
+        Response response2 = meanRest.validateMeanXtra(intervention.getId(),mean);
+        assertEquals(400,response2.getStatus());
+    }
+
+    @Test
+    public void testDeclineMeanXtra(){
+        Mean mean = new Mean(Vehicle.VSAV,false);
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        interventionRest.addExtraMeanToIntervention(intervention.getId(),mean);
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.REQUESTED,intervention.getMeansList().get(intervention.getMeansList().size()-1).getMeanState());
+        MeanRest meanRest = new MeanRest();
+        meanRest.declineMeanXtra(intervention.getId(),mean);
+        intervention = dao.getById(intervention.getId());
+        assertEquals(MeanState.REFUSED,intervention.getMeansList().get(intervention.getMeansList().size()-1).getMeanState());
+    }
+
+    @Test
+    public void testDeclineMeanXtraWhenNotInStateRequested(){
+        Mean mean = new Mean(Vehicle.VSAV,false);
+        dao.create(intervention);
+        InterventionRest interventionRest= new InterventionRest();
+        interventionRest.addExtraMeanToIntervention(intervention.getId(),mean);
+        intervention = dao.getById(intervention.getId());
+        MeanRest meanRest = new MeanRest();
+        Response response1 = meanRest.declineMeanXtra(intervention.getId(),mean);
+        assertEquals(200,response1.getStatus());
+        Response response2 = meanRest.declineMeanXtra(intervention.getId(),mean);
+        assertEquals(400,response2.getStatus());
+    }
+
+
 }
