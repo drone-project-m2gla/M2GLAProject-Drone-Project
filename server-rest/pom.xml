@@ -15,6 +15,7 @@
 			<id>int</id>
 			<properties>
 				<war.name>int</war.name>
+				<project.PATH_LOG>./webapps/sitserver/log/log4j.properties</project.PATH_LOG>
 				<project.MONGODB_USER>intUser</project.MONGODB_USER>
 				<project.MONGODB_PWD>pwd2intUser</project.MONGODB_PWD>
 				<project.DATABASE_NAME>int</project.DATABASE_NAME>
@@ -33,6 +34,7 @@
 			</activation>
 			<properties>
 				<war.name>dev</war.name>
+				<project.PATH_LOG>./webapps/ROOT/log/log4j.properties</project.PATH_LOG>
 				<project.MONGODB_USER>devUser</project.MONGODB_USER>
 				<project.MONGODB_PWD>pwd2devUser</project.MONGODB_PWD>
 				<project.DATABASE_NAME>dev</project.DATABASE_NAME>
@@ -48,6 +50,7 @@
 			<id>prod</id>
 			<properties>
 				<war.name>sitserver</war.name>
+				<project.PATH_LOG>./webapps/sitserver/log/log4j.properties</project.PATH_LOG>
 				<project.MONGODB_USER>prodUser</project.MONGODB_USER>
 				<project.MONGODB_PWD>pwd2prodUser</project.MONGODB_PWD>
 				<project.DATABASE_NAME>prod</project.DATABASE_NAME>
