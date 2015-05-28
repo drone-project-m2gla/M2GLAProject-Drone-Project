@@ -10,6 +10,10 @@ public interface GeneralConstants {
     // Codes retours des services REST
     public static final int     HTTP_RESP_OK = 200;
 
+    // Titre de l'icon
+    public static final String TITLE_DRONE_MARKER = "Checkpoint drone";
+    public static final String TITLE_MOYEN_MARKER = "Action sur le moyen";
+
     // References des éléments de la liste d'intervention
     public static final String  INTER_LIST_MEAN = "mean";
     public static final String  INTER_LIST_LABEL = "label";
@@ -26,6 +30,8 @@ public interface GeneralConstants {
     // References des éléments transitant entre les Activity
     public static final String  REF_ACT_ROLE = "role";
     public static final String  REF_ACT_IDINTER = "idIntervention";
+    public static final String  REF_ACT_LAT_IMG = "latitude";
+    public static final String  REF_ACT_LON_IMG = "longitude";
 
     // Affichage en cas de moyen refusé
     public static final String  MEAN_REFUSED = "REFUSÉ";

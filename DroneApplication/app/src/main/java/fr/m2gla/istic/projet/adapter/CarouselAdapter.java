@@ -1,6 +1,9 @@
 package fr.m2gla.istic.projet.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +62,17 @@ public class CarouselAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = (TextView) convertView.findViewById(R.id.label);
             viewHolder.image = (ImageView) convertView.findViewById(R.id.image);
+
             convertView.setTag(viewHolder);
         }
+
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+
+        byte[] byteImage = Base64.decode(data.get(position).getImage(), Base64.DEFAULT);
+        Bitmap image = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
+
+        holder.image.setImageBitmap(image);
+        holder.text.setText(data.get(position).getDate().toString());
 
         return convertView;
     }

@@ -172,7 +172,7 @@ public class MapActivity extends Activity implements ObserverTarget {
         // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
         mapFragment.getView().setOnDragListener(mapListeners);
 
-        // Définit l'action d'un clic long sur la carte pour dessiner la cible du drone
+        // Définit l'action d'un clic long sur la carte pour dessiner la cible du drone ou afficher les images
         map.setOnMapLongClickListener(mapListeners);
 
         // Lie les écouteurs de la carte à ceux implémentés par le cluster manager des moyens.
@@ -678,12 +678,13 @@ public class MapActivity extends Activity implements ObserverTarget {
 
     private void drawTarget(Target target) {
         Position oldPos = null;
-        for (Position p : target.getPositions()) {
-            //Remove old target
-            notifyClear();
+        //Remove old target
+        notifyClear();
 
+        for (Position p : target.getPositions()) {
             MarkerOptions markerOpt = new MarkerOptions()
                     .position(new LatLng(p.getLatitude(), p.getLongitude()))
+                    .title(GeneralConstants.TITLE_DRONE_MARKER)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
             Marker marker = map.addMarker(markerOpt);
             getDroneMarkers().add(marker);
@@ -695,7 +696,6 @@ public class MapActivity extends Activity implements ObserverTarget {
                         .geodesic(true)
                         .width(5)
                         .color(Color.rgb(143, 0, 71));
-
 
                 polylineList.add(map.addPolyline(polylineOptions));
 

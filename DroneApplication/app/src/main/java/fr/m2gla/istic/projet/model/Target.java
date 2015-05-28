@@ -1,5 +1,7 @@
 package fr.m2gla.istic.projet.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import java.util.List;
  * Created by baptiste on 16/04/15.
  * Chemin du drone
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Target extends Entity {
     private String interventionId;
     private List<Position> positions;

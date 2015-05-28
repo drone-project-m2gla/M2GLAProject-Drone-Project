@@ -1,5 +1,7 @@
 package fr.m2gla.istic.projet.model;
 
+import java.util.Date;
+
 /**
  * Entité de geolocalisation d'une image
  */
@@ -8,6 +10,8 @@ public class GeoImage extends Entity {
     private int width;
     private int height;
     private String image;
+    private Date date;
+    private String interventionId;
 
     /**
      * Récupération de l'image
@@ -72,5 +76,37 @@ public class GeoImage extends Entity {
      */
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    /**
+     * Date de la prise de l'image
+     * @return date de l'image
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * Date de la prise de l'image
+     * @param date date de l'image
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * Id de l'intervention
+     * @return id de l'intervention
+     */
+    public String getInterventionId() {
+        return interventionId;
+    }
+
+    /**
+     * Id de l'intervention
+     * @param interventionId id de l'intervention
+     */
+    public void setInterventionId(String interventionId) {
+        this.interventionId = interventionId;
     }
 }

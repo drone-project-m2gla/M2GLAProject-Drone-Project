@@ -29,7 +29,7 @@ public interface RestAPI {
     public static final String GET_INTERVENTION = "/intervention/{id}";
 
     //Demande le trajet du drone
-    public static final String GET_TARGET = "/target/{id}";
+    public static final String GET_TARGET = "/drone/target/{id}";
 
     // ajouter moyen supplementaire
     public static final String POST_VALIDER_MOYEN = "/moyen/{idintervention}/ok";
@@ -58,5 +58,5 @@ public interface RestAPI {
 //    public static final String GET_MOYENS_DISPO1 = "/intervention/{id}/moyen";
 
     // get images
-    public static final String GET_IMAGES = "/images";
+    public static final String GET_IMAGES = "/images/near/{latitude}/{longitude}/15";
 }

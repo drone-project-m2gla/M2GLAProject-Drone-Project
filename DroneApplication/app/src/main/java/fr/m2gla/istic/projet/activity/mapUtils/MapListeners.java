@@ -3,6 +3,7 @@ package fr.m2gla.istic.projet.activity.mapUtils;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -27,9 +28,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.m2gla.istic.projet.activity.CarouselActivity;
 import fr.m2gla.istic.projet.activity.MapActivity;
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
 import fr.m2gla.istic.projet.model.Mean;
@@ -146,6 +149,7 @@ public class MapListeners implements
 
         MarkerOptions markerOpt = new MarkerOptions()
             .position(latLng)
+            .title(GeneralConstants.TITLE_DRONE_MARKER)
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
         Marker marker = mapActivity.map.addMarker(markerOpt);
         mapActivity.getDroneMarkers().add(marker);
@@ -168,7 +172,6 @@ public class MapListeners implements
                     .geodesic(true)
                     .width(5)
                     .color(Color.rgb(143, 0, 71));
-
 
             mapActivity.getPolylineList().add(mapActivity.map.addPolyline(polylineOptions));
 
@@ -268,51 +271,60 @@ public class MapListeners implements
      */
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //Log.d(TAG, "main onClusterItemInfoWindowClick");
-        final Symbol meanSymbol = markerSymbolLinkMap.get(marker.getId()).getSymbol();
-        final String meanSymbolId = meanSymbol.getId();
-        final Marker _marker = marker;
-        if (!meanSymbol.isTopographic()) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mapActivity).setTitle(R.string.actions_moyens);
+        // If drone marker return
+        if (GeneralConstants.TITLE_MOYEN_MARKER.equals(marker.getTitle())) {
+            final Symbol meanSymbol = markerSymbolLinkMap.get(marker.getId()).getSymbol();
+            final String meanSymbolId = meanSymbol.getId();
+            final Marker _marker = marker;
+            if (!meanSymbol.isTopographic()) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mapActivity).setTitle(R.string.actions_moyens);
 
-            if (!meanSymbol.isValidated()) {
-                alertDialogBuilder.setItems(R.array.optionsMoyenEngage, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position of the selected item
-                        switch (which) {
-                            case 0: {
-                                validateMeanPosition(_marker.getPosition(), meanSymbolId);
-                                break;
-                            }
-                            case 1: {
-                                freeMean(meanSymbolId);
-                                break;
-                            }
-                            case 2: {
-                                sendMeanBackToCRM(meanSymbolId);
-                                break;
-                            }
-                        }
-                    }
-                });
-            } else {
-                alertDialogBuilder.setItems(R.array.optionsMoyenEngageEnPosition, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position of the selected item
-                        switch (which) {
-                            case 0: {
-                                freeMean(meanSymbolId);
-                                break;
-                            }
-                            case 1: {
-                                sendMeanBackToCRM(meanSymbolId);
-                                break;
+                if (!meanSymbol.isValidated()) {
+                    alertDialogBuilder.setItems(R.array.optionsMoyenEngage, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // The 'which' argument contains the index position of the selected item
+                            switch (which) {
+                                case 0: {
+                                    validateMeanPosition(_marker.getPosition(), meanSymbolId);
+                                    break;
+                                }
+                                case 1: {
+                                    freeMean(meanSymbolId);
+                                    break;
+                                }
+                                case 2: {
+                                    sendMeanBackToCRM(meanSymbolId);
+                                    break;
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                } else {
+                    alertDialogBuilder.setItems(R.array.optionsMoyenEngageEnPosition, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // The 'which' argument contains the index position of the selected item
+                            switch (which) {
+                                case 0: {
+                                    freeMean(meanSymbolId);
+                                    break;
+                                }
+                                case 1: {
+                                    sendMeanBackToCRM(meanSymbolId);
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                }
+                alertDialogBuilder.show();
             }
-            alertDialogBuilder.show();
+        } else if (GeneralConstants.TITLE_DRONE_MARKER.equals(marker.getTitle())) {
+            // Go to carousel
+            Intent intent = new Intent(mapActivity.getApplicationContext(), CarouselActivity.class);
+            intent.putExtra(GeneralConstants.REF_ACT_LAT_IMG, marker.getPosition().latitude);
+            intent.putExtra(GeneralConstants.REF_ACT_LON_IMG, marker.getPosition().longitude);
+
+            mapActivity.startActivity(intent);
         }
     }
 
