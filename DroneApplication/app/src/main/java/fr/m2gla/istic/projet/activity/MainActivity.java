@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -69,18 +68,18 @@ public class MainActivity extends Activity {
 
         // Recuperer l'option du menu selectionnee
         switch (id) {
-        // Reglage prevu pour plus tard
-        //case R.id.action_settings :
-        //    return true;
-        case R.id.action_deconnection :
-            this.initializeElement();
-            return true;
-        case R.id.action_quit :
-            Log.i(TAG, "Fin Application");
+            // Reglage prevu pour plus tard
+            //case R.id.action_settings :
+            //    return true;
+            case R.id.action_deconnection:
+                this.initializeElement();
+                return true;
+            case R.id.action_quit:
+                Log.i(TAG, "Fin Application");
 
-            // Arret de l'activity ici
-            finish();
-            return true;
+                // Arret de l'activity ici
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -91,7 +90,7 @@ public class MainActivity extends Activity {
      * Methode de gestion de l'usage des touches
      *
      * @param keyCode : Code de la touche
-     * @param event : Evènement
+     * @param event   : Evènement
      * @return true si reussite de l'operation, false sinon
      */
     @Override
@@ -102,8 +101,6 @@ public class MainActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
 
 
     /**
@@ -146,21 +143,19 @@ public class MainActivity extends Activity {
      *
      * @param view : vue courante
      */
-    public void actiValider(View view) {
+    public void activerValider(View view) {
 
         int radioBSelect;
         EditText textLogin = (EditText) findViewById(R.id.loginGet);
         EditText textPassword = (EditText) findViewById(R.id.passwordGet);
         RadioGroup roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
-        RadioButton codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
-
 
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
             this.loginName = "" + textLogin.getText();
         } else {
             Toast.makeText(getApplicationContext(), "Manque le login", Toast.LENGTH_SHORT).show();
-            Log.i("actiValider", "Pas de Login");
+            Log.i("activerValider", "Pas de Login");
             this.initializeElement();
             return;
         }
@@ -261,4 +256,5 @@ public class MainActivity extends Activity {
     private void postLoginAction() {
         this.initializeElement();
     }
+
 }
