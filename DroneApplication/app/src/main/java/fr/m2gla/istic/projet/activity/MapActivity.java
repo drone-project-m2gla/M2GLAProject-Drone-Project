@@ -51,6 +51,7 @@ import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Symbol;
+import fr.m2gla.istic.projet.model.Target;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
@@ -546,6 +547,21 @@ public class MapActivity extends Activity implements ObserverTarget {
             restParams.put("id", idIntervention);
 
             RestServiceImpl.getInstance()
+                    .get(RestAPI.GET_TARGET, restParams, Target.class,
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    drawTarget((Target)response);
+                                }
+                            },
+                            new Command() {
+                                @Override
+                                public void execute(Object response) {
+                                    Log.e(TAG, "Error get target");
+                                }
+                            });
+
+            RestServiceImpl.getInstance()
                     .get(RestAPI.GET_INTERVENTION, restParams, Intervention.class,
                             new Command() {
                                 @Override
@@ -659,5 +675,52 @@ public class MapActivity extends Activity implements ObserverTarget {
      */
     public List<GroundOverlay> getDronePathArrowImageList() {
         return dronePathArrowImageList;
+    }
+
+    private void drawTarget(Target target) {
+        Position oldPos = null;
+        for (Position p : target.getPositions()) {
+            //Remove old target
+            notifyClear();
+
+            MarkerOptions markerOpt = new MarkerOptions()
+                    .position(new LatLng(p.getLatitude(), p.getLongitude()))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+            Marker marker = map.addMarker(markerOpt);
+            getDroneMarkers().add(marker);
+
+            if (oldPos != null) {
+                PolylineOptions polylineOptions = new PolylineOptions()
+                        .add(new LatLng(oldPos.getLatitude(), oldPos.getLongitude()))
+                        .add(new LatLng(p.getLatitude(), p.getLongitude()))
+                        .geodesic(true)
+                        .width(5)
+                        .color(Color.rgb(143, 0, 71));
+
+
+                polylineList.add(map.addPolyline(polylineOptions));
+
+                double xx = (p.getLatitude() + oldPos.getLongitude())/2;
+                double yy = (p.getLatitude() + oldPos.getLatitude())/2;
+
+                LatLng positionMiddle = new LatLng(yy, xx);
+
+                double delta_x = oldPos.getLongitude() - p.getLongitude()  ;
+                double delta_y = oldPos.getLatitude() - p.getLatitude()  ;
+
+                float angle = (float) Math.toDegrees(Math.atan2(delta_y, delta_x));
+
+                //Set the new marker to the overlay
+                BitmapDrawable overlayItem = rotateDrawable(-angle);
+                GroundOverlayOptions newarkMap = new GroundOverlayOptions()
+                        .image(fromBitmap(overlayItem.getBitmap()))
+                        .position(positionMiddle, 15f, 15f);
+
+                // Add an overlay to the map, retaining a handle to the GroundOverlay object.
+                dronePathArrowImageList.add(map.addGroundOverlay(newarkMap));
+            }
+
+            oldPos = p;
+        }
     }
 }

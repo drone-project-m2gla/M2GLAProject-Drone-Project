@@ -191,14 +191,9 @@ public class MapListeners implements
             // Add an overlay to the map, retaining a handle to the GroundOverlay object.
 
             mapActivity.getDronePathArrowImageList().add(mapActivity.map.addGroundOverlay(newarkMap));
-
-
         }
 
         droneTargetActionFragment.addPosition(position);
-
-
-
     }
 
     /**

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by baptiste on 16/04/15.
  * Chemin du drone
  */
-public class Target {
+public class Target extends Entity {
     private String interventionId;
     private List<Position> positions;
     private boolean isClose;
