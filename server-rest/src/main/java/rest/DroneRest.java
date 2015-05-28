@@ -7,9 +7,11 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import dao.TargetDAO;
 import entity.GeoImage;
 import service.position.DroneThread;
 import service.position.TransitDroneSender;
@@ -21,6 +23,8 @@ import entity.Target;
  */
 @Path("/drone")
 public class DroneRest {
+	private Target target;
+
     /**
      * @return the position of the drone
      */
@@ -42,12 +46,27 @@ public class DroneRest {
 	}
 
     /**
+     * get the ride of the drone
+     */
+	@GET
+	@Path("target/{interventionId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Target getTrajet(@PathParam("interventionId") int interventionId) {
+		return target;
+	}
+
+    /**
      * add the ride of the drone
      */
 	@POST
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void doTrajet(Target target) {
+		TargetDAO targetDAO = new TargetDAO();
+		targetDAO.connect();
+		target = targetDAO.create(target);
+		targetDAO.disconnect();
+		
 		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
 
 		DroneThread.createNewInstance();

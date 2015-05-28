@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.bson.Document;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
+
 import util.Constant;
 import util.Tools;
 import entity.Target;
@@ -45,4 +48,8 @@ public class TargetDAO extends AbstractDAO<Target> {
 		return document;
 	}
 
+	public Target getTargetByInterventionId(int interventionId) {
+		FindIterable findIterable = collection.find(new BasicDBObject("interventionId", interventionId));
+		return documentToEntity((Document) findIterable.first());
+	}
 }
