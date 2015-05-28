@@ -167,11 +167,6 @@ public class MapActivity extends Activity implements ObserverTarget {
         topoSymbolRenderer.setContext(getApplicationContext());
         topoClusterManager.setRenderer(topoSymbolRenderer);
 
-        droneClusterManager = new ClusterManager<>(this, map);
-        ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
-
-        droneClusterManager.setRenderer(imageDroneRenderer);
-
         dronePathArrowImageList = new ArrayList<>();
 
         // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
