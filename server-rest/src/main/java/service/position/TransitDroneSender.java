@@ -25,14 +25,25 @@ import java.io.IOException;
  * Created by alban on 16/04/15.
  */
 public class TransitDroneSender implements PositionUnchangedObserver {
-	private static final Logger LOGGER = Logger
-			.getLogger(TransitDroneSender.class);
+	private static final Logger LOGGER = Logger.getLogger(TransitDroneSender.class);
+	private static TransitDroneSender INSTANCE = new TransitDroneSender();
 	private Target target;
 	private int index = 0;
 	private boolean isIncrement;
-
-	public TransitDroneSender(Target target) {
+	
+	public static TransitDroneSender getINSTANCE() {
+		return INSTANCE;
+	}
+	
+	public Target getTarget() {
+		return target;
+	}
+	
+	public void setTarget(Target target) {
 		this.target = target;
+	}
+
+	protected TransitDroneSender() {
 		this.isIncrement = true;
 	}
 

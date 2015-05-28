@@ -11,6 +11,10 @@ public class Target extends AbstractEntity {
     private boolean isClose;
     private int interventionId;
 
+    public Target() {
+        super();
+    }
+
     public List<Position> getPositions() {
         return positions;
     }
@@ -42,10 +46,15 @@ public class Target extends AbstractEntity {
         
         Target target = (Target) o;
         for (int i = 0; i < positions.size(); i++) {
+            boolean found = false;
             for (int j = 0; j < target.positions.size(); j++) {
                 if (positions.get(i).equals(target.positions.get(j))) {
-                    break;
+                	found = true;
+                	break;
                 }
+            }
+
+            if (!found) {
                 return false;
             }
         }

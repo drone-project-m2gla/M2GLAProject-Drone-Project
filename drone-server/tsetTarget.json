@@ -11,5 +11,6 @@
             "altitude": 10
         }
     ],
-    "close": false
+    "close": false,
+    "interventionId": 0
 }
