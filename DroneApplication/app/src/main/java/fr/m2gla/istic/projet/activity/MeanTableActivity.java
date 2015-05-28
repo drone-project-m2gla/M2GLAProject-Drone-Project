@@ -2,30 +2,19 @@
 package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -37,17 +26,12 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
-import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
-import fr.m2gla.istic.projet.context.UserQualification;
-import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
-import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.MeanState;
 import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
-import fr.m2gla.istic.projet.strategy.Strategy;
 
 /**
  * Created by david on 21/05/15.
@@ -60,15 +44,7 @@ public class MeanTableActivity extends Activity {
     private boolean         withRefusedMeans = false;
     private boolean         withTimeColor = false;
 
-    private String          titleMeanTab[];/*{
-                                GeneralConstants.MEAN_TABLE_1,
-                                GeneralConstants.MEAN_TABLE_2,
-                                GeneralConstants.MEAN_TABLE_3,
-                                GeneralConstants.MEAN_TABLE_4,
-                                GeneralConstants.MEAN_TABLE_5,
-                                GeneralConstants.MEAN_TABLE_6
-                            };*/
-
+    private String          titleMeanTab[];
 
     /**
      * Methode Principale de l'activité gerant l'affichage de la table des moyens d'une intervention

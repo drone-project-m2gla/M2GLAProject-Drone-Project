@@ -56,11 +56,6 @@
         </activity>
 
         <activity
-            android:name=".SVGActivity"
-            android:screenOrientation="landscape">
-        </activity>
-
-        <activity
             android:name=".CarouselActivity"
             android:screenOrientation="landscape">
         </activity>
