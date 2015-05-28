@@ -380,8 +380,8 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         adapter = (ItemsAdapter) this.curListView.getAdapter();
         position = this.curListView.getPositionForView(v);
         xtraMean = adapter.getMeanInList(position);
-Log.i(TAG, "--> Position = " + position + ", Moyen = " + xtraMean.getVehicle() + " " + xtraMean.getName());
-Log.i(TAG, "--> Premier element visible = " + this.curListView.getFirstVisiblePosition() + " " + position);
+        // Log.i(TAG, "--> Position = " + position + ", Moyen = " + xtraMean.getVehicle() + " " + xtraMean.getName());
+        // Log.i(TAG, "--> Premier element visible = " + this.curListView.getFirstVisiblePosition() + " " + position);
 
         return (onValidateClick(xtraMean, position));
     }
@@ -440,8 +440,8 @@ Log.i(TAG, "--> Premier element visible = " + this.curListView.getFirstVisiblePo
         adapter = (ItemsAdapter) this.curListView.getAdapter();
         position = this.curListView.getPositionForView(v);
         xtraMean = adapter.getMeanInList(position);
-Log.i(TAG, "--> Position = " + position + ", Moyen = " + xtraMean.getVehicle() + " " + xtraMean.getName());
-Log.i(TAG, "--> Premier element visible = " + this.curListView.getFirstVisiblePosition() + " " + position);
+        // Log.i(TAG, "--> Position = " + position + ", Moyen = " + xtraMean.getVehicle() + " " + xtraMean.getName());
+        // Log.i(TAG, "--> Premier element visible = " + this.curListView.getFirstVisiblePosition() + " " + position);
 
         return (onCancelClick(xtraMean, position));
     }
