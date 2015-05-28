@@ -37,7 +37,7 @@ public class DroneTargetActionFragment extends Fragment implements Observable {
     }
 
     public void setInterventionID(String interventionId) {
-        target.setInterventionsId(interventionId);
+        target.setInterventionId(interventionId);
     }
 
     /**

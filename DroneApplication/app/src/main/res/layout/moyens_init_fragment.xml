@@ -15,6 +15,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight=".15"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="14sp"
             android:text="@string/moyens_a_placer" />
 
         <ListView
@@ -34,6 +36,8 @@
             android:id="@+id/moyens_transit_textview"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="14sp"
             android:layout_weight=".15"
             android:text="@string/moyens_en_transit" />
 
@@ -54,7 +58,9 @@
             android:id="@+id/moyens_supp_textview"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight=".25"
+            android:layout_weight=".2"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="14sp"
             android:text="@string/moyens_a_valider" />
 
         <ListView
@@ -75,6 +81,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight=".35"
+            android:textSize="14sp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/moyens_refuses" />
 
 

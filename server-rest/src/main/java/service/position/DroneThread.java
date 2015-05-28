@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.GeoImageDAO;
 import entity.GeoImage;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import service.PushService;
+import service.PushService.TypeClient;
 import service.impl.PushServiceImpl;
 import util.Configuration;
 import util.Tools;
@@ -19,30 +20,29 @@ import entity.Position;
 /**
  * Created by alban on 16/04/15.
  */
-public class GetDronePositionThread implements Runnable, PositionUnchangedObservable {
-	private static GetDronePositionThread INSTANCE;
+public class DroneThread implements Runnable, PositionUnchangedObservable {
+	private static final Logger LOGGER = Logger.getLogger(DroneThread.class);
+	private static DroneThread INSTANCE;
 
 	private List<PositionUnchangedObserver> positionObservers = new ArrayList<PositionUnchangedObserver>();
 	private Position position;
 	private GeoImage image;
-    private int interventionId;
 	private boolean continueThread;
 
-	private GetDronePositionThread(int interventionId) {
-        this.interventionId = interventionId;
+	private DroneThread() {
         this.position = new Position(0.0, 0.0, 0.0);
         this.continueThread = true;
 	}
 
-	public static GetDronePositionThread getInstance() {
+	public static DroneThread getInstance() {
 		return INSTANCE;
 	}
 
-	public static void createNewInstance(int interventionId) {
+	public static void createNewInstance() {
 		if (INSTANCE != null) {
 			INSTANCE.stopThread();
 		}
-		INSTANCE = new GetDronePositionThread(interventionId);
+		INSTANCE = new DroneThread();
 	}
 
 	public synchronized void stopThread() {
@@ -68,26 +68,17 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 				Position position = mapper.readValue(getPosition.getResponseBodyAsString(), Position.class);
 				if (position != null && !Tools.isSamePositions(this.position, position)) {
 					this.position = position;
-					PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,
-								"droneMove", position);
-
-					GetMethod getImage = new GetMethod(
-							Configuration.getSERVER_PYTHON() + "/picture");
-					client.executeMethod(getImage);
-					this.image = mapper.readValue( getImage.getResponseBodyAsString(), GeoImage.class);
-                    GeoImageDAO dao = new GeoImageDAO();
-                    dao.connect();
-                    dao.create(this.image);
-                    dao.disconnect();
-                    PushServiceImpl.getInstance().sendMessage(PushService.TypeClient.SIMPLEUSER,"imageDrone",image);
+					PushServiceImpl.getInstance().sendMessage(TypeClient.SIMPLEUSER, "droneMove", position);
 				} else {
 					notifyObserversForPositionUnchanged();
 				}
-				Thread.sleep(29870/10);
+				Thread.sleep(30000);
 			} catch (IOException e) {
-				// LOGGER.error("Get position error", e);
+				LOGGER.error("Get position error", e);
+				return;
 			} catch (InterruptedException e) {
-				// LOGGER.error("Get position error", e);
+				LOGGER.error("Get position error", e);
+				return;
 			}
 		}
 	}
@@ -111,6 +102,6 @@ public class GetDronePositionThread implements Runnable, PositionUnchangedObserv
 
 	@Override
 	public void flushPositionUnchangedObservers() {
-		this.positionObservers = new ArrayList<PositionUnchangedObserver>();
+		this.positionObservers.clear();
 	}
 }

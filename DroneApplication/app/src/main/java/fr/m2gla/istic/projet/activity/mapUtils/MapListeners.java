@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.HashMap;
@@ -142,9 +144,11 @@ public class MapListeners implements
         position.setLatitude(latLng.latitude);
         position.setLongitude(latLng.longitude);
 
-        ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, null);
-        mapActivity.getDroneClusterManager().addItem(marker);
-        mapActivity.getDroneClusterManager().cluster();
+        MarkerOptions markerOpt = new MarkerOptions()
+            .position(latLng)
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+        Marker marker = mapActivity.map.addMarker(markerOpt);
+        mapActivity.getDroneMarkers().add(marker);
 
         // unclose target if add marker after close target
         if (droneTargetActionFragment.getTarget().isClose()) {

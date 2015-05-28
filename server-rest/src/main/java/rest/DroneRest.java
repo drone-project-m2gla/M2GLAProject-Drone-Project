@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import entity.GeoImage;
-import service.position.GetDronePositionThread;
+import service.position.DroneThread;
 import service.position.TransitDroneSender;
 import entity.Position;
 import entity.Target;
@@ -28,7 +28,7 @@ public class DroneRest {
 	@Path("position")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Position getPosition() {
-		return GetDronePositionThread.getInstance().getPosition();
+		return DroneThread.getInstance().getPosition();
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class DroneRest {
 	@Path("image")
 	@Produces(MediaType.APPLICATION_JSON)
 	public GeoImage getImage() throws IOException {
-		return GetDronePositionThread.getInstance().getImage();
+		return DroneThread.getInstance().getImage();
 	}
 
     /**
@@ -48,11 +48,13 @@ public class DroneRest {
 	@Path("target")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void doTrajet(Target target) {
-        TransitDroneSender transitDroneSender = new TransitDroneSender(target);
-        GetDronePositionThread.createNewInstance(target.getInterventionId());
+		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
 
-		GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
-		GetDronePositionThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
+		DroneThread.createNewInstance();
+		DroneThread.getInstance().flushPositionUnchangedObservers();
+		DroneThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
+
+		new Thread(DroneThread.getInstance()).start();
 	}
 
 	/**
@@ -60,11 +62,10 @@ public class DroneRest {
      */
 	@DELETE
 	@Path("target")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopTrajet() {
-        if (GetDronePositionThread.getInstance() != null) {
-            GetDronePositionThread.getInstance().stopThread();
-            GetDronePositionThread.getInstance().flushPositionUnchangedObservers();
+        if (DroneThread.getInstance() != null) {
+        	DroneThread.getInstance().flushPositionUnchangedObservers();
+        	DroneThread.getInstance().stopThread();
         }
 	}
 }
