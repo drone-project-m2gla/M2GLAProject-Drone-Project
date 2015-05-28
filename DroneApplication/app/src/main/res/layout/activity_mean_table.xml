@@ -27,6 +27,8 @@
                 android:id="@+id/meanTableIdDisp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/mean_table_title"
+                android:textColor="#00FF00"
                 android:layout_weight="8"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 

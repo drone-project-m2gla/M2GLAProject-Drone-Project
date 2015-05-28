@@ -38,4 +38,13 @@
         <item>  Libérer </item>
     </string-array>
 
+    <string-array name="meansTableColumns">
+        <item>VÉHICULES</item>
+        <item>DEMANDÉ</item>
+        <item>DÉCLENCHÉ</item>
+        <item>ARRIVÉ</item>
+        <item>ENGAGÉ</item>
+        <item>LIBÉRÉ</item>
+    </string-array>
+
 </resources>

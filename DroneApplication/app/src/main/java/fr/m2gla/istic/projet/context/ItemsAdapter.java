@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -218,7 +219,6 @@ public class ItemsAdapter extends ArrayAdapter {
             LayoutInflater mInflater = activity.getLayoutInflater();
 
             convertView = mInflater.inflate(this.customLayout, parent, false);
-
             holder = new ViewHolder();
 
             holder.itemLabelTxtView = (TextView) convertView.findViewById(R.id.tvLanguage);
@@ -234,12 +234,17 @@ public class ItemsAdapter extends ArrayAdapter {
                 holder.annullerImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        int pos;
+                        ListView    lv;
 
-                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
+                        // Récupérer la liste (listview) courante
+                        lv = (ListView) activity.findViewById(R.id.intervention_detail_list);
+                        pos = lv.getPositionForView(v);
+                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(pos);
                         if (ItemsAdapter.this.xtraMean == null) return;
 
                         if (adapterCommand != null) {
-                            adapterCommand.onCancelClick(ItemsAdapter.this.xtraMean, position);
+                            adapterCommand.onCancelClick(ItemsAdapter.this.xtraMean, pos);
                         }
                     }
                 });
@@ -247,12 +252,19 @@ public class ItemsAdapter extends ArrayAdapter {
                 holder.validerImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        int pos;
+                        ListView    lv;
 
-                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
+                        // Récupérer la liste (listview) courante
+                        lv = (ListView) activity.findViewById(R.id.intervention_detail_list);
+                        pos = lv.getPositionForView(v);
+                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(pos);
                         if (ItemsAdapter.this.xtraMean == null) return;
+                        Log.i(TAG, "--> Position = " + pos + ", Moyen = " + ItemsAdapter.this.xtraMean.getVehicle() + " " + ItemsAdapter.this.xtraMean.getName());
+                        Log.i(TAG, "--> Premier element visible = " + lv.getFirstVisiblePosition() + " " + position);
 
                         if (adapterCommand != null) {
-                            adapterCommand.onValidateClick(ItemsAdapter.this.xtraMean, position);
+                            adapterCommand.onValidateClick(ItemsAdapter.this.xtraMean, pos);
                         }
                     }
                 });

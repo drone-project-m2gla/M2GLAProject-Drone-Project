@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -19,20 +22,20 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.m2gla.istic.projet.activity.mapUtils.ImageDroneRenderer;
-import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
 import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
 import fr.m2gla.istic.projet.activity.mapUtils.RefreshAlarmManager;
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolMarkerClusterItem;
@@ -56,6 +59,8 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap;
+
 
 public class MapActivity extends Activity implements ObserverTarget {
     private static final String TAG = "MapActivity";
@@ -71,7 +76,10 @@ public class MapActivity extends Activity implements ObserverTarget {
     // Cluster managers pour gérer les trois types de marqueurs
     private ClusterManager<SymbolMarkerClusterItem> meansClusterManager;
     private ClusterManager<SymbolMarkerClusterItem> topoClusterManager;
-    private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
+
+
+    // List of Arrows when drawing drone path
+    private List<GroundOverlay> dronePathArrowImageList;
 
     // Définition des écouteurs sur la carte et les marqueurs
     private MapListeners mapListeners;
@@ -93,7 +101,6 @@ public class MapActivity extends Activity implements ObserverTarget {
         return isDroneMode;
     }
 
-
     /**
      * Methode renvoyant la liste des trajets successifs du drone
      *
@@ -102,11 +109,6 @@ public class MapActivity extends Activity implements ObserverTarget {
     public List<Polyline> getPolylineList() {
         return polylineList;
     }
-
-
-//    public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
-//        return droneClusterManager;
-//    }
 
     public DroneTargetActionFragment getDroneTargetActionFragment() {
         return droneTargetActionFragment;
@@ -122,7 +124,6 @@ public class MapActivity extends Activity implements ObserverTarget {
         refreshAlarmManager.UnregisterAlarmBroadcast();
         super.onDestroy();
     }
-
 
     /**
      * Methode Principale de l'activité de gestion de la carte
@@ -166,10 +167,7 @@ public class MapActivity extends Activity implements ObserverTarget {
         topoSymbolRenderer.setContext(getApplicationContext());
         topoClusterManager.setRenderer(topoSymbolRenderer);
 
-//        droneClusterManager = new ClusterManager<>(this, map);
-//        ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
-//
-//        droneClusterManager.setRenderer(imageDroneRenderer);
+        dronePathArrowImageList = new ArrayList<>();
 
         // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
         mapFragment.getView().setOnDragListener(mapListeners);
@@ -390,6 +388,12 @@ public class MapActivity extends Activity implements ObserverTarget {
             m.remove();
         }
 
+
+        for (int i = 0; i< dronePathArrowImageList.size(); i++){
+            dronePathArrowImageList.get(i).remove();
+        }
+
+
         polylineList.clear();
     }
 
@@ -406,7 +410,50 @@ public class MapActivity extends Activity implements ObserverTarget {
                 .color(Color.rgb(143, 0, 71));
 
         polylineList.add(map.addPolyline(polylineOptions));
+
+        double xx = (pos1.getLongitude() + pos2.getLongitude())/2;
+        double yy = (pos1.getLatitude() + pos2.getLatitude())/2;
+
+        LatLng positionMiddle = new LatLng(yy, xx);
+
+        double delta_x = pos2.getLongitude() - pos1.getLongitude();
+        double delta_y = pos2.getLatitude() - pos1.getLatitude();
+
+        float angle = (float) Math.toDegrees(Math.atan2(delta_y, delta_x));
+
+        //Set the new marker to the overlay
+        BitmapDrawable overlayItem = rotateDrawable(-angle);
+        GroundOverlayOptions newarkMap = new GroundOverlayOptions()
+                .image(fromBitmap(overlayItem.getBitmap()))
+                .position(positionMiddle, 15f, 15f);
+
+        // Add an overlay to the map, retaining a handle to the GroundOverlay object.
+        //    mapActivity.map.addGroundOverlay(newarkMap);
+        this.getDronePathArrowImageList().add(this.map.addGroundOverlay(newarkMap));
+
     }
+
+    public BitmapDrawable rotateDrawable(float angle)
+    {
+        Bitmap arrowBitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                R.drawable.fleche);
+        // Create blank bitmap of equal size
+        Bitmap canvasBitmap = arrowBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        canvasBitmap.eraseColor(0x00000000);
+
+        // Create canvas
+        Canvas canvas = new Canvas(canvasBitmap);
+
+        // Create rotation matrix
+        Matrix rotateMatrix = new Matrix();
+        rotateMatrix.setRotate(angle, canvas.getWidth()/2, canvas.getHeight()/2);
+
+        // Draw bitmap onto canvas using matrix
+        canvas.drawBitmap(arrowBitmap, rotateMatrix, null);
+
+        return new BitmapDrawable(this.getResources(),canvasBitmap);
+    }
+
 
     public void moveDrone(final Position position) {
         if (drone != null) {
@@ -433,18 +480,6 @@ public class MapActivity extends Activity implements ObserverTarget {
                             m.setIcon(BitmapDescriptorFactory.fromBitmap(imageMin));
                         }
                     }
-//                    Collection<Marker> imageMarker = droneClusterManager.getMarkerCollection().getMarkers();
-//                    for (Marker m : imageMarker) {
-//                        if (positionEqual(m.getPosition(), image.getPosition())) {
-//                            // Remove marker
-//                            LatLng latLng = m.getPosition();
-//                            m.remove();
-//                            // Replace marker to image marker
-//                            ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, image.getImage());
-//                            droneClusterManager.addItem(marker);
-//                            droneClusterManager.cluster();
-//                        }
-//                    }
                 }
             });
         }
@@ -615,5 +650,14 @@ public class MapActivity extends Activity implements ObserverTarget {
      */
     public void setDraggingMode(boolean isDragging) {
         this.isDragging = isDragging;
+    }
+
+    /**
+     * Permet de définir un booléen qui empêche la mise à jour des marquers,
+     * lors de l'action glisser-déposer, suite aux actions des autres utilisateurs
+     * @param
+     */
+    public List<GroundOverlay> getDronePathArrowImageList() {
+        return dronePathArrowImageList;
     }
 }
