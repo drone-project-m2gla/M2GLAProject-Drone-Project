@@ -117,24 +117,6 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                 List<Mean> meanList = intervention.meansRequested();
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, meanList);
-                /*List<Drawable> drawables = new ArrayList<Drawable>();
-
-                if (images.length > 0) {
-                    for (String imageId : images) {
-                        Log.wtf(TAG, "iamge id " + (imageId != null));
-                        if (!imageId.equals("")) {
-                            SVG svg = null;
-                            try {
-                                svg = SVG.getFromResource(getActivity(), getResources().getIdentifier(imageId, "raw", getActivity().getPackageName()));
-                            } catch (SVGParseException e) {
-                                e.printStackTrace();
-                            }
-                            drawables.add(new PictureDrawable(svg.renderToPicture()));
-                        } else {
-                            drawables.add(getResources().getDrawable(R.drawable.bubble_shadow));
-                        }
-                    }
-                }*/
 
                 curListView = (ListView) view.findViewById(R.id.intervention_detail_list);
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
@@ -210,8 +192,9 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             titleFragement.setVisibility(View.VISIBLE);
             titleNoMoyen.setVisibility(View.GONE);
             int position = 0;
-            for (Mean m : listXtra) {
 
+            drawables.clear();
+            for (Mean m : listXtra) {
                 if (!m.refusedMeans()) {
 
                     titles[position] = m.getVehicle().toString();
