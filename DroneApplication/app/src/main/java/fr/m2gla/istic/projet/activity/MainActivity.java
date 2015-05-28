@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -19,7 +18,8 @@ import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.context.UserQualification;
 import fr.m2gla.istic.projet.model.User;
 import fr.m2gla.istic.projet.service.RestService;
-import fr.m2gla.istic.projet.service.impl.*;
+import fr.m2gla.istic.projet.service.impl.PushServiceImpl;
+import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 
 
 public class MainActivity extends Activity {
@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getActionBar().setTitle(R.string.presentation_text);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
@@ -67,18 +68,18 @@ public class MainActivity extends Activity {
 
         // Recuperer l'option du menu selectionnee
         switch (id) {
-        // Reglage prevu pour plus tard
-        //case R.id.action_settings :
-        //    return true;
-        case R.id.action_deconnection :
-            this.initializeElement();
-            return true;
-        case R.id.action_quit :
-            Log.i(TAG, "Fin Application");
+            // Reglage prevu pour plus tard
+            //case R.id.action_settings :
+            //    return true;
+            case R.id.action_deconnection:
+                this.initializeElement();
+                return true;
+            case R.id.action_quit:
+                Log.i(TAG, "Fin Application");
 
-            // Arret de l'activity ici
-            finish();
-            return true;
+                // Arret de l'activity ici
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -89,7 +90,7 @@ public class MainActivity extends Activity {
      * Methode de gestion de l'usage des touches
      *
      * @param keyCode : Code de la touche
-     * @param event : Evènement
+     * @param event   : Evènement
      * @return true si reussite de l'operation, false sinon
      */
     @Override
@@ -100,8 +101,6 @@ public class MainActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
 
 
     /**
@@ -124,6 +123,7 @@ public class MainActivity extends Activity {
         this.loginPassword = "";
         this.userQualification = UserQualification.SIMPLEUSER;
 
+        findViewById(R.id.mainLayout).requestFocus();
     }
 
     /**
@@ -143,21 +143,19 @@ public class MainActivity extends Activity {
      *
      * @param view : vue courante
      */
-    public void actiValider(View view) {
+    public void activerValider(View view) {
 
         int radioBSelect;
         EditText textLogin = (EditText) findViewById(R.id.loginGet);
         EditText textPassword = (EditText) findViewById(R.id.passwordGet);
         RadioGroup roleRadioG = (RadioGroup) findViewById(R.id.roleRadioGroup);
-        RadioButton codisRadioB = (RadioButton) findViewById(R.id.codisRadioButton);
-
 
         // Recuperer le nom de login
         if (textLogin.getText().length() != 0) {
             this.loginName = "" + textLogin.getText();
         } else {
             Toast.makeText(getApplicationContext(), "Manque le login", Toast.LENGTH_SHORT).show();
-            Log.i("actiValider", "Pas de Login");
+            Log.i("activerValider", "Pas de Login");
             this.initializeElement();
             return;
         }
@@ -258,4 +256,5 @@ public class MainActivity extends Activity {
     private void postLoginAction() {
         this.initializeElement();
     }
+
 }

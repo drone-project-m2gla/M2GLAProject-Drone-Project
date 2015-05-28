@@ -36,6 +36,10 @@ public class DroneTargetActionFragment extends Fragment implements Observable {
         observers = new ArrayList<>();
     }
 
+    public void setInterventionID(String interventionId) {
+        target.setInterventionId(interventionId);
+    }
+
     /**
      * Ajout d'une position au drone
      * @param position : Nouvelle position pour le drone
@@ -119,11 +123,25 @@ public class DroneTargetActionFragment extends Fragment implements Observable {
         view.findViewById(R.id.cleanTargetDrone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (ObserverTarget observer : observers) {
-                    observer.notifyClear();
-                }
-                target.getPositions().clear();
-                target.setClose(false);
+                RestServiceImpl.getInstance()
+                        .delete(RestAPI.DELETE_PARCOURS_DRONE, null,
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.i(TAG, "Target remove success");
+                                        for (ObserverTarget observer : observers) {
+                                            observer.notifyClear();
+                                        }
+                                        target.getPositions().clear();
+                                        target.setClose(false);
+                                    }
+                                },
+                                new Command() {
+                                    @Override
+                                    public void execute(Object response) {
+                                        Log.i(TAG, "Target remove error");
+                                    }
+                                });
             }
         });
 

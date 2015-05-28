@@ -8,12 +8,18 @@ import java.util.Properties;
  * Created by alban on 12/03/15.
  */
 public class Configuration {
+    private static String PATH_LOG;
     private static String DATABASE_NAME;
     private static String MONGODB_HOSTNAME;
     private static String SERVER_PYTHON;
     private static String MONGODB_PORT;
     private static String MONGODB_PWD;
     private static String MONGODB_USER;
+    
+    public static String getPATH_LOG() {
+        if (PATH_LOG == null) {loadConfigurations();}
+        return PATH_LOG;
+    }
 
     public static String getMONGODB_PWD()
     {
@@ -66,6 +72,7 @@ public class Configuration {
         }
 
 
+        PATH_LOG = prop.getProperty("PATH_LOG");
         DATABASE_NAME = prop.getProperty("DATABASE_NAME");
         MONGODB_HOSTNAME = prop.getProperty("MONGODB_HOSTNAME");
         SERVER_PYTHON = prop.getProperty("SERVER_PYTHON");

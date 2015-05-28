@@ -189,7 +189,7 @@ public class SVGAdapter {
      */
     public static BitmapDescriptor convertSymbolToIcon(Context context, Symbol symbol){
         Drawable drawable = convertSymbolToDrawable(context, symbol);
-        Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 50, 50, true);
+        Bitmap image = Bitmap.createScaledBitmap(SVGAdapter.convertDrawableToBitmap(drawable, 64, 64), 60, 60, true);
         BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(image);
         return icon;
     }

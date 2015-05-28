@@ -17,10 +17,10 @@ public class StrategyCodisValidateMean implements Strategy {
 
     /**
      *
-     * @param interventionDetailFragment
+     * @param detailFragment
      */
-    public void setFragment(InterventionDetailFragment interventionDetailFragment) {
-        this.detailFragment = interventionDetailFragment;
+    public void setFragment(InterventionDetailFragment detailFragment) {
+        this.detailFragment = detailFragment;
         Log.i(TAG, "Setter");
     }
 
@@ -45,7 +45,7 @@ public class StrategyCodisValidateMean implements Strategy {
     @Override
     public void call(Object object) {
         if (detailFragment != null) {
-            detailFragment.updateFragmentOnMap((Mean) object);
+            detailFragment.updateMeanRequestView((Mean) object);
         }
     }
 

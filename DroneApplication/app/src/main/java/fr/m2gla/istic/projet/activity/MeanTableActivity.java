@@ -45,6 +45,7 @@ import fr.m2gla.istic.projet.fragments.InterventionListFragment;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.MeanState;
+import fr.m2gla.istic.projet.model.Vehicle;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.Strategy;
 
@@ -57,15 +58,16 @@ public class MeanTableActivity extends Activity {
     private String          idIntervention = null;
     private Intervention    intervention = null;
     private boolean         withRefusedMeans = false;
+    private boolean         withTimeColor = false;
 
-    private String          titleMeanTab[] = {
+    private String          titleMeanTab[];/*{
                                 GeneralConstants.MEAN_TABLE_1,
                                 GeneralConstants.MEAN_TABLE_2,
                                 GeneralConstants.MEAN_TABLE_3,
                                 GeneralConstants.MEAN_TABLE_4,
                                 GeneralConstants.MEAN_TABLE_5,
                                 GeneralConstants.MEAN_TABLE_6
-                            };
+                            };*/
 
 
     /**
@@ -78,9 +80,10 @@ public class MeanTableActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mean_table);
 
-        Intent  intent;
-        Button  addButton = (Button) findViewById(R.id.addInterButton);
+        Intent      intent;
+        Button      addButton = (Button) findViewById(R.id.addInterButton);
         CheckBox    withRefusedMeansCheck = (CheckBox) findViewById(R.id.refusedMeanCheckDisp);
+        CheckBox    timeColorMeanCheck = (CheckBox) findViewById(R.id.timeColorCheckDisp);
 
 
         intent = getIntent();
@@ -106,6 +109,10 @@ public class MeanTableActivity extends Activity {
         addButton.setVisibility(View.INVISIBLE);
 
         withRefusedMeansCheck.setTextColor(Color.CYAN);
+        timeColorMeanCheck.setTextColor(Color.MAGENTA);
+
+        //Désignation des colonnes de la table des moyens depuis ressources.xml
+        titleMeanTab = getResources().getStringArray(R.array.meansTableColumns);
 
         MeanTableViewRefresh();
 
@@ -132,7 +139,7 @@ public class MeanTableActivity extends Activity {
         return new Command() {
             @Override
             public void execute(Object response) {
-                Toast.makeText(getApplicationContext(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG).show();
             }
         };
     }
@@ -171,10 +178,15 @@ public class MeanTableActivity extends Activity {
                 table.removeAllViews();
 
                 // Ajout du nom de l'intervention
-                tv = (TextView) findViewById(R.id.meanTableIdDisp);
+                /*tv = (TextView) findViewById(R.id.meanTableIdDisp);
                 tv.setText(intervention.getLabel());
                 tv.setGravity(Gravity.CENTER);
-                tv.setTextColor(Color.GREEN);
+                tv.setTextColor(Color.GREEN);*/
+                // Montrer l'id de l'intervention et l'adresse dans le titre
+                getActionBar().setTitle(intervention.getLabel() + " : " +
+                        intervention.getAddress() + " " +
+                        intervention.getPostcode() + " " +
+                        intervention.getCity());
 
                 // Mise en place de la ligne de titres
                 row = new TableRow(MeanTableActivity.this);
@@ -194,32 +206,31 @@ public class MeanTableActivity extends Activity {
                 for (Mean m:meanList) {
                     String  str;
                     refusedMean = false;
-                    int color = Color.WHITE, idx = 6, i;
+                    int color = Color.WHITE, bgcolor = Color.TRANSPARENT, idx = 6, i;
 
                     MeanState meanState = m.getMeanState();
                     if (meanState.compareTo(MeanState.REFUSED) == 0) {
                         color = Color.RED;
                         idx = 4;
-                    }
-                    else if (meanState.compareTo(MeanState.REQUESTED) == 0) {
+                    } else if (meanState.compareTo(MeanState.REQUESTED) == 0) {
                         color = Color.BLUE;
                         idx = 0;
-                    }
-                    else if (meanState.compareTo(MeanState.ACTIVATED) == 0) {
+                    } else if (meanState.compareTo(MeanState.ACTIVATED) == 0) {
                         color = Color.CYAN;
                         idx = 1;
-                    }
-                    else if (meanState.compareTo(MeanState.ARRIVED) == 0) {
+                    } else if (meanState.compareTo(MeanState.ARRIVED) == 0) {
                         color = Color.GREEN;
                         idx = 2;
-                    }
-                    else if (meanState.compareTo(MeanState.ENGAGED) == 0) {
+                    } else if (meanState.compareTo(MeanState.ENGAGED) == 0) {
                         color = Color.YELLOW;
                         idx = 3;
-                    }
-                    else if (meanState.compareTo(MeanState.RELEASED) == 0) {
+                    } else if (meanState.compareTo(MeanState.RELEASED) == 0) {
                         color = Color.rgb(0xff, 0x8C, 0x00);
                         idx = 4;
+                    }
+                    if (withTimeColor != true) {
+                        bgcolor = Color.rgb(0xff, 0xff, 0xff);
+                        color = getMeanColor(m.getVehicle());
                     }
 
                     // Verifier si le moyen est a afficher
@@ -278,11 +289,19 @@ public class MeanTableActivity extends Activity {
                     i = 0;
                     for (String s:dateList) {
                         tv = new TextView(MeanTableActivity.this);
-                        if (i == idx) {
-                            tv.setTextColor(color);
+                        if (withTimeColor == true) {
+                            if (i == idx) {
+                                tv.setTextColor(color);
+                            }
+                            else {
+                                tv.setTextColor(Color.LTGRAY);
+                            }
                         }
                         else {
-                            tv.setTextColor(Color.LTGRAY);
+                            if (i == idx) {
+                                tv.setBackgroundColor(bgcolor);
+                            }
+                            tv.setTextColor(getMeanColor(m.getVehicle()));
                         }
                         i++;
 
@@ -291,7 +310,7 @@ public class MeanTableActivity extends Activity {
                         }
                         else if (s.compareTo(GeneralConstants.MEAN_REFUSED) == 0) {
                             dateStr = s;
-                            tv.setTextColor(Color.RED);
+                            if (withTimeColor == true) tv.setTextColor(Color.RED);
                         }
                         else {
                             dateLong = Long.valueOf(s);
@@ -382,13 +401,21 @@ public class MeanTableActivity extends Activity {
      * @param view : vue courante
      */
     public void MeanTableViewRefresh(View view) {
-        CheckBox    withRefusedMeansCheck = (CheckBox) view;
+        CheckBox    withRefusedMeansCheck = (CheckBox) findViewById(R.id.refusedMeanCheckDisp);
+        CheckBox    timeColorMeanCheck = (CheckBox) findViewById(R.id.timeColorCheckDisp);
 
         if (withRefusedMeansCheck.isChecked()) {
             this.withRefusedMeans = true;
         }
         else {
             this.withRefusedMeans = false;
+        }
+
+        if (timeColorMeanCheck.isChecked()) {
+            this.withTimeColor = true;
+        }
+        else {
+            this.withTimeColor = false;
         }
 
         MeanTableViewRefresh();
@@ -405,5 +432,27 @@ public class MeanTableActivity extends Activity {
         finish();
     }
 
+
+    /**
+     * Retourne la couleur en fonction du type de vehicule
+     * @param vehicleType : Type de véhicule
+     * @return : Couleur sous forme d'entier
+     */
+    private int getMeanColor(Vehicle vehicleType) {
+        switch (vehicleType) {
+            case VSAV :
+                return Color.GREEN;
+            case VSR :
+                return Color.RED;
+            case VLCG :
+                return Color.MAGENTA;
+            case EPA :
+            case FPT :
+                return Color.RED;
+            case CCGC :
+                return Color.BLUE;
+        }
+        return (Color.LTGRAY);
+    }
 
 }

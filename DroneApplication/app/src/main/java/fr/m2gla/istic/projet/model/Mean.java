@@ -24,6 +24,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération du type de véhicule
+     *
      * @return : type de véhicule
      */
     public Vehicle getVehicle() {
@@ -32,6 +33,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement du type de véhicule
+     *
      * @param vehicle : type de véhicule
      */
     public void setVehicle(Vehicle vehicle) {
@@ -40,6 +42,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération des coordonnées du véhicule
+     *
      * @return : coordonnées du véhicule
      */
     public Position getCoordinates() {
@@ -48,6 +51,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement des coordonnées du véhicule
+     *
      * @param coordinates : coordonnées du véhicule
      */
     public void setCoordinates(Position coordinates) {
@@ -56,6 +60,7 @@ public class Mean extends Entity {
 
     /**
      * Indique si la position du moyen est validée
+     *
      * @return : true si la position est validée, false sinon
      */
     public boolean getInPosition() {
@@ -64,6 +69,7 @@ public class Mean extends Entity {
 
     /**
      * Indique si la position du moyen est validée
+     *
      * @return : true si la position est validée, false sinon
      */
     public boolean isInPosition() {
@@ -72,6 +78,7 @@ public class Mean extends Entity {
 
     /**
      * Permet de spécifier si la position du moyen est validée
+     *
      * @param inPosition : true si la position est validée, false sinon
      */
     public void setInPosition(boolean inPosition) {
@@ -80,6 +87,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération de l'état courant du moyen
+     *
      * @return : état courant du moyen
      */
     public MeanState getMeanState() {
@@ -88,6 +96,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement de l'état courant du moyen
+     *
      * @param meanState : état courant du moyen
      */
     public void setMeanState(MeanState meanState) {
@@ -96,6 +105,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération du nom / de la désignation unique du moyen
+     *
      * @return : nom / désignation unique du moyen
      */
     public String getName() {
@@ -104,6 +114,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement du nom / de la désignation unique du moyen
+     *
      * @param name : nom / désignation unique du moyen
      */
     public void setName(String name) {
@@ -112,6 +123,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération de la date de refus du moyen
+     *
      * @return : date de refus du moyen
      */
     public String getDateRefused() {
@@ -120,6 +132,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement de la date de refus du moyen
+     *
      * @param dateRefused : date de refus du moyen
      */
     public void setDateRefused(String dateRefused) {
@@ -128,6 +141,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération de la date de demande de moyen supplémentaire
+     *
      * @return : date de demande de moyen supplémentaire
      */
     public String getDateRequested() {
@@ -136,6 +150,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement de la date de demande de moyen supplémentaire
+     *
      * @param dateRequested : date de demande de moyen supplémentaire
      */
     public void setDateRequested(String dateRequested) {
@@ -144,6 +159,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération de la date de validation du moyen
+     *
      * @return : date validation du moyen
      */
     public String getDateActivated() {
@@ -152,6 +168,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement de la date validation du moyen
+     *
      * @param dateActivated : date validation du moyen
      */
     public void setDateActivated(String dateActivated) {
@@ -160,6 +177,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération de la date d'arrivée du moyen sur le lieu de l'intervention
+     *
      * @return : date d'arrivée du moyen sur le lieu de l'intervention
      */
     public String getDateArrived() {
@@ -168,6 +186,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement de la date d'arrivée du moyen sur le lieu de l'intervention
+     *
      * @param dateArrived : date d'arrivée du moyen sur le lieu de l'intervention
      */
     public void setDateArrived(String dateArrived) {
@@ -176,6 +195,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération de la date d'engagement du moyen
+     *
      * @return : date d'engagement du moyen
      */
     public String getDateEngaged() {
@@ -184,6 +204,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement de la date d'engagement du moyen
+     *
      * @param dateEngaged : date d'engagement du moyen
      */
     public void setDateEngaged(String dateEngaged) {
@@ -192,6 +213,7 @@ public class Mean extends Entity {
 
     /**
      * Récupération de la date de libération du moyen
+     *
      * @return : date de libération du moyen
      */
     public String getDateReleased() {
@@ -200,6 +222,7 @@ public class Mean extends Entity {
 
     /**
      * Renseignement de la date de libération du moyen
+     *
      * @param dateReleased : date de libération du moyen
      */
     public void setDateReleased(String dateReleased) {
@@ -208,6 +231,7 @@ public class Mean extends Entity {
 
     /**
      * Vérification de l'état Refusé du moyen
+     *
      * @return : true si le moyen a été refusé, false sinon
      */
     public boolean refusedMeans() {
@@ -216,6 +240,7 @@ public class Mean extends Entity {
 
     /**
      * Vérification de l'état demandé du moyen
+     *
      * @return : true si le moyen est en cours de demande
      */
     public boolean requestedMean() {
@@ -224,6 +249,7 @@ public class Mean extends Entity {
 
     /**
      * Vérification de l'état arrivée du moyen
+     *
      * @return : true si le moyen est arrivée sur le lieu de l'intervention, false sinon
      */
     public boolean arrivedMean() {
@@ -232,8 +258,9 @@ public class Mean extends Entity {
 
     /**
      * Vérification de l'état en transit du moyen
+     *
      * @return : true si le moyen est en cours de déplacement vers sa position d'intervention, false
-     *          sinon
+     * sinon
      */
     public boolean onTransitMean() {
         return this.meanState == MeanState.ACTIVATED;

@@ -3,8 +3,13 @@ package fr.m2gla.istic.projet.activity.mapUtils;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
@@ -12,8 +17,11 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.HashMap;
@@ -28,7 +36,7 @@ import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
-
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap;
 /**
  * Created by fernando on 22/05/15.
  */
@@ -105,6 +113,27 @@ public class MapListeners implements
         return true;
     }
 
+    public BitmapDrawable rotateDrawable(float angle)
+    {
+        Bitmap arrowBitmap = BitmapFactory.decodeResource(mapActivity.getApplicationContext().getResources(),
+                R.drawable.fleche);
+        // Create blank bitmap of equal size
+        Bitmap canvasBitmap = arrowBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        canvasBitmap.eraseColor(0x00000000);
+
+        // Create canvas
+        Canvas canvas = new Canvas(canvasBitmap);
+
+        // Create rotation matrix
+        Matrix rotateMatrix = new Matrix();
+        rotateMatrix.setRotate(angle, canvas.getWidth()/2, canvas.getHeight()/2);
+
+        // Draw bitmap onto canvas using matrix
+        canvas.drawBitmap(arrowBitmap, rotateMatrix, null);
+
+        return new BitmapDrawable(mapActivity.getResources(),canvasBitmap);
+    }
+
 
     @Override
     public void onMapLongClick(LatLng latLng) {
@@ -115,9 +144,11 @@ public class MapListeners implements
         position.setLatitude(latLng.latitude);
         position.setLongitude(latLng.longitude);
 
-        ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, null);
-        mapActivity.getDroneClusterManager().addItem(marker);
-        mapActivity.getDroneClusterManager().cluster();
+        MarkerOptions markerOpt = new MarkerOptions()
+            .position(latLng)
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+        Marker marker = mapActivity.map.addMarker(markerOpt);
+        mapActivity.getDroneMarkers().add(marker);
 
         // unclose target if add marker after close target
         if (droneTargetActionFragment.getTarget().isClose()) {
@@ -138,10 +169,36 @@ public class MapListeners implements
                     .width(5)
                     .color(Color.rgb(143, 0, 71));
 
+
             mapActivity.getPolylineList().add(mapActivity.map.addPolyline(polylineOptions));
+
+            double xx = (latLng.longitude + pos.getLongitude())/2;
+            double yy = (latLng.latitude + pos.getLatitude())/2;
+
+            LatLng positionMiddle = new LatLng(yy, xx);
+
+            double delta_x = pos.getLongitude() - latLng.longitude  ;
+            double delta_y = pos.getLatitude() - latLng.latitude ;
+
+            float angle = (float) Math.toDegrees(Math.atan2(delta_y, delta_x));
+
+            //Set the new marker to the overlay
+            BitmapDrawable overlayItem = rotateDrawable(-angle);
+            GroundOverlayOptions newarkMap = new GroundOverlayOptions()
+                    .image(fromBitmap(overlayItem.getBitmap()))
+                    .position(positionMiddle, 15f, 15f);
+
+            // Add an overlay to the map, retaining a handle to the GroundOverlay object.
+
+            mapActivity.getDronePathArrowImageList().add(mapActivity.map.addGroundOverlay(newarkMap));
+
+
         }
 
         droneTargetActionFragment.addPosition(position);
+
+
+
     }
 
     /**

@@ -2,8 +2,14 @@ package fr.m2gla.istic.projet.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,22 +19,26 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.m2gla.istic.projet.activity.mapUtils.ImageDroneRenderer;
-import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
+import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
+import fr.m2gla.istic.projet.activity.mapUtils.RefreshAlarmManager;
+import fr.m2gla.istic.projet.activity.mapUtils.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.activity.mapUtils.SymbolRenderer;
 import fr.m2gla.istic.projet.command.Command;
 import fr.m2gla.istic.projet.context.GeneralConstants;
@@ -36,13 +46,11 @@ import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.fragments.DroneTargetActionFragment;
 import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
 import fr.m2gla.istic.projet.fragments.MoyensSuppFragment;
-import fr.m2gla.istic.projet.activity.mapUtils.MapListeners;
 import fr.m2gla.istic.projet.model.GeoImage;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.model.Symbol;
-import fr.m2gla.istic.projet.activity.mapUtils.SymbolMarkerClusterItem;
 import fr.m2gla.istic.projet.model.Topographie;
 import fr.m2gla.istic.projet.observer.ObserverTarget;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
@@ -50,6 +58,8 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyImageDrone;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanMove;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMeanValidatePosition;
 import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
+
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap;
 
 
 public class MapActivity extends Activity implements ObserverTarget {
@@ -66,7 +76,10 @@ public class MapActivity extends Activity implements ObserverTarget {
     // Cluster managers pour gérer les trois types de marqueurs
     private ClusterManager<SymbolMarkerClusterItem> meansClusterManager;
     private ClusterManager<SymbolMarkerClusterItem> topoClusterManager;
-    private ClusterManager<ImageMarkerClusterItem> droneClusterManager;
+
+
+    // List of Arrows when drawing drone path
+    private List<GroundOverlay> dronePathArrowImageList;
 
     // Définition des écouteurs sur la carte et les marqueurs
     private MapListeners mapListeners;
@@ -76,40 +89,41 @@ public class MapActivity extends Activity implements ObserverTarget {
     private Circle drone;
     private List<Polyline> polylineList;
     private DroneTargetActionFragment droneTargetActionFragment;
-
+    private List<Marker> droneMarkers;
+    private RefreshAlarmManager refreshAlarmManager;
 
     /**
      * Methode renvoyant si le mode de fonctionnement de la carte est le mode drone
+     *
      * @return true si mode drone, false sinon
      */
     public boolean isDroneMode() {
         return isDroneMode;
     }
 
-
     /**
      * Methode renvoyant la liste des trajets successifs du drone
+     *
      * @return liste demandée
      */
     public List<Polyline> getPolylineList() {
         return polylineList;
     }
 
-
-    public ClusterManager<ImageMarkerClusterItem> getDroneClusterManager() {
-        return droneClusterManager;
-    }
-
     public DroneTargetActionFragment getDroneTargetActionFragment() {
         return droneTargetActionFragment;
+    }
+
+    public List<Marker> getDroneMarkers()  {
+        return droneMarkers;
     }
 
     @Override
     protected void onDestroy() {
         StrategyMoveDrone.getINSTANCE().setActivity(null);
+        refreshAlarmManager.UnregisterAlarmBroadcast();
         super.onDestroy();
     }
-
 
     /**
      * Methode Principale de l'activité de gestion de la carte
@@ -125,6 +139,7 @@ public class MapActivity extends Activity implements ObserverTarget {
         isDragging = false;
         polylineList = new ArrayList<Polyline>();
         restParams = new HashMap<String, String>();
+        droneMarkers = new ArrayList<Marker>();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = mapFragment.getMap();
@@ -152,10 +167,7 @@ public class MapActivity extends Activity implements ObserverTarget {
         topoSymbolRenderer.setContext(getApplicationContext());
         topoClusterManager.setRenderer(topoSymbolRenderer);
 
-        droneClusterManager = new ClusterManager<>(this, map);
-        ImageDroneRenderer imageDroneRenderer = new ImageDroneRenderer(this, map, droneClusterManager);
-
-        droneClusterManager.setRenderer(imageDroneRenderer);
+        dronePathArrowImageList = new ArrayList<>();
 
         // Définit les écouteurs pour les événements glisser et déposer afin de récupérer les symboles déplacés sur la carte
         mapFragment.getView().setOnDragListener(mapListeners);
@@ -178,6 +190,23 @@ public class MapActivity extends Activity implements ObserverTarget {
         findViewById(R.id.drone_targer_action).setVisibility(View.INVISIBLE);
 
         loadTopographicSymbols();
+
+        // Utiliser un timer pour rafraîchir les moyens de manière périodique
+        refreshAlarmManager = new RefreshAlarmManager(this, new Command() {
+            @Override
+            public void execute(Object response) {
+                Log.d(TAG, "Mise à jour périodique des moyens");
+                //mettre à jour la carte
+                updateMeans();
+                MoyensInitFragment moyensInitFragment = ((MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init));
+                // mettre à jour les listes de moyens
+                moyensInitFragment.demandMeanStrategy(null);
+                moyensInitFragment.arrivedMeanStrategy(null);
+                moyensInitFragment.transitMeanStrategy(null);
+                moyensInitFragment.refusedMeanStrategy(null);
+            }
+        }, 30000L);
+        refreshAlarmManager.RegisterAlarmBroadcast();
     }
 
     @Override
@@ -265,8 +294,8 @@ public class MapActivity extends Activity implements ObserverTarget {
                 }
                 break;
             case R.id.disp_mean_table:
-                Intent  intent;
-                String  idIntervention;
+                Intent intent;
+                String idIntervention;
 
                 // Creation d'un intent pour appeler une autre activité (SecondaryActivity)
                 intent = new Intent(getApplicationContext(), MeanTableActivity.class);
@@ -354,8 +383,16 @@ public class MapActivity extends Activity implements ObserverTarget {
             polyline.remove();
         }
 
-        droneClusterManager.clearItems();
-        droneClusterManager.cluster();
+        for (int i = 0; i < droneMarkers.size(); i++) {
+            Marker m = droneMarkers.get(i);
+            m.remove();
+        }
+
+
+        for (int i = 0; i< dronePathArrowImageList.size(); i++){
+            dronePathArrowImageList.get(i).remove();
+        }
+
 
         polylineList.clear();
     }
@@ -373,7 +410,50 @@ public class MapActivity extends Activity implements ObserverTarget {
                 .color(Color.rgb(143, 0, 71));
 
         polylineList.add(map.addPolyline(polylineOptions));
+
+        double xx = (pos1.getLongitude() + pos2.getLongitude())/2;
+        double yy = (pos1.getLatitude() + pos2.getLatitude())/2;
+
+        LatLng positionMiddle = new LatLng(yy, xx);
+
+        double delta_x = pos2.getLongitude() - pos1.getLongitude();
+        double delta_y = pos2.getLatitude() - pos1.getLatitude();
+
+        float angle = (float) Math.toDegrees(Math.atan2(delta_y, delta_x));
+
+        //Set the new marker to the overlay
+        BitmapDrawable overlayItem = rotateDrawable(-angle);
+        GroundOverlayOptions newarkMap = new GroundOverlayOptions()
+                .image(fromBitmap(overlayItem.getBitmap()))
+                .position(positionMiddle, 15f, 15f);
+
+        // Add an overlay to the map, retaining a handle to the GroundOverlay object.
+        //    mapActivity.map.addGroundOverlay(newarkMap);
+        this.getDronePathArrowImageList().add(this.map.addGroundOverlay(newarkMap));
+
     }
+
+    public BitmapDrawable rotateDrawable(float angle)
+    {
+        Bitmap arrowBitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                R.drawable.fleche);
+        // Create blank bitmap of equal size
+        Bitmap canvasBitmap = arrowBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        canvasBitmap.eraseColor(0x00000000);
+
+        // Create canvas
+        Canvas canvas = new Canvas(canvasBitmap);
+
+        // Create rotation matrix
+        Matrix rotateMatrix = new Matrix();
+        rotateMatrix.setRotate(angle, canvas.getWidth()/2, canvas.getHeight()/2);
+
+        // Draw bitmap onto canvas using matrix
+        canvas.drawBitmap(arrowBitmap, rotateMatrix, null);
+
+        return new BitmapDrawable(this.getResources(),canvasBitmap);
+    }
+
 
     public void moveDrone(final Position position) {
         if (drone != null) {
@@ -391,16 +471,13 @@ public class MapActivity extends Activity implements ObserverTarget {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Collection<Marker> imageMarker = droneClusterManager.getMarkerCollection().getMarkers();
-                    for (Marker m : imageMarker) {
+                    for (Marker m : droneMarkers) {
                         if (positionEqual(m.getPosition(), image.getPosition())) {
-                            // Remove marker
-                            LatLng latLng = m.getPosition();
-                            m.remove();
-                            // Replace marker to image marker
-                            ImageMarkerClusterItem marker = new ImageMarkerClusterItem(latLng, image.getImage());
-                            droneClusterManager.addItem(marker);
-                            droneClusterManager.cluster();
+                            byte[] byteImage = Base64.decode(image.getImage(), Base64.DEFAULT);
+                            Bitmap image = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
+                            Bitmap imageMin = Bitmap.createScaledBitmap(image, 50, 50, false);
+
+                            m.setIcon(BitmapDescriptorFactory.fromBitmap(imageMin));
                         }
                     }
                 }
@@ -426,8 +503,9 @@ public class MapActivity extends Activity implements ObserverTarget {
 
     /**
      * Permet de comparer deux positions données dans les formats LatLnt et Position
+     *
      * @param pos1 position 1 en format LatLng
-     * @param pos2 position 1 en format Position
+     * @param pos2 position 2 en format Position
      * @return True si on doit considérer les positions comme équivalentes
      */
     private boolean positionEqual(LatLng pos1, Position pos2) {
@@ -445,7 +523,7 @@ public class MapActivity extends Activity implements ObserverTarget {
      * Charge l'intervention et les moyens sur la carte
      */
     private void loadIntervention() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         if (intent != null) {
             String idIntervention = intent.getStringExtra(fr.m2gla.istic.projet.context.GeneralConstants.REF_ACT_IDINTER);
@@ -461,6 +539,9 @@ public class MapActivity extends Activity implements ObserverTarget {
             if (mInitFragment != null && idIntervention != null) {
                 mInitFragment.setInterventionID(idIntervention);
             }
+            if (droneTargetActionFragment != null && idIntervention != null) {
+                droneTargetActionFragment.setInterventionID(idIntervention);
+            }
 
             restParams.put("id", idIntervention);
 
@@ -470,10 +551,16 @@ public class MapActivity extends Activity implements ObserverTarget {
                                 @Override
                                 public void execute(Object response) {
                                     Intervention intervention = (Intervention) response;
+                                    // Montrer l'id de l'intervention et l'adresse dans le titre
+                                    getActionBar().setTitle(intervention.getLabel() + " : " +
+                                            intervention.getAddress() + " " +
+                                            intervention.getPostcode() + " " +
+                                            intervention.getCity());
+
                                     Position pos = intervention.getCoordinates();
 
                                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pos.getLatitude(), pos.getLongitude()), ZOOM_INDEX));
-                                    updateMeans();
+                                    loadMeansInMap();
                                 }
                             },
                             new Command() {
@@ -537,7 +624,7 @@ public class MapActivity extends Activity implements ObserverTarget {
                     String meanType = Symbol.getImage(meanClass);
                     Symbol symbol = new Symbol(m.getId(),
                             Symbol.SymbolType.valueOf(meanType),
-                            meanClass, Symbol.getCityTrigram(),
+                            meanClass, m.getName(),
                             Symbol.getMeanColor(m.getVehicle()));
 
                     symbol.setValidated(m.isInPosition());
@@ -558,9 +645,19 @@ public class MapActivity extends Activity implements ObserverTarget {
     /**
      * Permet de définir un booléen qui empêche la mise à jour des marquers,
      * lors de l'action glisser-déposer, suite aux actions des autres utilisateurs
+     *
      * @param isDragging
      */
-    public void setDraggingMode(boolean isDragging){
+    public void setDraggingMode(boolean isDragging) {
         this.isDragging = isDragging;
+    }
+
+    /**
+     * Permet de définir un booléen qui empêche la mise à jour des marquers,
+     * lors de l'action glisser-déposer, suite aux actions des autres utilisateurs
+     * @param
+     */
+    public List<GroundOverlay> getDronePathArrowImageList() {
+        return dronePathArrowImageList;
     }
 }

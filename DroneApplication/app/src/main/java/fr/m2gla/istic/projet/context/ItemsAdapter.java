@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -141,7 +142,7 @@ public class ItemsAdapter extends ArrayAdapter {
      * @param position : position dans le liste
      * @return : Moyen trouvé
      */
-    private Mean getMeanInList(int position) {
+    public Mean getMeanInList(int position) {
         if (this.meanList == null) {
             return (null);
         }
@@ -168,7 +169,7 @@ public class ItemsAdapter extends ArrayAdapter {
      * @param position
      * @return
      */
-    private int getMeanPositionInList(int position) {
+    public int getMeanPositionInList(int position) {
         if (this.meanList == null) {
             return (-1);
         }
@@ -218,7 +219,6 @@ public class ItemsAdapter extends ArrayAdapter {
             LayoutInflater mInflater = activity.getLayoutInflater();
 
             convertView = mInflater.inflate(this.customLayout, parent, false);
-
             holder = new ViewHolder();
 
             holder.itemLabelTxtView = (TextView) convertView.findViewById(R.id.tvLanguage);
@@ -234,12 +234,8 @@ public class ItemsAdapter extends ArrayAdapter {
                 holder.annullerImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
-                        if (ItemsAdapter.this.xtraMean == null) return;
-
                         if (adapterCommand != null) {
-                            adapterCommand.onCancelClick(ItemsAdapter.this.xtraMean, position);
+                            adapterCommand.onCancelClick(v);
                         }
                     }
                 });
@@ -247,12 +243,8 @@ public class ItemsAdapter extends ArrayAdapter {
                 holder.validerImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(position);
-                        if (ItemsAdapter.this.xtraMean == null) return;
-
                         if (adapterCommand != null) {
-                            adapterCommand.onValidateClick(ItemsAdapter.this.xtraMean, position);
+                            adapterCommand.onValidateClick(v);
                         }
                     }
                 });
@@ -263,7 +255,7 @@ public class ItemsAdapter extends ArrayAdapter {
             // Setting the color of the text
             holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
             // Setting the size of the text
-            holder.itemLabelTxtView.setTextSize(20f);
+            holder.itemLabelTxtView.setTextSize(12f);
 
             Drawable drawable = images[position];
             Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);
@@ -280,7 +272,7 @@ public class ItemsAdapter extends ArrayAdapter {
             // Setting the color of the text
             holder.itemLabelTxtView.setTextColor(Color.rgb(75, 180, 225));
             // Setting the size of the text
-            holder.itemLabelTxtView.setTextSize(20f);
+            holder.itemLabelTxtView.setTextSize(12f);
 
             Drawable drawable = images[position];
             Bitmap src = SVGAdapter.convertDrawableToBitmap(drawable, 64, 64);

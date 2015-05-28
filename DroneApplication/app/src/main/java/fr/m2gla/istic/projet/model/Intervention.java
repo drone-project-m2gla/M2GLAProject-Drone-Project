@@ -171,7 +171,7 @@ public class Intervention extends Entity {
         Iterator<Mean> it = this.getMeansList().iterator();
         while (it.hasNext()) {
             Mean m = it.next();
-            Log.i(TAG, "Mean " + m.getMeanState());
+            // Log.i(TAG, "Mean " + m.getMeanState());
             if (m.getMeanState() == MeanState.REQUESTED) {
                 means.add(m);
             }

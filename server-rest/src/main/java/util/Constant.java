@@ -4,6 +4,7 @@ package util;
  * Created by alban on 10/03/15.
  */
 public class Constant {
+    public static final String DATATYPE_TARGET = "TARGET";
     public static final String DATATYPE_GEOIMAGE = "GEOIMAGE";
     public static final String DATATYPE_USER = "USER";
     public static final String DATATYPE_MEAN = "MEAN";

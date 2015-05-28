@@ -30,9 +30,9 @@ import java.util.Map;
 
 import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.Command;
+import fr.m2gla.istic.projet.command.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
-import fr.m2gla.istic.projet.command.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.RestAPI;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
@@ -48,17 +48,19 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     private static final String TAG = "Inter";
     private Intervention intervention;
 
-    private String idIntervention = "";
-    private String[] titles;
-    private String[] images;
-    private ArrayList<String> titlesList;
-    private View view = null;
+    private String              idIntervention = "";
+    private String[]            titles;
+    private String[]            images;
+    private ArrayList<String>   titlesList;
+    private View                view = null;
+    private ListView            curListView;
 
 
     // Declaring the Integer Array with resourse Id's of Images for the Spinners
 
     /**
      * Methode principale
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -67,7 +69,8 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_intervention_detail, container, false);
-        StrategyCodisValidateMean.getINSTANCE().setFragment(this);
+
+        StrategyCodisValidateMean.getINSTANCE().setFragment(this); // Strategie de la validation des moyens
 
         return view;
     }
@@ -139,16 +142,16 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
                 }
 
-                ListView moyensListView = (ListView) view.findViewById(R.id.intervention_detail_list);
+                curListView = (ListView) view.findViewById(R.id.intervention_detail_list);
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 Context activity = InterventionDetailFragment.this.getActivity();
 //                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
                 ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titlesList, imagesArray, getIdIntervention(), meanList, InterventionDetailFragment.this);
                 Log.i(TAG, "adapterMeans  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
-                Log.i(TAG, "List\t" + (moyensListView == null));
+                Log.i(TAG, "List\t" + (curListView  == null));
 
-                moyensListView.setAdapter(adapter);
+                curListView.setAdapter(adapter);
             }
         };
     }
@@ -267,6 +270,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
     /**
      * Methode de récupération pas saisie écran du nom attribué au moyen validé
+     *
      * @param xtraMean
      * @param position
      */
@@ -295,14 +299,12 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                                         //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
                                         Log.i("itemsAdapter", "Moyen validé : " + position);
                                         refreshList();
-
-                                        // Mise en place de la stratégie.
-                                        updateFragmentOnMap(null);
-                                        MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
+//
+//                                        MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
 //                                        Activity initFragment = fragment.getActivity();
-                                        if (fragment != null) {
-                                            Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
-                                        }
+//                                        if (fragment != null) {
+//                                            Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
+//                                        }
                                     }
                                 }, new Command() {
                                     @Override
@@ -328,6 +330,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     /**
      * Demande de rafraichissement de la list des intervention et des détails de l'intervention
      * sélectionnée
+     *
      * @return true
      */
     @Override
@@ -343,15 +346,18 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
     /**
      * Methode d'action sur validation d'un moyen en attente
+     *
      * @param xtraMean : Moyen validé
      * @param position : Position dans la liste
      * @return true si validation effectuée, false sinon
      */
-    @Override
     public boolean onValidateClick(final Mean xtraMean, final int position) {
         final Map<String, String> map = new HashMap<>();
 
-        if (xtraMean == null) return (false);
+        if (xtraMean == null) {
+            Log.d(TAG, "Validation, Moyen NULL !");
+            return (false);
+        }
 
         meanNameGet(xtraMean, position);
         return (true);
@@ -359,15 +365,41 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
     /**
      * Methode d'action sur invalidation d'un moyen en attente
+     *
+     * @param v : vue courante
+     * @return true si invalidation effectuée, false sinon
+     */
+    @Override
+    public boolean onValidateClick(View v) {
+        final Mean xtraMean;
+        final int position;
+        final Map<String, String> map = new HashMap<>();
+        ItemsAdapter adapter;
+
+        // Récupérer l'adapter courante
+        adapter = (ItemsAdapter) this.curListView.getAdapter();
+        position = this.curListView.getPositionForView(v);
+        xtraMean = adapter.getMeanInList(position);
+        // Log.i(TAG, "--> Position = " + position + ", Moyen = " + xtraMean.getVehicle() + " " + xtraMean.getName());
+        // Log.i(TAG, "--> Premier element visible = " + this.curListView.getFirstVisiblePosition() + " " + position);
+
+        return (onValidateClick(xtraMean, position));
+    }
+
+    /**
+     * Methode d'action sur invalidation d'un moyen en attente
+     *
      * @param xtraMean : Moyen non validé
      * @param position : Position dans la liste
      * @return true si invalidation effectuée, false sinon
      */
-    @Override
     public boolean onCancelClick(final Mean xtraMean, final int position) {
         final Map<String, String> map = new HashMap<>();
 
-        if (xtraMean == null) return (false);
+        if (xtraMean == null) {
+            Log.d(TAG, "Refus, Moyen NULL !");
+            return (false);
+        }
 
         map.put("idintervention", idIntervention);
         //Toast.makeText(getContext(), "button annuler " + position, Toast.LENGTH_LONG).show();
@@ -393,7 +425,30 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     }
 
     /**
+     * Methode d'action sur invalidation d'un moyen en attente
+     * @param v : vue courante
+     * @return true si invalidation effectuée, false sinon
+     */
+    @Override
+    public boolean onCancelClick(View v) {
+        final Mean xtraMean;
+        final int position;
+        final Map<String, String> map = new HashMap<>();
+        ItemsAdapter adapter;
+
+        // Récupérer l'adapter courante
+        adapter = (ItemsAdapter) this.curListView.getAdapter();
+        position = this.curListView.getPositionForView(v);
+        xtraMean = adapter.getMeanInList(position);
+        // Log.i(TAG, "--> Position = " + position + ", Moyen = " + xtraMean.getVehicle() + " " + xtraMean.getName());
+        // Log.i(TAG, "--> Premier element visible = " + this.curListView.getFirstVisiblePosition() + " " + position);
+
+        return (onCancelClick(xtraMean, position));
+    }
+
+    /**
      * Recupération d'un moyen en fonction de sa position
+     *
      * @param position : position du moyen dans la liste
      * @return : Moyen trouvé
      */
@@ -403,16 +458,24 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
     /**
      * Récupération de l'identifiant de l'intervention en cours
+     *
      * @return : identifiant de l'intervention
      */
     public String getIdIntervention() {
         return idIntervention;
     }
 
-    public void updateFragmentOnMap(Mean mean) {
+    /**
+     * Méthode appelée par la strategie lorsqu'un moyen est validé par le CODIS.
+     *
+     * @param mean
+     */
+    public void updateMeanRequestView(Mean mean) {
         MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
         if (fragment != null) {
-            fragment.updateMeanValidation(mean);
+            fragment.demandMeanStrategy(mean);
+            fragment.transitMeanStrategy(mean);
+            fragment.refusedMeanStrategy(mean);
         }
     }
 }

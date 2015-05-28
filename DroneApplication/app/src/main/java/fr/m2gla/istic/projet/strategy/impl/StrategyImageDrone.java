@@ -1,14 +1,7 @@
 package fr.m2gla.istic.projet.strategy.impl;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-
-import java.util.Collection;
-
 import fr.m2gla.istic.projet.activity.MapActivity;
-import fr.m2gla.istic.projet.activity.mapUtils.ImageMarkerClusterItem;
 import fr.m2gla.istic.projet.model.GeoImage;
-import fr.m2gla.istic.projet.model.Position;
 import fr.m2gla.istic.projet.strategy.Strategy;
 import fr.m2gla.istic.projet.strategy.StrategyRegistery;
 
