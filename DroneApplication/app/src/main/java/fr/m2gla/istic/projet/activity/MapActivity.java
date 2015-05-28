@@ -505,7 +505,7 @@ public class MapActivity extends Activity implements ObserverTarget {
      * Permet de comparer deux positions données dans les formats LatLnt et Position
      *
      * @param pos1 position 1 en format LatLng
-     * @param pos2 position 1 en format Position
+     * @param pos2 position 2 en format Position
      * @return True si on doit considérer les positions comme équivalentes
      */
     private boolean positionEqual(LatLng pos1, Position pos2) {
