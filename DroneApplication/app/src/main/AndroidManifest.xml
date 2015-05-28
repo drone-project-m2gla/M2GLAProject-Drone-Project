@@ -36,49 +36,33 @@
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".MapActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
             android:name=".MeanTableActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
             android:name=".InterventionListActivity"
             android:screenOrientation="landscape">
-
-            <intent-filter>
-                <action android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
             android:name=".SVGActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
             android:name=".CarouselActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
