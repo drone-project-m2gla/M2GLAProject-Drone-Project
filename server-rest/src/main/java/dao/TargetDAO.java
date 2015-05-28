@@ -1,6 +1,5 @@
 package dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
@@ -17,7 +16,7 @@ public class TargetDAO extends AbstractDAO<Target> {
 	 * Contructor TargetDAO
 	 */
 	public TargetDAO() {
-		this.datatype = Constant.DATATYPE_GEOIMAGE;
+		this.datatype = Constant.DATATYPE_TARGET;
 	}
 
 	@Override

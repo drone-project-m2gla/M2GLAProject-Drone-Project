@@ -1,10 +1,18 @@
 [
-	{
-		"username":"baptiste",
-		"password":"martin"
-	},
-	{
-		"username":"d",
-		"password":"l"
-	}
+  {
+    "username": "baptiste",
+    "password": "martin"
+  },
+  {
+    "username": "d",
+    "password": "l"
+  },
+  {
+    "username": "noel",
+    "password": "plouzeau"
+  },
+  {
+    "username": "marc",
+    "password": "bousse"
+  }
 ]
