@@ -142,7 +142,7 @@ public class ItemsAdapter extends ArrayAdapter {
      * @param position : position dans le liste
      * @return : Moyen trouvé
      */
-    private Mean getMeanInList(int position) {
+    public Mean getMeanInList(int position) {
         if (this.meanList == null) {
             return (null);
         }
@@ -169,7 +169,7 @@ public class ItemsAdapter extends ArrayAdapter {
      * @param position
      * @return
      */
-    private int getMeanPositionInList(int position) {
+    public int getMeanPositionInList(int position) {
         if (this.meanList == null) {
             return (-1);
         }
@@ -234,17 +234,8 @@ public class ItemsAdapter extends ArrayAdapter {
                 holder.annullerImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int pos;
-                        ListView    lv;
-
-                        // Récupérer la liste (listview) courante
-                        lv = (ListView) activity.findViewById(R.id.intervention_detail_list);
-                        pos = lv.getPositionForView(v);
-                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(pos);
-                        if (ItemsAdapter.this.xtraMean == null) return;
-
                         if (adapterCommand != null) {
-                            adapterCommand.onCancelClick(ItemsAdapter.this.xtraMean, pos);
+                            adapterCommand.onCancelClick(v);
                         }
                     }
                 });
@@ -252,19 +243,8 @@ public class ItemsAdapter extends ArrayAdapter {
                 holder.validerImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int pos;
-                        ListView    lv;
-
-                        // Récupérer la liste (listview) courante
-                        lv = (ListView) activity.findViewById(R.id.intervention_detail_list);
-                        pos = lv.getPositionForView(v);
-                        ItemsAdapter.this.xtraMean = ItemsAdapter.this.getMeanInList(pos);
-                        if (ItemsAdapter.this.xtraMean == null) return;
-                        Log.i(TAG, "--> Position = " + pos + ", Moyen = " + ItemsAdapter.this.xtraMean.getVehicle() + " " + ItemsAdapter.this.xtraMean.getName());
-                        Log.i(TAG, "--> Premier element visible = " + lv.getFirstVisiblePosition() + " " + position);
-
                         if (adapterCommand != null) {
-                            adapterCommand.onValidateClick(ItemsAdapter.this.xtraMean, pos);
+                            adapterCommand.onValidateClick(v);
                         }
                     }
                 });
