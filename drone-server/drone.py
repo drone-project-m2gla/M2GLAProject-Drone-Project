@@ -8,7 +8,7 @@ bpymorse.set_speed(fps=60, logic_step_max=5, physics_step_max=5)
 '''quadrotor = Submarine()'''
 quadrotor = Quadrotor()
 '''quadrotor = B21()'''
-quadrotor.translate(x=-0, y=0, z=20)
+quadrotor.translate(x=-0, y=0, z=30)
 quadrotor.name = 'drone'
 
 camera = VideoCamera()
