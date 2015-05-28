@@ -8,7 +8,7 @@ from geometry_msgs.msg import Pose
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-lat0 = 48.117451
+lat0 = 48.11745
 lng0 = -1.641408
 
 def gpsToPoint(lat,lng):
@@ -24,7 +24,7 @@ def gpsToPoint(lat,lng):
 
     x =  coefx * gpsToMeter(lat,lng, lat,lng0)
     y =  coefy * gpsToMeter(lat,lng, lat0,lng)
-    return Point(x,y,20)
+    return Point(x,y,30)
 
 def gpsToMeter(lat_a, lng_a, lat_b, lng_b):
     angleLatA = math.radians(lat_a)
@@ -36,11 +36,11 @@ def gpsToMeter(lat_a, lng_a, lat_b, lng_b):
     t2 = math.cos(angleLatA)*math.sin(angleLngA)*math.cos(angleLatB)*math.sin(angleLngB)
     t3 = math.sin(angleLatA)*math.sin(angleLatB)
     tt = math.acos(t1 + t2 + t3) 
-    return 6366000*tt
+    return 6371000*tt
 
 def meterToGps(x,y):
-    lat = lat0 + (180/ math.pi)*(y/6378137)
-    lng = lng0 + (180/ math.pi)*(x/6378137)/math.cos(lat0)
+    lat = lat0 + (180/ math.pi)*(y/6371000)
+    lng = lng0 - (180/ math.pi)*(x/6371000)/math.cos(lat0)
     return (lat,lng)
 
 def callbackOdometry(data):
