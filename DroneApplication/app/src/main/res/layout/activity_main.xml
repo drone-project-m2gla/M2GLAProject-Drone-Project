@@ -112,7 +112,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_valid"
+        android:text="@string/action_connexion"
         android:id="@+id/validButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

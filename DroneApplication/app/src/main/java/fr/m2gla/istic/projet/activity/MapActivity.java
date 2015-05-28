@@ -62,7 +62,6 @@ import fr.m2gla.istic.projet.strategy.impl.StrategyMoveDrone;
 
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap;
 
-
 public class MapActivity extends Activity implements ObserverTarget {
     private static final String TAG = "MapActivity";
     private static final int ZOOM_INDEX = 18;

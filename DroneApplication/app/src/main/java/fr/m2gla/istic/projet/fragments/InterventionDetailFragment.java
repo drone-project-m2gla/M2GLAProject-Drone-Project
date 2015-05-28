@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -20,9 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +30,12 @@ import fr.m2gla.istic.projet.command.ListAdapterCommand;
 import fr.m2gla.istic.projet.context.GeneralConstants;
 import fr.m2gla.istic.projet.context.ItemsAdapter;
 import fr.m2gla.istic.projet.context.RestAPI;
+import fr.m2gla.istic.projet.context.SVGAdapter;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
 import fr.m2gla.istic.projet.strategy.impl.StrategyCodisValidateMean;
-
 
 /**
  * Fragment dde gestion de l'affichage des détails d'une intervention
@@ -50,7 +46,8 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
 
     private String              idIntervention = "";
     private String[]            titles;
-    private String[]            images;
+    //private String[]            images;
+    private List<Drawable>      drawables = new ArrayList<Drawable>();
     private ArrayList<String>   titlesList;
     private View                view = null;
     private ListView            curListView;
@@ -102,7 +99,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
         return new Command() {
             @Override
             public void execute(Object response) {
-                Toast.makeText(getActivity(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), "ERROR\nRequête HTTP en échec", Toast.LENGTH_LONG).show();
             }
         };
     }
@@ -120,7 +117,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                 List<Mean> meanList = intervention.meansRequested();
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, meanList);
-                List<Drawable> drawables = new ArrayList<Drawable>();
+                /*List<Drawable> drawables = new ArrayList<Drawable>();
 
                 if (images.length > 0) {
                     for (String imageId : images) {
@@ -133,13 +130,11 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                                 e.printStackTrace();
                             }
                             drawables.add(new PictureDrawable(svg.renderToPicture()));
-
                         } else {
                             drawables.add(getResources().getDrawable(R.drawable.bubble_shadow));
                         }
                     }
-
-                }
+                }*/
 
                 curListView = (ListView) view.findViewById(R.id.intervention_detail_list);
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
@@ -170,7 +165,7 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             }
         }
         titles = new String[listXtraNotDeclinedSize];
-        images = new String[listXtraNotDeclinedSize];
+        //images = new String[listXtraNotDeclinedSize];
         titlesList = new ArrayList<String>();
 
         LinearLayout nomLayout = (LinearLayout) this.view.findViewById(R.id.nomDetailsLayout);
@@ -222,7 +217,16 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                     titles[position] = m.getVehicle().toString();
                     titlesList.add(m.getVehicle().toString());
 
-                    images[position] = Symbol.getImage(m.getVehicle().toString());
+                    //images[position] = Symbol.getImage(m.getVehicle().toString());
+                    String meanClass = m.getVehicle().toString();
+                    String meanType = Symbol.getImage(meanClass);
+                    Symbol symbol = new Symbol(m.getId(),
+                            Symbol.SymbolType.valueOf(meanType),
+                            meanClass, m.getName(),
+                            Symbol.getMeanColor(m.getVehicle()));
+
+                    symbol.setValidated(m.isInPosition());
+                    drawables.add(SVGAdapter.convertSymbolToDrawable(getActivity(), symbol));
 
                     position++;
                 }

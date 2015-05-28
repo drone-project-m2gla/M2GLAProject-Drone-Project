@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import fr.m2gla.istic.projet.activity.R;
 import fr.m2gla.istic.projet.command.ListAdapterCommand;
 import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
-
 
 /**
  * Personnalisation de la classe ArrayAdapter
