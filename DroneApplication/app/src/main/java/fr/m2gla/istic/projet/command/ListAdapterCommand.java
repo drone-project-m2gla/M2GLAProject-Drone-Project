@@ -1,5 +1,7 @@
 package fr.m2gla.istic.projet.command;
 
+import android.view.View;
+
 import fr.m2gla.istic.projet.model.Mean;
 
 /**
@@ -18,12 +20,12 @@ public interface ListAdapterCommand {
      * Methode d'action après clic sur le bouton validation dans une liste
      * @return true si pas de problème, false sinon
      */
-    public boolean onValidateClick(Mean xtraMean, int position);
+    public boolean onValidateClick(View v);
 
 
     /**
      * Methode d'action après clic sur le bouton d'annulation dans une liste
      * @return true si pas de problème, false sinon
      */
-    public boolean onCancelClick(Mean xtraMean, int position);
+    public boolean onCancelClick(View v);
 }
