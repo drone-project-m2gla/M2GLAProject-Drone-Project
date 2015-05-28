@@ -681,6 +681,8 @@ public class MapActivity extends Activity implements ObserverTarget {
         //Remove old target
         notifyClear();
 
+        if (target == null) return;
+        
         for (Position p : target.getPositions()) {
             MarkerOptions markerOpt = new MarkerOptions()
                     .position(new LatLng(p.getLatitude(), p.getLongitude()))
