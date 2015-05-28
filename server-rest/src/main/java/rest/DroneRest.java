@@ -50,7 +50,7 @@ public class DroneRest {
      */
 	@GET
 	@Path("target/{interventionId}")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Target getTrajet(@PathParam("interventionId") int interventionId) {
 		return target;
 	}
