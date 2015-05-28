@@ -2,7 +2,7 @@ package fr.m2gla.istic.projet.strategy.impl;
 
 import android.util.Log;
 
-import fr.m2gla.istic.projet.fragments.MoyensInitFragment;
+import fr.m2gla.istic.projet.fragments.InterventionDetailFragment;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.strategy.Strategy;
 import fr.m2gla.istic.projet.strategy.StrategyRegistery;
@@ -17,14 +17,14 @@ public class StrategyCodisValidateMean implements Strategy {
 
     /**
      *
-     * @param moyensInitFragment
+     * @param detailFragment
      */
-    public void setFragment(MoyensInitFragment moyensInitFragment) {
-        this.moyensInitFragment = moyensInitFragment;
+    public void setFragment(InterventionDetailFragment detailFragment) {
+        this.detailFragment = detailFragment;
         Log.i(TAG, "Setter");
     }
 
-    private MoyensInitFragment moyensInitFragment;
+    private InterventionDetailFragment detailFragment;
 
     /**
      * Constructeur
@@ -44,8 +44,8 @@ public class StrategyCodisValidateMean implements Strategy {
 
     @Override
     public void call(Object object) {
-        if (moyensInitFragment != null) {
-            moyensInitFragment.updateMeanRequestView((Mean) object);
+        if (detailFragment != null) {
+            detailFragment.updateMeanRequestView((Mean) object);
         }
     }
 

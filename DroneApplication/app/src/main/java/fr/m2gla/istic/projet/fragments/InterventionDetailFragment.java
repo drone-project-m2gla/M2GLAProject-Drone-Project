@@ -38,6 +38,7 @@ import fr.m2gla.istic.projet.model.Intervention;
 import fr.m2gla.istic.projet.model.Mean;
 import fr.m2gla.istic.projet.model.Symbol;
 import fr.m2gla.istic.projet.service.impl.RestServiceImpl;
+import fr.m2gla.istic.projet.strategy.impl.StrategyCodisValidateMean;
 
 
 /**
@@ -67,6 +68,9 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_intervention_detail, container, false);
+
+        StrategyCodisValidateMean.getINSTANCE().setFragment(this); // Strategie de la validation des moyens
+
         return view;
     }
 
@@ -415,5 +419,19 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
      */
     public String getIdIntervention() {
         return idIntervention;
+    }
+
+    /**
+     * Méthode appelée par la strategie lorsqu'un moyen est validé par le CODIS.
+     *
+     * @param mean
+     */
+    public void updateMeanRequestView(Mean mean) {
+        MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
+        if (fragment != null) {
+            fragment.demandMeanStrategy(mean);
+            fragment.transitMeanStrategy(mean);
+            fragment.refusedMeanStrategy(mean);
+        }
     }
 }

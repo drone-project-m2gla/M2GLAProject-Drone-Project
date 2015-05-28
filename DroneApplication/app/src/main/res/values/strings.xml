@@ -2,10 +2,10 @@
 <resources>
     <string name="app_name">Drone Application</string>
 
-    <string name="no_image">Pas dimage</string>
+    <string name="no_image">Pas d\'image</string>
 
     <string name="action_settings">Reglages</string>
-    <string name="action_deconnection">Deconnexion</string>
+    <string name="action_deconnection">Déconnexion</string>
     <string name="action_quit">Quitter</string>
 
     <string name="yes">Oui</string>
@@ -31,7 +31,7 @@
 
     <string name="label_text">"Nom d'intervention :"</string>
 
-    <string name="address_hint">Rue,Voie, Allée</string>
+    <string name="address_hint">Rue, Voie, Allée</string>
     <string name="codepostal_hint">Code Postal</string>
     <string name="ville_hint">Ville</string>
     <string name="sinistreCode_text">Selection du code sinistre :</string>
@@ -49,7 +49,6 @@
     <string name="switch_dorne_mode">Passer en mode drone</string>
     <string name="switch_moyen_mode">Passer en mode gestion des moyens</string>
     <string name="disp_moyen_table">Liste des moyens</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="management_target">Gestion du trajet</string>
     <string name="validate_target">Valider</string>
@@ -74,6 +73,6 @@
     <string name="moyens_en_transit">Moyens en transit</string>
     <string name="actions_moyens">Sélectionnez une action sur le moyen</string>
 
-    <string name="withRefusedMeans">Inclus les Moyens refusés</string>
+    <string name="withRefusedMeans">Inclure les moyens refusés</string>
     <string name="timeColorDisp">"Couleur en fonction de l'état"</string>
 </resources>
