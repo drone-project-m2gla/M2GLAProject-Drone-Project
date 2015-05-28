@@ -64,7 +64,7 @@ public class DroneRest {
 	public void doTrajet(Target target) {
 		TargetDAO targetDAO = new TargetDAO();
 		targetDAO.connect();
-		target = targetDAO.create(target);
+		this.target = targetDAO.create(target);
 		targetDAO.disconnect();
 		
 		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
