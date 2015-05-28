@@ -3,6 +3,7 @@ package dao;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.client.FindIterable;
+
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import entity.GeoImage;
 import util.Constant;
+import util.Datetime;
 import util.Tools;
 
 /**
@@ -38,7 +40,11 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         geoImage.setImage(document.getString("image"));
         geoImage.setWidth(document.getInteger("width"));
         geoImage.setHeight(document.getInteger("height"));
-        if(document.getLong("interventionId")!=null)
+        if(document.getDate("date") != null)
+        {
+            geoImage.setDate(document.getDate("date"));
+        }
+        if(document.getLong("interventionId") != null)
         {
             geoImage.setInterventionId(document.getLong("interventionId"));
         }
@@ -54,6 +60,7 @@ public class GeoImageDAO extends AbstractDAO<GeoImage> {
         document.put("width",entity.getWidth());
         document.put("position", Tools.positionToBasicDBList(entity.getPosition()));
         document.put("interventionId", entity.getInterventionId());
+        document.put("date", Datetime.getCurrentDate());
         document.put("_id",entity.getId());
         return document;
     }

@@ -2,8 +2,11 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.mongodb.BasicDBList;
+
 import entity.*;
+
 import org.bson.Document;
 
 /**
@@ -20,7 +23,7 @@ public class Tools {
         return basicDBList;
     }
 
-    public static Position arrayListToPosition(ArrayList arrayList)
+    public static Position arrayListToPosition(List arrayList)
     {
         Position p = new Position();
         if(arrayList !=null && arrayList.size() == 3)
@@ -40,10 +43,26 @@ public class Tools {
         return z;
     }
 
+    public static List<Position> documentListToPositionList(List<List<Double>> postions) {
+        List<Position> list = new ArrayList<Position>();
+        for(List<Double> p : postions) {
+            list.add(Tools.arrayListToPosition(p));
+        }
+        return list;
+    }
+
     public static BasicDBList meanListToBasicDBList(List<Mean> means) {
         BasicDBList basicDBList = new BasicDBList();
         for(Mean mean : means) {
             basicDBList.add(Tools.meanToDocument(mean));
+        }
+        return basicDBList;
+    }
+
+    public static BasicDBList positionListToBasicDBList(List<Position> positions) {
+        BasicDBList basicDBList = new BasicDBList();
+        for(Position position : positions) {
+            basicDBList.add(Tools.positionToBasicDBList(position));
         }
         return basicDBList;
     }

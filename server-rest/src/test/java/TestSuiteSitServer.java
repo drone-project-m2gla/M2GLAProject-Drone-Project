@@ -23,6 +23,7 @@ import dao.GeoIconDAOTest;
 import dao.GeoImageDAOTest;
 import dao.InterventionDAOTest;
 import dao.MeanDAOTest;
+import dao.TargetDAOTest;
 import dao.UserDAOTest;
 
 @RunWith(Suite.class)
@@ -36,7 +37,8 @@ import dao.UserDAOTest;
         InterventionRestTest.class,
         ImagesRestTest.class,
         MeanRestTest.class,
-        TopographyRestTest.class
+        TopographyRestTest.class,
+        TargetDAOTest.class
 })
 public class TestSuiteSitServer {
 
