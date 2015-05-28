@@ -23,8 +23,6 @@ import entity.Target;
  */
 @Path("/drone")
 public class DroneRest {
-	private Target target;
-
     /**
      * @return the position of the drone
      */
@@ -52,7 +50,7 @@ public class DroneRest {
 	@Path("target/{interventionId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Target getTrajet(@PathParam("interventionId") int interventionId) {
-		return target;
+		return TransitDroneSender.getINSTANCE().getTarget();
 	}
 
     /**
@@ -64,14 +62,14 @@ public class DroneRest {
 	public void doTrajet(Target target) {
 		TargetDAO targetDAO = new TargetDAO();
 		targetDAO.connect();
-		target = targetDAO.create(target);
+		targetDAO.create(target);
 		targetDAO.disconnect();
-		
-		TransitDroneSender transitDroneSender = new TransitDroneSender(target);
+
+		TransitDroneSender.getINSTANCE().setTarget(target);
 
 		DroneThread.createNewInstance();
 		DroneThread.getInstance().flushPositionUnchangedObservers();
-		DroneThread.getInstance().addObserversPositionsUnhanged(transitDroneSender);
+		DroneThread.getInstance().addObserversPositionsUnhanged(TransitDroneSender.getINSTANCE());
 
 		new Thread(DroneThread.getInstance()).start();
 	}
