@@ -72,7 +72,7 @@ public class DroneThread implements Runnable, PositionUnchangedObservable {
 				} else {
 					notifyObserversForPositionUnchanged();
 				}
-				Thread.sleep(30000);
+				Thread.sleep(3000);
 			} catch (IOException e) {
 				LOGGER.error("Get position error", e);
 				return;
