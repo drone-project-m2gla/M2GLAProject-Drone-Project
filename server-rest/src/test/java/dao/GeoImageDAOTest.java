@@ -97,6 +97,7 @@ public class GeoImageDAOTest {
         geoImage1.setHeight(500);
         geoImage1.setInterventionId(0);
         GeoImage geoImage1InBase = dao.create(geoImage1);
+        geoImage1.setDate(geoImage1InBase.getDate());
         assertEquals(geoImage1, geoImage1InBase);
 
         GeoImage geoImage2 = new GeoImage();
@@ -106,6 +107,7 @@ public class GeoImageDAOTest {
         geoImage2.setHeight(500);
         geoImage2.setInterventionId(0);
         GeoImage geoImage2InBase = dao.create(geoImage2);
+        geoImage2.setDate(geoImage2InBase.getDate());
         assertEquals(geoImage2, geoImage2InBase);
 
         GeoImage geoImage3 = new GeoImage();
@@ -115,6 +117,7 @@ public class GeoImageDAOTest {
         geoImage3.setHeight(500);
         geoImage3.setInterventionId(0);
         GeoImage geoImage3InBase = dao.create(geoImage3);
+        geoImage3.setDate(geoImage3InBase.getDate());
         assertEquals(geoImage3, geoImage3InBase);
 
         dao.ensureIndex();

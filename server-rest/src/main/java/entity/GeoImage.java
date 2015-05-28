@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Date;
+
 /**
  * @author mds
  * @see GeoImage with coordinates and name
@@ -9,6 +11,7 @@ public class GeoImage extends AbstractEntity {
     private int width;
     private int height;
     private String image;
+    private Date date;
     private long interventionId;
 
     public String getImage() {
@@ -17,6 +20,14 @@ public class GeoImage extends AbstractEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Position getPosition() {
@@ -63,6 +74,7 @@ public class GeoImage extends AbstractEntity {
         if (image != null ? !image.equals(geoImage.image) : geoImage.image != null) return false;
         if (position != null ? !position.equals(geoImage.position) : geoImage.position != null) return false;
         if (interventionId != geoImage.interventionId) return false;
+        if (geoImage.date != null && date != null && geoImage.date.getTime() != date.getTime()) return false;
         return true;
     }
 
@@ -74,6 +86,7 @@ public class GeoImage extends AbstractEntity {
                 ", height=" + height +
                 ", image='" + image + '\'' +
                 ", interventionId=" + interventionId + '\'' +
+                ", date=" + date + '\'' +
                 '}';
     }
 }
