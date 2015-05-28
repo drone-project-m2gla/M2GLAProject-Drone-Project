@@ -117,7 +117,6 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
             @Override
             public void execute(Object response) {
                 intervention = (Intervention) response;
-                // Toast.makeText(getActivity(), "  test intervention return " + intervention.getId(), Toast.LENGTH_LONG).show();
                 List<Mean> meanList = intervention.meansRequested();
                 // Initialisation des titres et images.
                 initImagesTitles(intervention, meanList);
@@ -145,7 +144,6 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                 curListView = (ListView) view.findViewById(R.id.intervention_detail_list);
                 Drawable[] imagesArray = drawables.toArray(new Drawable[drawables.size()]);
                 Context activity = InterventionDetailFragment.this.getActivity();
-//                ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titles, imagesArray);
                 ListAdapter adapter = new ItemsAdapter(activity, R.layout.custom_detail_moyen, titlesList, imagesArray, getIdIntervention(), meanList, InterventionDetailFragment.this);
                 Log.i(TAG, "adapterMeans  " + (adapter == null) + " \nImage array  " + imagesArray.length + " \ntitles " + (titles == null) + "\nactivity  " + (activity == null));
 
@@ -299,12 +297,6 @@ public class InterventionDetailFragment extends Fragment implements ListAdapterC
                                         //Toast.makeText(getContext(), "Moyen validé\nID mean: " + xtraMean.getId(), Toast.LENGTH_LONG).show();
                                         Log.i("itemsAdapter", "Moyen validé : " + position);
                                         refreshList();
-//
-//                                        MoyensInitFragment fragment = (MoyensInitFragment) getFragmentManager().findFragmentById(R.id.fragment_moyens_init);
-//                                        Activity initFragment = fragment.getActivity();
-//                                        if (fragment != null) {
-//                                            Toast.makeText(getActivity(), "Hello\nUn moyen a été mis à jour", Toast.LENGTH_SHORT).show();
-//                                        }
                                     }
                                 }, new Command() {
                                     @Override
